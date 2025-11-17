@@ -50,10 +50,17 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.AspectRatioFrameLayout
+import com.manjul.genai.videogenerator.data.local.AppDatabase
+import com.manjul.genai.videogenerator.data.local.VideoCacheEntity
 import com.manjul.genai.videogenerator.data.model.VideoJob
 import com.manjul.genai.videogenerator.ui.viewmodel.HistoryViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.LaunchedEffect
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -130,6 +137,9 @@ private fun JobCard(
     job: VideoJob,
     onVideoClick: (String) -> Unit
 ) {
+    val context = LocalContext.current
+    val database = remember { AppDatabase.getDatabase(context) }
+    val cacheDao = remember { database.videoCacheDao() }
     // Display model name - prefer model_id if available, otherwise use model_name
     val displayModelName = job.modelId?.replace("-", " ")?.replaceFirstChar { it.uppercaseChar() }
         ?: job.modelName.split("/").lastOrNull()?.replace("-", " ")?.replaceFirstChar { it.uppercaseChar() }
@@ -172,6 +182,36 @@ private fun JobCard(
             job.previewUrl?.takeIf { it.isNotBlank() }
         }
         else -> null
+    }
+    
+    // Load cache entry for this video (async)
+    var cacheEntry by remember(videoUrl) { mutableStateOf<VideoCacheEntity?>(null) }
+    LaunchedEffect(videoUrl) {
+        if (videoUrl != null) {
+            cacheEntry = withContext(Dispatchers.IO) {
+                cacheDao.getCacheEntry(videoUrl)
+            }
+            // Update access count and timestamp
+            if (cacheEntry != null) {
+                withContext(Dispatchers.IO) {
+                    cacheDao.updateAccess(videoUrl)
+                }
+            } else if (videoUrl != null) {
+                // Create new cache entry
+                withContext(Dispatchers.IO) {
+                    cacheDao.insertOrUpdate(
+                        VideoCacheEntity(
+                            videoUrl = videoUrl,
+                            modelId = job.modelId ?: "",
+                            modelName = job.modelName,
+                            lastPlayedPosition = 0L,
+                            isCached = false,
+                            cacheSize = 0L
+                        )
+                    )
+                }
+            }
+        }
     }
     
     Card(
@@ -297,6 +337,7 @@ private fun JobCard(
             // Video preview
             if (videoUrl != null) {
                 Spacer(modifier = Modifier.height(16.dp))
+                var isVideoPlaying by remember { mutableStateOf(false) }
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -312,23 +353,34 @@ private fun JobCard(
                                 .fillMaxWidth()
                                 .aspectRatio(16f / 9f),
                             playbackEnabled = true,
-                            onVideoClick = { onVideoClick(videoUrl) }
+                            onVideoClick = { onVideoClick(videoUrl) },
+                            onPlayingStateChanged = { playing ->
+                                isVideoPlaying = playing
+                                // Update cache access when video starts playing
+                                if (playing && videoUrl != null) {
+                                    kotlinx.coroutines.CoroutineScope(Dispatchers.IO).launch {
+                                        cacheDao.updateAccess(videoUrl)
+                                    }
+                                }
+                            }
                         )
-                        // Overlay with play icon
-                        Surface(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .size(56.dp),
-                            shape = CircleShape,
-                            color = Color.White.copy(alpha = 0.9f)
-                        ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Icon(
-                                    imageVector = Icons.Default.PlayArrow,
-                                    contentDescription = "Play fullscreen",
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(32.dp)
-                                )
+                        // Overlay with play icon - only show when video is not playing
+                        if (!isVideoPlaying) {
+                            Surface(
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .size(56.dp),
+                                shape = CircleShape,
+                                color = Color.White.copy(alpha = 0.9f)
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Icon(
+                                        imageVector = Icons.Default.PlayArrow,
+                                        contentDescription = "Play fullscreen",
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(32.dp)
+                                    )
+                                }
                             }
                         }
                     }
