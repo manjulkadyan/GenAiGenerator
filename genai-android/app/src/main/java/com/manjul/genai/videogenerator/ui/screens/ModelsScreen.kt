@@ -618,7 +618,8 @@ internal fun ModelVideoPlayer(
     initialVolume: Float = 0f,
     resizeMode: Int = AspectRatioFrameLayout.RESIZE_MODE_ZOOM,
     playbackEnabled: Boolean = true,
-    onVideoClick: (() -> Unit)? = null
+    onVideoClick: (() -> Unit)? = null,
+    onPlayingStateChanged: ((Boolean) -> Unit)? = null
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -626,6 +627,7 @@ internal fun ModelVideoPlayer(
 
     var isBuffering by remember(videoUrl) { mutableStateOf(true) }
     var hasError by remember(videoUrl) { mutableStateOf(false) }
+    var isPlaying by remember(videoUrl) { mutableStateOf(false) }
     var exoPlayer by remember(videoUrl) { mutableStateOf<ExoPlayer?>(null) }
     
     // Room DB cache for video metadata
@@ -782,6 +784,8 @@ internal fun ModelVideoPlayer(
         val listener = object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 isBuffering = playbackState == Player.STATE_BUFFERING || playbackState == Player.STATE_IDLE
+                isPlaying = player.isPlaying && playbackState == Player.STATE_READY
+                onPlayingStateChanged?.invoke(isPlaying)
                 
                 // Update cache status when video is ready
                 if (playbackState == Player.STATE_READY) {
@@ -803,9 +807,15 @@ internal fun ModelVideoPlayer(
                     }
                 }
             }
+            
+            override fun onIsPlayingChanged(isPlayingNow: Boolean) {
+                isPlaying = isPlayingNow && player.playbackState == Player.STATE_READY
+                onPlayingStateChanged?.invoke(isPlaying)
+            }
 
             override fun onPlayerError(error: PlaybackException) {
                 hasError = true
+                isPlaying = false
                 android.util.Log.e("ModelVideoPlayer", "Player error for $videoUrl", error)
             }
         }
