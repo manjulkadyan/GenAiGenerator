@@ -1,0 +1,222 @@
+[
+  {
+    "model": "openai/sora-2-pro",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-afe2d0ae-cf4c-4a8c-92b4-5b3a35b98747\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [{\"description\": \"sora-2-pro-own-key\", \"subtype\": \"string\", \"title\": \"model variant\", \"type\": \"equals\", \"value\": \"sora-2-pro-own-key\"}], \"description\": \"You pay OpenAI directly via your API key.\", \"prices\": [], \"title\": \"OpenAI (own key)\"}, {\"criteria\": [{\"description\": \"sora-2-pro-standard\", \"subtype\": \"string\", \"title\": \"model variant\", \"type\": \"equals\", \"value\": \"sora-2-pro-standard\"}], \"description\": \"Charged per second of generated video.\", \"prices\": [{\"description\": \"or around 33 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.30\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": \"Standard quality\"}, {\"criteria\": [{\"description\": \"sora-2-pro-high\", \"subtype\": \"string\", \"title\": \"model variant\", \"type\": \"equals\", \"value\": \"sora-2-pro-high\"}], \"description\": \"Charged per second of generated video.\", \"prices\": [{\"description\": \"or 20 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.50\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": \"High quality\"}]}, \"modelName\": \"openai/sora-2-pro\", \"showTable\": false, \"__flags\": {\"show-open-ai-api-instructions\": false, \"show-pylon-widget\": false, \"assign-support-tickets-to-ai\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-afe2d0ae-cf4c-4a8c-92b4-5b3a35b98747\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/openai/sora-2-pro#pricing"
+    }
+  },
+  {
+    "model": "openai/sora-2",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-4e4c6261-9ee0-4ff7-924d-a5f6cc97e800\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [{\"description\": \"sora-2-own-key\", \"subtype\": \"string\", \"title\": \"model variant\", \"type\": \"equals\", \"value\": \"sora-2-own-key\"}], \"description\": \"You pay OpenAI directly via your API key.\", \"prices\": [], \"title\": \"OpenAI (own key)\"}, {\"criteria\": [{\"description\": \"sora-2\", \"subtype\": \"string\", \"title\": \"model variant\", \"type\": \"equals\", \"value\": \"sora-2\"}], \"description\": \"Charged per second of generated video.\", \"prices\": [{\"description\": \"or 10 seconds for $1\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.10\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": \"Standard quality\"}]}, \"modelName\": \"openai/sora-2\", \"showTable\": false, \"__flags\": {\"show-pylon-widget\": false, \"show-open-ai-api-instructions\": false, \"assign-support-tickets-to-ai\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-4e4c6261-9ee0-4ff7-924d-a5f6cc97e800\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/openai/sora-2#pricing"
+    }
+  },
+  {
+    "model": "google/veo-3.1",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-04100001-b211-43c5-b2e7-b13fd0bb3a1c\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [{\"description\": \"with_audio\", \"subtype\": \"string\", \"title\": \"model variant\", \"type\": \"equals\", \"value\": \"with_audio\"}], \"description\": null, \"prices\": [{\"description\": \"or 25 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.40\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"without_audio\", \"subtype\": \"string\", \"title\": \"model variant\", \"type\": \"equals\", \"value\": \"without_audio\"}], \"description\": null, \"prices\": [{\"description\": \"or 50 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.20\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"google/veo-3.1\", \"showTable\": false, \"__flags\": {\"show-open-ai-api-instructions\": false, \"assign-support-tickets-to-ai\": true, \"show-pylon-widget\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-04100001-b211-43c5-b2e7-b13fd0bb3a1c\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/google/veo-3.1#pricing"
+    }
+  },
+  {
+    "model": "google/veo-3.1-fast",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-1d721f4f-429a-4076-9ca0-bc2bccfe74fd\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [{\"description\": \"with_audio\", \"subtype\": \"string\", \"title\": \"model variant\", \"type\": \"equals\", \"value\": \"with_audio\"}], \"description\": null, \"prices\": [{\"description\": \"or around 66 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.15\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"without_audio\", \"subtype\": \"string\", \"title\": \"model variant\", \"type\": \"equals\", \"value\": \"without_audio\"}], \"description\": null, \"prices\": [{\"description\": \"or 10 seconds for $1\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.10\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"google/veo-3.1-fast\", \"showTable\": false, \"__flags\": {\"show-open-ai-api-instructions\": false, \"assign-support-tickets-to-ai\": false, \"show-pylon-widget\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-1d721f4f-429a-4076-9ca0-bc2bccfe74fd\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/google/veo-3.1-fast#pricing"
+    }
+  },
+  {
+    "model": "google/veo-3",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-efec6620-5c7a-41d7-ba01-1225379af1e8\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [{\"description\": \"with_audio\", \"subtype\": \"string\", \"title\": \"model variant\", \"type\": \"equals\", \"value\": \"with_audio\"}], \"description\": null, \"prices\": [{\"description\": \"or 25 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.40\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"without_audio\", \"subtype\": \"string\", \"title\": \"model variant\", \"type\": \"equals\", \"value\": \"without_audio\"}], \"description\": null, \"prices\": [{\"description\": \"or 50 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.20\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"google/veo-3\", \"showTable\": false, \"__flags\": {\"show-pylon-widget\": false, \"assign-support-tickets-to-ai\": false, \"show-open-ai-api-instructions\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-efec6620-5c7a-41d7-ba01-1225379af1e8\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/google/veo-3#pricing"
+    }
+  },
+  {
+    "model": "wan-video/wan-2.5-t2v-fast",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-480dec40-51f4-4d53-be71-6fb385be2fba\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [{\"description\": \"720p\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"720p\"}], \"description\": null, \"prices\": [{\"description\": \"or around 14 seconds for $1\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.068\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"1080p\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"1080p\"}], \"description\": null, \"prices\": [{\"description\": \"or around 98 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.102\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"wan-video/wan-2.5-t2v-fast\", \"showTable\": false, \"__flags\": {\"show-pylon-widget\": false, \"show-open-ai-api-instructions\": false, \"assign-support-tickets-to-ai\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-480dec40-51f4-4d53-be71-6fb385be2fba\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/wan-video/wan-2.5-t2v-fast#pricing"
+    }
+  },
+  {
+    "model": "bytedance/seedance-1-lite",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-89627b26-cd1b-40e6-a32d-53c570cbc129\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [{\"description\": \"480p\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"480p\"}], \"description\": null, \"prices\": [{\"description\": \"or around 55 seconds for $1\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.018\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"720p\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"720p\"}], \"description\": null, \"prices\": [{\"description\": \"or around 27 seconds for $1\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.036\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"1080p\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"1080p\"}], \"description\": null, \"prices\": [{\"description\": \"or around 13 seconds for $1\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.072\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"bytedance/seedance-1-lite\", \"showTable\": false, \"__flags\": {\"show-open-ai-api-instructions\": false, \"assign-support-tickets-to-ai\": false, \"show-pylon-widget\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-89627b26-cd1b-40e6-a32d-53c570cbc129\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/bytedance/seedance-1-lite#pricing"
+    }
+  },
+  {
+    "model": "wan-video/wan-2.5-i2v",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-b246eca5-f49c-4e1b-a528-cdd12730e905\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [{\"description\": \"480p\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"480p\"}], \"description\": null, \"prices\": [{\"description\": \"or 20 seconds for $1\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.05\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"720p\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"720p\"}], \"description\": null, \"prices\": [{\"description\": \"or 10 seconds for $1\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.10\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"1080p\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"1080p\"}], \"description\": null, \"prices\": [{\"description\": \"or around 66 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.15\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"wan-video/wan-2.5-i2v\", \"showTable\": false, \"__flags\": {\"show-open-ai-api-instructions\": false, \"show-pylon-widget\": false, \"assign-support-tickets-to-ai\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-b246eca5-f49c-4e1b-a528-cdd12730e905\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/wan-video/wan-2.5-i2v#pricing"
+    }
+  },
+  {
+    "model": "google/veo-3-fast",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-8e0a7dd5-831a-43b9-949c-442ace5dc9a0\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [{\"description\": \"with_audio\", \"subtype\": \"string\", \"title\": \"model variant\", \"type\": \"equals\", \"value\": \"with_audio\"}], \"description\": null, \"prices\": [{\"description\": \"or around 66 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.15\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"without_audio\", \"subtype\": \"string\", \"title\": \"model variant\", \"type\": \"equals\", \"value\": \"without_audio\"}], \"description\": null, \"prices\": [{\"description\": \"or 10 seconds for $1\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.10\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"google/veo-3-fast\", \"showTable\": false, \"__flags\": {\"assign-support-tickets-to-ai\": false, \"show-open-ai-api-instructions\": false, \"show-pylon-widget\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-8e0a7dd5-831a-43b9-949c-442ace5dc9a0\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/google/veo-3-fast#pricing"
+    }
+  },
+  {
+    "model": "minimax/hailuo-2.3-fast",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-203f996d-3e67-4dbf-9c3e-9c720cdb40b5\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [{\"description\": \"768P\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"768P\"}, {\"description\": \"6\", \"subtype\": \"number\", \"title\": \"second of output video\", \"type\": \"equals\", \"value\": 6}], \"description\": null, \"prices\": [{\"description\": \"or around 52 videos for $10\", \"metric\": \"video_output_count\", \"metric_display\": \"output video\", \"price\": \"$0.19\", \"title\": \"per output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"768P\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"768P\"}, {\"description\": \"10\", \"subtype\": \"number\", \"title\": \"second of output video\", \"type\": \"equals\", \"value\": 10}], \"description\": null, \"prices\": [{\"description\": \"or around 31 videos for $10\", \"metric\": \"video_output_count\", \"metric_display\": \"output video\", \"price\": \"$0.32\", \"title\": \"per output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"1080P\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"1080P\"}, {\"description\": \"6\", \"subtype\": \"number\", \"title\": \"second of output video\", \"type\": \"equals\", \"value\": 6}], \"description\": null, \"prices\": [{\"description\": \"or around 30 videos for $10\", \"metric\": \"video_output_count\", \"metric_display\": \"output video\", \"price\": \"$0.33\", \"title\": \"per output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"minimax/hailuo-2.3-fast\", \"showTable\": false, \"__flags\": {\"show-pylon-widget\": false, \"assign-support-tickets-to-ai\": false, \"show-open-ai-api-instructions\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-203f996d-3e67-4dbf-9c3e-9c720cdb40b5\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/minimax/hailuo-2.3-fast#pricing"
+    }
+  },
+  {
+    "model": "bytedance/seedance-1-pro",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-5d0a6599-422e-400c-9176-b12fd8ad5fcd\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [{\"description\": \"480p\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"480p\"}], \"description\": null, \"prices\": [{\"description\": \"or around 33 seconds for $1\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.03\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"720p\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"720p\"}], \"description\": null, \"prices\": [{\"description\": \"or around 16 seconds for $1\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.06\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"1080p\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"1080p\"}], \"description\": null, \"prices\": [{\"description\": \"or around 66 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.15\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"bytedance/seedance-1-pro\", \"showTable\": false, \"__flags\": {\"show-pylon-widget\": false, \"show-open-ai-api-instructions\": false, \"assign-support-tickets-to-ai\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-5d0a6599-422e-400c-9176-b12fd8ad5fcd\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/bytedance/seedance-1-pro#pricing"
+    }
+  },
+  {
+    "model": "minimax/hailuo-02",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-7f8a2a91-be4c-4008-b010-1ac7b33c1906\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [{\"description\": \"512P\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"512P\"}, {\"description\": \"6\", \"subtype\": \"number\", \"title\": \"second of output video\", \"type\": \"equals\", \"value\": 6}], \"description\": null, \"prices\": [{\"description\": \"or 10 videos for $1\", \"metric\": \"video_output_count\", \"metric_display\": \"output video\", \"price\": \"$0.10\", \"title\": \"per output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"512P\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"512P\"}, {\"description\": \"10\", \"subtype\": \"number\", \"title\": \"second of output video\", \"type\": \"equals\", \"value\": 10}], \"description\": null, \"prices\": [{\"description\": \"or around 66 videos for $10\", \"metric\": \"video_output_count\", \"metric_display\": \"output video\", \"price\": \"$0.15\", \"title\": \"per output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"768P\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"768P\"}, {\"description\": \"6\", \"subtype\": \"number\", \"title\": \"second of output video\", \"type\": \"equals\", \"value\": 6}], \"description\": null, \"prices\": [{\"description\": \"or around 37 videos for $10\", \"metric\": \"video_output_count\", \"metric_display\": \"output video\", \"price\": \"$0.27\", \"title\": \"per output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"768P\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"768P\"}, {\"description\": \"10\", \"subtype\": \"number\", \"title\": \"second of output video\", \"type\": \"equals\", \"value\": 10}], \"description\": null, \"prices\": [{\"description\": \"or around 22 videos for $10\", \"metric\": \"video_output_count\", \"metric_display\": \"output video\", \"price\": \"$0.45\", \"title\": \"per output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"1080P\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"1080P\"}, {\"description\": \"6\", \"subtype\": \"number\", \"title\": \"second of output video\", \"type\": \"equals\", \"value\": 6}], \"description\": null, \"prices\": [{\"description\": \"or around 20 videos for $10\", \"metric\": \"video_output_count\", \"metric_display\": \"output video\", \"price\": \"$0.48\", \"title\": \"per output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"minimax/hailuo-02\", \"showTable\": false, \"__flags\": {\"show-open-ai-api-instructions\": false, \"show-pylon-widget\": false, \"assign-support-tickets-to-ai\": true}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-7f8a2a91-be4c-4008-b010-1ac7b33c1906\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/minimax/hailuo-02#pricing"
+    }
+  },
+  {
+    "model": "kwaivgi/kling-v2.1-master",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-60ad1f68-886b-470f-9054-4cd04a6868c8\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [], \"description\": null, \"prices\": [{\"description\": \"or around 35 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.28\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"kwaivgi/kling-v2.1-master\", \"showTable\": false, \"__flags\": {\"show-pylon-widget\": false, \"show-open-ai-api-instructions\": false, \"assign-support-tickets-to-ai\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-60ad1f68-886b-470f-9054-4cd04a6868c8\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/kwaivgi/kling-v2.1-master#pricing"
+    }
+  },
+  {
+    "model": "wan-video/wan-2.2-t2v-fast",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-39cd143c-10af-443c-8d2a-7c0464cfebbd\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [{\"description\": \"480p\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"480p\"}], \"description\": null, \"prices\": [{\"description\": \"or 20 videos for $1\", \"metric\": \"video_output_count\", \"metric_display\": \"output video\", \"price\": \"$0.05\", \"title\": \"per output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"720p\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"720p\"}], \"description\": null, \"prices\": [{\"description\": \"or 10 videos for $1\", \"metric\": \"video_output_count\", \"metric_display\": \"output video\", \"price\": \"$0.10\", \"title\": \"per output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"wan-video/wan-2.2-t2v-fast\", \"showTable\": false, \"__flags\": {\"show-open-ai-api-instructions\": false, \"assign-support-tickets-to-ai\": true, \"show-pylon-widget\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-39cd143c-10af-443c-8d2a-7c0464cfebbd\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/wan-video/wan-2.2-t2v-fast#pricing"
+    }
+  },
+  {
+    "model": "pixverse/pixverse-v5",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-c9914ada-9245-4b3f-84d4-dc22a8012dba\" type=\"application/json\">{\"billingConfig\": {\"current_description\": \"\\u003Ctable\\u003E\\n\\u003Cthead\\u003E\\n\\u003Ctr\\u003E\\n\\u003Cth\\u003EDuration\\u003C/th\\u003E\\n\\u003Cth\\u003EResolution\\u003C/th\\u003E\\n\\u003Cth\\u003EMotion\\u003C/th\\u003E\\n\\u003Cth\\u003EUnits\\u003C/th\\u003E\\n\\u003Cth\\u003ECost ($)\\u003C/th\\u003E\\n\\u003C/tr\\u003E\\n\\u003C/thead\\u003E\\n\\u003Ctbody\\u003E\\n\\u003Ctr\\u003E\\n\\u003Ctd\\u003E5s\\u003C/td\\u003E\\n\\u003Ctd\\u003E360p\\u003C/td\\u003E\\n\\u003Ctd\\u003Enormal\\u003C/td\\u003E\\n\\u003Ctd\\u003E30\\u003C/td\\u003E\\n\\u003Ctd\\u003E0.30\\u003C/td\\u003E\\n\\u003C/tr\\u003E\\n\\u003Ctr\\u003E\\n\\u003Ctd\\u003E5s\\u003C/td\\u003E\\n\\u003Ctd\\u003E360p\\u003C/td\\u003E\\n\\u003Ctd\\u003Esmooth\\u003C/td\\u003E\\n\\u003Ctd\\u003E60\\u003C/td\\u003E\\n\\u003Ctd\\u003E0.60\\u003C/td\\u003E\\n\\u003C/tr\\u003E\\n\\u003Ctr\\u003E\\n\\u003Ctd\\u003E8s\\u003C/td\\u003E\\n\\u003Ctd\\u003E360p\\u003C/td\\u003E\\n\\u003Ctd\\u003Enormal\\u003C/td\\u003E\\n\\u003Ctd\\u003E60\\u003C/td\\u003E\\n\\u003Ctd\\u003E0.60\\u003C/td\\u003E\\n\\u003C/tr\\u003E\\n\\u003Ctr\\u003E\\n\\u003Ctd\\u003E5s\\u003C/td\\u003E\\n\\u003Ctd\\u003E540p\\u003C/td\\u003E\\n\\u003Ctd\\u003Enormal\\u003C/td\\u003E\\n\\u003Ctd\\u003E30\\u003C/td\\u003E\\n\\u003Ctd\\u003E0.30\\u003C/td\\u003E\\n\\u003C/tr\\u003E\\n\\u003Ctr\\u003E\\n\\u003Ctd\\u003E5s\\u003C/td\\u003E\\n\\u003Ctd\\u003E540p\\u003C/td\\u003E\\n\\u003Ctd\\u003Esmooth\\u003C/td\\u003E\\n\\u003Ctd\\u003E60\\u003C/td\\u003E\\n\\u003Ctd\\u003E0.60\\u003C/td\\u003E\\n\\u003C/tr\\u003E\\n\\u003Ctr\\u003E\\n\\u003Ctd\\u003E8s\\u003C/td\\u003E\\n\\u003Ctd\\u003E540p\\u003C/td\\u003E\\n\\u003Ctd\\u003Enormal\\u003C/td\\u003E\\n\\u003Ctd\\u003E60\\u003C/td\\u003E\\n\\u003Ctd\\u003E0.60\\u003C/td\\u003E\\n\\u003C/tr\\u003E\\n\\u003Ctr\\u003E\\n\\u003Ctd\\u003E5s\\u003C/td\\u003E\\n\\u003Ctd\\u003E720p\\u003C/td\\u003E\\n\\u003Ctd\\u003Enormal\\u003C/td\\u003E\\n\\u003Ctd\\u003E40\\u003C/td\\u003E\\n\\u003Ctd\\u003E0.40\\u003C/td\\u003E\\n\\u003C/tr\\u003E\\n\\u003Ctr\\u003E\\n\\u003Ctd\\u003E5s\\u003C/td\\u003E\\n\\u003Ctd\\u003E720p\\u003C/td\\u003E\\n\\u003Ctd\\u003Esmooth\\u003C/td\\u003E\\n\\u003Ctd\\u003E80\\u003C/td\\u003E\\n\\u003Ctd\\u003E0.80\\u003C/td\\u003E\\n\\u003C/tr\\u003E\\n\\u003Ctr\\u003E\\n\\u003Ctd\\u003E8s\\u003C/td\\u003E\\n\\u003Ctd\\u003E720p\\u003C/td\\u003E\\n\\u003Ctd\\u003Enormal\\u003C/td\\u003E\\n\\u003Ctd\\u003E80\\u003C/td\\u003E\\n\\u003Ctd\\u003E0.80\\u003C/td\\u003E\\n\\u003C/tr\\u003E\\n\\u003Ctr\\u003E\\n\\u003Ctd\\u003E5s\\u003C/td\\u003E\\n\\u003Ctd\\u003E1080p\\u003C/td\\u003E\\n\\u003Ctd\\u003Enormal\\u003C/td\\u003E\\n\\u003Ctd\\u003E80\\u003C/td\\u003E\\n\\u003Ctd\\u003E0.80\\u003C/td\\u003E\\n\\u003C/tr\\u003E\\n\\u003Ctr\\u003E\\n\\u003Ctd\\u003E8s\\u003C/td\\u003E\\n\\u003Ctd\\u003E1080p\\u003C/td\\u003E\\n\\u003Ctd\\u003Enormal\\u003C/td\\u003E\\n\\u003Ctd\\u003E160\\u003C/td\\u003E\\n\\u003Ctd\\u003E1.60\\u003C/td\\u003E\\n\\u003C/tr\\u003E\\n\\u003C/tbody\\u003E\\n\\u003C/table\\u003E\", \"current_tiers\": [{\"criteria\": [], \"description\": null, \"prices\": [{\"description\": \"or 100 units for $1\", \"metric\": \"unspecified_billing_metric\", \"metric_display\": \"unit\", \"price\": \"$0.01\", \"title\": \"per unit\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"pixverse/pixverse-v5\", \"showTable\": false, \"__flags\": {\"show-open-ai-api-instructions\": false, \"assign-support-tickets-to-ai\": false, \"show-pylon-widget\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-c9914ada-9245-4b3f-84d4-dc22a8012dba\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/pixverse/pixverse-v5#pricing"
+    }
+  },
+  {
+    "model": "kwaivgi/kling-v2.5-turbo-pro",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-bbbe81d4-0687-47c5-beef-62ba3e2ed936\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [], \"description\": null, \"prices\": [{\"description\": \"or around 14 seconds for $1\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.07\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"kwaivgi/kling-v2.5-turbo-pro\", \"showTable\": false, \"__flags\": {\"assign-support-tickets-to-ai\": false, \"show-open-ai-api-instructions\": false, \"show-pylon-widget\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-bbbe81d4-0687-47c5-beef-62ba3e2ed936\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/kwaivgi/kling-v2.5-turbo-pro#pricing"
+    }
+  },
+  {
+    "model": "runwayml/gen4-image-turbo",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-6720e872-544e-4fa7-a17c-73ae681e5b5b\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [], \"description\": null, \"prices\": [{\"description\": \"or around 33 images for $1\", \"metric\": \"image_output_count\", \"metric_display\": \"output image\", \"price\": \"$0.03\", \"title\": \"per output image\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"runwayml/gen4-image-turbo\", \"showTable\": false, \"__flags\": {\"show-open-ai-api-instructions\": false, \"assign-support-tickets-to-ai\": false, \"show-pylon-widget\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-6720e872-544e-4fa7-a17c-73ae681e5b5b\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/runwayml/gen4-image-turbo#pricing"
+    }
+  },
+  {
+    "model": "lightricks/ltx-2-fast",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-afaa6d4d-ce48-4280-9ea7-f43a12b11e1c\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [{\"description\": \"1080p\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"1080p\"}], \"description\": null, \"prices\": [{\"description\": \"or 25 seconds for $1\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.04\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"2k\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"2k\"}], \"description\": null, \"prices\": [{\"description\": \"or around 12 seconds for $1\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.08\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"4k\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"4k\"}], \"description\": null, \"prices\": [{\"description\": \"or around 62 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.16\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"lightricks/ltx-2-fast\", \"showTable\": false, \"__flags\": {\"show-open-ai-api-instructions\": false, \"assign-support-tickets-to-ai\": false, \"show-pylon-widget\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-afaa6d4d-ce48-4280-9ea7-f43a12b11e1c\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/lightricks/ltx-2-fast#pricing"
+    }
+  },
+  {
+    "model": "leonardoai/motion-2.0",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-8ee8d5d1-4175-4869-9ce4-2ae03bd1e592\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [], \"description\": null, \"prices\": [{\"description\": \"or around 33 videos for $10\", \"metric\": \"video_output_count\", \"metric_display\": \"output video\", \"price\": \"$0.30\", \"title\": \"per output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"leonardoai/motion-2.0\", \"showTable\": false, \"__flags\": {\"assign-support-tickets-to-ai\": false, \"show-pylon-widget\": false, \"show-open-ai-api-instructions\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-8ee8d5d1-4175-4869-9ce4-2ae03bd1e592\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/leonardoai/motion-2.0#pricing"
+    }
+  },
+  {
+    "model": "lightricks/ltx-2-pro",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-dcdccee7-036f-4754-a4f9-f862f8c89ca7\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [{\"description\": \"1080p\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"1080p\"}], \"description\": null, \"prices\": [{\"description\": \"or around 16 seconds for $1\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.06\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"2k\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"2k\"}], \"description\": null, \"prices\": [{\"description\": \"or around 83 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.12\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}, {\"criteria\": [{\"description\": \"4k\", \"subtype\": \"string\", \"title\": \"target resolution\", \"type\": \"equals\", \"value\": \"4k\"}], \"description\": null, \"prices\": [{\"description\": \"or around 41 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.24\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"lightricks/ltx-2-pro\", \"showTable\": false, \"__flags\": {\"show-pylon-widget\": false, \"assign-support-tickets-to-ai\": false, \"show-open-ai-api-instructions\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-dcdccee7-036f-4754-a4f9-f862f8c89ca7\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/lightricks/ltx-2-pro#pricing"
+    }
+  },
+  {
+    "model": "character-ai/ovi-i2v",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-52456c2f-be8e-4be8-afb3-2ca7a18c4450\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [], \"description\": null, \"prices\": [{\"description\": \"or 50 videos for $10\", \"metric\": \"video_output_count\", \"metric_display\": \"output video\", \"price\": \"$0.20\", \"title\": \"per output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"character-ai/ovi-i2v\", \"showTable\": false, \"__flags\": {\"show-pylon-widget\": false, \"assign-support-tickets-to-ai\": false, \"show-open-ai-api-instructions\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-52456c2f-be8e-4be8-afb3-2ca7a18c4450\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/character-ai/ovi-i2v#pricing"
+    }
+  },
+  {
+    "model": "luma/ray-2-720p",
+    "schema": null,
+    "pricing": {
+      "variants": [],
+      "raw_html": "<section class=\"mb-2lh\" id=\"pricing\">\n<script id=\"react-component-props-aa167d98-e0b3-420f-ba38-15408f37d472\" type=\"application/json\">{\"billingConfig\": {\"current_description\": null, \"current_tiers\": [{\"criteria\": [], \"description\": null, \"prices\": [{\"description\": \"or around 55 seconds for $10\", \"metric\": \"video_output_duration_seconds\", \"metric_display\": \"second of output video\", \"price\": \"$0.18\", \"title\": \"per second of output video\", \"type\": \"per-unit\"}], \"title\": null}]}, \"modelName\": \"luma/ray-2-720p\", \"showTable\": false, \"__flags\": {\"show-open-ai-api-instructions\": false, \"show-pylon-widget\": false, \"assign-support-tickets-to-ai\": false}}</script>\n<div data-component=\"ModelBilling\" data-props=\"react-component-props-aa167d98-e0b3-420f-ba38-15408f37d472\">\n</div>\n</section>",
+      "raw_text": "\n\n\n\n",
+      "url": "https://replicate.com/luma/ray-2-720p#pricing"
+    }
+  }
+]

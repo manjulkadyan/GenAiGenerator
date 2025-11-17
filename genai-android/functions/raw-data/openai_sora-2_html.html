@@ -1,0 +1,990 @@
+
+
+<!DOCTYPE html>
+<html lang="en"
+      class="">
+
+  <head>
+    <meta charset="utf-8" />
+    <title>
+      
+  
+    Sora 2 API | OpenAI
+  
+
+    </title>
+
+    
+      
+      <meta name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+
+    <link id="favicon-ico"
+          rel="icon"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/favicon.121ea3afd763.ico"
+          sizes="any" />
+    <link id="favicon-png"
+          rel="icon"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/favicon.fdf5ef8729cc.png"
+          type="image/png" />
+    <link rel="mask-icon"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/safari-pinned-tab.4c32b8e091a9.svg"
+          color="#FFFFFF" />
+    <link rel="apple-touch-icon"
+          sizes="180x180"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/apple-touch-icon.39c0aa0659e3.png" />
+
+    
+  <script nonce="lMo6HPR1jSLE+ofeGC1/zw==">
+    /* beautify ignore:start */
+    window.dataLayer = window.dataLayer || [];
+    
+    
+    dataLayer.push({
+      'event': 'user_anonymous',
+      'user_type': 'anonymous',
+      
+      'anonymous_session_id': 'e89a175e-df79-4a27-8f97-a4c91c4da970'
+      
+    });
+    
+    /* beautify ignore:end */
+  </script>
+  <script nonce="lMo6HPR1jSLE+ofeGC1/zw==">
+    (function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-KZDCFZR9');
+  </script>
+
+
+
+    
+    
+
+    <link  rel="stylesheet" href="https://d31rfu1d3w8e4q.cloudfront.net/static/dist/index-BxwK8EBg.css" />
+<script type="module" crossorigin="" src="https://d31rfu1d3w8e4q.cloudfront.net/static/dist/index-BK0wCkVE.js"></script>
+
+    <link rel="stylesheet"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/dist/indexCss-D5iwNvwU.css" />
+
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="Blog (RSS)"
+          href="https://replicate.com/blog/rss" />
+    <link rel="alternate"
+          type="application/atom+xml"
+          title="Blog (Atom)"
+          href="https://replicate.com/blog/atom" />
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="Changelog (RSS)"
+          href="https://replicate.com/changelog/rss" />
+    <link rel="alternate"
+          type="application/atom+xml"
+          title="Changelog (Atom)"
+          href="https://replicate.com/changelog/atom" />
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="Status (RSS)"
+          href="https://replicatestatus.com/feed" />
+
+    
+      <link rel="dns-prefetch"
+            href="https://replicate.delivery" />
+    
+      <link rel="dns-prefetch"
+            href="https://tjzk.replicate.delivery" />
+    
+
+    
+
+    <link rel="canonical"
+          href="https://replicate.com/openai/sora-2" />
+
+    
+  
+  
+    
+  
+
+  <meta name="twitter:card"
+        content="summary_large_image" />
+
+
+<meta name="twitter:site"
+      content="@replicate" />
+
+
+  <meta name="twitter:image"
+        content="https://og-api.replicateassets.com/api/models/openai/sora-2" />
+  <meta property="og:image"
+        content="https://og-api.replicateassets.com/api/models/openai/sora-2" />
+
+
+
+
+  <meta name="twitter:title"
+        content="Sora 2 API | OpenAI" />
+  <meta name="twitter:description"
+        content="API for Sora 2. Generate videos using Sora 2. Realistic AI video using Sora 2 from OpenAI." />
+  <meta property="og:image"
+        content="https://og-api.replicateassets.com/api/models/openai/sora-2" />
+  <meta property="twitter:image"
+        content="https://og-api.replicateassets.com/api/models/openai/sora-2" />
+
+  
+
+  
+    <meta name="description"
+          content="API for Sora 2. Generate videos using Sora 2. Realistic AI video using Sora 2 from OpenAI." />
+  
+
+
+    <meta name="sentry-dsn-js"
+          content="https://3dc017e574684610bbc7fd3b5519a4e8@o255771.ingest.sentry.io/5909364" />
+    
+    
+      <meta name="anonymous-id"
+            content="e89a175e-df79-4a27-8f97-a4c91c4da970" />
+    
+
+    
+      <script nonce="lMo6HPR1jSLE+ofeGC1/zw==">
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (prefersDarkScheme) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.add("light");
+        }
+      </script>
+    
+
+    
+  </head>
+
+  
+
+  <body class="font-sans overflow-y-scroll antialiased flex min-h-screen flex-col">
+    
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KZDCFZR9"
+        height="0"
+        width="0"
+        style="display:none;
+               visibility:hidden"></iframe></noscript>
+
+
+    
+
+      
+
+      
+        
+
+<div class="h-[var(--header-height)] mb-6 no-focus">
+  
+    <script id="react-component-props-e07c588f-f19d-4726-a6c8-807e7dbb6c4e" type="application/json">{"activePath": "/openai/sora-2", "isAuthenticated": false, "theme": "", "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false}}</script>
+
+<div data-component="Navigation"
+     data-props="react-component-props-e07c588f-f19d-4726-a6c8-807e7dbb6c4e">
+  
+</div>
+
+  
+</div>
+
+        
+
+
+
+      
+
+      
+      
+
+      
+      
+
+      
+
+      <main class="layout-main flex-1">
+        
+
+        
+          
+
+  
+  
+  
+    
+      
+
+    
+      
+    
+
+    
+
+    
+      
+
+<header class="space-y-4 pb-10 lg:pb-4"
+        aria-label="openai/sora-2">
+
+  
+
+<div class="flex gap-8 gap-y-4 w-full flex-wrap justify-between items-center">
+  <div class="space-y-4">
+    <div class="flex-wrap flex flex-col gap-1">
+
+      <div class="flex gap-2 sm:gap-3 w-full">
+
+        <h3 aria-label="openai/sora-2"
+            class="sr-only">
+          openai/sora-2
+        </h3>
+
+        <div translate="no"
+             aria-hidden="true"
+             class="flex relative items-center gap-1 flex-1 flex-wrap">
+          <div class="flex items-center gap-3 whitespace-nowrap">
+            
+              
+
+
+  <img class="avatar size-9 flex-shrink-0"
+       src="https://github.com/openai.png"
+       alt=""
+       role="presentation"
+       onerror="this.onerror=null; this.src='https://d31rfu1d3w8e4q.cloudfront.net/static/placeholder-avatar-organization.ff98795474e8.svg'" />
+
+
+            
+            <div class="text-r8-gray-11 text-lg font-heading">
+              
+                <a href="https://replicate.com/openai">openai</a>
+              
+            </div>
+            <div class="text-r8-gray-11 text-lg font-heading">
+              /
+            </div>
+          </div>
+          <div>
+            <span class="text-lg font-heading">
+              sora-2
+            </span>
+            <span class="[&>div]:inline">
+              
+                <script id="react-component-props-e2a29479-9546-4a70-8c3a-ca0050fc616a" type="application/json">{"identifier": "openai/sora-2", "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false}}</script>
+
+<div data-component="CopyIdentifierButton"
+     data-props="react-component-props-e2a29479-9546-4a70-8c3a-ca0050fc616a">
+  
+</div>
+
+              
+            </span>
+          </div>
+        </div>
+      </div>
+
+      
+
+    </div>
+  </div>
+
+  <div class="relative flex flex-wrap gap-2 md:justify-end w-full md:w-auto">
+
+    
+
+    
+
+    <div>
+      <script id="react-component-props-5df63701-1e93-4f54-a825-faf05fa67122" type="application/json">{"model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/d361c5e3-dd4e-461d-9ea1-56c85643710b/Screenshot_2025-10-07_at_3.03..png", "description": "OpenAI's Flagship video generation with synced audio", "hardware": "CPU", "latest_version": {"id": "6dd6f49244af4fc3cc2de9b65ab589e85870035dba05329d21c434e9172f0143"}, "name": "sora-2", "owner": "openai", "url": "https://replicate.com/openai/sora-2", "visibility": "public", "_extras": {"name": "openai/sora-2", "is_official": true, "is_pipeline": false}}, "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false}}</script>
+
+<div data-component="ModelDetailButton"
+     data-props="react-component-props-5df63701-1e93-4f54-a825-faf05fa67122">
+  
+</div>
+
+    </div>
+  </div>
+</div>
+
+
+  
+
+
+
+<div class="flex flex-col gap-2 w-full">
+  
+    <div class="flex gap-4 flex-col md:flex-row items-start">
+      
+        <p class="max-w-3xl text-r8-lg [overflow-wrap:anywhere] text-pretty">
+          
+            OpenAI&#x27;s Flagship video generation with synced audio
+            
+          
+        </p>
+      
+    </div>
+  
+
+  
+</div>
+
+<div class="w-full">
+  <div class="space-y-4 @container">
+
+    <div class="gap-y-2 items-start @xl:items-center grid @xl:flex @xl:flex-wrap @xl:flex-row @xs:grid-cols-2 gap-x-2 @xl:gap-x-6">
+
+      
+        <div class="flex items-center">
+          <script id="react-component-props-c91eb423-9264-4ffe-95e0-fef2c8b60fad" type="application/json">{"initialStatus": "online", "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/d361c5e3-dd4e-461d-9ea1-56c85643710b/Screenshot_2025-10-07_at_3.03..png", "description": "OpenAI's Flagship video generation with synced audio", "hardware": "CPU", "latest_version": {"id": "6dd6f49244af4fc3cc2de9b65ab589e85870035dba05329d21c434e9172f0143"}, "name": "sora-2", "owner": "openai", "url": "https://replicate.com/openai/sora-2", "visibility": "public", "_extras": {"name": "openai/sora-2", "is_official": true, "is_pipeline": false}}, "isOfficialModel": "", "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false}}</script>
+
+  <div data-react-placeholder="ModelStatusIndicator">
+    <div class="flex items-center">
+  <div class="rounded-full bg-r8-gray-3 animate-pulse w-[64px] h-[29px]">
+  </div>
+</div>
+
+  </div>
+
+<div data-component="ModelStatusIndicator"
+     data-props="react-component-props-c91eb423-9264-4ffe-95e0-fef2c8b60fad">
+  
+</div>
+
+        </div>
+      
+
+      <div class="flex items-start gap-2">
+        
+          <span class="flex-shrink-0 -mt-0.5">
+            <svg class="icon"
+     fill="currentColor"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 256 256">
+  <rect width="256" height="256" fill="none" />
+  <path d="M54.46,201.54c-9.2-9.2-3.1-28.53-7.78-39.85C41.82,150,24,140.5,24,128s17.82-22,22.68-33.69C51.36,83,45.26,63.66,54.46,54.46S83,51.36,94.31,46.68C106.05,41.82,115.5,24,128,24S150,41.82,161.69,46.68c11.32,4.68,30.65-1.42,39.85,7.78s3.1,28.53,7.78,39.85C214.18,106.05,232,115.5,232,128S214.18,150,209.32,161.69c-4.68,11.32,1.42,30.65-7.78,39.85s-28.53,3.1-39.85,7.78C150,214.18,140.5,232,128,232s-22-17.82-33.69-22.68C83,204.64,63.66,210.74,54.46,201.54Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" />
+  <polyline points="88 136 112 160 168 104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" />
+</svg>
+
+          </span>
+          <span class="text-r8-sm"><script id="react-component-props-db0ba0cc-5b68-4880-a91d-38b14ae68db9" type="application/json">{"anchorText": "Official", "anchorHref": "https://replicate.com/docs/topics/models/official-models", "tooltipText": "Official models are always on, maintained, and have predictable pricing.", "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false}}</script>
+
+<div data-component="TextTooltip"
+     data-props="react-component-props-db0ba0cc-5b68-4880-a91d-38b14ae68db9">
+  
+</div>
+</span>
+        
+      </div>
+
+      
+        <div class="flex items-start gap-2">
+          <span class="flex-shrink-0 -mt-0.5">
+            
+<svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     width="24"
+     height="24">
+  <path fill="currentColor" fill-rule="evenodd" d="M20.322.75a10.75 10.75 0 00-7.373 2.926l-1.304 1.23A23.743 23.743 0 0010.103 6.5H5.066a1.75 1.75 0 00-1.5.85l-2.71 4.514a.75.75 0 00.49 1.12l4.571.963c.039.049.082.096.129.14L8.04 15.96l1.872 1.994c.044.047.091.09.14.129l.963 4.572a.75.75 0 001.12.488l4.514-2.709a1.75 1.75 0 00.85-1.5v-5.038a23.741 23.741 0 001.596-1.542l1.228-1.304a10.75 10.75 0 002.925-7.374V2.499A1.75 1.75 0 0021.498.75h-1.177zM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 00.121-.214v-3.822zm-10.092-2.7L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 00-.214.121l-2.167 3.612 3.223.679zm8.07-7.644a9.25 9.25 0 016.344-2.518h1.177a.25.25 0 01.25.25v1.176a9.25 9.25 0 01-2.517 6.346l-1.228 1.303a22.248 22.248 0 01-3.854 3.257l-3.288 2.192-1.743-1.858a.764.764 0 00-.034-.034l-1.859-1.744 2.193-3.29a22.248 22.248 0 013.255-3.851l1.304-1.23zM17.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-11 13c.9-.9.9-2.6 0-3.5-.9-.9-2.6-.9-3.5 0-1.209 1.209-1.445 3.901-1.49 4.743a.232.232 0 00.247.247c.842-.045 3.534-.281 4.743-1.49z">
+  </path>
+</svg>
+
+          </span>
+          <span class="text-r8-sm whitespace-nowrap">94.4K
+            runs
+          </span>
+        </div>
+
+        
+          <div class="[&>div]:flex">
+            
+            <script id="react-component-props-74dfe83d-e2d7-4051-96c0-12ec324c6630" type="application/json">{"version": {"id": "5283b7f3cdcb9dc379470fe8e3a9d63832260c2c122125d8375c0ea3efdb750e", "created_at": "2025-11-07T12:55:37.923931Z", "_extras": {"arch": "cpu", "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "x-order": 0, "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "x-order": 2, "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "x-order": 0, "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "x-order": 2, "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "x-order": 0, "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "x-order": 2, "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "x-order": 0, "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "x-order": 2, "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "x-order": 0, "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "x-order": 2, "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "x-order": 0, "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "x-order": 2, "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "x-order": 0, "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "x-order": 2, "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "disabled_for_predictions": false, "disabled_for_trainings": false, "model": {"cover_image_url": null, "description": null, "hardware": null, "latest_version": {"id": "5283b7f3cdcb9dc379470fe8e3a9d63832260c2c122125d8375c0ea3efdb750e"}, "name": "openai-sora-2-internal", "owner": "replicate", "url": "https://replicate.com/replicate/openai-sora-2-internal", "visibility": "private", "_extras": {"name": "replicate/openai-sora-2-internal", "is_official": false, "is_pipeline": false}}, "name": "replicate/openai-sora-2-internal:5283b7f3", "release_notes": null, "short_id": "5283b7f3", "url": "https://replicate.com/replicate/openai-sora-2-internal/versions/5283b7f3cdcb9dc379470fe8e3a9d63832260c2c122125d8375c0ea3efdb750e"}}, "hardware": "CPU", "billingConfig": {"current_description": null, "current_tiers": [{"criteria": [{"description": "sora-2-own-key", "subtype": "string", "title": "model variant", "type": "equals", "value": "sora-2-own-key"}], "description": "You pay OpenAI directly via your API key.", "prices": [], "title": "OpenAI (own key)"}, {"criteria": [{"description": "sora-2", "subtype": "string", "title": "model variant", "type": "equals", "value": "sora-2"}], "description": "Charged per second of generated video.", "prices": [{"description": "or 10 seconds for $1", "metric": "video_output_duration_seconds", "metric_display": "second of output video", "price": "$0.10", "title": "per second of output video", "type": "per-unit"}], "title": "Standard quality"}]}, "price": "$0.0001 per second", "p50price": "$0.014", "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/d361c5e3-dd4e-461d-9ea1-56c85643710b/Screenshot_2025-10-07_at_3.03..png", "description": "OpenAI's Flagship video generation with synced audio", "hardware": "CPU", "latest_version": {"id": "6dd6f49244af4fc3cc2de9b65ab589e85870035dba05329d21c434e9172f0143"}, "name": "sora-2", "owner": "openai", "url": "https://replicate.com/openai/sora-2", "visibility": "public", "_extras": {"name": "openai/sora-2", "is_official": true, "is_pipeline": false}}, "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false}}</script>
+
+<div data-component="ModelPricePopover"
+     data-props="react-component-props-74dfe83d-e2d7-4051-96c0-12ec324c6630">
+  
+</div>
+
+          </div>
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+    </div>
+
+    
+
+  </div>
+</div>
+
+
+</header>
+
+    
+    
+      
+        <div class="border-b border-r8-gray-6">
+          
+
+
+
+
+
+
+<div class="r8-tabs r8-tabs--bordered r8-tabs--md top-px relative flex-wrap">
+  
+    <a href="/openai/sora-2"
+       aria-selected="true"
+       class="r8-tabs__tab no-underline">
+      <span class="r8-tabs__start-icon">
+        <svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+
+</svg>
+
+      </span>
+      <span>Playground</span>
+    </a>
+  
+
+  
+    
+      <a href="/openai/sora-2/api"
+         
+         class="r8-tabs__tab no-underline">
+
+        <span class="r8-tabs__start-icon">
+          
+<svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     width="24"
+     height="24">
+  <path fill="currentColor" fill-rule="evenodd" d="M20.322.75a10.75 10.75 0 00-7.373 2.926l-1.304 1.23A23.743 23.743 0 0010.103 6.5H5.066a1.75 1.75 0 00-1.5.85l-2.71 4.514a.75.75 0 00.49 1.12l4.571.963c.039.049.082.096.129.14L8.04 15.96l1.872 1.994c.044.047.091.09.14.129l.963 4.572a.75.75 0 001.12.488l4.514-2.709a1.75 1.75 0 00.85-1.5v-5.038a23.741 23.741 0 001.596-1.542l1.228-1.304a10.75 10.75 0 002.925-7.374V2.499A1.75 1.75 0 0021.498.75h-1.177zM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 00.121-.214v-3.822zm-10.092-2.7L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 00-.214.121l-2.167 3.612 3.223.679zm8.07-7.644a9.25 9.25 0 016.344-2.518h1.177a.25.25 0 01.25.25v1.176a9.25 9.25 0 01-2.517 6.346l-1.228 1.303a22.248 22.248 0 01-3.854 3.257l-3.288 2.192-1.743-1.858a.764.764 0 00-.034-.034l-1.859-1.744 2.193-3.29a22.248 22.248 0 013.255-3.851l1.304-1.23zM17.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-11 13c.9-.9.9-2.6 0-3.5-.9-.9-2.6-.9-3.5 0-1.209 1.209-1.445 3.901-1.49 4.743a.232.232 0 00.247.247c.842-.045 3.534-.281 4.743-1.49z">
+  </path>
+</svg>
+
+        </span>
+        <span>API</span>
+      </a>
+    
+  
+
+  
+    <a href="/openai/sora-2/examples"
+       
+       class="r8-tabs__tab no-underline">
+      <span class="r8-tabs__start-icon">
+        <svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+  <polyline points="11 3 11 11 14 8 17 11 17 3"></polyline>
+</svg>
+
+      </span>
+      <span>Examples</span>
+    </a>
+  
+
+  
+
+  <a href="/openai/sora-2/readme"
+     
+     class="r8-tabs__tab no-underline">
+    <span class="r8-tabs__start-icon">
+      
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z">
+  </path>
+  <polyline points="14 2 14 8 20 8"></polyline>
+  <line x1="16" y1="13" x2="8" y2="13"></line>
+  <line x1="16" y1="17" x2="8" y2="17"></line>
+  <line x1="10" y1="9" x2="8" y2="9"></line>
+</svg>
+
+    </span>
+    <span>README</span>
+  </a>
+
+  
+    
+  
+
+  
+
+  
+
+  
+</div>
+
+        </div>
+      
+    
+
+    
+
+  
+    
+  
+
+
+  
+    <div class="model-content mt-lh">
+      
+  
+    
+
+<div class="mb-2lh">
+  
+  
+  
+    <script id="react-component-props-0ac3ad20-5a35-43cb-bffe-fb8acdf23f39" type="application/json">{"initialPrediction": {"completed_at": "2025-10-20T17:01:24.287077Z", "created_at": "2025-10-20T16:59:56.760000Z", "data_removed": false, "error": null, "id": "bh4506snv1rm80ct0a8b0a80gm", "input": {"prompt": "Bob ross in his studio painting the Replicate logo on a background of red orange yellow pink goo", "seconds": 4, "aspect_ratio": "landscape", "input_reference": "https://replicate.delivery/pbxt/Nv0Z9AJHJYls2BQ454I4ZWxPO9gXr4VaaigGeWOo4mi4L2f7/replicate-prediction-7swvy5ghpnrmc0ct0a780kb124.jpeg"}, "logs": "Model: sora-2\nGenerating 4s video with size: 1280x720\nVideo generation initiated in 1.4sec\nVideo ID: video_68f66a8e0c688191865c743cffe43c370aae0fd0278c59bf\nVideo queued... (0s, 0% complete)\nVideo queued... (2s, 0% complete)\nVideo queued... (5s, 0% complete)\nVideo queued... (8s, 0% complete)\nVideo queued... (10s, 0% complete)\nVideo queued... (13s, 0% complete)\nVideo queued... (15s, 0% complete)\nVideo queued... (18s, 0% complete)\nVideo queued... (21s, 0% complete)\nVideo in_progress... (24s, 40% complete)\nVideo in_progress... (30s, 40% complete)\nVideo in_progress... (32s, 40% complete)\nVideo in_progress... (35s, 63% complete)\nVideo in_progress... (37s, 63% complete)\nVideo in_progress... (40s, 63% complete)\nVideo in_progress... (43s, 63% complete)\nVideo in_progress... (45s, 86% complete)\nVideo in_progress... (48s, 86% complete)\nVideo in_progress... (50s, 86% complete)\nVideo in_progress... (53s, 86% complete)\nVideo in_progress... (55s, 86% complete)\nVideo in_progress... (58s, 86% complete)\nVideo in_progress... (60s, 86% complete)\nVideo in_progress... (63s, 99% complete)\nVideo in_progress... (65s, 99% complete)\nVideo in_progress... (68s, 99% complete)\nVideo in_progress... (70s, 99% complete)\nVideo in_progress... (73s, 99% complete)\nVideo in_progress... (75s, 99% complete)\nDownloaded video to /tmp/tmp95uk29hk.mp4\nVideo generated in 87.2sec\nGenerated video: 4.0s", "metrics": {"predict_time": 87.517577447, "total_time": 87.527077}, "output": "https://replicate.delivery/xezq/269LKn0Xu5LPHVjcELGzgNmIY0ujGLUAOjIXfF6gcjby5gwKA/tmp95uk29hk.mp4", "started_at": "2025-10-20T16:59:56.769500Z", "status": "succeeded", "urls": {"stream": "https://stream.replicate.com/v1/files/bcwr-kfouvr5nidc5yxyakuvhvyyx3tecfhehxrygsgkfgaf2bgp6o7na", "get": "https://api.replicate.com/v1/predictions/bh4506snv1rm80ct0a8b0a80gm", "cancel": "https://api.replicate.com/v1/predictions/bh4506snv1rm80ct0a8b0a80gm/cancel"}, "_extras": {"api_token_name": null, "created_by": {"kind": "organization", "url": "https://replicate.com/openai", "username": "openai"}, "input_files": ["https://replicate.delivery/pbxt/Nv0Z9AJHJYls2BQ454I4ZWxPO9gXr4VaaigGeWOo4mi4L2f7/replicate-prediction-7swvy5ghpnrmc0ct0a780kb124.jpeg"], "is_immutable": false, "is_shared": false, "is_waiting_for_boot": null, "may_have_sensitive_output": false, "output_files": ["https://replicate.delivery/xezq/269LKn0Xu5LPHVjcELGzgNmIY0ujGLUAOjIXfF6gcjby5gwKA/tmp95uk29hk.mp4"], "pipeline_child_predictions": [], "ran_on": {"capabilities": {"hotswap": false, "run": true, "stream": false, "train": false}, "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "hardware": {"arch": "cpu", "display_name": "CPU", "short_display_name": "CPU", "sku": "cpu"}, "has_special_pricing": true, "is_official": true, "kind": "model", "model": {"name": "sora-2", "username": "openai", "visibility": "public"}, "supports_cancelation": false, "url": "https://replicate.com/openai/sora-2"}, "source": "web", "total_child_predictions": 0}, "version": "hidden"}, "initialPredictionVersion": {"id": "5e61bfeda5a4e8437811462b677bcf237365f02b2ef4d8f2a8239be6aeddfc9d", "created_at": "2025-10-20T14:37:04.362035Z", "_extras": {"arch": "cpu", "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "disabled_for_predictions": false, "disabled_for_trainings": false, "model": {"cover_image_url": null, "description": null, "hardware": null, "latest_version": {"id": "5283b7f3cdcb9dc379470fe8e3a9d63832260c2c122125d8375c0ea3efdb750e"}, "name": "openai-sora-2-internal", "owner": "replicate", "url": "https://replicate.com/replicate/openai-sora-2-internal", "visibility": "private", "_extras": {"name": "replicate/openai-sora-2-internal", "is_official": false, "is_pipeline": false}}, "name": "replicate/openai-sora-2-internal:5e61bfed", "release_notes": null, "short_id": "5e61bfed", "url": "https://replicate.com/replicate/openai-sora-2-internal/versions/5e61bfeda5a4e8437811462b677bcf237365f02b2ef4d8f2a8239be6aeddfc9d"}}, "isAuthenticated": false, "features": {"show_pipeline_steps": false, "show_before_after_slider_output": false, "show_goo_shader_output": false, "link_to_video_upscaler": false, "link_to_image_upscaler": false, "link_to_playground": true, "link_to_audio_adder": false, "pixelate_images": false}, "permissions": {"create_example": false, "debug": false, "edit_featured_inputs": false, "report": true, "run": true, "tweak": true, "delete": false, "share": true}, "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/d361c5e3-dd4e-461d-9ea1-56c85643710b/Screenshot_2025-10-07_at_3.03..png", "description": "OpenAI's Flagship video generation with synced audio", "hardware": "CPU", "latest_version": {"id": "6dd6f49244af4fc3cc2de9b65ab589e85870035dba05329d21c434e9172f0143"}, "name": "sora-2", "owner": "openai", "url": "https://replicate.com/openai/sora-2", "visibility": "public", "_extras": {"name": "openai/sora-2", "is_official": true, "is_pipeline": false}}, "schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "x-order": 0, "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "x-order": 2, "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "x-order": 0, "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "x-order": 2, "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "x-order": 0, "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "x-order": 2, "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "x-order": 0, "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "x-order": 2, "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "x-order": 0, "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "x-order": 2, "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "x-order": 0, "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "x-order": 2, "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "A text description of the video to generate"}, "seconds": {"enum": [4, 8, 12], "type": "integer", "title": "seconds", "description": "Duration of the video in seconds", "default": 4, "x-order": 3}, "aspect_ratio": {"enum": ["portrait", "landscape"], "type": "string", "title": "aspect_ratio", "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720", "default": "portrait", "x-order": 4}, "openai_api_key": {"type": "string", "title": "Openai Api Key", "format": "password", "x-order": 0, "nullable": true, "writeOnly": true, "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.", "x-cog-secret": true}, "input_reference": {"type": "string", "title": "Input Reference", "format": "uri", "x-order": 2, "nullable": true, "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "token": "", "modelStatus": "online", "modelInputSettings": {"hidden": ["openai_api_key"]}, "requiresCredit": true, "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false}}</script>
+
+  <div data-react-placeholder="APIPlayground">
+    <div class="input-output-grid">
+  <div class="flex flex-col md:flex-row">
+    <div class="input-col relative md:flex-1 pb-4 min-w-0">
+      <div class="mb-2 flex items-center justify-between">
+        <div class="flex-1">
+          <div class="mb-4 bg-r8-gray-4 animate-pulse h-8 w-24">
+          </div>
+        </div>
+      </div>
+      <div class="h-8 bg-r8-gray-4 animate-pulse mb-6">
+      </div>
+      <div class="space-y-4">
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <div class="input-output-grid--divider flex-shrink-0 md:mx-6 mb-6 md:my-0"
+         role="separator">
+      <div class="bg-r8-gray-6 md:w-px md:h-full h-px w-full">
+      </div>
+    </div>
+    <div class="output-col md:flex-1 pb-4 min-w-0">
+      <div class="flex flex-col">
+        <div class="flex-1">
+          <div class="mb-4 bg-r8-gray-4 animate-pulse h-8 w-24">
+          </div>
+        </div>
+        <div class="h-8 bg-r8-gray-4 animate-pulse mb-6">
+        </div>
+        <div class="aspect-square bg-r8-gray-4 animate-pulse">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+<div data-component="APIPlayground"
+     data-props="react-component-props-0ac3ad20-5a35-43cb-bffe-fb8acdf23f39">
+  
+</div>
+
+  
+</div>
+
+    
+
+
+
+  
+  
+  
+    <div class="pb-2 border-b border-r8-gray-5 mb-lh flex">
+      <h2 class="inline-block flex-grow text-r8-2xl">
+        Examples
+      </h2>
+
+      <p>
+        <a href="/openai/sora-2/examples"
+           class="no-default">
+          View more <span class="hidden sm:inline">examples</span><span class="relative -top-0.5">
+          
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <line x1="7" y1="17" x2="17" y2="7"></line>
+  <polyline points="7 7 17 7 17 17"></polyline>
+</svg>
+
+        </span></a>
+      </p>
+    </div>
+
+    <div class="mb-2lh h-40 overflow-hidden ">
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/openai/sora-2/examples#5j8wwmwmz9rme0ct07g9kz6gcw">
+
+              
+                <video data-src="https://replicate.delivery/xezq/rf7jDpzBdvVoUCKMV5eavWwKmrtzbiX5YJ4jMdiCXH1if9BrA/tmpot52l9ao.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/openai/sora-2/examples#bh4506snv1rm80ct0a8b0a80gm">
+
+              
+                <video data-src="https://replicate.delivery/xezq/269LKn0Xu5LPHVjcELGzgNmIY0ujGLUAOjIXfF6gcjby5gwKA/tmp95uk29hk.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+    </div>
+  
+
+
+
+
+    
+      
+
+<section id="pricing"
+         class="mb-2lh">
+
+  <script id="react-component-props-67df2bb1-011d-4f66-95f1-172ddef0ecba" type="application/json">{"billingConfig": {"current_description": null, "current_tiers": [{"criteria": [{"description": "sora-2-own-key", "subtype": "string", "title": "model variant", "type": "equals", "value": "sora-2-own-key"}], "description": "You pay OpenAI directly via your API key.", "prices": [], "title": "OpenAI (own key)"}, {"criteria": [{"description": "sora-2", "subtype": "string", "title": "model variant", "type": "equals", "value": "sora-2"}], "description": "Charged per second of generated video.", "prices": [{"description": "or 10 seconds for $1", "metric": "video_output_duration_seconds", "metric_display": "second of output video", "price": "$0.10", "title": "per second of output video", "type": "per-unit"}], "title": "Standard quality"}]}, "modelName": "openai/sora-2", "showTable": false, "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false}}</script>
+
+<div data-component="ModelBilling"
+     data-props="react-component-props-67df2bb1-011d-4f66-95f1-172ddef0ecba">
+  
+</div>
+
+</section>
+
+    
+
+    
+
+<article class="mb-2lh">
+  
+    <div id="readme"
+         class="border-b border-r8-gray-5 pb-2 mb-lh flex items-center gap-2">
+      <h2 class="inline-block text-r8-2xl">
+        Readme
+      </h2>
+      
+    </div>
+  
+  
+    <div class="readme-prose max-w-4xl">
+      <h1 id="sora-2">Sora 2</h1>
+<p>Sora 2 is OpenAI’s flagship video and audio generation model that creates richly detailed, dynamic video clips with synchronized audio from natural language prompts or images.</p>
+<p>For higher quality outputs, see <a href="https://replicate.com/openai/sora-2-pro" rel="nofollow ugc">openai/sora-2-pro</a>.</p>
+<h2 id="about-the-model">About the model</h2>
+<p>Sora 2 represents a major advancement in AI video generation, offering significantly improved physics simulation, realism, and controllability compared to previous systems. The model can generate videos with synchronized dialogue, sound effects, and background audio, making it ideal for creating cinematic content across multiple styles including realistic, cinematic, and anime aesthetics.</p>
+<h3 id="key-capabilities">Key capabilities</h3>
+<p><strong>Advanced physics simulation</strong>: Sora 2 understands real-world physics including gravity, momentum, buoyancy, and object permanence. When a basketball misses a shot, it bounces realistically off the backboard rather than teleporting into the hoop. Objects move and interact naturally with their environment.</p>
+<p><strong>Synchronized audio generation</strong>: The model creates sophisticated background soundscapes, dialogue, and sound effects with a high degree of realism. Audio is generated alongside visuals and properly synchronized with on-screen action, including accurate lip-sync for speaking characters.</p>
+<p><strong>Multi-shot sequences</strong>: Sora 2 can follow intricate instructions spanning multiple shots while accurately persisting world state. This allows for cohesive storytelling with consistent characters, environments, and lighting across scene transitions.</p>
+<p><strong>Style versatility</strong>: The model excels at generating content in various aesthetic styles, from photorealistic footage to stylized animations. It can produce realistic cinematography, anime-style sequences, and everything in between.</p>
+<p><strong>Controllability</strong>: Sora 2 offers fine-grained control over camera movements, framing, lighting, and composition. You can specify detailed shot instructions including camera angles, movements, and transitions.</p>
+<h2 id="use-cases">Use cases</h2>
+<p><strong>Marketing and advertising</strong>: Create compelling product demonstrations, branded campaign assets, and promotional videos with professional-quality visuals and synchronized audio.</p>
+<p><strong>Content creation</strong>: Generate eye-catching videos for social media platforms including TikTok, Instagram Reels, and YouTube Shorts with cinematic quality output.</p>
+<p><strong>Previsualization and prototyping</strong>: Quickly mockup scenes, test concepts, and create storyboards for creative projects without the need for expensive production setups.</p>
+<p><strong>Educational content</strong>: Transform complex concepts into engaging visual explanations with accurate physics simulation and clear narration.</p>
+<p><strong>Creative projects</strong>: Bring artistic visions to life with the ability to generate custom animations, stylized sequences, and imaginative scenarios.</p>
+<h2 id="input-specifications">Input specifications</h2>
+<p><strong>Text prompts</strong>: Describe your desired video using natural language. For best results, include specific details about:
+- Subject and action
+- Camera framing and movement (e.g., “wide shot,” “dolly in,” “pan left”)
+- Lighting and atmosphere (e.g., “warm morning light,” “dramatic shadows”)
+- Style and aesthetic (e.g., “cinematic,” “Studio Ghibli style,” “16mm film”)
+- Audio elements (e.g., “ambient forest sounds,” “dialogue”)</p>
+<p><strong>Images (optional)</strong>: Provide reference images to guide the visual style, composition, or serve as the starting frame for image-to-video generation.</p>
+<p><strong>Duration</strong>: Specify video length in seconds. Sora 2 typically generates clips ranging from 4 to 12 seconds.</p>
+<p><strong>Resolution</strong>: Choose from available resolution options including 720p and 1080p (depending on model tier).</p>
+<p><strong>Aspect ratio</strong>: Select portrait (9:16) or landscape (16:9) formats to match your intended platform.</p>
+<h2 id="output">Output</h2>
+<p>The model generates MP4 video files with synchronized audio, including:
+- High-quality video with consistent motion and physics
+- Synchronized dialogue, sound effects, and ambient audio
+- Embedded audio track matching the visual content
+- Watermarking and provenance metadata for responsible AI use</p>
+<h2 id="tips-for-best-results">Tips for best results</h2>
+<p><strong>Be specific and detailed</strong>: Instead of “a cat playing,” describe “an orange tabby cat knocking over a ceramic mug on a wooden table, with the sound of ceramic breaking, in warm kitchen lighting.”</p>
+<p><strong>Describe audio explicitly</strong>: While Sora 2 generates audio automatically, mentioning specific sounds (“steam hissing,” “footsteps crunching on gravel”) improves accuracy.</p>
+<p><strong>Structure multi-shot prompts</strong>: For sequences with multiple shots, clearly delineate each shot with timing and transitions. Example: “Shot 1 (0-4s): wide establishing shot. Shot 2 (4-8s): cut to close-up.”</p>
+<p><strong>Specify camera movement</strong>: Include cinematic terminology like “dolly in,” “pan right,” “handheld camera,” or “static shot” for precise control over cinematography.</p>
+<p><strong>Set the aesthetic early</strong>: Establish the overall style at the beginning of your prompt (e.g., “cinematic IMAX-scale scene” or “1970s film grain”) so the model applies it consistently.</p>
+<p><strong>Keep it concise for first attempts</strong>: Shorter videos (4-8 seconds) tend to produce more consistent results. You can stitch multiple clips together in post-production for longer sequences.</p>
+<p><strong>Consider physics constraints</strong>: The model works best with physically plausible scenarios. While it can handle creative concepts, grounding action in realistic motion yields better results.</p>
+<h2 id="limitations">Limitations</h2>
+<p>While Sora 2 represents a significant advancement, the model has some limitations:</p>
+<ul>
+<li>Physics simulation is improved but not perfect; occasional artifacts may appear</li>
+<li>Generation time can take several minutes depending on complexity and server load</li>
+<li>Temporal consistency improves with shorter clips</li>
+<li>Some complex interactions or highly specific scenarios may not render exactly as described</li>
+<li>The model may struggle with very detailed text rendering or small intricate patterns</li>
+</ul>
+<h2 id="verification-and-billing">Verification and billing</h2>
+<p><strong>Organization verification</strong>: If you encounter the error “your organization must be verified to use the model,” visit <a href="https://platform.openai.com/settings/organization/general" rel="nofollow ugc">platform.openai.com/settings/organization/general</a> and click “Verify Organization.” Access may take up to 15 minutes to propagate after verification.</p>
+<p><strong>Billing</strong>: When using your own OpenAI API key, you are billed directly by OpenAI for generation costs. Refer to <a href="https://platform.openai.com/docs/models/sora-2" rel="nofollow ugc">OpenAI’s API pricing documentation</a> for current rates.</p>
+<h2 id="responsible-ai-use">Responsible AI use</h2>
+<p>Sora 2 includes built-in safety measures including content moderation, watermarking, and provenance metadata. Always ensure you have appropriate rights and permissions for any reference images or likeness content you provide to the model.</p>
+<h2 id="learn-more">Learn more</h2>
+<p>For detailed API documentation and technical specifications, visit <a href="https://platform.openai.com/docs/models/sora-2" rel="nofollow ugc">OpenAI’s Sora 2 documentation</a>.</p>
+<hr/>
+<p><strong>Try the model yourself on the <a href="https://replicate.com/google/nano-banana" rel="nofollow ugc">Replicate Playground</a></strong> to explore its capabilities and see how it can enhance your creative workflow.</p>
+    </div>
+  
+</article>
+
+    
+
+
+
+
+    <script id="react-component-props-fef772bf-2f53-41e7-8775-b914ef133d00" type="application/json">{"name": "openai/sora-2", "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false}}</script>
+
+<div data-component="RelatedModels"
+     data-props="react-component-props-fef772bf-2f53-41e7-8775-b914ef133d00">
+  
+</div>
+
+  </div>
+
+
+    </div>
+  
+
+  <div class="model-content mt-2lh">
+    
+
+
+
+  </div>
+
+
+
+          
+        
+      </main>
+
+      
+        
+
+<div class="footer no-focus">
+  <script id="react-component-props-f82409ea-09d1-4811-92cd-0e2547e672a4" type="application/json">{"theme": "", "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false}}</script>
+
+<div data-component="Footer"
+     data-props="react-component-props-f82409ea-09d1-4811-92cd-0e2547e672a4">
+  
+</div>
+
+</div>
+
+      
+
+    
+
+    <script nonce="lMo6HPR1jSLE+ofeGC1/zw==">
+      window.VIDEOJS_NO_DYNAMIC_STYLE = true;
+    </script>
+
+    <script nonce="lMo6HPR1jSLE+ofeGC1/zw==">
+      const header = document.getElementById("app-header");
+
+      function monitorHeaderStickiness() {
+        if (header) {
+          header.setAttribute("data-stuck", window.scrollY > 0);
+        }
+      }
+
+      monitorHeaderStickiness();
+
+      document.addEventListener("scroll", (event) => {
+        monitorHeaderStickiness();
+      });
+
+      // Prevent mousewheel from being able to change the value of a numeric input.
+      // This "feature" often causes issues when users scroll from a focused input field
+      // to the submit button and accidentally increment the contents of the field.
+      document.addEventListener("wheel", (event) => {
+        if (document.activeElement && document.activeElement.matches('input[type=number]') && document.activeElement === event.target) {
+          event.preventDefault();
+        }
+      }, {
+        passive: false
+      });
+    </script>
+
+    
+    
+    
+
+  </body>
+
+</html>

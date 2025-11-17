@@ -1,0 +1,219 @@
+# Specific Text-to-Video Models from Replicate
+# Total models: 22
+# Generated: 2025-11-17T09:37:36.794Z
+
+---
+
+1. **openai/sora-2-pro**
+   URL: https://replicate.com/openai/sora-2-pro
+   Pricing: $0.0001/sec
+   Example Videos: 2 video(s)
+      1. https://replicate.delivery/xezq/6AV71MwvhV7nINq376qBf27eo7k3KMBZtrM9KhejLz8uhfDWB/tmpkoheyvn2.mp4
+      2. https://replicate.delivery/xezq/TjiHWxnCNgp2O5sJJJ7QjcVRQQUmg6WdoqOUuVuO3huwZiYF/tmp72b74bmb.mp4
+
+2. **openai/sora-2**
+   URL: https://replicate.com/openai/sora-2
+   Pricing: $0.0001/sec
+   Example Videos: 3 video(s)
+      1. https://replicate.delivery/xezq/rf7jDpzBdvVoUCKMV5eavWwKmrtzbiX5YJ4jMdiCXH1if9BrA/tmpot52l9ao.mp4
+      2. https://replicate.delivery/xezq/269LKn0Xu5LPHVjcELGzgNmIY0ujGLUAOjIXfF6gcjby5gwKA/tmp95uk29hk.mp4
+      3. https://replicate.delivery/pbxt/Nv0Z9AJHJYls2BQ454I4ZWxPO9gXr4VaaigGeWOo4mi4L2f7/replicate-prediction-7swvy5ghpnrmc0ct0a780kb124.jpeg
+
+3. **google/veo-3.1**
+   URL: https://replicate.com/google/veo-3.1
+   Pricing: $0.0001/sec
+   Example Videos: 6 video(s)
+      1. https://replicate.delivery/xezq/WoC3evx2EQQHLCHq9vEfjhIq9ZotfQhQWmBEd54iLhvVUleVB/tmpk07h98l4.mp4
+      2. https://replicate.delivery/xezq/MDBpHsfnFuS2TiCNuXM0QGghQ83rAuHikI5x9heoWs2mqTfqA/tmp62g_gnbr.mp4
+      3. https://replicate.delivery/xezq/69ok3gifKESec04GfPMaTU2YShWMSL37elrN7dQ3QJmeD56rC/tmpvruiwe2d.mp4
+      4. https://replicate.delivery/xezq/hpxa0wn2og7aIRife9Xlvu0OGeS1qaz45bl43foW3rL58t9VB/tmpgnyhwssx.mp4
+      5. https://replicate.delivery/pbxt/Nt8bL90QO5In3RDkC82HtqeXqNdITglTVpaicTgrdT8mtjiW/0_1.webp
+      6. https://replicate.delivery/pbxt/Nt8bLbk1uz4EIMWhIQ0DyjO8BGJYYeAgQWgEnFUWNMOGEpbU/Screenshot%202025-08-26%20at%205.30.12%E2%80%AFPM.png
+
+4. **google/veo-3.1-fast**
+   URL: https://replicate.com/google/veo-3.1-fast
+   Pricing: $0.0001/sec
+   Example Videos: 6 video(s)
+      1. https://replicate.delivery/xezq/aOYeXeCcnHhDiELUfr7GJR0IkfcGabYRUWiTShhvdJCTEQ9VB/tmpafbwmta5.mp4
+      2. https://replicate.delivery/xezq/1B4tYHYfzWzDA6QU9CEDxkCnStf8YeysV0TlfnKktgG3la9VB/tmpyxaslbuk.mp4
+      3. https://replicate.delivery/xezq/Z3Ix0cUxzkqcL18AfbOu0B5pXJFfsqfscQQzenO288McMb9VB/tmp2vogi5sn.mp4
+      4. https://replicate.delivery/xezq/8ZOMlNOoESqDDZXc9SwJNselA7lTLS1MBx3HgSx0lTzwhrvKA/tmpyid0s5l4.mp4
+      5. https://replicate.delivery/pbxt/NtDCMBJNIQTOU0mZtlnlrqrPLgYvTvpCISbFIiweYPsotGY5/replicate-prediction-gn4tnddn5drme0csx1yt3jvy4c.jpeg
+      6. https://replicate.delivery/pbxt/NtDCLnwTQaPfLhgaNDmLevN8QivDFS8V91M8pCwEpDNIN9uA/replicate-prediction-8m82ekaj7hrma0csx1xrkmqjhm.jpeg
+
+5. **google/veo-3**
+   URL: https://replicate.com/google/veo-3
+   Pricing: $0.0001/sec
+   Example Videos: 6 video(s)
+      1. https://replicate.delivery/xezq/xfz0U06bqSw1AyiJsw7LjOjVXOBpmjJfe7K9XtRLifW26q7SB/tmpi29yh_f0.mp4
+      2. https://replicate.delivery/xezq/Hlc4n4H0hJYsARpeGdaOLCdaWLyRUyaWNqsg5vosHdnvJgXKA/tmpsz1voe2j.mp4
+      3. https://replicate.delivery/xezq/IZvJUH7VaYo9BBq9lhMjAHXCz1WJUuOWyXx2fFGcKXcrlaYKA/tmpxsomu815.mp4
+      4. https://replicate.delivery/xezq/lZfr3rskBEVLDCytear4lUo92fOpAcoblFWzk6e06WEnC3PTB/tmpny051d_c.mp4
+      5. https://replicate.delivery/xezq/mryc62SvSpp3NpOedDNQD7njZlmd5re5e8ClPltdEwWF7BopA/tmp7uoz8hjv.mp4
+      6. https://replicate.delivery/xezq/ZdvQyoLLXgKNKtgU8Kdy5HBdIDaHVTl4Iws4zufK38e4WrGVA/tmpov6h3v3s.mp4
+
+6. **wan-video/wan-2.5-t2v-fast**
+   URL: https://replicate.com/wan-video/wan-2.5-t2v-fast
+   Pricing: $0.0001/sec
+   Example Videos: 1 video(s)
+      1. https://replicate.delivery/xezq/G2SgiLJaDrYpGJnBezzhrqwdA7Z6cO4PHUKrkBbuFaaZwPsKA/tmpmb4xgltj.mp4
+
+7. **bytedance/seedance-1-lite**
+   URL: https://replicate.com/bytedance/seedance-1-lite
+   Pricing: $0.0001/sec
+   Example Videos: 4 video(s)
+      1. https://replicate.delivery/xezq/L4f180LhnhSCHihiHQ1vX7ZfEG7XOK2WCKNlGGd81xGr7v4UA/tmpeywvj5rm.mp4
+      2. https://replicate.delivery/xezq/TdE8PqxZMNKOABO3KIok1RVXuXxEBDJcDrWI9ewQhMAeDw4UA/tmpt6y3sy01.mp4
+      3. https://replicate.delivery/xezq/BxhvfwlsVtXnByBxMw7lxS2hSPVZJ1Uc6urvVtQqx0eXIw4UA/tmpjj2pfqsg.mp4
+      4. https://replicate.delivery/xezq/ucdza5hh5hJlA92SgLwAen9EQiSxXmuJj38FrvJdvxfnfR9pA/tmplwb84b03.mp4
+
+8. **wan-video/wan-2.5-i2v**
+   URL: https://replicate.com/wan-video/wan-2.5-i2v
+   Pricing: $0.0001/sec
+   Example Videos: 5 video(s)
+      1. https://replicate.delivery/xezq/KUdYQBcySHanKZzAiCcz7DRqCZ59QLp6zKUvkzUBDPUueMsKA/tmpyol7xiil.mp4
+      2. https://replicate.delivery/xezq/P33ke99FZTTWDKYainJQXizgxr7NxAMBYlK4QemCm0dsigYVA/tmp1l37lz4s.mp4
+      3. https://replicate.delivery/xezq/nQec5ARx2fnWXE5dRUNwHizbSZ9uH5IXeZSsqF27M7XQWBxqA/tmpho4736hc.mp4
+      4. https://replicate.delivery/xezq/AdX9KfAKEs1qMidbHzseSmefdOtfIEBg9HrulHeCf6tRzYQsKA/tmpvphmgf3e.mp4
+      5. https://replicate.delivery/pbxt/NliewIc4bFNWJIfiDSRMzvozuAl3dLwIx1fldasrYoXpME3g/image.png
+
+9. **google/veo-3-fast**
+   URL: https://replicate.com/google/veo-3-fast
+   Pricing: $0.0001/sec
+   Example Videos: 6 video(s)
+      1. https://replicate.delivery/xezq/iY9PbAFJN2LJOBx1imI08Bhz4lJX1ZHBf5WakE1JGNtfKHfpA/tmp8ai_03z8.mp4
+      2. https://replicate.delivery/xezq/VleZE1vtsJyLfUxuKcYzsngzUUFrgeeLlqsQdnLdG7sFNd8TB/tmpva5kimdq.mp4
+      3. https://replicate.delivery/xezq/ecejocRJQkkUGUPfWnMf7AIAIlraKuSCd2bdkoeLdqflj1xPF/tmphuw78wy3.mp4
+      4. https://replicate.delivery/xezq/xKos9IcrsrqrId3eA5bVZxD5m5jWRednYoECfsSaqASM9OeTB/tmpqa0xpc63.mp4
+      5. https://replicate.delivery/xezq/l8u0QcK58uIQF5IUyYRQeMi0eAjISqU01o6XvY6PWqmEcrGVA/tmp9pdz1bfu.mp4
+      6. https://replicate.delivery/pbxt/NSdAcsNDeUPlnK7X5Kpc2O8ZG7wHuqCVbxI8dtUhApopzOK9/Screenshot%202025-08-01%20at%201.17.27%E2%80%AFPM.png
+
+10. **minimax/hailuo-2.3-fast**
+   URL: https://replicate.com/minimax/hailuo-2.3-fast
+   Pricing: $0.0001/sec
+   Example Videos: 5 video(s)
+      1. https://replicate.delivery/xezq/NohwkQMfXYWKAS5QciHGFng9b9H0wVEbvol7WJAEmkN8MixKA/tmp5hxzqzw4.mp4
+      2. https://replicate.delivery/xezq/xMBu3hve9jUTUyeijFeZNPBWT9sAxaQ0shKrsxltREUHdgGrA/tmp5teqjfsk.mp4
+      3. https://replicate.delivery/xezq/OH4Ubefa0NiZwUneg3eS0LqcPYtNmxVJlSsZMFl6JpvFu4NWB/tmp6hdm26gd.mp4
+      4. https://replicate.delivery/xezq/fXRgtIXwL2RfiEnoeaIZKfgVee8q8FUFqHxlcLCtrPonAl3YF/tmplcgybmlt.mp4
+      5. https://replicate.delivery/pbxt/NxCp7nByNL7VN8Kh51UHXftguHvGd56CLAJeM3jMJf7ZQOmK/replicate-prediction-9rhzeppdfnrmc0cswyfrm1a1am.jpeg
+
+11. **bytedance/seedance-1-pro**
+   URL: https://replicate.com/bytedance/seedance-1-pro
+   Pricing: $0.0001/sec
+   Example Videos: 2 video(s)
+      1. https://replicate.delivery/xezq/ClgDLn4vlLosCtQeNCBMfAFxFefS9CwjWr6XkppFrQ2saYoTB/tmp4csnp1gw.mp4
+      2. https://replicate.delivery/xezq/DfgnKlBwYW38OSSOyeeJ2seBqpDLjX1e7FxJxXFpahkDfhhOF/tmp0ht3v7vp.mp4
+
+12. **minimax/hailuo-02**
+   URL: https://replicate.com/minimax/hailuo-02
+   Pricing: $0.0001/sec
+   Example Videos: 7 video(s)
+      1. https://replicate.delivery/xezq/NLybk0ySU6qKANmOJ5xzKJx28Q8x5rk4PZey7eeoC7qiIg5pA/tmpbufkswx1.mp4
+      2. https://replicate.delivery/xezq/yAfwoReEDZl39EeInfkM7nufcc7eeAkB02POD28SGYX7wFYeUA/tmpjeapk4og.mp4
+      3. https://replicate.delivery/xezq/CSPm6I9uOR45JFzXKX6wQKXaEUKE08x4wl0MhGoSDgWEDMPF/tmpeahvppel.mp4
+      4. https://replicate.delivery/xezq/fjGfQQVNPvjCeJCp2eXRMqzdwBUxKmB4hQcQyBTpVH1NAKzTB/tmpm5vefpnt.mp4
+      5. https://replicate.delivery/xezq/LEuAxRIjDJKtEBtjJqz7fys54ONyDRUAK3jNxNwCEkKAdZeUA/tmpy89a70ke.mp4
+      6. https://replicate.delivery/xezq/eRwX7pg1AIUjFC148S2JpVn2hWS5r9dULdxm15dOMfxd54GVA/tmpou9td0s5.mp4
+      7. https://replicate.delivery/xezq/RrB0vIXdP7YMHx6NJqV9plIbwJ85Rktes9R26txTnjIjCMoKA/tmpoo4_l9xh.mp4
+
+13. **kwaivgi/kling-v2.1-master**
+   URL: https://replicate.com/kwaivgi/kling-v2.1-master
+   Pricing: $0.0001/sec
+   Example Videos: 4 video(s)
+      1. https://replicate.delivery/xezq/9uK7fv8Ahn3Kbam2dLehxXjxzsFiedPdWG086eeBRPdDZLEnC/tmp_07jswu0.mp4
+      2. https://replicate.delivery/xezq/XYrfXEU8EJQjDqcHG7Pt6fDlIKQWyleZuRV58eEtX3IxaGiTB/tmpunco8ebh.mp4
+      3. https://replicate.delivery/xezq/eOagYC8PA4zYRajq2EjDbTtO7120oD4AHFAlmhC3NFlLHRcKA/tmp5bp3oxgh.mp4
+      4. https://replicate.delivery/xezq/D0S2kFge6F1KXahOjV77ifxqLb5PFp8y1vHayeCZhgJgmJxpA/tmpooyiogo4.mp4
+
+14. **wan-video/wan-2.2-t2v-fast**
+   URL: https://replicate.com/wan-video/wan-2.2-t2v-fast
+   Pricing: $0.001525/sec
+   Example Videos: 4 video(s)
+      1. https://replicate.delivery/xezq/fLIizBaYWBWwBKFAL7JRKQsfmqSeHfI5fQH8RitXfQ7w65eiKA/output.mp4
+      2. https://replicate.delivery/xezq/PNTe7b9VBLxFPKB35GDhzrMYaph7WKspkexwtxeRPxJqfuXUB/output.mp4
+      3. https://replicate.delivery/xezq/j71Ii2YrWfRpGilHFUkqMSPhrV9rPu0ee4EiSV1H7CD3PhvqA/output_30fps.mp4
+      4. https://replicate.delivery/xezq/FxmknjDK8SqlBRoWWFnfxsOMwnuUMnpj1w6joZljM3D6m4iKA/output.mp4
+
+15. **pixverse/pixverse-v5**
+   URL: https://replicate.com/pixverse/pixverse-v5
+   Pricing: $0.0001/sec
+   Example Videos: 3 video(s)
+      1. https://replicate.delivery/xezq/cGWRn81blVZGKFocNncx5MHgLtvho90zLaTn3gtQpySLxzTF/tmppcyih9pj.mp4
+      2. https://replicate.delivery/xezq/ljc6TxrXY1bOLhvnbL3ukFK6T2161ptYcIgLyiFXReNCknnKA/tmp3s3i7nns.mp4
+      3. https://replicate.delivery/xezq/ZpcwMRwOww7iKJ6f7Tqv9XxXDS9liCOQokaIDbUFwIF7lnnKA/tmp2sgncxf1.mp4
+
+16. **kwaivgi/kling-v2.5-turbo-pro**
+   URL: https://replicate.com/kwaivgi/kling-v2.5-turbo-pro
+   Pricing: $0.0001/sec
+   Example Videos: 5 video(s)
+      1. https://replicate.delivery/xezq/17c3JG1SzH6NCduMiKp1Cxyqvpad0GXRf507Pqq5GOqNsZsKA/tmpg4w3kyjz.mp4
+      2. https://replicate.delivery/xezq/ssJoLMbvdLIgIRdWaDY26XEmUJmQfH1Af6He1Z2XHLtqIoxqA/tmpp3vqjumh.mp4
+      3. https://replicate.delivery/xezq/Fez1ZQegP1tyC0f18Qr1WyVpVeGWEYS0GPemdGCI9ayvDhGrC/tmp4s6vgmpf.mp4
+      4. https://replicate.delivery/xezq/EnlmUfQrjDTzGaMakDffU94SfsNnrSIcGdK9AlRGi0uDBRjVB/tmptifj8gul.mp4
+      5. https://replicate.delivery/xezq/Lzq3zWbgAH7vCRFyf7xef9AEqfNOK1fYk2ZJfprfEdHaZUasKA/tmpmpzrg66r.mp4
+
+17. **runwayml/gen4-image-turbo**
+   URL: https://replicate.com/runwayml/gen4-image-turbo
+   Pricing: $0.0001/sec
+   Example Videos: 5 video(s)
+      1. https://replicate.delivery/pbxt/NW3jTsbeAGmmIdOvQ5Ks2Dh6wAWAwBj9FLup7GmkmKZIzVp7/w99em95b01rmc0cqrny8chf49w-1.jpg
+      2. https://replicate.delivery/pbxt/NW3jTS88toyUUsCurdKfDgWVfXLXWmBsGbbG6jipbMFgpyT2/psjdbkzgm1rmc0cqrnysbg93cm.jpg
+      3. https://replicate.delivery/xezq/mV82397wvrIxDlCV0AMe3v6MSoRh4xEa8a0eSDr7ipH0q3JVA/tmpuwbggnyb.png
+      4. https://replicate.delivery/xezq/2ytMtPEXUvbQMZtC05fIBqLKKr9v1xsytHdRvdUCJ7wHn7kKA/tmpwvlg9o02.png
+      5. https://replicate.delivery/xezq/G4dft9DpvzS9bKYfyCEvmn1V3GDfUKx4bUrktcr4NCj1ecnUB/tmpv98md6c7.png
+
+18. **lightricks/ltx-2-fast**
+   URL: https://replicate.com/lightricks/ltx-2-fast
+   Pricing: $0.0001/sec
+   Example Videos: 9 video(s)
+      1. https://replicate.delivery/xezq/VUdJthWRZxJMOdVL2lBFR1K9J2nLUUjngDiyagPbjAejvehVA/tmplkv0_7wi.mp4
+      2. https://replicate.delivery/xezq/OZDRKjW01V54BNhZll1lo9CVPIU2pbD8yGGSvFRy1MAAmfwKA/tmpoahhx6gd.mp4
+      3. https://replicate.delivery/xezq/zsD7zCTyuL7eW68mhR2To8DZoS4OT2BQd2oXP3ZOK1U0MfhVA/tmp8un0w8yy.mp4
+      4. https://replicate.delivery/xezq/ZuMzPe5GtOxtVK59EO2a4F8hDrDESMTPUshVB86dffS538DrA/tmp55nt3l_c.mp4
+      5. https://replicate.delivery/xezq/qZJqNQUGOQZBL11GKYyMf6j9zebygo2QxsbmGztcezBQ48DrA/tmpycq8b_l0.mp4
+      6. https://replicate.delivery/xezq/C5lKtwHSBloDJB5LmasPpsRZdVUgqTnwdK2BjASYOe4rRfhVA/tmp69__x443.mp4
+      7. https://replicate.delivery/xezq/Xe3HUYeQMIlJzEmRW2RFdH6Vifeg8Z1PkAmhlc5eS0pqrLQsC/tmpzqz2e09l.mp4
+      8. https://replicate.delivery/xezq/FvR9AwLdbzIKNRQ0y2pwEDf0BgF0Ez1sQE8eZteW1J7XcfGWB/tmpan00ukuq.mp4
+      9. https://replicate.delivery/pbxt/Nvp4bHMZRVeafvUBJKIfzlqkqRjLl8Fyn3JMuWUlUWEVhzuT/replicate-prediction-pwnbqza6f9rm80ct1sgtfgvwdr.png
+
+19. **leonardoai/motion-2.0**
+   URL: https://replicate.com/leonardoai/motion-2.0
+   Pricing: $0.0001/sec
+   Example Videos: 2 video(s)
+      1. https://replicate.delivery/xezq/ONOR9TevnKSldi2E5yObpoByieYhuGDePh1Fl0DA0tiOoWipA/tmpwfxoip00.mp4
+      2. https://replicate.delivery/xezq/Up5cK7j9ZgJALVZjTvCfQeDWibaoABcjh6qfGlzyXLEwoWipA/tmps5gv28ej.mp4
+
+20. **lightricks/ltx-2-pro**
+   URL: https://replicate.com/lightricks/ltx-2-pro
+   Pricing: $0.0001/sec
+   Example Videos: 7 video(s)
+      1. https://replicate.delivery/xezq/M8krcmsXwRrSK1DuufUjOpLjfHs9KGF7zgespA2hugJ1V7DrA/tmpc_m94ikd.mp4
+      2. https://replicate.delivery/xezq/GPXMuvvmsJp9P5zhA8iXvkFVETpel5tiMdhtUhWjsBD8RfhVA/tmp3_rwznmf.mp4
+      3. https://replicate.delivery/xezq/SKUPcbemc2VNE6B3ykiKKIYn3w7S3BQaMg4YIf4kN0zHoeDrA/tmpjk5lvmjy.mp4
+      4. https://replicate.delivery/xezq/FN4X6kFZhRKEMJNH8pDa1mtg3kcGdfDrINIg38FCqalbWfhVA/tmp3q56smse.mp4
+      5. https://replicate.delivery/xezq/10DE4e0psL1EBiQqZA9rc7JdCBmdGKpc0NoeaJLfzuRic9DrA/tmpaxus5iln.mp4
+      6. https://replicate.delivery/xezq/OdK1NDj7x6rwNdfLRGCHzrz3OS20dbBlW6dGI73Y09eYzeDrA/tmpujshdc0p.mp4
+      7. https://replicate.delivery/pbxt/NvqakTNQAu10qQBXiS00K2Z4pDgWafgrVrZjsFU5ipAEBqp5/replicate-prediction-hq3n9jetmxrmc0ct1sj9k38jpg.png
+
+21. **character-ai/ovi-i2v**
+   URL: https://replicate.com/character-ai/ovi-i2v
+   Pricing: $0.001525/sec
+   Example Videos: 6 video(s)
+      1. https://replicate.delivery/xezq/7spwly6repRhAqQZw5FbNGkexFMxLIdJ83r0Q11sJ2Tw0acVA/output.mp4
+      2. https://replicate.delivery/xezq/IgZWgrUkXsL3Ihf7ftHhOiaeE9K8Hcv6e7H1jLxOPYXVdrxVB/output.mp4
+      3. https://replicate.delivery/xezq/vMy749nMtroXLVHYAfNTKXEruMVcCyEZSYockVN7j0yTcNuKA/output.mp4
+      4. https://replicate.delivery/xezq/4ZbQqkJIuuLtCpMMz2Sfj0uFFytvCm562B1WZiPftamgwycVA/output.mp4
+      5. https://replicate.delivery/xezq/oUGT0YvX1tqoGFPvBukW4DFSXvJEptXX8U6Kt36jkhaBrFXF/output.mp4
+      6. https://replicate.delivery/pbxt/Nq2nAZ74W84SJcREj08DJryQe6JZpBG0cp2FDJYvrLJqA4pk/podcast.png
+
+22. **luma/ray-2-720p**
+   URL: https://replicate.com/luma/ray-2-720p
+   Pricing: $0.0001/sec
+   Example Videos: 5 video(s)
+      1. https://replicate.delivery/czjl/QAYtRuTghFrPH1qgCx3C0a8WrQggBsGJ0yCCZLsSVuye8pEKA/tmpkq6t05vs.mp4
+      2. https://replicate.delivery/czjl/DPQLyUb0KH6eKafJafajZJMYUkdK5NFpLrzHNKqE1Jv1MoSoA/tmp501exz8a.mp4
+      3. https://replicate.delivery/czjl/qQJQ3L2pDgIaPBET4YjZergziQu776uXRJnllTJCOSynDqEKA/tmpmxs3uoat.mp4
+      4. https://replicate.delivery/czjl/DW5uByT9o5K3EpK4aryN5lT0Le8o9wMrDdElpxYtx3FiFqEKA/tmp850eff5d.mp4
+      5. https://replicate.delivery/czjl/Q6jWYYtvlAauJlWqS5oYvzaWZrBERcXTXb9Evyp3yH1sCVCF/tmpn8nwwjak.mp4
+

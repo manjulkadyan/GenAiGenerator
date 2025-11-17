@@ -1,0 +1,1235 @@
+
+
+<!DOCTYPE html>
+<html lang="en"
+      class="">
+
+  <head>
+    <meta charset="utf-8" />
+    <title>
+      
+  
+    ali-vilab/i2vgen-xl | Run with an API on Replicate
+  
+
+    </title>
+
+    
+      
+      <meta name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+
+    <link id="favicon-ico"
+          rel="icon"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/favicon.121ea3afd763.ico"
+          sizes="any" />
+    <link id="favicon-png"
+          rel="icon"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/favicon.fdf5ef8729cc.png"
+          type="image/png" />
+    <link rel="mask-icon"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/safari-pinned-tab.4c32b8e091a9.svg"
+          color="#FFFFFF" />
+    <link rel="apple-touch-icon"
+          sizes="180x180"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/apple-touch-icon.39c0aa0659e3.png" />
+
+    
+  <script nonce="DDER53qB/5at+zHqZlrFaA==">
+    /* beautify ignore:start */
+    window.dataLayer = window.dataLayer || [];
+    
+    
+    dataLayer.push({
+      'event': 'user_anonymous',
+      'user_type': 'anonymous',
+      
+      'anonymous_session_id': '0cce2661-8680-445c-9041-560b208827d6'
+      
+    });
+    
+    /* beautify ignore:end */
+  </script>
+  <script nonce="DDER53qB/5at+zHqZlrFaA==">
+    (function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-KZDCFZR9');
+  </script>
+
+
+
+    
+    
+
+    <link  rel="stylesheet" href="https://d31rfu1d3w8e4q.cloudfront.net/static/dist/index-BxwK8EBg.css" />
+<script type="module" crossorigin="" src="https://d31rfu1d3w8e4q.cloudfront.net/static/dist/index-BK0wCkVE.js"></script>
+
+    <link rel="stylesheet"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/dist/indexCss-D5iwNvwU.css" />
+
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="Blog (RSS)"
+          href="https://replicate.com/blog/rss" />
+    <link rel="alternate"
+          type="application/atom+xml"
+          title="Blog (Atom)"
+          href="https://replicate.com/blog/atom" />
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="Changelog (RSS)"
+          href="https://replicate.com/changelog/rss" />
+    <link rel="alternate"
+          type="application/atom+xml"
+          title="Changelog (Atom)"
+          href="https://replicate.com/changelog/atom" />
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="Status (RSS)"
+          href="https://replicatestatus.com/feed" />
+
+    
+      <link rel="dns-prefetch"
+            href="https://replicate.delivery" />
+    
+      <link rel="dns-prefetch"
+            href="https://tjzk.replicate.delivery" />
+    
+
+    
+
+    <link rel="canonical"
+          href="https://replicate.com/ali-vilab/i2vgen-xl" />
+
+    
+  
+  
+    
+  
+
+  <meta name="twitter:card"
+        content="summary_large_image" />
+
+
+<meta name="twitter:site"
+      content="@replicate" />
+
+
+  <meta name="twitter:image"
+        content="https://og-api.replicateassets.com/api/models/ali-vilab/i2vgen-xl" />
+  <meta property="og:image"
+        content="https://og-api.replicateassets.com/api/models/ali-vilab/i2vgen-xl" />
+
+
+
+
+  <meta name="twitter:title"
+        content="ali-vilab/i2vgen-xl – Replicate" />
+  <meta name="twitter:description"
+        content="RESEARCH/NON-COMMERCIAL USE ONLY: High-Quality Image-to-Video Synthesis via Cascaded Diffusion Models" />
+  <meta property="og:image"
+        content="https://og-api.replicateassets.com/api/models/ali-vilab/i2vgen-xl" />
+  <meta property="twitter:image"
+        content="https://og-api.replicateassets.com/api/models/ali-vilab/i2vgen-xl" />
+
+  
+
+  
+    <meta name="description"
+          content="RESEARCH/NON-COMMERCIAL USE ONLY: High-Quality Image-to-Video Synthesis via Cascaded Diffusion Models" />
+  
+
+
+    <meta name="sentry-dsn-js"
+          content="https://3dc017e574684610bbc7fd3b5519a4e8@o255771.ingest.sentry.io/5909364" />
+    
+    
+      <meta name="anonymous-id"
+            content="0cce2661-8680-445c-9041-560b208827d6" />
+    
+
+    
+      <script nonce="DDER53qB/5at+zHqZlrFaA==">
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (prefersDarkScheme) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.add("light");
+        }
+      </script>
+    
+
+    
+  </head>
+
+  
+
+  <body class="font-sans overflow-y-scroll antialiased flex min-h-screen flex-col">
+    
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KZDCFZR9"
+        height="0"
+        width="0"
+        style="display:none;
+               visibility:hidden"></iframe></noscript>
+
+
+    
+
+      
+
+      
+        
+
+<div class="h-[var(--header-height)] mb-6 no-focus">
+  
+    <script id="react-component-props-f169ae6e-94e9-43ef-b301-37155e2a4646" type="application/json">{"activePath": "/ali-vilab/i2vgen-xl", "isAuthenticated": false, "theme": "", "__flags": {"assign-support-tickets-to-ai": false, "show-pylon-widget": false, "show-open-ai-api-instructions": false}}</script>
+
+<div data-component="Navigation"
+     data-props="react-component-props-f169ae6e-94e9-43ef-b301-37155e2a4646">
+  
+</div>
+
+  
+</div>
+
+        
+
+
+
+      
+
+      
+      
+
+      
+      
+
+      
+
+      <main class="layout-main flex-1">
+        
+
+        
+          
+
+  
+  
+  
+    
+      
+
+    
+      
+    
+
+    
+
+    
+      
+
+<header class="space-y-4 pb-10 lg:pb-4"
+        aria-label="ali-vilab/i2vgen-xl">
+
+  
+
+<div class="flex gap-8 gap-y-4 w-full flex-wrap justify-between items-center">
+  <div class="space-y-4">
+    <div class="flex-wrap flex flex-col gap-1">
+
+      <div class="flex gap-2 sm:gap-3 w-full">
+
+        <h3 aria-label="ali-vilab/i2vgen-xl"
+            class="sr-only">
+          ali-vilab/i2vgen-xl
+        </h3>
+
+        <div translate="no"
+             aria-hidden="true"
+             class="flex relative items-center gap-1 flex-1 flex-wrap">
+          <div class="flex items-center gap-3 whitespace-nowrap">
+            
+              
+
+
+  <img class="avatar size-9 flex-shrink-0"
+       src="https://github.com/ali-vilab.png"
+       alt=""
+       role="presentation"
+       onerror="this.onerror=null; this.src='https://d31rfu1d3w8e4q.cloudfront.net/static/placeholder-avatar-organization.ff98795474e8.svg'" />
+
+
+            
+            <div class="text-r8-gray-11 text-lg font-heading">
+              
+                <a href="https://replicate.com/ali-vilab">ali-vilab</a>
+              
+            </div>
+            <div class="text-r8-gray-11 text-lg font-heading">
+              /
+            </div>
+          </div>
+          <div>
+            <span class="text-lg font-heading">
+              i2vgen-xl
+            </span>
+            <span class="[&>div]:inline">
+              
+                <script id="react-component-props-b4f05486-3cc2-48ea-8554-664519c570c5" type="application/json">{"identifier": "ali-vilab/i2vgen-xl:5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4", "__flags": {"assign-support-tickets-to-ai": false, "show-pylon-widget": false, "show-open-ai-api-instructions": false}}</script>
+
+<div data-component="CopyIdentifierButton"
+     data-props="react-component-props-b4f05486-3cc2-48ea-8554-664519c570c5">
+  
+</div>
+
+              
+            </span>
+          </div>
+        </div>
+      </div>
+
+      
+
+    </div>
+  </div>
+
+  <div class="relative flex flex-wrap gap-2 md:justify-end w-full md:w-auto">
+
+    
+
+    
+
+    <div>
+      <script id="react-component-props-f8a46f9a-5b4c-4262-85b1-7da28a5d93e4" type="application/json">{"model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/f699ed7f-f4da-420e-a35c-8f3bbca4ca75/replicate-prediction-rdltegbbe.gif", "description": "RESEARCH/NON-COMMERCIAL USE ONLY: High-Quality Image-to-Video Synthesis via Cascaded Diffusion Models", "hardware": "A100 (80GB)", "latest_version": {"id": "5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4"}, "name": "i2vgen-xl", "owner": "ali-vilab", "url": "https://replicate.com/ali-vilab/i2vgen-xl", "visibility": "public", "_extras": {"name": "ali-vilab/i2vgen-xl", "is_official": false, "is_pipeline": false}}, "__flags": {"assign-support-tickets-to-ai": false, "show-pylon-widget": false, "show-open-ai-api-instructions": false}}</script>
+
+<div data-component="ModelDetailButton"
+     data-props="react-component-props-f8a46f9a-5b4c-4262-85b1-7da28a5d93e4">
+  
+</div>
+
+    </div>
+  </div>
+</div>
+
+
+  
+
+
+
+<div class="flex flex-col gap-2 w-full">
+  
+    <div class="flex gap-4 flex-col md:flex-row items-start">
+      
+        <p class="max-w-3xl text-r8-lg [overflow-wrap:anywhere] text-pretty">
+          
+            RESEARCH/NON-COMMERCIAL USE ONLY: High-Quality Image-to-Video Synthesis via Cascaded Diffusion Models
+            
+          
+        </p>
+      
+    </div>
+  
+
+  
+</div>
+
+<div class="w-full">
+  <div class="space-y-4 @container">
+
+    <div class="gap-y-2 items-start @xl:items-center grid @xl:flex @xl:flex-wrap @xl:flex-row @xs:grid-cols-2 gap-x-2 @xl:gap-x-6">
+
+      
+        <div class="flex items-center">
+          <script id="react-component-props-260b3c56-f9d2-43ac-a103-0958532775d1" type="application/json">{"initialStatus": "offline", "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/f699ed7f-f4da-420e-a35c-8f3bbca4ca75/replicate-prediction-rdltegbbe.gif", "description": "RESEARCH/NON-COMMERCIAL USE ONLY: High-Quality Image-to-Video Synthesis via Cascaded Diffusion Models", "hardware": "A100 (80GB)", "latest_version": {"id": "5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4"}, "name": "i2vgen-xl", "owner": "ali-vilab", "url": "https://replicate.com/ali-vilab/i2vgen-xl", "visibility": "public", "_extras": {"name": "ali-vilab/i2vgen-xl", "is_official": false, "is_pipeline": false}}, "isOfficialModel": "", "__flags": {"assign-support-tickets-to-ai": false, "show-pylon-widget": false, "show-open-ai-api-instructions": false}}</script>
+
+  <div data-react-placeholder="ModelStatusIndicator">
+    <div class="flex items-center">
+  <div class="rounded-full bg-r8-gray-3 animate-pulse w-[64px] h-[29px]">
+  </div>
+</div>
+
+  </div>
+
+<div data-component="ModelStatusIndicator"
+     data-props="react-component-props-260b3c56-f9d2-43ac-a103-0958532775d1">
+  
+</div>
+
+        </div>
+      
+
+      <div class="flex items-start gap-2">
+        
+          <span class="flex-shrink-0 -mt-0.5">
+            
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <circle cx="12" cy="12" r="10"></circle>
+  <line x1="2" y1="12" x2="22" y2="12"></line>
+  <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z">
+  </path>
+</svg>
+
+          </span>
+          <span class="text-r8-sm">Public</span>
+        
+      </div>
+
+      
+        <div class="flex items-start gap-2">
+          <span class="flex-shrink-0 -mt-0.5">
+            
+<svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     width="24"
+     height="24">
+  <path fill="currentColor" fill-rule="evenodd" d="M20.322.75a10.75 10.75 0 00-7.373 2.926l-1.304 1.23A23.743 23.743 0 0010.103 6.5H5.066a1.75 1.75 0 00-1.5.85l-2.71 4.514a.75.75 0 00.49 1.12l4.571.963c.039.049.082.096.129.14L8.04 15.96l1.872 1.994c.044.047.091.09.14.129l.963 4.572a.75.75 0 001.12.488l4.514-2.709a1.75 1.75 0 00.85-1.5v-5.038a23.741 23.741 0 001.596-1.542l1.228-1.304a10.75 10.75 0 002.925-7.374V2.499A1.75 1.75 0 0021.498.75h-1.177zM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 00.121-.214v-3.822zm-10.092-2.7L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 00-.214.121l-2.167 3.612 3.223.679zm8.07-7.644a9.25 9.25 0 016.344-2.518h1.177a.25.25 0 01.25.25v1.176a9.25 9.25 0 01-2.517 6.346l-1.228 1.303a22.248 22.248 0 01-3.854 3.257l-3.288 2.192-1.743-1.858a.764.764 0 00-.034-.034l-1.859-1.744 2.193-3.29a22.248 22.248 0 013.255-3.851l1.304-1.23zM17.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-11 13c.9-.9.9-2.6 0-3.5-.9-.9-2.6-.9-3.5 0-1.209 1.209-1.445 3.901-1.49 4.743a.232.232 0 00.247.247c.842-.045 3.534-.281 4.743-1.49z">
+  </path>
+</svg>
+
+          </span>
+          <span class="text-r8-sm whitespace-nowrap">128K
+            runs
+          </span>
+        </div>
+
+        
+          <div class="[&>div]:flex">
+            
+            <script id="react-component-props-c6d08f03-a143-4428-8ecf-df23bf93b0b9" type="application/json">{"version": {"id": "5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4", "created_at": "2024-01-04T21:47:10.279536Z", "_extras": {"arch": "gpu", "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "disabled_for_predictions": false, "disabled_for_trainings": false, "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/f699ed7f-f4da-420e-a35c-8f3bbca4ca75/replicate-prediction-rdltegbbe.gif", "description": "RESEARCH/NON-COMMERCIAL USE ONLY: High-Quality Image-to-Video Synthesis via Cascaded Diffusion Models", "hardware": "A100 (80GB)", "latest_version": {"id": "5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4"}, "name": "i2vgen-xl", "owner": "ali-vilab", "url": "https://replicate.com/ali-vilab/i2vgen-xl", "visibility": "public", "_extras": {"name": "ali-vilab/i2vgen-xl", "is_official": false, "is_pipeline": false}}, "name": "ali-vilab/i2vgen-xl:5821a338", "release_notes": null, "short_id": "5821a338", "url": "https://replicate.com/ali-vilab/i2vgen-xl/versions/5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4"}}, "hardware": "A100 (80GB)", "billingConfig": "", "price": "$0.0014 per second", "p50price": "$0.23", "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/f699ed7f-f4da-420e-a35c-8f3bbca4ca75/replicate-prediction-rdltegbbe.gif", "description": "RESEARCH/NON-COMMERCIAL USE ONLY: High-Quality Image-to-Video Synthesis via Cascaded Diffusion Models", "hardware": "A100 (80GB)", "latest_version": {"id": "5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4"}, "name": "i2vgen-xl", "owner": "ali-vilab", "url": "https://replicate.com/ali-vilab/i2vgen-xl", "visibility": "public", "_extras": {"name": "ali-vilab/i2vgen-xl", "is_official": false, "is_pipeline": false}}, "__flags": {"assign-support-tickets-to-ai": false, "show-pylon-widget": false, "show-open-ai-api-instructions": false}}</script>
+
+<div data-component="ModelPricePopover"
+     data-props="react-component-props-c6d08f03-a143-4428-8ecf-df23bf93b0b9">
+  
+</div>
+
+          </div>
+        
+      
+
+      
+
+      
+
+        <div class="flex items-start gap-2">
+          <i class="-mt-0.5">
+            
+<svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="2"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22">
+  </path>
+</svg>
+
+          </i>
+          <a href="https://github.com/chenxwh/i2vgen-xl"
+             target="_blank"
+             class="text-r8-sm">
+            GitHub
+          </a>
+        </div>
+      
+
+      
+
+      
+
+        <div class="flex items-start gap-2">
+          <i class="-mt-0.5">
+            
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z">
+  </path>
+  <polyline points="14 2 14 8 20 8"></polyline>
+  <line x1="16" y1="13" x2="8" y2="13"></line>
+  <line x1="16" y1="17" x2="8" y2="17"></line>
+  <line x1="10" y1="9" x2="8" y2="9"></line>
+</svg>
+
+          </i>
+          <a href="https://arxiv.org/abs/2311.04145"
+             target="_blank"
+             class="text-r8-sm">
+            Paper
+          </a>
+        </div>
+      
+
+    </div>
+
+    
+
+  </div>
+</div>
+
+
+</header>
+
+    
+    
+      
+        <div class="border-b border-r8-gray-6">
+          
+
+
+
+
+
+
+<div class="r8-tabs r8-tabs--bordered r8-tabs--md top-px relative flex-wrap">
+  
+    <a href="/ali-vilab/i2vgen-xl"
+       aria-selected="true"
+       class="r8-tabs__tab no-underline">
+      <span class="r8-tabs__start-icon">
+        <svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+
+</svg>
+
+      </span>
+      <span>Playground</span>
+    </a>
+  
+
+  
+    
+      <a href="/ali-vilab/i2vgen-xl/api"
+         
+         class="r8-tabs__tab no-underline">
+
+        <span class="r8-tabs__start-icon">
+          
+<svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     width="24"
+     height="24">
+  <path fill="currentColor" fill-rule="evenodd" d="M20.322.75a10.75 10.75 0 00-7.373 2.926l-1.304 1.23A23.743 23.743 0 0010.103 6.5H5.066a1.75 1.75 0 00-1.5.85l-2.71 4.514a.75.75 0 00.49 1.12l4.571.963c.039.049.082.096.129.14L8.04 15.96l1.872 1.994c.044.047.091.09.14.129l.963 4.572a.75.75 0 001.12.488l4.514-2.709a1.75 1.75 0 00.85-1.5v-5.038a23.741 23.741 0 001.596-1.542l1.228-1.304a10.75 10.75 0 002.925-7.374V2.499A1.75 1.75 0 0021.498.75h-1.177zM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 00.121-.214v-3.822zm-10.092-2.7L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 00-.214.121l-2.167 3.612 3.223.679zm8.07-7.644a9.25 9.25 0 016.344-2.518h1.177a.25.25 0 01.25.25v1.176a9.25 9.25 0 01-2.517 6.346l-1.228 1.303a22.248 22.248 0 01-3.854 3.257l-3.288 2.192-1.743-1.858a.764.764 0 00-.034-.034l-1.859-1.744 2.193-3.29a22.248 22.248 0 013.255-3.851l1.304-1.23zM17.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-11 13c.9-.9.9-2.6 0-3.5-.9-.9-2.6-.9-3.5 0-1.209 1.209-1.445 3.901-1.49 4.743a.232.232 0 00.247.247c.842-.045 3.534-.281 4.743-1.49z">
+  </path>
+</svg>
+
+        </span>
+        <span>API</span>
+      </a>
+    
+  
+
+  
+    <a href="/ali-vilab/i2vgen-xl/examples"
+       
+       class="r8-tabs__tab no-underline">
+      <span class="r8-tabs__start-icon">
+        <svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+  <polyline points="11 3 11 11 14 8 17 11 17 3"></polyline>
+</svg>
+
+      </span>
+      <span>Examples</span>
+    </a>
+  
+
+  
+
+  <a href="/ali-vilab/i2vgen-xl/readme"
+     
+     class="r8-tabs__tab no-underline">
+    <span class="r8-tabs__start-icon">
+      
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z">
+  </path>
+  <polyline points="14 2 14 8 20 8"></polyline>
+  <line x1="16" y1="13" x2="8" y2="13"></line>
+  <line x1="16" y1="17" x2="8" y2="17"></line>
+  <line x1="10" y1="9" x2="8" y2="9"></line>
+</svg>
+
+    </span>
+    <span>README</span>
+  </a>
+
+  
+    <a href="/ali-vilab/i2vgen-xl/versions"
+       
+       class="r8-tabs__tab no-underline">
+      <span class="r8-tabs__start-icon">
+        
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <path d="M3 3v5h5">
+  </path>
+  <path d="M3.05 13A9 9 0 106 5.3L3 8">
+  </path>
+  <path d="M12 7v5l4 2">
+  </path>
+</svg>
+
+      </span>
+      <span>Versions</span>
+    </a>
+  
+
+  
+
+  
+
+  
+</div>
+
+        </div>
+      
+    
+
+    
+      
+
+
+
+    
+
+  
+    
+  
+
+
+  
+    <div class="model-content mt-lh">
+      
+  
+    
+
+<div class="mb-2lh">
+  
+  
+  
+    
+      <script id="react-component-props-8446ce66-803a-425f-a4b5-ba15076b7c1d" type="application/json">{"initialPrediction": {"completed_at": "2024-01-04T22:09:41.707229Z", "created_at": "2024-01-04T22:07:45.891880Z", "data_removed": false, "error": null, "id": "7nmo2lrb6jtysf7hozhcw5ayqa", "input": {"image": "https://replicate.delivery/pbxt/KA6KcZp2UhselAqryBuWaIV2w3KPKYJpVM9cQtqSctlhwdK5/img_0002.png", "prompt": "A blonde girl in jeans", "max_frames": 16, "guidance_scale": 9, "num_inference_steps": 50}, "logs": "Using seed: 25382\nGPU Memory used 36.12 GB", "metrics": {"predict_time": 115.80122, "total_time": 115.815349}, "output": "https://replicate.delivery/pbxt/8FpYFhLD6XKYIpivyRjI3LHHhV4C1kAVsGZSP4f2f4Uk6NJSA/out.mp4", "started_at": "2024-01-04T22:07:45.906009Z", "status": "succeeded", "urls": {"get": "https://api.replicate.com/v1/predictions/7nmo2lrb6jtysf7hozhcw5ayqa", "cancel": "https://api.replicate.com/v1/predictions/7nmo2lrb6jtysf7hozhcw5ayqa/cancel"}, "_extras": {"api_token_name": null, "created_by": {"kind": "user", "url": "https://replicate.com/chenxwh", "username": "chenxwh"}, "input_files": ["https://replicate.delivery/pbxt/KA6KcZp2UhselAqryBuWaIV2w3KPKYJpVM9cQtqSctlhwdK5/img_0002.png"], "is_immutable": false, "is_shared": false, "is_waiting_for_boot": null, "may_have_sensitive_output": false, "output_files": ["https://replicate.delivery/pbxt/8FpYFhLD6XKYIpivyRjI3LHHhV4C1kAVsGZSP4f2f4Uk6NJSA/out.mp4"], "pipeline_child_predictions": [], "ran_on": {"capabilities": {"hotswap": false, "run": true, "stream": false, "train": false}, "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "hardware": {"arch": "gpu", "display_name": "Nvidia A100 (40GB) GPU", "short_display_name": "A100 (40GB)", "sku": "gpu-a100-small"}, "has_special_pricing": false, "is_official": false, "kind": "version", "model": {"name": "i2vgen-xl", "username": "ali-vilab", "visibility": "public"}, "supports_cancelation": true, "url": "https://replicate.com/ali-vilab/i2vgen-xl/versions/5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4", "version": {"id": "5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4"}}, "source": "web", "total_child_predictions": 0}, "version": "5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4"}, "initialPredictionVersion": {"id": "5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4", "created_at": "2024-01-04T21:47:10.279536Z", "_extras": {"arch": "gpu", "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "disabled_for_predictions": false, "disabled_for_trainings": false, "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/f699ed7f-f4da-420e-a35c-8f3bbca4ca75/replicate-prediction-rdltegbbe.gif", "description": "RESEARCH/NON-COMMERCIAL USE ONLY: High-Quality Image-to-Video Synthesis via Cascaded Diffusion Models", "hardware": "A100 (80GB)", "latest_version": {"id": "5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4"}, "name": "i2vgen-xl", "owner": "ali-vilab", "url": "https://replicate.com/ali-vilab/i2vgen-xl", "visibility": "public", "_extras": {"name": "ali-vilab/i2vgen-xl", "is_official": false, "is_pipeline": false}}, "name": "ali-vilab/i2vgen-xl:5821a338", "release_notes": null, "short_id": "5821a338", "url": "https://replicate.com/ali-vilab/i2vgen-xl/versions/5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4"}}, "isAuthenticated": false, "features": {"show_pipeline_steps": false, "show_before_after_slider_output": false, "show_goo_shader_output": false, "link_to_video_upscaler": false, "link_to_image_upscaler": false, "link_to_playground": true, "link_to_audio_adder": false, "pixelate_images": false}, "permissions": {"create_example": false, "debug": false, "edit_featured_inputs": false, "report": true, "run": false, "tweak": true, "delete": false, "share": false}, "schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "version": {"id": "5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4", "created_at": "2024-01-04T21:47:10.279536Z", "_extras": {"arch": "gpu", "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["image", "prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed. Leave blank to randomize the seed"}, "image": {"type": "string", "title": "Image", "format": "uri", "x-order": 0, "description": "Input image."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 1, "description": "Describe the input image."}, "max_frames": {"type": "integer", "title": "Max Frames", "default": 16, "minimum": 2, "x-order": 2, "description": "Number of frames in the output"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 9, "maximum": 20, "minimum": 1, "x-order": 4, "description": "Scale for classifier-free guidance"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 50, "maximum": 500, "minimum": 1, "x-order": 3, "description": "Number of denoising steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "disabled_for_predictions": false, "disabled_for_trainings": false, "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/f699ed7f-f4da-420e-a35c-8f3bbca4ca75/replicate-prediction-rdltegbbe.gif", "description": "RESEARCH/NON-COMMERCIAL USE ONLY: High-Quality Image-to-Video Synthesis via Cascaded Diffusion Models", "hardware": "A100 (80GB)", "latest_version": {"id": "5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4"}, "name": "i2vgen-xl", "owner": "ali-vilab", "url": "https://replicate.com/ali-vilab/i2vgen-xl", "visibility": "public", "_extras": {"name": "ali-vilab/i2vgen-xl", "is_official": false, "is_pipeline": false}}, "name": "ali-vilab/i2vgen-xl:5821a338", "release_notes": null, "short_id": "5821a338", "url": "https://replicate.com/ali-vilab/i2vgen-xl/versions/5821a338d00033abaaba89080a17eb8783d9a17ed710a6b4246a18e0900ccad4"}}, "token": "", "modelStatus": "offline", "modelInputSettings": null, "requiresCredit": true, "__flags": {"assign-support-tickets-to-ai": false, "show-pylon-widget": false, "show-open-ai-api-instructions": false}}</script>
+
+  <div data-react-placeholder="APIPlayground">
+    <div class="input-output-grid">
+  <div class="flex flex-col md:flex-row">
+    <div class="input-col relative md:flex-1 pb-4 min-w-0">
+      <div class="mb-2 flex items-center justify-between">
+        <div class="flex-1">
+          <div class="mb-4 bg-r8-gray-4 animate-pulse h-8 w-24">
+          </div>
+        </div>
+      </div>
+      <div class="h-8 bg-r8-gray-4 animate-pulse mb-6">
+      </div>
+      <div class="space-y-4">
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <div class="input-output-grid--divider flex-shrink-0 md:mx-6 mb-6 md:my-0"
+         role="separator">
+      <div class="bg-r8-gray-6 md:w-px md:h-full h-px w-full">
+      </div>
+    </div>
+    <div class="output-col md:flex-1 pb-4 min-w-0">
+      <div class="flex flex-col">
+        <div class="flex-1">
+          <div class="mb-4 bg-r8-gray-4 animate-pulse h-8 w-24">
+          </div>
+        </div>
+        <div class="h-8 bg-r8-gray-4 animate-pulse mb-6">
+        </div>
+        <div class="aspect-square bg-r8-gray-4 animate-pulse">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+<div data-component="APIPlayground"
+     data-props="react-component-props-8446ce66-803a-425f-a4b5-ba15076b7c1d">
+  
+</div>
+
+    
+  
+</div>
+
+    
+
+
+
+  
+  
+  
+    <div class="pb-2 border-b border-r8-gray-5 mb-lh flex">
+      <h2 class="inline-block flex-grow text-r8-2xl">
+        Examples
+      </h2>
+
+      <p>
+        <a href="/ali-vilab/i2vgen-xl/examples"
+           class="no-default">
+          View more <span class="hidden sm:inline">examples</span><span class="relative -top-0.5">
+          
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <line x1="7" y1="17" x2="17" y2="7"></line>
+  <polyline points="7 7 17 7 17 17"></polyline>
+</svg>
+
+        </span></a>
+      </p>
+    </div>
+
+    <div class="mb-2lh h-40 overflow-hidden ">
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/ali-vilab/i2vgen-xl/examples#sbwnhhrb3ihbvriz6jouig5wai">
+
+              
+                <video data-src="https://replicate.delivery/pbxt/qtcUTHn7RhbJDhpyD3hjyidUg6cgTDdhjgTwDcXkpgI6bTiE/out.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/ali-vilab/i2vgen-xl/examples#7nmo2lrb6jtysf7hozhcw5ayqa">
+
+              
+                <video data-src="https://replicate.delivery/pbxt/8FpYFhLD6XKYIpivyRjI3LHHhV4C1kAVsGZSP4f2f4Uk6NJSA/out.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/ali-vilab/i2vgen-xl/examples#2m3npajb3lzubejsnd46tfql6y">
+
+              
+                <video data-src="https://replicate.delivery/pbxt/uagzCbHvxwJzIFQMsuFfF9XmXUgTVlI9ySTgouFLICJmBnEJA/out.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/ali-vilab/i2vgen-xl/examples#nfxtm5bbxwwpu26nnthp6mfgqm">
+
+              
+                <video data-src="https://replicate.delivery/pbxt/u6P5IrDM3xqBPBUdwDaCFP9ClOR9uJhU7CuYwCm5UfJjCnEJA/out.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/ali-vilab/i2vgen-xl/examples#g7cgxfbbs2w7dlxjz6nyovoluu">
+
+              
+                <video data-src="https://replicate.delivery/pbxt/17w7ehiPd0WxbiV9espf5kvreaWlPei4I1DQiRxMtYA4CxJRC/out.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/ali-vilab/i2vgen-xl/examples#qmtrv3rbp7xcqrvsog4zb3uc3e">
+
+              
+                <video data-src="https://replicate.delivery/pbxt/EQYlzgOni5J2B90p7ppQHXNlkOS7Y4m0GpMQyBR4Lrf4EnEJA/out.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/ali-vilab/i2vgen-xl/examples#wc32s5rbb5ec2un3xly3eerulq">
+
+              
+                <video data-src="https://replicate.delivery/pbxt/cIu6jSkFd1IcApptmzpUEH946fevSuoOZdO3oIsyIDhfZcSkA/out.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/ali-vilab/i2vgen-xl/examples#lb63s2zbjcanc7iiubicybgocm">
+
+              
+                <video data-src="https://replicate.delivery/pbxt/k8snVuprc55lEZbZpBeNwpDLu3miaeLmhzGPz7febe7ngyJRC/out.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/ali-vilab/i2vgen-xl/examples#xwhu2tzbrekcauusnec5ypicwa">
+
+              
+                <video data-src="https://replicate.delivery/pbxt/4ozZ2Cd27A4dHRST3dC2rJa8gjhGzno6synllDiXVeRuInEJA/out.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/ali-vilab/i2vgen-xl/examples#h5nyeorbapvtn2a4mtmlxqluvq">
+
+              
+                <video data-src="https://replicate.delivery/pbxt/xLur1grNd5JZDNrocPmpqZcexW1olby5QrFzNg5CoBSbOnEJA/out.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/ali-vilab/i2vgen-xl/examples#s34qjvrbxt6a2hdorscqjbvxde">
+
+              
+                <video data-src="https://replicate.delivery/pbxt/TOWclQV8cm6PKteOJCL6Zngo2pxbqwmPcCfUquWvnEEee5kIB/out.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+    </div>
+  
+
+
+
+
+    
+      
+
+<div id="pricing"
+     class="mb-2lh">
+  <a id="performance"></a>
+
+  <h2 class="mb-lh pb-2 border-b border-r8-gray-5 text-r8-2xl">
+    Run time and cost
+  </h2>
+
+  
+
+  
+
+    
+      
+        <p class="mb-lh">
+          This model costs approximately $0.23 to run on Replicate, or 4 runs per $1, but this varies depending on your inputs. It is also open source and you can <a href="/ali-vilab/i2vgen-xl/api">run it on your own computer with Docker</a>.
+        </p>
+      
+    
+
+    
+
+    <p class="mb-lh">
+      
+        This model runs on <a href="https://replicate.com/docs/billing">Nvidia A100 (80GB) GPU hardware</a>.
+      
+      
+
+      
+        Predictions typically complete within 3 minutes.
+
+        
+          The predict time for this model varies significantly based on the inputs.
+        
+      
+    </p>
+  
+</div>
+
+    
+
+    
+
+<article class="mb-2lh">
+  
+    <div id="readme"
+         class="border-b border-r8-gray-5 pb-2 mb-lh flex items-center gap-2">
+      <h2 class="inline-block text-r8-2xl">
+        Readme
+      </h2>
+      
+    </div>
+  
+  
+    <div class="readme-prose max-w-4xl">
+      <h1 id="vgen">VGen</h1>
+<p><img alt="figure1" src="https://raw.githubusercontent.com/ali-vilab/i2vgen-xl/main/source/VGen.jpg"/></p>
+<p>VGen is an open-source video synthesis codebase developed by the Tongyi Lab of Alibaba Group, featuring state-of-the-art video generative models. This repository includes implementations of the following methods:</p>
+<p><a href="https://i2vgen-xl.github.io" rel="nofollow ugc">I2VGen-xl: High-quality image-to-video synthesis via cascaded diffusion models</a></p>
+<h2 id="bibtex">BibTeX</h2>
+<p>If this repo is useful to you, please cite our corresponding technical paper.</p>
+<pre><code class="language-bibtex">@article{2023i2vgenxl,
+  title={I2VGen-XL: High-Quality Image-to-Video Synthesis via Cascaded Diffusion Models},
+  author={Zhang, Shiwei and Wang, Jiayu and Zhang, Yingya and Zhao, Kang and Yuan, Hangjie and Qing, Zhiwu and Wang, Xiang  and Zhao, Deli and Zhou, Jingren},
+  booktitle={arXiv preprint arXiv:2311.04145},
+  year={2023}
+}
+</code></pre>
+<h2 id="acknowledgement">Acknowledgement</h2>
+<p>We would like to express our gratitude for the contributions of several previous works to the development of VGen. This includes, but is not limited to <a href="https://arxiv.org/abs/2302.09778" rel="nofollow ugc">Composer</a>, <a href="https://modelscope.cn/models/damo/text-to-video-synthesis/summary" rel="nofollow ugc">ModelScopeT2V</a>, <a href="https://github.com/Stability-AI/stablediffusion" rel="nofollow ugc">Stable Diffusion</a>, <a href="https://github.com/mlfoundations/open_clip" rel="nofollow ugc">OpenCLIP</a>, <a href="https://m-bain.github.io/webvid-dataset/" rel="nofollow ugc">WebVid-10M</a>, <a href="https://laion.ai/blog/laion-400-open-dataset/" rel="nofollow ugc">LAION-400M</a>, <a href="https://github.com/zhuoinoulu/pidinet" rel="nofollow ugc">Pidinet</a> and <a href="https://github.com/isl-org/MiDaS" rel="nofollow ugc">MiDaS</a>. We are committed to building upon these foundations in a way that respects their original contributions.</p>
+<h2 id="disclaimer">Disclaimer</h2>
+<p>This open-source model is trained with using <a href="https://m-bain.github.io/webvid-dataset/" rel="nofollow ugc">WebVid-10M</a> and <a href="https://laion.ai/blog/laion-400-open-dataset/" rel="nofollow ugc">LAION-400M</a> datasets and is intended for <strong>RESEARCH/NON-COMMERCIAL USE ONLY</strong>.</p>
+    </div>
+  
+</article>
+
+    
+
+
+
+
+    <script id="react-component-props-adb37812-c637-4f1b-983d-d848f18a73d5" type="application/json">{"name": "ali-vilab/i2vgen-xl", "__flags": {"assign-support-tickets-to-ai": false, "show-pylon-widget": false, "show-open-ai-api-instructions": false}}</script>
+
+<div data-component="RelatedModels"
+     data-props="react-component-props-adb37812-c637-4f1b-983d-d848f18a73d5">
+  
+</div>
+
+  </div>
+
+
+    </div>
+  
+
+  <div class="model-content mt-2lh">
+    
+
+
+
+  </div>
+
+
+
+          
+        
+      </main>
+
+      
+        
+
+<div class="footer no-focus">
+  <script id="react-component-props-494a411f-b49b-4e4e-b140-323c3ff46b89" type="application/json">{"theme": "", "__flags": {"assign-support-tickets-to-ai": false, "show-pylon-widget": false, "show-open-ai-api-instructions": false}}</script>
+
+<div data-component="Footer"
+     data-props="react-component-props-494a411f-b49b-4e4e-b140-323c3ff46b89">
+  
+</div>
+
+</div>
+
+      
+
+    
+
+    <script nonce="DDER53qB/5at+zHqZlrFaA==">
+      window.VIDEOJS_NO_DYNAMIC_STYLE = true;
+    </script>
+
+    <script nonce="DDER53qB/5at+zHqZlrFaA==">
+      const header = document.getElementById("app-header");
+
+      function monitorHeaderStickiness() {
+        if (header) {
+          header.setAttribute("data-stuck", window.scrollY > 0);
+        }
+      }
+
+      monitorHeaderStickiness();
+
+      document.addEventListener("scroll", (event) => {
+        monitorHeaderStickiness();
+      });
+
+      // Prevent mousewheel from being able to change the value of a numeric input.
+      // This "feature" often causes issues when users scroll from a focused input field
+      // to the submit button and accidentally increment the contents of the field.
+      document.addEventListener("wheel", (event) => {
+        if (document.activeElement && document.activeElement.matches('input[type=number]') && document.activeElement === event.target) {
+          event.preventDefault();
+        }
+      }, {
+        passive: false
+      });
+    </script>
+
+    
+    
+    
+
+  </body>
+
+</html>

@@ -1,0 +1,4321 @@
+{
+  "exported_at": "2025-11-17T17:05:19.174Z",
+  "collection": "video_features",
+  "total_documents": 22,
+  "documents": [
+    {
+      "id": "gen4-image-turbo",
+      "data": {
+        "id": "gen4-image-turbo",
+        "name": "Gen4 Image Turbo",
+        "description": "Gen-4 Image Turbo is cheaper and 2.5x faster than Gen-4 Image. An image model with references, use up to 3 reference images to create the exact image you need. Capture every angle.",
+        "price_per_sec": 3,
+        "default_duration": 5,
+        "duration_options": [
+          5
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16",
+          "4:3",
+          "3:4",
+          "1:1",
+          "21:9"
+        ],
+        "supports_first_frame": false,
+        "requires_first_frame": false,
+        "supports_last_frame": false,
+        "requires_last_frame": false,
+        "supports_audio": false,
+        "preview_url": "",
+        "replicate_name": "runwayml/gen4-image-turbo",
+        "index": 16,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "seed",
+            "type": "number",
+            "required": false,
+            "nullable": true,
+            "description": "Random seed. Set for reproducible generation",
+            "title": "Seed"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt for image generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "resolution",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Image resolution",
+            "default": "1080p",
+            "enum": [
+              "720p",
+              "1080p"
+            ],
+            "title": "resolution"
+          },
+          {
+            "name": "aspect_ratio",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Image aspect ratio",
+            "default": "16:9",
+            "enum": [
+              "16:9",
+              "9:16",
+              "4:3",
+              "3:4",
+              "1:1",
+              "21:9"
+            ],
+            "title": "aspect_ratio"
+          },
+          {
+            "name": "reference_tags",
+            "type": "array",
+            "required": false,
+            "nullable": false,
+            "description": "An optional tag for each of your reference images. Tags must be alphanumeric and start with a letter. You can reference them in your prompt using @tag_name. Tags must be between 3 and 15 characters.",
+            "default": [],
+            "title": "Reference Tags"
+          },
+          {
+            "name": "reference_images",
+            "type": "array",
+            "required": false,
+            "nullable": false,
+            "description": "You must give at least one reference image. Up to 3 reference images are supported. Images must be between 0.5 and 2 aspect ratio.",
+            "default": [],
+            "title": "Reference Images"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt for image generation"
+              },
+              {
+                "name": "reference_tags",
+                "type": "array",
+                "required": false,
+                "description": "An optional tag for each of your reference images. Tags must be alphanumeric and start with a letter. You can reference them in your prompt using @tag_name. Tags must be between 3 and 15 characters.",
+                "default": []
+              }
+            ],
+            "numeric": [
+              {
+                "name": "seed",
+                "type": "number",
+                "required": false,
+                "description": "Random seed. Set for reproducible generation"
+              }
+            ],
+            "boolean": [],
+            "enum": [
+              {
+                "name": "resolution",
+                "type": "enum",
+                "required": false,
+                "description": "Image resolution",
+                "default": "1080p",
+                "enum": [
+                  "720p",
+                  "1080p"
+                ]
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "enum",
+                "required": false,
+                "description": "Image aspect ratio",
+                "default": "16:9",
+                "enum": [
+                  "16:9",
+                  "9:16",
+                  "4:3",
+                  "3:4",
+                  "1:1",
+                  "21:9"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "reference_images",
+                "type": "array",
+                "required": false,
+                "description": "You must give at least one reference image. Up to 3 reference images are supported. Images must be between 0.5 and 2 aspect ratio."
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"seed\":{\"type\":\"integer\",\"title\":\"Seed\",\"nullable\":true,\"description\":\"Random seed. Set for reproducible generation\"},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"description\":\"Text prompt for image generation\"},\"resolution\":{\"enum\":[\"720p\",\"1080p\"],\"type\":\"string\",\"title\":\"resolution\",\"description\":\"Image resolution\",\"default\":\"1080p\",\"x-order\":3},\"aspect_ratio\":{\"enum\":[\"16:9\",\"9:16\",\"4:3\",\"3:4\",\"1:1\",\"21:9\"],\"type\":\"string\",\"title\":\"aspect_ratio\",\"description\":\"Image aspect ratio\",\"default\":\"16:9\",\"x-order\":2},\"reference_tags\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"title\":\"Reference Tags\",\"default\":[],\"description\":\"An optional tag for each of your reference images. Tags must be alphanumeric and start with a letter. You can reference them in your prompt using @tag_name. Tags must be between 3 and 15 characters.\"},\"reference_images\":{\"type\":\"array\",\"items\":{\"type\":\"string\",\"format\":\"uri\"},\"title\":\"Reference Images\",\"default\":[],\"description\":\"You must give at least one reference image. Up to 3 reference images are supported. Images must be between 0.5 and 2 aspect ratio.\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/pbxt/NW3jTsbeAGmmIdOvQ5Ks2Dh6wAWAwBj9FLup7GmkmKZIzVp7/w99em95b01rmc0cqrny8chf49w-1.jpg",
+          "https://replicate.delivery/pbxt/NW3jTS88toyUUsCurdKfDgWVfXLXWmBsGbbG6jipbMFgpyT2/psjdbkzgm1rmc0cqrnysbg93cm.jpg",
+          "https://replicate.delivery/xezq/mV82397wvrIxDlCV0AMe3v6MSoRh4xEa8a0eSDr7ipH0q3JVA/tmpuwbggnyb.png",
+          "https://replicate.delivery/xezq/2ytMtPEXUvbQMZtC05fIBqLKKr9v1xsytHdRvdUCJ7wHn7kKA/tmpwvlg9o02.png",
+          "https://replicate.delivery/xezq/G4dft9DpvzS9bKYfyCEvmn1V3GDfUKx4bUrktcr4NCj1ecnUB/tmpv98md6c7.png"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/pbxt/NW3jTsbeAGmmIdOvQ5Ks2Dh6wAWAwBj9FLup7GmkmKZIzVp7/w99em95b01rmc0cqrny8chf49w-1.jpg",
+          "https://replicate.delivery/pbxt/NW3jTS88toyUUsCurdKfDgWVfXLXWmBsGbbG6jipbMFgpyT2/psjdbkzgm1rmc0cqrnysbg93cm.jpg",
+          "https://replicate.delivery/xezq/mV82397wvrIxDlCV0AMe3v6MSoRh4xEa8a0eSDr7ipH0q3JVA/tmpuwbggnyb.png",
+          "https://replicate.delivery/xezq/2ytMtPEXUvbQMZtC05fIBqLKKr9v1xsytHdRvdUCJ7wHn7kKA/tmpwvlg9o02.png",
+          "https://replicate.delivery/xezq/G4dft9DpvzS9bKYfyCEvmn1V3GDfUKx4bUrktcr4NCj1ecnUB/tmpv98md6c7.png"
+        ]
+      }
+    },
+    {
+      "id": "hailuo-02",
+      "data": {
+        "id": "hailuo-02",
+        "name": "Hailuo 02",
+        "description": "Hailuo 2 is a text-to-video and image-to-video model that can make 6s or 10s videos at 768p (standard) or 1080p (pro). It excels at real world physics.",
+        "price_per_sec": 10,
+        "default_duration": 6,
+        "duration_options": [
+          6,
+          10
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": true,
+        "requires_last_frame": false,
+        "supports_audio": false,
+        "preview_url": "",
+        "replicate_name": "minimax/hailuo-02",
+        "index": 11,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt for generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.",
+            "default": 6,
+            "enum": [
+              6,
+              10
+            ],
+            "title": "duration"
+          },
+          {
+            "name": "resolution",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.",
+            "default": "1080p",
+            "enum": [
+              "512p",
+              "768p",
+              "1080p"
+            ],
+            "title": "resolution"
+          },
+          {
+            "name": "last_frame_image",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "Last frame image for video generation. The final frame of the output video will match this image.",
+            "format": "uri",
+            "title": "Last Frame Image"
+          },
+          {
+            "name": "prompt_optimizer",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Use prompt optimizer",
+            "default": true,
+            "title": "Prompt Optimizer"
+          },
+          {
+            "name": "first_frame_image",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "First frame image for video generation. The output video will have the same aspect ratio as this image.",
+            "format": "uri",
+            "title": "First Frame Image"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt for generation"
+              }
+            ],
+            "numeric": [],
+            "boolean": [
+              {
+                "name": "prompt_optimizer",
+                "type": "boolean",
+                "required": false,
+                "description": "Use prompt optimizer",
+                "default": true
+              }
+            ],
+            "enum": [
+              {
+                "name": "duration",
+                "type": "number",
+                "required": false,
+                "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.",
+                "default": 6,
+                "enum": [
+                  6,
+                  10
+                ]
+              },
+              {
+                "name": "resolution",
+                "type": "enum",
+                "required": false,
+                "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.",
+                "default": "1080p",
+                "enum": [
+                  "512p",
+                  "768p",
+                  "1080p"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "last_frame_image",
+                "type": "string",
+                "required": false,
+                "description": "Last frame image for video generation. The final frame of the output video will match this image.",
+                "format": "uri"
+              },
+              {
+                "name": "first_frame_image",
+                "type": "string",
+                "required": false,
+                "description": "First frame image for video generation. The output video will have the same aspect ratio as this image.",
+                "format": "uri"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"description\":\"Text prompt for generation\"},\"duration\":{\"enum\":[6,10],\"type\":\"integer\",\"title\":\"duration\",\"description\":\"Duration of the video in seconds. 10 seconds is only available for 768p resolution.\",\"default\":6,\"x-order\":3},\"resolution\":{\"enum\":[\"512p\",\"768p\",\"1080p\"],\"type\":\"string\",\"title\":\"resolution\",\"description\":\"Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.\",\"default\":\"1080p\",\"x-order\":4},\"last_frame_image\":{\"type\":\"string\",\"title\":\"Last Frame Image\",\"format\":\"uri\",\"description\":\"Last frame image for video generation. The final frame of the output video will match this image.\"},\"prompt_optimizer\":{\"type\":\"boolean\",\"title\":\"Prompt Optimizer\",\"default\":true,\"description\":\"Use prompt optimizer\"},\"first_frame_image\":{\"type\":\"string\",\"title\":\"First Frame Image\",\"format\":\"uri\",\"description\":\"First frame image for video generation. The output video will have the same aspect ratio as this image.\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/NLybk0ySU6qKANmOJ5xzKJx28Q8x5rk4PZey7eeoC7qiIg5pA/tmpbufkswx1.mp4",
+          "https://replicate.delivery/xezq/yAfwoReEDZl39EeInfkM7nufcc7eeAkB02POD28SGYX7wFYeUA/tmpjeapk4og.mp4",
+          "https://replicate.delivery/xezq/CSPm6I9uOR45JFzXKX6wQKXaEUKE08x4wl0MhGoSDgWEDMPF/tmpeahvppel.mp4",
+          "https://replicate.delivery/xezq/fjGfQQVNPvjCeJCp2eXRMqzdwBUxKmB4hQcQyBTpVH1NAKzTB/tmpm5vefpnt.mp4",
+          "https://replicate.delivery/xezq/LEuAxRIjDJKtEBtjJqz7fys54ONyDRUAK3jNxNwCEkKAdZeUA/tmpy89a70ke.mp4",
+          "https://replicate.delivery/xezq/eRwX7pg1AIUjFC148S2JpVn2hWS5r9dULdxm15dOMfxd54GVA/tmpou9td0s5.mp4",
+          "https://replicate.delivery/xezq/RrB0vIXdP7YMHx6NJqV9plIbwJ85Rktes9R26txTnjIjCMoKA/tmpoo4_l9xh.mp4"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/NLybk0ySU6qKANmOJ5xzKJx28Q8x5rk4PZey7eeoC7qiIg5pA/tmpbufkswx1.mp4",
+          "https://replicate.delivery/xezq/yAfwoReEDZl39EeInfkM7nufcc7eeAkB02POD28SGYX7wFYeUA/tmpjeapk4og.mp4",
+          "https://replicate.delivery/xezq/CSPm6I9uOR45JFzXKX6wQKXaEUKE08x4wl0MhGoSDgWEDMPF/tmpeahvppel.mp4",
+          "https://replicate.delivery/xezq/fjGfQQVNPvjCeJCp2eXRMqzdwBUxKmB4hQcQyBTpVH1NAKzTB/tmpm5vefpnt.mp4",
+          "https://replicate.delivery/xezq/LEuAxRIjDJKtEBtjJqz7fys54ONyDRUAK3jNxNwCEkKAdZeUA/tmpy89a70ke.mp4",
+          "https://replicate.delivery/xezq/eRwX7pg1AIUjFC148S2JpVn2hWS5r9dULdxm15dOMfxd54GVA/tmpou9td0s5.mp4",
+          "https://replicate.delivery/xezq/RrB0vIXdP7YMHx6NJqV9plIbwJ85Rktes9R26txTnjIjCMoKA/tmpoo4_l9xh.mp4"
+        ]
+      }
+    },
+    {
+      "id": "hailuo-2.3-fast",
+      "data": {
+        "id": "hailuo-2.3-fast",
+        "name": "Hailuo 2.3 Fast",
+        "description": "A lower-latency image-to-video version of Hailuo 2.3 that preserves core motion quality, visual consistency, and stylization performance while enabling faster iteration cycles.",
+        "price_per_sec": 19,
+        "default_duration": 6,
+        "duration_options": [
+          6,
+          10
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": true,
+        "supports_last_frame": false,
+        "requires_last_frame": false,
+        "supports_audio": false,
+        "preview_url": "",
+        "replicate_name": "minimax/hailuo-2.3-fast",
+        "index": 9,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt for generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.",
+            "default": 6,
+            "enum": [
+              6,
+              10
+            ],
+            "title": "duration"
+          },
+          {
+            "name": "resolution",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Pick between 768p or 1080p resolution. 1080p supports only 6-second duration.",
+            "default": "768p",
+            "enum": [
+              "768p",
+              "1080p"
+            ],
+            "title": "resolution"
+          },
+          {
+            "name": "prompt_optimizer",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Use prompt optimizer",
+            "default": true,
+            "title": "Prompt Optimizer"
+          },
+          {
+            "name": "first_frame_image",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "First frame image for video generation. The output video will have the same aspect ratio as this image.",
+            "format": "uri",
+            "title": "First Frame Image"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt",
+            "first_frame_image"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt for generation"
+              }
+            ],
+            "numeric": [],
+            "boolean": [
+              {
+                "name": "prompt_optimizer",
+                "type": "boolean",
+                "required": false,
+                "description": "Use prompt optimizer",
+                "default": true
+              }
+            ],
+            "enum": [
+              {
+                "name": "duration",
+                "type": "number",
+                "required": false,
+                "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.",
+                "default": 6,
+                "enum": [
+                  6,
+                  10
+                ]
+              },
+              {
+                "name": "resolution",
+                "type": "enum",
+                "required": false,
+                "description": "Pick between 768p or 1080p resolution. 1080p supports only 6-second duration.",
+                "default": "768p",
+                "enum": [
+                  "768p",
+                  "1080p"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "first_frame_image",
+                "type": "string",
+                "required": true,
+                "description": "First frame image for video generation. The output video will have the same aspect ratio as this image.",
+                "format": "uri"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\",\"first_frame_image\"],\"properties\":{\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"description\":\"Text prompt for generation\"},\"duration\":{\"enum\":[6,10],\"type\":\"integer\",\"title\":\"duration\",\"description\":\"Duration of the video in seconds. 10 seconds is only available for 768p resolution.\",\"default\":6,\"x-order\":2},\"resolution\":{\"enum\":[\"768p\",\"1080p\"],\"type\":\"string\",\"title\":\"resolution\",\"description\":\"Pick between 768p or 1080p resolution. 1080p supports only 6-second duration.\",\"default\":\"768p\",\"x-order\":3},\"prompt_optimizer\":{\"type\":\"boolean\",\"title\":\"Prompt Optimizer\",\"default\":true,\"description\":\"Use prompt optimizer\"},\"first_frame_image\":{\"type\":\"string\",\"title\":\"First Frame Image\",\"format\":\"uri\",\"description\":\"First frame image for video generation. The output video will have the same aspect ratio as this image.\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/NohwkQMfXYWKAS5QciHGFng9b9H0wVEbvol7WJAEmkN8MixKA/tmp5hxzqzw4.mp4",
+          "https://replicate.delivery/xezq/xMBu3hve9jUTUyeijFeZNPBWT9sAxaQ0shKrsxltREUHdgGrA/tmp5teqjfsk.mp4",
+          "https://replicate.delivery/xezq/OH4Ubefa0NiZwUneg3eS0LqcPYtNmxVJlSsZMFl6JpvFu4NWB/tmp6hdm26gd.mp4",
+          "https://replicate.delivery/xezq/fXRgtIXwL2RfiEnoeaIZKfgVee8q8FUFqHxlcLCtrPonAl3YF/tmplcgybmlt.mp4",
+          "https://replicate.delivery/pbxt/NxCp7nByNL7VN8Kh51UHXftguHvGd56CLAJeM3jMJf7ZQOmK/replicate-prediction-9rhzeppdfnrmc0cswyfrm1a1am.jpeg"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/NohwkQMfXYWKAS5QciHGFng9b9H0wVEbvol7WJAEmkN8MixKA/tmp5hxzqzw4.mp4",
+          "https://replicate.delivery/xezq/xMBu3hve9jUTUyeijFeZNPBWT9sAxaQ0shKrsxltREUHdgGrA/tmp5teqjfsk.mp4",
+          "https://replicate.delivery/xezq/OH4Ubefa0NiZwUneg3eS0LqcPYtNmxVJlSsZMFl6JpvFu4NWB/tmp6hdm26gd.mp4",
+          "https://replicate.delivery/xezq/fXRgtIXwL2RfiEnoeaIZKfgVee8q8FUFqHxlcLCtrPonAl3YF/tmplcgybmlt.mp4",
+          "https://replicate.delivery/pbxt/NxCp7nByNL7VN8Kh51UHXftguHvGd56CLAJeM3jMJf7ZQOmK/replicate-prediction-9rhzeppdfnrmc0cswyfrm1a1am.jpeg"
+        ]
+      }
+    },
+    {
+      "id": "kling-v2.1-master",
+      "data": {
+        "id": "kling-v2.1-master",
+        "name": "Kling V2.1 Master",
+        "description": "A premium version of Kling v2.1 with superb dynamics and prompt adherence. Generate 1080p 5s and 10s videos from text or an image",
+        "price_per_sec": 28,
+        "default_duration": 5,
+        "duration_options": [
+          5,
+          10
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16",
+          "1:1"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": false,
+        "requires_last_frame": false,
+        "supports_audio": false,
+        "preview_url": "",
+        "replicate_name": "kwaivgi/kling-v2.1-master",
+        "index": 12,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt for video generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Duration of the video in seconds",
+            "default": 5,
+            "enum": [
+              5,
+              10
+            ],
+            "title": "duration"
+          },
+          {
+            "name": "start_image",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "First frame of the video",
+            "format": "uri",
+            "title": "Start Image"
+          },
+          {
+            "name": "aspect_ratio",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Aspect ratio of the video. Ignored if start_image is provided.",
+            "default": "16:9",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1"
+            ],
+            "title": "aspect_ratio"
+          },
+          {
+            "name": "negative_prompt",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "Things you do not want to see in the video",
+            "default": "",
+            "title": "Negative Prompt"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt for video generation"
+              },
+              {
+                "name": "negative_prompt",
+                "type": "string",
+                "required": false,
+                "description": "Things you do not want to see in the video",
+                "default": ""
+              }
+            ],
+            "numeric": [],
+            "boolean": [],
+            "enum": [
+              {
+                "name": "duration",
+                "type": "number",
+                "required": false,
+                "description": "Duration of the video in seconds",
+                "default": 5,
+                "enum": [
+                  5,
+                  10
+                ]
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "enum",
+                "required": false,
+                "description": "Aspect ratio of the video. Ignored if start_image is provided.",
+                "default": "16:9",
+                "enum": [
+                  "16:9",
+                  "9:16",
+                  "1:1"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "start_image",
+                "type": "string",
+                "required": false,
+                "description": "First frame of the video",
+                "format": "uri"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"description\":\"Text prompt for video generation\"},\"duration\":{\"enum\":[5,10],\"type\":\"integer\",\"title\":\"duration\",\"description\":\"Duration of the video in seconds\",\"default\":5,\"x-order\":4},\"start_image\":{\"type\":\"string\",\"title\":\"Start Image\",\"format\":\"uri\",\"description\":\"First frame of the video\"},\"aspect_ratio\":{\"enum\":[\"16:9\",\"9:16\",\"1:1\"],\"type\":\"string\",\"title\":\"aspect_ratio\",\"description\":\"Aspect ratio of the video. Ignored if start_image is provided.\",\"default\":\"16:9\",\"x-order\":3},\"negative_prompt\":{\"type\":\"string\",\"title\":\"Negative Prompt\",\"default\":\"\",\"description\":\"Things you do not want to see in the video\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/9uK7fv8Ahn3Kbam2dLehxXjxzsFiedPdWG086eeBRPdDZLEnC/tmp_07jswu0.mp4",
+          "https://replicate.delivery/xezq/XYrfXEU8EJQjDqcHG7Pt6fDlIKQWyleZuRV58eEtX3IxaGiTB/tmpunco8ebh.mp4",
+          "https://replicate.delivery/xezq/eOagYC8PA4zYRajq2EjDbTtO7120oD4AHFAlmhC3NFlLHRcKA/tmp5bp3oxgh.mp4",
+          "https://replicate.delivery/xezq/D0S2kFge6F1KXahOjV77ifxqLb5PFp8y1vHayeCZhgJgmJxpA/tmpooyiogo4.mp4"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/9uK7fv8Ahn3Kbam2dLehxXjxzsFiedPdWG086eeBRPdDZLEnC/tmp_07jswu0.mp4",
+          "https://replicate.delivery/xezq/XYrfXEU8EJQjDqcHG7Pt6fDlIKQWyleZuRV58eEtX3IxaGiTB/tmpunco8ebh.mp4",
+          "https://replicate.delivery/xezq/eOagYC8PA4zYRajq2EjDbTtO7120oD4AHFAlmhC3NFlLHRcKA/tmp5bp3oxgh.mp4",
+          "https://replicate.delivery/xezq/D0S2kFge6F1KXahOjV77ifxqLb5PFp8y1vHayeCZhgJgmJxpA/tmpooyiogo4.mp4"
+        ]
+      }
+    },
+    {
+      "id": "kling-v2.5-turbo-pro",
+      "data": {
+        "id": "kling-v2.5-turbo-pro",
+        "name": "Kling V2.5 Turbo Pro",
+        "description": "Kling 2.5 Turbo Pro: Unlock pro-level text-to-video and image-to-video creation with smooth motion, cinematic depth, and remarkable prompt adherence.",
+        "price_per_sec": 7,
+        "default_duration": 5,
+        "duration_options": [
+          5,
+          10
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16",
+          "1:1"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": false,
+        "requires_last_frame": false,
+        "supports_audio": false,
+        "preview_url": "",
+        "replicate_name": "kwaivgi/kling-v2.5-turbo-pro",
+        "index": 15,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "image",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Deprecated: Use start_image instead.",
+            "format": "uri",
+            "title": "Image"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt for video generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Duration of the video in seconds",
+            "default": 5,
+            "enum": [
+              5,
+              10
+            ],
+            "title": "duration"
+          },
+          {
+            "name": "start_image",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "First frame of the video",
+            "format": "uri",
+            "title": "Start Image"
+          },
+          {
+            "name": "aspect_ratio",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Aspect ratio of the video. Ignored if start_image is provided.",
+            "default": "16:9",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1"
+            ],
+            "title": "aspect_ratio"
+          },
+          {
+            "name": "negative_prompt",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "Things you do not want to see in the video",
+            "default": "",
+            "title": "Negative Prompt"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt for video generation"
+              },
+              {
+                "name": "negative_prompt",
+                "type": "string",
+                "required": false,
+                "description": "Things you do not want to see in the video",
+                "default": ""
+              }
+            ],
+            "numeric": [],
+            "boolean": [],
+            "enum": [
+              {
+                "name": "duration",
+                "type": "number",
+                "required": false,
+                "description": "Duration of the video in seconds",
+                "default": 5,
+                "enum": [
+                  5,
+                  10
+                ]
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "enum",
+                "required": false,
+                "description": "Aspect ratio of the video. Ignored if start_image is provided.",
+                "default": "16:9",
+                "enum": [
+                  "16:9",
+                  "9:16",
+                  "1:1"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "image",
+                "type": "string",
+                "required": false,
+                "description": "Deprecated: Use start_image instead.",
+                "format": "uri"
+              },
+              {
+                "name": "start_image",
+                "type": "string",
+                "required": false,
+                "description": "First frame of the video",
+                "format": "uri"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"image\":{\"type\":\"string\",\"title\":\"Image\",\"format\":\"uri\",\"nullable\":true,\"deprecated\":true,\"description\":\"Deprecated: Use start_image instead.\"},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"description\":\"Text prompt for video generation\"},\"duration\":{\"enum\":[5,10],\"type\":\"integer\",\"title\":\"duration\",\"description\":\"Duration of the video in seconds\",\"default\":5,\"x-order\":4},\"start_image\":{\"type\":\"string\",\"title\":\"Start Image\",\"format\":\"uri\",\"description\":\"First frame of the video\"},\"aspect_ratio\":{\"enum\":[\"16:9\",\"9:16\",\"1:1\"],\"type\":\"string\",\"title\":\"aspect_ratio\",\"description\":\"Aspect ratio of the video. Ignored if start_image is provided.\",\"default\":\"16:9\",\"x-order\":3},\"negative_prompt\":{\"type\":\"string\",\"title\":\"Negative Prompt\",\"default\":\"\",\"description\":\"Things you do not want to see in the video\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/17c3JG1SzH6NCduMiKp1Cxyqvpad0GXRf507Pqq5GOqNsZsKA/tmpg4w3kyjz.mp4",
+          "https://replicate.delivery/xezq/ssJoLMbvdLIgIRdWaDY26XEmUJmQfH1Af6He1Z2XHLtqIoxqA/tmpp3vqjumh.mp4",
+          "https://replicate.delivery/xezq/Fez1ZQegP1tyC0f18Qr1WyVpVeGWEYS0GPemdGCI9ayvDhGrC/tmp4s6vgmpf.mp4",
+          "https://replicate.delivery/xezq/EnlmUfQrjDTzGaMakDffU94SfsNnrSIcGdK9AlRGi0uDBRjVB/tmptifj8gul.mp4",
+          "https://replicate.delivery/xezq/Lzq3zWbgAH7vCRFyf7xef9AEqfNOK1fYk2ZJfprfEdHaZUasKA/tmpmpzrg66r.mp4"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/17c3JG1SzH6NCduMiKp1Cxyqvpad0GXRf507Pqq5GOqNsZsKA/tmpg4w3kyjz.mp4",
+          "https://replicate.delivery/xezq/ssJoLMbvdLIgIRdWaDY26XEmUJmQfH1Af6He1Z2XHLtqIoxqA/tmpp3vqjumh.mp4",
+          "https://replicate.delivery/xezq/Fez1ZQegP1tyC0f18Qr1WyVpVeGWEYS0GPemdGCI9ayvDhGrC/tmp4s6vgmpf.mp4",
+          "https://replicate.delivery/xezq/EnlmUfQrjDTzGaMakDffU94SfsNnrSIcGdK9AlRGi0uDBRjVB/tmptifj8gul.mp4",
+          "https://replicate.delivery/xezq/Lzq3zWbgAH7vCRFyf7xef9AEqfNOK1fYk2ZJfprfEdHaZUasKA/tmpmpzrg66r.mp4"
+        ]
+      }
+    },
+    {
+      "id": "ltx-2-fast",
+      "data": {
+        "id": "ltx-2-fast",
+        "name": "Ltx 2 Fast",
+        "description": "Ltx 2 Fast - High-quality video generation model",
+        "price_per_sec": 4,
+        "default_duration": 6,
+        "duration_options": [
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": false,
+        "requires_last_frame": false,
+        "supports_audio": true,
+        "preview_url": "",
+        "replicate_name": "lightricks/ltx-2-fast",
+        "index": 17,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "image",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "First frame image for optional image-to-video generation",
+            "format": "uri",
+            "title": "Image"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt describing the video to generate",
+            "title": "Prompt"
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Duration of the video in seconds. Durations longer than 10 seconds are only available with 1080p resolution.",
+            "default": 6,
+            "enum": [
+              6,
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20
+            ],
+            "title": "duration"
+          },
+          {
+            "name": "resolution",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Resolution quality of the generated video",
+            "default": "1080p",
+            "enum": [
+              "1080p",
+              "2k",
+              "4k"
+            ],
+            "title": "resolution"
+          },
+          {
+            "name": "generate_audio",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Generate audio for the video",
+            "default": true,
+            "title": "Generate Audio"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt describing the video to generate"
+              }
+            ],
+            "numeric": [],
+            "boolean": [],
+            "enum": [
+              {
+                "name": "duration",
+                "type": "number",
+                "required": false,
+                "description": "Duration of the video in seconds. Durations longer than 10 seconds are only available with 1080p resolution.",
+                "default": 6,
+                "enum": [
+                  6,
+                  8,
+                  10,
+                  12,
+                  14,
+                  16,
+                  18,
+                  20
+                ]
+              },
+              {
+                "name": "resolution",
+                "type": "enum",
+                "required": false,
+                "description": "Resolution quality of the generated video",
+                "default": "1080p",
+                "enum": [
+                  "1080p",
+                  "2k",
+                  "4k"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "image",
+                "type": "string",
+                "required": false,
+                "description": "First frame image for optional image-to-video generation",
+                "format": "uri"
+              },
+              {
+                "name": "generate_audio",
+                "type": "boolean",
+                "required": false,
+                "description": "Generate audio for the video"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"image\":{\"type\":\"string\",\"title\":\"Image\",\"format\":\"uri\",\"description\":\"First frame image for optional image-to-video generation\"},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"description\":\"Text prompt describing the video to generate\"},\"duration\":{\"enum\":[6,8,10,12,14,16,18,20],\"type\":\"integer\",\"title\":\"duration\",\"description\":\"Duration of the video in seconds. Durations longer than 10 seconds are only available with 1080p resolution.\",\"default\":6,\"x-order\":3},\"resolution\":{\"enum\":[\"1080p\",\"2k\",\"4k\"],\"type\":\"string\",\"title\":\"resolution\",\"description\":\"Resolution quality of the generated video\",\"default\":\"1080p\",\"x-order\":2},\"generate_audio\":{\"type\":\"boolean\",\"title\":\"Generate Audio\",\"default\":true,\"description\":\"Generate audio for the video\"}}}",
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/VUdJthWRZxJMOdVL2lBFR1K9J2nLUUjngDiyagPbjAejvehVA/tmplkv0_7wi.mp4",
+          "https://replicate.delivery/xezq/OZDRKjW01V54BNhZll1lo9CVPIU2pbD8yGGSvFRy1MAAmfwKA/tmpoahhx6gd.mp4",
+          "https://replicate.delivery/xezq/zsD7zCTyuL7eW68mhR2To8DZoS4OT2BQd2oXP3ZOK1U0MfhVA/tmp8un0w8yy.mp4",
+          "https://replicate.delivery/xezq/ZuMzPe5GtOxtVK59EO2a4F8hDrDESMTPUshVB86dffS538DrA/tmp55nt3l_c.mp4",
+          "https://replicate.delivery/xezq/qZJqNQUGOQZBL11GKYyMf6j9zebygo2QxsbmGztcezBQ48DrA/tmpycq8b_l0.mp4",
+          "https://replicate.delivery/xezq/C5lKtwHSBloDJB5LmasPpsRZdVUgqTnwdK2BjASYOe4rRfhVA/tmp69__x443.mp4",
+          "https://replicate.delivery/xezq/Xe3HUYeQMIlJzEmRW2RFdH6Vifeg8Z1PkAmhlc5eS0pqrLQsC/tmpzqz2e09l.mp4",
+          "https://replicate.delivery/xezq/FvR9AwLdbzIKNRQ0y2pwEDf0BgF0Ez1sQE8eZteW1J7XcfGWB/tmpan00ukuq.mp4",
+          "https://replicate.delivery/pbxt/Nvp4bHMZRVeafvUBJKIfzlqkqRjLl8Fyn3JMuWUlUWEVhzuT/replicate-prediction-pwnbqza6f9rm80ct1sgtfgvwdr.png"
+        ]
+      }
+    },
+    {
+      "id": "ltx-2-pro",
+      "data": {
+        "id": "ltx-2-pro",
+        "name": "Ltx 2 Pro",
+        "description": "Ltx 2 Pro - High-quality video generation model",
+        "price_per_sec": 6,
+        "default_duration": 6,
+        "duration_options": [
+          6,
+          8,
+          10
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": false,
+        "requires_last_frame": false,
+        "supports_audio": true,
+        "preview_url": "",
+        "replicate_name": "lightricks/ltx-2-pro",
+        "index": 19,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "image",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "First frame image for optional image-to-video generation",
+            "format": "uri",
+            "title": "Image"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt describing the video to generate",
+            "title": "Prompt"
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Duration of the video in seconds",
+            "default": 6,
+            "enum": [
+              6,
+              8,
+              10
+            ],
+            "title": "duration"
+          },
+          {
+            "name": "resolution",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Resolution quality of the generated video",
+            "default": "1080p",
+            "enum": [
+              "1080p",
+              "2k",
+              "4k"
+            ],
+            "title": "resolution"
+          },
+          {
+            "name": "generate_audio",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Generate audio for the video",
+            "default": true,
+            "title": "Generate Audio"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt describing the video to generate"
+              }
+            ],
+            "numeric": [],
+            "boolean": [],
+            "enum": [
+              {
+                "name": "duration",
+                "type": "number",
+                "required": false,
+                "description": "Duration of the video in seconds",
+                "default": 6,
+                "enum": [
+                  6,
+                  8,
+                  10
+                ]
+              },
+              {
+                "name": "resolution",
+                "type": "enum",
+                "required": false,
+                "description": "Resolution quality of the generated video",
+                "default": "1080p",
+                "enum": [
+                  "1080p",
+                  "2k",
+                  "4k"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "image",
+                "type": "string",
+                "required": false,
+                "description": "First frame image for optional image-to-video generation",
+                "format": "uri"
+              },
+              {
+                "name": "generate_audio",
+                "type": "boolean",
+                "required": false,
+                "description": "Generate audio for the video"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"image\":{\"type\":\"string\",\"title\":\"Image\",\"format\":\"uri\",\"description\":\"First frame image for optional image-to-video generation\"},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"description\":\"Text prompt describing the video to generate\"},\"duration\":{\"enum\":[6,8,10],\"type\":\"integer\",\"title\":\"duration\",\"description\":\"Duration of the video in seconds\",\"default\":6,\"x-order\":3},\"resolution\":{\"enum\":[\"1080p\",\"2k\",\"4k\"],\"type\":\"string\",\"title\":\"resolution\",\"description\":\"Resolution quality of the generated video\",\"default\":\"1080p\",\"x-order\":2},\"generate_audio\":{\"type\":\"boolean\",\"title\":\"Generate Audio\",\"default\":true,\"description\":\"Generate audio for the video\"}}}",
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/M8krcmsXwRrSK1DuufUjOpLjfHs9KGF7zgespA2hugJ1V7DrA/tmpc_m94ikd.mp4",
+          "https://replicate.delivery/xezq/GPXMuvvmsJp9P5zhA8iXvkFVETpel5tiMdhtUhWjsBD8RfhVA/tmp3_rwznmf.mp4",
+          "https://replicate.delivery/xezq/SKUPcbemc2VNE6B3ykiKKIYn3w7S3BQaMg4YIf4kN0zHoeDrA/tmpjk5lvmjy.mp4",
+          "https://replicate.delivery/xezq/FN4X6kFZhRKEMJNH8pDa1mtg3kcGdfDrINIg38FCqalbWfhVA/tmp3q56smse.mp4",
+          "https://replicate.delivery/xezq/10DE4e0psL1EBiQqZA9rc7JdCBmdGKpc0NoeaJLfzuRic9DrA/tmpaxus5iln.mp4",
+          "https://replicate.delivery/xezq/OdK1NDj7x6rwNdfLRGCHzrz3OS20dbBlW6dGI73Y09eYzeDrA/tmpujshdc0p.mp4",
+          "https://replicate.delivery/pbxt/NvqakTNQAu10qQBXiS00K2Z4pDgWafgrVrZjsFU5ipAEBqp5/replicate-prediction-hq3n9jetmxrmc0ct1sj9k38jpg.png"
+        ]
+      }
+    },
+    {
+      "id": "motion-2.0",
+      "data": {
+        "id": "motion-2.0",
+        "name": "Motion 2.0",
+        "description": "Create 5s 480p videos from a text prompt",
+        "price_per_sec": 30,
+        "default_duration": 5,
+        "duration_options": [
+          5
+        ],
+        "aspect_ratios": [
+          "9:16",
+          "16:9",
+          "2:3",
+          "4:5"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": false,
+        "requires_last_frame": false,
+        "supports_audio": false,
+        "preview_url": "",
+        "replicate_name": "leonardoai/motion-2.0",
+        "index": 18,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "image",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "Image to use for the first frame of the video",
+            "format": "uri",
+            "title": "Image"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt for generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "vibe_style",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Style for the overall vibe of the video. Ignored if image is provided.",
+            "default": "None",
+            "enum": [
+              "None",
+              "clay",
+              "color_sketch",
+              "logo",
+              "papercraft",
+              "pro_photo",
+              "sci_fi",
+              "sketch",
+              "stock_footage",
+              "streetshot"
+            ],
+            "title": "vibe_style"
+          },
+          {
+            "name": "aspect_ratio",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Aspect ratio of the output video. Ignored if image is provided.",
+            "default": "16:9",
+            "enum": [
+              "9:16",
+              "16:9",
+              "2:3",
+              "4:5"
+            ],
+            "title": "aspect_ratio"
+          },
+          {
+            "name": "lighting_style",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Style for the lighting of the video. Ignored if image is provided.",
+            "default": "None",
+            "enum": [
+              "None",
+              "backlight",
+              "candle_lit",
+              "chiaroscuro",
+              "film_haze",
+              "foggy",
+              "golden_hour",
+              "hardlight",
+              "lens_flare",
+              "light_art",
+              "low_key",
+              "luminous",
+              "mystical",
+              "rainy",
+              "soft_light",
+              "volumetric"
+            ],
+            "title": "lighting_style"
+          },
+          {
+            "name": "prompt_enhance",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Whether to enhance the prompt",
+            "default": true,
+            "title": "Prompt Enhance"
+          },
+          {
+            "name": "negative_prompt",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "The negative prompt used for the video generation",
+            "title": "Negative Prompt"
+          },
+          {
+            "name": "shot_type_style",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Style for the shot type of the video. Ignored if image is provided.",
+            "default": "None",
+            "enum": [
+              "None",
+              "bokeh",
+              "cinematic",
+              "close_up",
+              "overhead",
+              "spiritual",
+              "spooky"
+            ],
+            "title": "shot_type_style"
+          },
+          {
+            "name": "color_theme_style",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Style for the color theme of the video. Ignored if image is provided.",
+            "default": "None",
+            "enum": [
+              "None",
+              "autumn",
+              "complimentary",
+              "cool",
+              "dark",
+              "earthy",
+              "electric",
+              "iridescent",
+              "pastel",
+              "split",
+              "terracotta_teal",
+              "ultraviolet",
+              "vibrant",
+              "warm"
+            ],
+            "title": "color_theme_style"
+          },
+          {
+            "name": "frame_interpolation",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Smoothly blend frames for fluid video transitions",
+            "default": true,
+            "title": "Frame Interpolation"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt for generation"
+              },
+              {
+                "name": "negative_prompt",
+                "type": "string",
+                "required": false,
+                "description": "The negative prompt used for the video generation"
+              }
+            ],
+            "numeric": [],
+            "boolean": [
+              {
+                "name": "prompt_enhance",
+                "type": "boolean",
+                "required": false,
+                "description": "Whether to enhance the prompt",
+                "default": true
+              }
+            ],
+            "enum": [
+              {
+                "name": "vibe_style",
+                "type": "enum",
+                "required": false,
+                "description": "Style for the overall vibe of the video. Ignored if image is provided.",
+                "default": "None",
+                "enum": [
+                  "None",
+                  "clay",
+                  "color_sketch",
+                  "logo",
+                  "papercraft",
+                  "pro_photo",
+                  "sci_fi",
+                  "sketch",
+                  "stock_footage",
+                  "streetshot"
+                ]
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "enum",
+                "required": false,
+                "description": "Aspect ratio of the output video. Ignored if image is provided.",
+                "default": "16:9",
+                "enum": [
+                  "9:16",
+                  "16:9",
+                  "2:3",
+                  "4:5"
+                ]
+              },
+              {
+                "name": "lighting_style",
+                "type": "enum",
+                "required": false,
+                "description": "Style for the lighting of the video. Ignored if image is provided.",
+                "default": "None",
+                "enum": [
+                  "None",
+                  "backlight",
+                  "candle_lit",
+                  "chiaroscuro",
+                  "film_haze",
+                  "foggy",
+                  "golden_hour",
+                  "hardlight",
+                  "lens_flare",
+                  "light_art",
+                  "low_key",
+                  "luminous",
+                  "mystical",
+                  "rainy",
+                  "soft_light",
+                  "volumetric"
+                ]
+              },
+              {
+                "name": "shot_type_style",
+                "type": "enum",
+                "required": false,
+                "description": "Style for the shot type of the video. Ignored if image is provided.",
+                "default": "None",
+                "enum": [
+                  "None",
+                  "bokeh",
+                  "cinematic",
+                  "close_up",
+                  "overhead",
+                  "spiritual",
+                  "spooky"
+                ]
+              },
+              {
+                "name": "color_theme_style",
+                "type": "enum",
+                "required": false,
+                "description": "Style for the color theme of the video. Ignored if image is provided.",
+                "default": "None",
+                "enum": [
+                  "None",
+                  "autumn",
+                  "complimentary",
+                  "cool",
+                  "dark",
+                  "earthy",
+                  "electric",
+                  "iridescent",
+                  "pastel",
+                  "split",
+                  "terracotta_teal",
+                  "ultraviolet",
+                  "vibrant",
+                  "warm"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "image",
+                "type": "string",
+                "required": false,
+                "description": "Image to use for the first frame of the video",
+                "format": "uri"
+              },
+              {
+                "name": "frame_interpolation",
+                "type": "boolean",
+                "required": false,
+                "description": "Smoothly blend frames for fluid video transitions"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"image\":{\"type\":\"string\",\"title\":\"Image\",\"format\":\"uri\",\"description\":\"Image to use for the first frame of the video\"},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"description\":\"Text prompt for generation\"},\"vibe_style\":{\"enum\":[\"None\",\"clay\",\"color_sketch\",\"logo\",\"papercraft\",\"pro_photo\",\"sci_fi\",\"sketch\",\"stock_footage\",\"streetshot\"],\"type\":\"string\",\"title\":\"vibe_style\",\"description\":\"Style for the overall vibe of the video. Ignored if image is provided.\",\"default\":\"None\",\"x-order\":6},\"aspect_ratio\":{\"enum\":[\"9:16\",\"16:9\",\"2:3\",\"4:5\"],\"type\":\"string\",\"title\":\"aspect_ratio\",\"description\":\"Aspect ratio of the output video. Ignored if image is provided.\",\"default\":\"16:9\",\"x-order\":2},\"lighting_style\":{\"enum\":[\"None\",\"backlight\",\"candle_lit\",\"chiaroscuro\",\"film_haze\",\"foggy\",\"golden_hour\",\"hardlight\",\"lens_flare\",\"light_art\",\"low_key\",\"luminous\",\"mystical\",\"rainy\",\"soft_light\",\"volumetric\"],\"type\":\"string\",\"title\":\"lighting_style\",\"description\":\"Style for the lighting of the video. Ignored if image is provided.\",\"default\":\"None\",\"x-order\":7},\"prompt_enhance\":{\"type\":\"boolean\",\"title\":\"Prompt Enhance\",\"default\":true,\"description\":\"Whether to enhance the prompt\"},\"negative_prompt\":{\"type\":\"string\",\"title\":\"Negative Prompt\",\"nullable\":true,\"description\":\"The negative prompt used for the video generation\"},\"shot_type_style\":{\"enum\":[\"None\",\"bokeh\",\"cinematic\",\"close_up\",\"overhead\",\"spiritual\",\"spooky\"],\"type\":\"string\",\"title\":\"shot_type_style\",\"description\":\"Style for the shot type of the video. Ignored if image is provided.\",\"default\":\"None\",\"x-order\":8},\"color_theme_style\":{\"enum\":[\"None\",\"autumn\",\"complimentary\",\"cool\",\"dark\",\"earthy\",\"electric\",\"iridescent\",\"pastel\",\"split\",\"terracotta_teal\",\"ultraviolet\",\"vibrant\",\"warm\"],\"type\":\"string\",\"title\":\"color_theme_style\",\"description\":\"Style for the color theme of the video. Ignored if image is provided.\",\"default\":\"None\",\"x-order\":9},\"frame_interpolation\":{\"type\":\"boolean\",\"title\":\"Frame Interpolation\",\"default\":true,\"description\":\"Smoothly blend frames for fluid video transitions\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/ONOR9TevnKSldi2E5yObpoByieYhuGDePh1Fl0DA0tiOoWipA/tmpwfxoip00.mp4",
+          "https://replicate.delivery/xezq/Up5cK7j9ZgJALVZjTvCfQeDWibaoABcjh6qfGlzyXLEwoWipA/tmps5gv28ej.mp4"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/ONOR9TevnKSldi2E5yObpoByieYhuGDePh1Fl0DA0tiOoWipA/tmpwfxoip00.mp4",
+          "https://replicate.delivery/xezq/Up5cK7j9ZgJALVZjTvCfQeDWibaoABcjh6qfGlzyXLEwoWipA/tmps5gv28ej.mp4"
+        ]
+      }
+    },
+    {
+      "id": "ovi-i2v",
+      "data": {
+        "id": "ovi-i2v",
+        "name": "Ovi I2v",
+        "description": "Ovi: generate videos with audio from image and text inputs",
+        "price_per_sec": 20,
+        "default_duration": 5,
+        "duration_options": [
+          5
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": true,
+        "supports_last_frame": false,
+        "requires_last_frame": false,
+        "supports_audio": false,
+        "preview_url": "",
+        "replicate_name": "character-ai/ovi-i2v",
+        "index": 20,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "seed",
+            "type": "number",
+            "required": false,
+            "nullable": true,
+            "description": "Random seed. Set for reproducible generation.",
+            "title": "Seed"
+          },
+          {
+            "name": "image",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Input image to generate video from.",
+            "format": "uri",
+            "title": "Image"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Prompt for generated video.",
+            "title": "Prompt"
+          },
+          {
+            "name": "audio_negative_prompt",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "Negative prompt for audio generation.",
+            "default": "robotic, muffled, echo, distorted",
+            "title": "Audio Negative Prompt"
+          },
+          {
+            "name": "video_negative_prompt",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "Negative prompt for video generation.",
+            "default": "jitter, bad hands, blur, distortion",
+            "title": "Video Negative Prompt"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt",
+            "image"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Prompt for generated video."
+              }
+            ],
+            "numeric": [
+              {
+                "name": "seed",
+                "type": "number",
+                "required": false,
+                "description": "Random seed. Set for reproducible generation."
+              }
+            ],
+            "boolean": [],
+            "enum": [],
+            "file": [
+              {
+                "name": "image",
+                "type": "string",
+                "required": true,
+                "description": "Input image to generate video from.",
+                "format": "uri"
+              },
+              {
+                "name": "audio_negative_prompt",
+                "type": "string",
+                "required": false,
+                "description": "Negative prompt for audio generation."
+              },
+              {
+                "name": "video_negative_prompt",
+                "type": "string",
+                "required": false,
+                "description": "Negative prompt for video generation."
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\",\"image\"],\"properties\":{\"seed\":{\"type\":\"integer\",\"title\":\"Seed\",\"x-order\":2,\"nullable\":true,\"description\":\"Random seed. Set for reproducible generation.\"},\"image\":{\"type\":\"string\",\"title\":\"Image\",\"format\":\"uri\",\"x-order\":1,\"description\":\"Input image to generate video from.\"},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"x-order\":0,\"description\":\"Prompt for generated video.\"},\"audio_negative_prompt\":{\"type\":\"string\",\"title\":\"Audio Negative Prompt\",\"default\":\"robotic, muffled, echo, distorted\",\"x-order\":4,\"description\":\"Negative prompt for audio generation.\"},\"video_negative_prompt\":{\"type\":\"string\",\"title\":\"Video Negative Prompt\",\"default\":\"jitter, bad hands, blur, distortion\",\"x-order\":3,\"description\":\"Negative prompt for video generation.\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/7spwly6repRhAqQZw5FbNGkexFMxLIdJ83r0Q11sJ2Tw0acVA/output.mp4",
+          "https://replicate.delivery/xezq/IgZWgrUkXsL3Ihf7ftHhOiaeE9K8Hcv6e7H1jLxOPYXVdrxVB/output.mp4",
+          "https://replicate.delivery/xezq/vMy749nMtroXLVHYAfNTKXEruMVcCyEZSYockVN7j0yTcNuKA/output.mp4",
+          "https://replicate.delivery/xezq/4ZbQqkJIuuLtCpMMz2Sfj0uFFytvCm562B1WZiPftamgwycVA/output.mp4",
+          "https://replicate.delivery/xezq/oUGT0YvX1tqoGFPvBukW4DFSXvJEptXX8U6Kt36jkhaBrFXF/output.mp4",
+          "https://replicate.delivery/pbxt/Nq2nAZ74W84SJcREj08DJryQe6JZpBG0cp2FDJYvrLJqA4pk/podcast.png"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/7spwly6repRhAqQZw5FbNGkexFMxLIdJ83r0Q11sJ2Tw0acVA/output.mp4",
+          "https://replicate.delivery/xezq/IgZWgrUkXsL3Ihf7ftHhOiaeE9K8Hcv6e7H1jLxOPYXVdrxVB/output.mp4",
+          "https://replicate.delivery/xezq/vMy749nMtroXLVHYAfNTKXEruMVcCyEZSYockVN7j0yTcNuKA/output.mp4",
+          "https://replicate.delivery/xezq/4ZbQqkJIuuLtCpMMz2Sfj0uFFytvCm562B1WZiPftamgwycVA/output.mp4",
+          "https://replicate.delivery/xezq/oUGT0YvX1tqoGFPvBukW4DFSXvJEptXX8U6Kt36jkhaBrFXF/output.mp4",
+          "https://replicate.delivery/pbxt/Nq2nAZ74W84SJcREj08DJryQe6JZpBG0cp2FDJYvrLJqA4pk/podcast.png"
+        ]
+      }
+    },
+    {
+      "id": "pixverse-v5",
+      "data": {
+        "id": "pixverse-v5",
+        "name": "Pixverse V5",
+        "description": "PixVerse V5, latest AI video generation model that offers fast rendering speeds, high-end motion quality and cinematic detailing.",
+        "price_per_sec": 1,
+        "default_duration": 5,
+        "duration_options": [
+          5,
+          8
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16",
+          "1:1"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": true,
+        "requires_last_frame": false,
+        "supports_audio": false,
+        "preview_url": "",
+        "replicate_name": "pixverse/pixverse-v5",
+        "index": 14,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "seed",
+            "type": "number",
+            "required": false,
+            "nullable": true,
+            "description": "Random seed. Set for reproducible generation",
+            "title": "Seed"
+          },
+          {
+            "name": "image",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Image to use for the first frame of the video",
+            "format": "uri",
+            "title": "Image"
+          },
+          {
+            "name": "effect",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Special effect to apply to the video. V5 supports effects. Does not work with last_frame_image.",
+            "default": "None",
+            "enum": [
+              "None",
+              "Let's YMCA!",
+              "Subject 3 Fever",
+              "Ghibli Live!",
+              "Suit Swagger",
+              "Muscle Surge",
+              "360° Microwave",
+              "Warmth of Jesus",
+              "Emergency Beat",
+              "Anything, Robot",
+              "Kungfu Club",
+              "Mint in Box",
+              "Retro Anime Pop",
+              "Vogue Walk",
+              "Mega Dive",
+              "Evil Trigger"
+            ],
+            "title": "effect"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt for video generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "quality",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Resolution of the video. 360p and 540p cost the same, but 720p and 1080p cost more. V5 supports 1080p with 8 second duration.",
+            "default": "540p",
+            "enum": [
+              "360p",
+              "540p",
+              "720p",
+              "1080p"
+            ],
+            "title": "quality"
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Duration of the video in seconds. 8 second videos cost twice as much as 5 second videos. V5 supports 1080p with 8 second duration.",
+            "default": 5,
+            "enum": [
+              5,
+              8
+            ],
+            "title": "duration"
+          },
+          {
+            "name": "aspect_ratio",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Aspect ratio of the video",
+            "default": "16:9",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1"
+            ],
+            "title": "aspect_ratio"
+          },
+          {
+            "name": "negative_prompt",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "Negative prompt to avoid certain elements in the video",
+            "default": "",
+            "title": "Negative Prompt"
+          },
+          {
+            "name": "last_frame_image",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Use to generate a video that transitions from the first image to the last image. Must be used with image.",
+            "format": "uri",
+            "title": "Last Frame Image"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt for video generation"
+              },
+              {
+                "name": "negative_prompt",
+                "type": "string",
+                "required": false,
+                "description": "Negative prompt to avoid certain elements in the video",
+                "default": ""
+              }
+            ],
+            "numeric": [
+              {
+                "name": "seed",
+                "type": "number",
+                "required": false,
+                "description": "Random seed. Set for reproducible generation"
+              }
+            ],
+            "boolean": [],
+            "enum": [
+              {
+                "name": "effect",
+                "type": "enum",
+                "required": false,
+                "description": "Special effect to apply to the video. V5 supports effects. Does not work with last_frame_image.",
+                "default": "None",
+                "enum": [
+                  "None",
+                  "Let's YMCA!",
+                  "Subject 3 Fever",
+                  "Ghibli Live!",
+                  "Suit Swagger",
+                  "Muscle Surge",
+                  "360° Microwave",
+                  "Warmth of Jesus",
+                  "Emergency Beat",
+                  "Anything, Robot",
+                  "Kungfu Club",
+                  "Mint in Box",
+                  "Retro Anime Pop",
+                  "Vogue Walk",
+                  "Mega Dive",
+                  "Evil Trigger"
+                ]
+              },
+              {
+                "name": "quality",
+                "type": "enum",
+                "required": false,
+                "description": "Resolution of the video. 360p and 540p cost the same, but 720p and 1080p cost more. V5 supports 1080p with 8 second duration.",
+                "default": "540p",
+                "enum": [
+                  "360p",
+                  "540p",
+                  "720p",
+                  "1080p"
+                ]
+              },
+              {
+                "name": "duration",
+                "type": "number",
+                "required": false,
+                "description": "Duration of the video in seconds. 8 second videos cost twice as much as 5 second videos. V5 supports 1080p with 8 second duration.",
+                "default": 5,
+                "enum": [
+                  5,
+                  8
+                ]
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "enum",
+                "required": false,
+                "description": "Aspect ratio of the video",
+                "default": "16:9",
+                "enum": [
+                  "16:9",
+                  "9:16",
+                  "1:1"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "image",
+                "type": "string",
+                "required": false,
+                "description": "Image to use for the first frame of the video",
+                "format": "uri"
+              },
+              {
+                "name": "last_frame_image",
+                "type": "string",
+                "required": false,
+                "description": "Use to generate a video that transitions from the first image to the last image. Must be used with image.",
+                "format": "uri"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"seed\":{\"type\":\"integer\",\"title\":\"Seed\",\"nullable\":true,\"description\":\"Random seed. Set for reproducible generation\"},\"image\":{\"type\":\"string\",\"title\":\"Image\",\"format\":\"uri\",\"nullable\":true,\"description\":\"Image to use for the first frame of the video\"},\"effect\":{\"enum\":[\"None\",\"Let's YMCA!\",\"Subject 3 Fever\",\"Ghibli Live!\",\"Suit Swagger\",\"Muscle Surge\",\"360° Microwave\",\"Warmth of Jesus\",\"Emergency Beat\",\"Anything, Robot\",\"Kungfu Club\",\"Mint in Box\",\"Retro Anime Pop\",\"Vogue Walk\",\"Mega Dive\",\"Evil Trigger\"],\"type\":\"string\",\"title\":\"effect\",\"description\":\"Special effect to apply to the video. V5 supports effects. Does not work with last_frame_image.\",\"default\":\"None\",\"x-order\":8},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"description\":\"Text prompt for video generation\"},\"quality\":{\"enum\":[\"360p\",\"540p\",\"720p\",\"1080p\"],\"type\":\"string\",\"title\":\"quality\",\"description\":\"Resolution of the video. 360p and 540p cost the same, but 720p and 1080p cost more. V5 supports 1080p with 8 second duration.\",\"default\":\"540p\",\"x-order\":3},\"duration\":{\"enum\":[5,8],\"type\":\"integer\",\"title\":\"duration\",\"description\":\"Duration of the video in seconds. 8 second videos cost twice as much as 5 second videos. V5 supports 1080p with 8 second duration.\",\"default\":5,\"x-order\":5},\"aspect_ratio\":{\"enum\":[\"16:9\",\"9:16\",\"1:1\"],\"type\":\"string\",\"title\":\"aspect_ratio\",\"description\":\"Aspect ratio of the video\",\"default\":\"16:9\",\"x-order\":4},\"negative_prompt\":{\"type\":\"string\",\"title\":\"Negative Prompt\",\"default\":\"\",\"description\":\"Negative prompt to avoid certain elements in the video\"},\"last_frame_image\":{\"type\":\"string\",\"title\":\"Last Frame Image\",\"format\":\"uri\",\"nullable\":true,\"description\":\"Use to generate a video that transitions from the first image to the last image. Must be used with image.\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/cGWRn81blVZGKFocNncx5MHgLtvho90zLaTn3gtQpySLxzTF/tmppcyih9pj.mp4",
+          "https://replicate.delivery/xezq/ljc6TxrXY1bOLhvnbL3ukFK6T2161ptYcIgLyiFXReNCknnKA/tmp3s3i7nns.mp4",
+          "https://replicate.delivery/xezq/ZpcwMRwOww7iKJ6f7Tqv9XxXDS9liCOQokaIDbUFwIF7lnnKA/tmp2sgncxf1.mp4"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/cGWRn81blVZGKFocNncx5MHgLtvho90zLaTn3gtQpySLxzTF/tmppcyih9pj.mp4",
+          "https://replicate.delivery/xezq/ljc6TxrXY1bOLhvnbL3ukFK6T2161ptYcIgLyiFXReNCknnKA/tmp3s3i7nns.mp4",
+          "https://replicate.delivery/xezq/ZpcwMRwOww7iKJ6f7Tqv9XxXDS9liCOQokaIDbUFwIF7lnnKA/tmp2sgncxf1.mp4"
+        ]
+      }
+    },
+    {
+      "id": "ray-2-720p",
+      "data": {
+        "id": "ray-2-720p",
+        "name": "Ray 2 720p",
+        "description": "Generate 5s and 9s 720p videos",
+        "price_per_sec": 18,
+        "default_duration": 5,
+        "duration_options": [
+          5,
+          9
+        ],
+        "aspect_ratios": [
+          "1:1",
+          "3:4",
+          "4:3",
+          "9:16",
+          "16:9",
+          "9:21",
+          "21:9"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": true,
+        "requires_last_frame": false,
+        "supports_audio": false,
+        "preview_url": "",
+        "replicate_name": "luma/ray-2-720p",
+        "index": 21,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "loop",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Whether the video should loop, with the last frame matching the first frame for smooth, continuous playback.",
+            "default": false,
+            "title": "Loop"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt for video generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "concepts",
+            "type": "array",
+            "required": false,
+            "nullable": false,
+            "description": "List of camera concepts to apply to the video generation. Concepts include: truck_left, pan_right, pedestal_down, low_angle, pedestal_up, selfie, pan_left, roll_right, zoom_in, over_the_shoulder, orbit_right, orbit_left, static, tiny_planet, high_angle, bolt_cam, dolly_zoom, overhead, zoom_out, handheld, roll_left, pov, aerial_drone, push_in, crane_down, truck_right, tilt_down, elevator_doors, tilt_up, ground_level, pull_out, aerial, crane_up, eye_level",
+            "title": "Concepts"
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Duration of the video in seconds",
+            "default": 5,
+            "enum": [
+              5,
+              9
+            ],
+            "title": "duration"
+          },
+          {
+            "name": "end_image",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "An optional last frame of the video to use as the ending frame.",
+            "format": "uri",
+            "title": "End Image"
+          },
+          {
+            "name": "start_image",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "An optional first frame of the video to use as the starting frame.",
+            "format": "uri",
+            "title": "Start Image"
+          },
+          {
+            "name": "aspect_ratio",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Aspect ratio of the generated video",
+            "default": "16:9",
+            "enum": [
+              "1:1",
+              "3:4",
+              "4:3",
+              "9:16",
+              "16:9",
+              "9:21",
+              "21:9"
+            ],
+            "title": "aspect_ratio"
+          },
+          {
+            "name": "end_image_url",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "Deprecated: Use end_image instead",
+            "title": "End Image Url"
+          },
+          {
+            "name": "start_image_url",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "Deprecated: Use start_image instead",
+            "title": "Start Image Url"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt for video generation"
+              },
+              {
+                "name": "concepts",
+                "type": "array",
+                "required": false,
+                "description": "List of camera concepts to apply to the video generation. Concepts include: truck_left, pan_right, pedestal_down, low_angle, pedestal_up, selfie, pan_left, roll_right, zoom_in, over_the_shoulder, orbit_right, orbit_left, static, tiny_planet, high_angle, bolt_cam, dolly_zoom, overhead, zoom_out, handheld, roll_left, pov, aerial_drone, push_in, crane_down, truck_right, tilt_down, elevator_doors, tilt_up, ground_level, pull_out, aerial, crane_up, eye_level"
+              }
+            ],
+            "numeric": [],
+            "boolean": [
+              {
+                "name": "loop",
+                "type": "boolean",
+                "required": false,
+                "description": "Whether the video should loop, with the last frame matching the first frame for smooth, continuous playback.",
+                "default": false
+              }
+            ],
+            "enum": [
+              {
+                "name": "duration",
+                "type": "number",
+                "required": false,
+                "description": "Duration of the video in seconds",
+                "default": 5,
+                "enum": [
+                  5,
+                  9
+                ]
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "enum",
+                "required": false,
+                "description": "Aspect ratio of the generated video",
+                "default": "16:9",
+                "enum": [
+                  "1:1",
+                  "3:4",
+                  "4:3",
+                  "9:16",
+                  "16:9",
+                  "9:21",
+                  "21:9"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "end_image",
+                "type": "string",
+                "required": false,
+                "description": "An optional last frame of the video to use as the ending frame.",
+                "format": "uri"
+              },
+              {
+                "name": "start_image",
+                "type": "string",
+                "required": false,
+                "description": "An optional first frame of the video to use as the starting frame.",
+                "format": "uri"
+              },
+              {
+                "name": "end_image_url",
+                "type": "string",
+                "required": false,
+                "description": "Deprecated: Use end_image instead"
+              },
+              {
+                "name": "start_image_url",
+                "type": "string",
+                "required": false,
+                "description": "Deprecated: Use start_image instead"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"loop\":{\"type\":\"boolean\",\"title\":\"Loop\",\"default\":false,\"description\":\"Whether the video should loop, with the last frame matching the first frame for smooth, continuous playback.\"},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"description\":\"Text prompt for video generation\"},\"concepts\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"title\":\"Concepts\",\"description\":\"List of camera concepts to apply to the video generation. Concepts include: truck_left, pan_right, pedestal_down, low_angle, pedestal_up, selfie, pan_left, roll_right, zoom_in, over_the_shoulder, orbit_right, orbit_left, static, tiny_planet, high_angle, bolt_cam, dolly_zoom, overhead, zoom_out, handheld, roll_left, pov, aerial_drone, push_in, crane_down, truck_right, tilt_down, elevator_doors, tilt_up, ground_level, pull_out, aerial, crane_up, eye_level\"},\"duration\":{\"enum\":[5,9],\"type\":\"integer\",\"title\":\"duration\",\"description\":\"Duration of the video in seconds\",\"default\":5,\"x-order\":3},\"end_image\":{\"type\":\"string\",\"title\":\"End Image\",\"format\":\"uri\",\"description\":\"An optional last frame of the video to use as the ending frame.\"},\"start_image\":{\"type\":\"string\",\"title\":\"Start Image\",\"format\":\"uri\",\"description\":\"An optional first frame of the video to use as the starting frame.\"},\"aspect_ratio\":{\"enum\":[\"1:1\",\"3:4\",\"4:3\",\"9:16\",\"16:9\",\"9:21\",\"21:9\"],\"type\":\"string\",\"title\":\"aspect_ratio\",\"description\":\"Aspect ratio of the generated video\",\"default\":\"16:9\",\"x-order\":4},\"end_image_url\":{\"type\":\"string\",\"title\":\"End Image Url\",\"deprecated\":true,\"description\":\"Deprecated: Use end_image instead\"},\"start_image_url\":{\"type\":\"string\",\"title\":\"Start Image Url\",\"deprecated\":true,\"description\":\"Deprecated: Use start_image instead\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/czjl/QAYtRuTghFrPH1qgCx3C0a8WrQggBsGJ0yCCZLsSVuye8pEKA/tmpkq6t05vs.mp4",
+          "https://replicate.delivery/czjl/DPQLyUb0KH6eKafJafajZJMYUkdK5NFpLrzHNKqE1Jv1MoSoA/tmp501exz8a.mp4",
+          "https://replicate.delivery/czjl/qQJQ3L2pDgIaPBET4YjZergziQu776uXRJnllTJCOSynDqEKA/tmpmxs3uoat.mp4",
+          "https://replicate.delivery/czjl/DW5uByT9o5K3EpK4aryN5lT0Le8o9wMrDdElpxYtx3FiFqEKA/tmp850eff5d.mp4",
+          "https://replicate.delivery/czjl/Q6jWYYtvlAauJlWqS5oYvzaWZrBERcXTXb9Evyp3yH1sCVCF/tmpn8nwwjak.mp4"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/czjl/QAYtRuTghFrPH1qgCx3C0a8WrQggBsGJ0yCCZLsSVuye8pEKA/tmpkq6t05vs.mp4",
+          "https://replicate.delivery/czjl/DPQLyUb0KH6eKafJafajZJMYUkdK5NFpLrzHNKqE1Jv1MoSoA/tmp501exz8a.mp4",
+          "https://replicate.delivery/czjl/qQJQ3L2pDgIaPBET4YjZergziQu776uXRJnllTJCOSynDqEKA/tmpmxs3uoat.mp4",
+          "https://replicate.delivery/czjl/DW5uByT9o5K3EpK4aryN5lT0Le8o9wMrDdElpxYtx3FiFqEKA/tmp850eff5d.mp4",
+          "https://replicate.delivery/czjl/Q6jWYYtvlAauJlWqS5oYvzaWZrBERcXTXb9Evyp3yH1sCVCF/tmpn8nwwjak.mp4"
+        ]
+      }
+    },
+    {
+      "id": "seedance-1-lite",
+      "data": {
+        "id": "seedance-1-lite",
+        "name": "Seedance 1 Lite",
+        "description": "A video generation model that offers text-to-video and image-to-video support for 5s or 10s videos, at 480p and 720p resolution",
+        "price_per_sec": 4,
+        "default_duration": 5,
+        "duration_options": [
+          2,
+          4,
+          6,
+          8,
+          10,
+          12
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "4:3",
+          "1:1",
+          "3:4",
+          "9:16",
+          "21:9",
+          "9:21"
+        ],
+        "resolutions": [
+          "480p",
+          "720p",
+          "1080p"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": true,
+        "requires_last_frame": false,
+        "supports_reference_images": true,
+        "max_reference_images": 4,
+        "supports_audio": false,
+        "preview_url": "",
+        "replicate_name": "bytedance/seedance-1-lite",
+        "trending": true,
+        "index": 6,
+        "updated_at": "2025-11-17T13:06:11.561Z",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/L4f180LhnhSCHihiHQ1vX7ZfEG7XOK2WCKNlGGd81xGr7v4UA/tmpeywvj5rm.mp4",
+          "https://replicate.delivery/xezq/TdE8PqxZMNKOABO3KIok1RVXuXxEBDJcDrWI9ewQhMAeDw4UA/tmpt6y3sy01.mp4",
+          "https://replicate.delivery/xezq/BxhvfwlsVtXnByBxMw7lxS2hSPVZJ1Uc6urvVtQqx0eXIw4UA/tmpjj2pfqsg.mp4",
+          "https://replicate.delivery/xezq/ucdza5hh5hJlA92SgLwAen9EQiSxXmuJj38FrvJdvxfnfR9pA/tmplwb84b03.mp4"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/L4f180LhnhSCHihiHQ1vX7ZfEG7XOK2WCKNlGGd81xGr7v4UA/tmpeywvj5rm.mp4",
+          "https://replicate.delivery/xezq/TdE8PqxZMNKOABO3KIok1RVXuXxEBDJcDrWI9ewQhMAeDw4UA/tmpt6y3sy01.mp4",
+          "https://replicate.delivery/xezq/BxhvfwlsVtXnByBxMw7lxS2hSPVZJ1Uc6urvVtQqx0eXIw4UA/tmpjj2pfqsg.mp4",
+          "https://replicate.delivery/xezq/ucdza5hh5hJlA92SgLwAen9EQiSxXmuJj38FrvJdvxfnfR9pA/tmplwb84b03.mp4"
+        ]
+      }
+    },
+    {
+      "id": "seedance-1-pro",
+      "data": {
+        "id": "seedance-1-pro",
+        "name": "Seedance 1 Pro",
+        "description": "A pro version of Seedance that offers text-to-video and image-to-video support for 5s or 10s videos, at 480p and 1080p resolution",
+        "price_per_sec": 3,
+        "default_duration": 5,
+        "duration_options": [
+          5
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "4:3",
+          "1:1",
+          "3:4",
+          "9:16",
+          "21:9",
+          "9:21"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": true,
+        "requires_last_frame": false,
+        "supports_audio": false,
+        "preview_url": "",
+        "replicate_name": "bytedance/seedance-1-pro",
+        "index": 10,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "fps",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Frame rate (frames per second)",
+            "default": 24,
+            "enum": [
+              24
+            ],
+            "title": "fps"
+          },
+          {
+            "name": "seed",
+            "type": "number",
+            "required": false,
+            "nullable": true,
+            "description": "Random seed. Set for reproducible generation",
+            "title": "Seed"
+          },
+          {
+            "name": "image",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Input image for image-to-video generation",
+            "format": "uri",
+            "title": "Image"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt for video generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Video duration in seconds",
+            "default": 5,
+            "min": 2,
+            "max": 12,
+            "title": "Duration"
+          },
+          {
+            "name": "resolution",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Video resolution",
+            "default": "1080p",
+            "enum": [
+              "480p",
+              "720p",
+              "1080p"
+            ],
+            "title": "resolution"
+          },
+          {
+            "name": "aspect_ratio",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Video aspect ratio. Ignored if an image is used.",
+            "default": "16:9",
+            "enum": [
+              "16:9",
+              "4:3",
+              "1:1",
+              "3:4",
+              "9:16",
+              "21:9",
+              "9:21"
+            ],
+            "title": "aspect_ratio"
+          },
+          {
+            "name": "camera_fixed",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Whether to fix camera position",
+            "default": false,
+            "title": "Camera Fixed"
+          },
+          {
+            "name": "last_frame_image",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Input image for last frame generation. This only works if an image start frame is given too.",
+            "format": "uri",
+            "title": "Last Frame Image"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt for video generation"
+              }
+            ],
+            "numeric": [
+              {
+                "name": "seed",
+                "type": "number",
+                "required": false,
+                "description": "Random seed. Set for reproducible generation"
+              },
+              {
+                "name": "duration",
+                "type": "number",
+                "required": false,
+                "description": "Video duration in seconds",
+                "default": 5,
+                "min": 2,
+                "max": 12
+              }
+            ],
+            "boolean": [
+              {
+                "name": "camera_fixed",
+                "type": "boolean",
+                "required": false,
+                "description": "Whether to fix camera position",
+                "default": false
+              }
+            ],
+            "enum": [
+              {
+                "name": "fps",
+                "type": "number",
+                "required": false,
+                "description": "Frame rate (frames per second)",
+                "default": 24,
+                "enum": [
+                  24
+                ]
+              },
+              {
+                "name": "resolution",
+                "type": "enum",
+                "required": false,
+                "description": "Video resolution",
+                "default": "1080p",
+                "enum": [
+                  "480p",
+                  "720p",
+                  "1080p"
+                ]
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "enum",
+                "required": false,
+                "description": "Video aspect ratio. Ignored if an image is used.",
+                "default": "16:9",
+                "enum": [
+                  "16:9",
+                  "4:3",
+                  "1:1",
+                  "3:4",
+                  "9:16",
+                  "21:9",
+                  "9:21"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "image",
+                "type": "string",
+                "required": false,
+                "description": "Input image for image-to-video generation",
+                "format": "uri"
+              },
+              {
+                "name": "last_frame_image",
+                "type": "string",
+                "required": false,
+                "description": "Input image for last frame generation. This only works if an image start frame is given too.",
+                "format": "uri"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"fps\":{\"enum\":[24],\"type\":\"integer\",\"title\":\"fps\",\"description\":\"Frame rate (frames per second)\",\"default\":24,\"x-order\":6},\"seed\":{\"type\":\"integer\",\"title\":\"Seed\",\"x-order\":8,\"nullable\":true,\"description\":\"Random seed. Set for reproducible generation\"},\"image\":{\"type\":\"string\",\"title\":\"Image\",\"format\":\"uri\",\"x-order\":1,\"nullable\":true,\"description\":\"Input image for image-to-video generation\"},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"x-order\":0,\"description\":\"Text prompt for video generation\"},\"duration\":{\"type\":\"integer\",\"title\":\"Duration\",\"default\":5,\"maximum\":12,\"minimum\":2,\"x-order\":3,\"description\":\"Video duration in seconds\"},\"resolution\":{\"enum\":[\"480p\",\"720p\",\"1080p\"],\"type\":\"string\",\"title\":\"resolution\",\"description\":\"Video resolution\",\"default\":\"1080p\",\"x-order\":4},\"aspect_ratio\":{\"enum\":[\"16:9\",\"4:3\",\"1:1\",\"3:4\",\"9:16\",\"21:9\",\"9:21\"],\"type\":\"string\",\"title\":\"aspect_ratio\",\"description\":\"Video aspect ratio. Ignored if an image is used.\",\"default\":\"16:9\",\"x-order\":5},\"camera_fixed\":{\"type\":\"boolean\",\"title\":\"Camera Fixed\",\"default\":false,\"x-order\":7,\"description\":\"Whether to fix camera position\"},\"last_frame_image\":{\"type\":\"string\",\"title\":\"Last Frame Image\",\"format\":\"uri\",\"x-order\":2,\"nullable\":true,\"description\":\"Input image for last frame generation. This only works if an image start frame is given too.\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/ClgDLn4vlLosCtQeNCBMfAFxFefS9CwjWr6XkppFrQ2saYoTB/tmp4csnp1gw.mp4",
+          "https://replicate.delivery/xezq/DfgnKlBwYW38OSSOyeeJ2seBqpDLjX1e7FxJxXFpahkDfhhOF/tmp0ht3v7vp.mp4"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/ClgDLn4vlLosCtQeNCBMfAFxFefS9CwjWr6XkppFrQ2saYoTB/tmp4csnp1gw.mp4",
+          "https://replicate.delivery/xezq/DfgnKlBwYW38OSSOyeeJ2seBqpDLjX1e7FxJxXFpahkDfhhOF/tmp0ht3v7vp.mp4"
+        ]
+      }
+    },
+    {
+      "id": "sora-2",
+      "data": {
+        "id": "sora-2",
+        "name": "Sora 2",
+        "description": "API for Sora 2. Generate videos using Sora 2. Realistic AI video using Sora 2 from OpenAI.",
+        "price_per_sec": 10,
+        "default_duration": 4,
+        "duration_options": [
+          4,
+          8,
+          12
+        ],
+        "aspect_ratios": [
+          "portrait",
+          "landscape"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": false,
+        "requires_last_frame": false,
+        "supports_audio": false,
+        "preview_url": "",
+        "replicate_name": "openai/sora-2",
+        "index": 1,
+        "trending": true,
+        "schema_parameters": [
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "A text description of the video to generate",
+            "title": "Prompt"
+          },
+          {
+            "name": "seconds",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Duration of the video in seconds",
+            "default": 4,
+            "enum": [
+              4,
+              8,
+              12
+            ],
+            "title": "seconds"
+          },
+          {
+            "name": "aspect_ratio",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720",
+            "default": "portrait",
+            "enum": [
+              "portrait",
+              "landscape"
+            ],
+            "title": "aspect_ratio"
+          },
+          {
+            "name": "openai_api_key",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.",
+            "format": "password",
+            "title": "Openai Api Key"
+          },
+          {
+            "name": "input_reference",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video.",
+            "format": "uri",
+            "title": "Input Reference"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "A text description of the video to generate"
+              },
+              {
+                "name": "openai_api_key",
+                "type": "string",
+                "required": false,
+                "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI."
+              }
+            ],
+            "numeric": [],
+            "boolean": [],
+            "enum": [
+              {
+                "name": "seconds",
+                "type": "number",
+                "required": false,
+                "description": "Duration of the video in seconds",
+                "default": 4,
+                "enum": [
+                  4,
+                  8,
+                  12
+                ]
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "enum",
+                "required": false,
+                "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720",
+                "default": "portrait",
+                "enum": [
+                  "portrait",
+                  "landscape"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "input_reference",
+                "type": "string",
+                "required": false,
+                "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video.",
+                "format": "uri"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"x-order\":1,\"description\":\"A text description of the video to generate\"},\"seconds\":{\"enum\":[4,8,12],\"type\":\"integer\",\"title\":\"seconds\",\"description\":\"Duration of the video in seconds\",\"default\":4,\"x-order\":3},\"aspect_ratio\":{\"enum\":[\"portrait\",\"landscape\"],\"type\":\"string\",\"title\":\"aspect_ratio\",\"description\":\"Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720\",\"default\":\"portrait\",\"x-order\":4},\"openai_api_key\":{\"type\":\"string\",\"title\":\"Openai Api Key\",\"format\":\"password\",\"x-order\":0,\"nullable\":true,\"writeOnly\":true,\"description\":\"Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.\",\"x-cog-secret\":true},\"input_reference\":{\"type\":\"string\",\"title\":\"Input Reference\",\"format\":\"uri\",\"x-order\":2,\"nullable\":true,\"description\":\"An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video.\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/rf7jDpzBdvVoUCKMV5eavWwKmrtzbiX5YJ4jMdiCXH1if9BrA/tmpot52l9ao.mp4",
+          "https://replicate.delivery/xezq/269LKn0Xu5LPHVjcELGzgNmIY0ujGLUAOjIXfF6gcjby5gwKA/tmp95uk29hk.mp4",
+          "https://replicate.delivery/pbxt/Nv0Z9AJHJYls2BQ454I4ZWxPO9gXr4VaaigGeWOo4mi4L2f7/replicate-prediction-7swvy5ghpnrmc0ct0a780kb124.jpeg"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/rf7jDpzBdvVoUCKMV5eavWwKmrtzbiX5YJ4jMdiCXH1if9BrA/tmpot52l9ao.mp4",
+          "https://replicate.delivery/xezq/269LKn0Xu5LPHVjcELGzgNmIY0ujGLUAOjIXfF6gcjby5gwKA/tmp95uk29hk.mp4",
+          "https://replicate.delivery/pbxt/Nv0Z9AJHJYls2BQ454I4ZWxPO9gXr4VaaigGeWOo4mi4L2f7/replicate-prediction-7swvy5ghpnrmc0ct0a780kb124.jpeg"
+        ]
+      }
+    },
+    {
+      "id": "sora-2-pro",
+      "data": {
+        "id": "sora-2-pro",
+        "name": "Sora 2 Pro",
+        "description": "OpenAI&#x27;s Most advanced synced-audio video generation",
+        "price_per_sec": 30,
+        "default_duration": 4,
+        "duration_options": [
+          4,
+          8,
+          12
+        ],
+        "aspect_ratios": [
+          "portrait",
+          "landscape"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": false,
+        "requires_last_frame": false,
+        "supports_audio": false,
+        "preview_url": "",
+        "replicate_name": "openai/sora-2-pro",
+        "index": 0,
+        "trending": true,
+        "schema_parameters": [
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "A text description of the video to generate",
+            "title": "Prompt"
+          },
+          {
+            "name": "seconds",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Duration of the video in seconds",
+            "default": 4,
+            "enum": [
+              4,
+              8,
+              12
+            ],
+            "title": "seconds"
+          },
+          {
+            "name": "resolution",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Resolution quality. Standard is 720p, high is 1024p",
+            "default": "standard",
+            "enum": [
+              "standard",
+              "high"
+            ],
+            "title": "resolution"
+          },
+          {
+            "name": "aspect_ratio",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720",
+            "default": "portrait",
+            "enum": [
+              "portrait",
+              "landscape"
+            ],
+            "title": "aspect_ratio"
+          },
+          {
+            "name": "openai_api_key",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.",
+            "format": "password",
+            "title": "Openai Api Key"
+          },
+          {
+            "name": "input_reference",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video.",
+            "format": "uri",
+            "title": "Input Reference"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "A text description of the video to generate"
+              },
+              {
+                "name": "openai_api_key",
+                "type": "string",
+                "required": false,
+                "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI."
+              }
+            ],
+            "numeric": [],
+            "boolean": [],
+            "enum": [
+              {
+                "name": "seconds",
+                "type": "number",
+                "required": false,
+                "description": "Duration of the video in seconds",
+                "default": 4,
+                "enum": [
+                  4,
+                  8,
+                  12
+                ]
+              },
+              {
+                "name": "resolution",
+                "type": "enum",
+                "required": false,
+                "description": "Resolution quality. Standard is 720p, high is 1024p",
+                "default": "standard",
+                "enum": [
+                  "standard",
+                  "high"
+                ]
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "enum",
+                "required": false,
+                "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720",
+                "default": "portrait",
+                "enum": [
+                  "portrait",
+                  "landscape"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "input_reference",
+                "type": "string",
+                "required": false,
+                "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video.",
+                "format": "uri"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"x-order\":1,\"description\":\"A text description of the video to generate\"},\"seconds\":{\"enum\":[4,8,12],\"type\":\"integer\",\"title\":\"seconds\",\"description\":\"Duration of the video in seconds\",\"default\":4,\"x-order\":3},\"resolution\":{\"enum\":[\"standard\",\"high\"],\"type\":\"string\",\"title\":\"resolution\",\"description\":\"Resolution quality. Standard is 720p, high is 1024p\",\"default\":\"standard\",\"x-order\":5},\"aspect_ratio\":{\"enum\":[\"portrait\",\"landscape\"],\"type\":\"string\",\"title\":\"aspect_ratio\",\"description\":\"Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720\",\"default\":\"portrait\",\"x-order\":4},\"openai_api_key\":{\"type\":\"string\",\"title\":\"Openai Api Key\",\"format\":\"password\",\"x-order\":0,\"nullable\":true,\"writeOnly\":true,\"description\":\"Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.\",\"x-cog-secret\":true},\"input_reference\":{\"type\":\"string\",\"title\":\"Input Reference\",\"format\":\"uri\",\"x-order\":2,\"nullable\":true,\"description\":\"An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video.\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/6AV71MwvhV7nINq376qBf27eo7k3KMBZtrM9KhejLz8uhfDWB/tmpkoheyvn2.mp4",
+          "https://replicate.delivery/xezq/TjiHWxnCNgp2O5sJJJ7QjcVRQQUmg6WdoqOUuVuO3huwZiYF/tmp72b74bmb.mp4"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/6AV71MwvhV7nINq376qBf27eo7k3KMBZtrM9KhejLz8uhfDWB/tmpkoheyvn2.mp4",
+          "https://replicate.delivery/xezq/TjiHWxnCNgp2O5sJJJ7QjcVRQQUmg6WdoqOUuVuO3huwZiYF/tmp72b74bmb.mp4"
+        ]
+      }
+    },
+    {
+      "id": "veo-3",
+      "data": {
+        "id": "veo-3",
+        "name": "Veo 3",
+        "description": "Veo 3 is Google DeepMind’s latest advancement in text-to-video generation, on Replicate, pushing the boundaries of what AI can create from natural language prompts. Includes native audio generation, improved prompt adherence, and stunning hyperrealism.",
+        "price_per_sec": 40,
+        "default_duration": 4,
+        "duration_options": [
+          4,
+          6,
+          8
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": false,
+        "requires_last_frame": false,
+        "supports_audio": true,
+        "preview_url": "",
+        "replicate_name": "google/veo-3",
+        "index": 4,
+        "trending": true,
+        "schema_parameters": [
+          {
+            "name": "seed",
+            "type": "number",
+            "required": false,
+            "nullable": true,
+            "description": "Random seed. Omit for random generations",
+            "title": "Seed"
+          },
+          {
+            "name": "image",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose.",
+            "format": "uri",
+            "title": "Image"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt for video generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Video duration in seconds",
+            "default": 8,
+            "enum": [
+              4,
+              6,
+              8
+            ],
+            "title": "duration"
+          },
+          {
+            "name": "resolution",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Resolution of the generated video",
+            "default": "1080p",
+            "enum": [
+              "720p",
+              "1080p"
+            ],
+            "title": "resolution"
+          },
+          {
+            "name": "aspect_ratio",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Video aspect ratio",
+            "default": "16:9",
+            "enum": [
+              "16:9",
+              "9:16"
+            ],
+            "title": "aspect_ratio"
+          },
+          {
+            "name": "generate_audio",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Generate audio with the video",
+            "default": true,
+            "title": "Generate Audio"
+          },
+          {
+            "name": "negative_prompt",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Description of what to exclude from the generated video",
+            "title": "Negative Prompt"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt for video generation"
+              },
+              {
+                "name": "negative_prompt",
+                "type": "string",
+                "required": false,
+                "description": "Description of what to exclude from the generated video"
+              }
+            ],
+            "numeric": [
+              {
+                "name": "seed",
+                "type": "number",
+                "required": false,
+                "description": "Random seed. Omit for random generations"
+              }
+            ],
+            "boolean": [],
+            "enum": [
+              {
+                "name": "duration",
+                "type": "number",
+                "required": false,
+                "description": "Video duration in seconds",
+                "default": 8,
+                "enum": [
+                  4,
+                  6,
+                  8
+                ]
+              },
+              {
+                "name": "resolution",
+                "type": "enum",
+                "required": false,
+                "description": "Resolution of the generated video",
+                "default": "1080p",
+                "enum": [
+                  "720p",
+                  "1080p"
+                ]
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "enum",
+                "required": false,
+                "description": "Video aspect ratio",
+                "default": "16:9",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "image",
+                "type": "string",
+                "required": false,
+                "description": "Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose.",
+                "format": "uri"
+              },
+              {
+                "name": "generate_audio",
+                "type": "boolean",
+                "required": false,
+                "description": "Generate audio with the video"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"seed\":{\"type\":\"integer\",\"title\":\"Seed\",\"x-order\":7,\"nullable\":true,\"description\":\"Random seed. Omit for random generations\"},\"image\":{\"type\":\"string\",\"title\":\"Image\",\"format\":\"uri\",\"x-order\":3,\"nullable\":true,\"description\":\"Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose.\"},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"x-order\":0,\"description\":\"Text prompt for video generation\"},\"duration\":{\"enum\":[4,6,8],\"type\":\"integer\",\"title\":\"duration\",\"description\":\"Video duration in seconds\",\"default\":8,\"x-order\":2},\"resolution\":{\"enum\":[\"720p\",\"1080p\"],\"type\":\"string\",\"title\":\"resolution\",\"description\":\"Resolution of the generated video\",\"default\":\"1080p\",\"x-order\":5},\"aspect_ratio\":{\"enum\":[\"16:9\",\"9:16\"],\"type\":\"string\",\"title\":\"aspect_ratio\",\"description\":\"Video aspect ratio\",\"default\":\"16:9\",\"x-order\":1},\"generate_audio\":{\"type\":\"boolean\",\"title\":\"Generate Audio\",\"default\":true,\"x-order\":6,\"description\":\"Generate audio with the video\"},\"negative_prompt\":{\"type\":\"string\",\"title\":\"Negative Prompt\",\"x-order\":4,\"nullable\":true,\"description\":\"Description of what to exclude from the generated video\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/xfz0U06bqSw1AyiJsw7LjOjVXOBpmjJfe7K9XtRLifW26q7SB/tmpi29yh_f0.mp4",
+          "https://replicate.delivery/xezq/Hlc4n4H0hJYsARpeGdaOLCdaWLyRUyaWNqsg5vosHdnvJgXKA/tmpsz1voe2j.mp4",
+          "https://replicate.delivery/xezq/IZvJUH7VaYo9BBq9lhMjAHXCz1WJUuOWyXx2fFGcKXcrlaYKA/tmpxsomu815.mp4",
+          "https://replicate.delivery/xezq/lZfr3rskBEVLDCytear4lUo92fOpAcoblFWzk6e06WEnC3PTB/tmpny051d_c.mp4",
+          "https://replicate.delivery/xezq/mryc62SvSpp3NpOedDNQD7njZlmd5re5e8ClPltdEwWF7BopA/tmp7uoz8hjv.mp4",
+          "https://replicate.delivery/xezq/ZdvQyoLLXgKNKtgU8Kdy5HBdIDaHVTl4Iws4zufK38e4WrGVA/tmpov6h3v3s.mp4"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/xfz0U06bqSw1AyiJsw7LjOjVXOBpmjJfe7K9XtRLifW26q7SB/tmpi29yh_f0.mp4",
+          "https://replicate.delivery/xezq/Hlc4n4H0hJYsARpeGdaOLCdaWLyRUyaWNqsg5vosHdnvJgXKA/tmpsz1voe2j.mp4",
+          "https://replicate.delivery/xezq/IZvJUH7VaYo9BBq9lhMjAHXCz1WJUuOWyXx2fFGcKXcrlaYKA/tmpxsomu815.mp4",
+          "https://replicate.delivery/xezq/lZfr3rskBEVLDCytear4lUo92fOpAcoblFWzk6e06WEnC3PTB/tmpny051d_c.mp4",
+          "https://replicate.delivery/xezq/mryc62SvSpp3NpOedDNQD7njZlmd5re5e8ClPltdEwWF7BopA/tmp7uoz8hjv.mp4",
+          "https://replicate.delivery/xezq/ZdvQyoLLXgKNKtgU8Kdy5HBdIDaHVTl4Iws4zufK38e4WrGVA/tmpov6h3v3s.mp4"
+        ]
+      }
+    },
+    {
+      "id": "veo-3-fast",
+      "data": {
+        "id": "veo-3-fast",
+        "name": "Veo 3 Fast",
+        "description": "Google&#x27;s Veo 3 Fast video model — the advanced AI video generation model designed for ultra-high-speed, cinematic-quality video creation. Explore its features, capabilities, and real-world applications.",
+        "price_per_sec": 15,
+        "default_duration": 4,
+        "duration_options": [
+          4,
+          6,
+          8
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": false,
+        "requires_last_frame": false,
+        "supports_audio": true,
+        "preview_url": "",
+        "replicate_name": "google/veo-3-fast",
+        "index": 8,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "seed",
+            "type": "number",
+            "required": false,
+            "nullable": true,
+            "description": "Random seed. Omit for random generations",
+            "title": "Seed"
+          },
+          {
+            "name": "image",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose.",
+            "format": "uri",
+            "title": "Image"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt for video generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Video duration in seconds",
+            "default": 8,
+            "enum": [
+              4,
+              6,
+              8
+            ],
+            "title": "duration"
+          },
+          {
+            "name": "resolution",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Resolution of the generated video",
+            "default": "1080p",
+            "enum": [
+              "720p",
+              "1080p"
+            ],
+            "title": "resolution"
+          },
+          {
+            "name": "aspect_ratio",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Video aspect ratio",
+            "default": "16:9",
+            "enum": [
+              "16:9",
+              "9:16"
+            ],
+            "title": "aspect_ratio"
+          },
+          {
+            "name": "generate_audio",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Generate audio with the video",
+            "default": true,
+            "title": "Generate Audio"
+          },
+          {
+            "name": "negative_prompt",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Description of what to exclude from the generated video",
+            "title": "Negative Prompt"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt for video generation"
+              },
+              {
+                "name": "negative_prompt",
+                "type": "string",
+                "required": false,
+                "description": "Description of what to exclude from the generated video"
+              }
+            ],
+            "numeric": [
+              {
+                "name": "seed",
+                "type": "number",
+                "required": false,
+                "description": "Random seed. Omit for random generations"
+              }
+            ],
+            "boolean": [],
+            "enum": [
+              {
+                "name": "duration",
+                "type": "number",
+                "required": false,
+                "description": "Video duration in seconds",
+                "default": 8,
+                "enum": [
+                  4,
+                  6,
+                  8
+                ]
+              },
+              {
+                "name": "resolution",
+                "type": "enum",
+                "required": false,
+                "description": "Resolution of the generated video",
+                "default": "1080p",
+                "enum": [
+                  "720p",
+                  "1080p"
+                ]
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "enum",
+                "required": false,
+                "description": "Video aspect ratio",
+                "default": "16:9",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "image",
+                "type": "string",
+                "required": false,
+                "description": "Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose.",
+                "format": "uri"
+              },
+              {
+                "name": "generate_audio",
+                "type": "boolean",
+                "required": false,
+                "description": "Generate audio with the video"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"seed\":{\"type\":\"integer\",\"title\":\"Seed\",\"x-order\":7,\"nullable\":true,\"description\":\"Random seed. Omit for random generations\"},\"image\":{\"type\":\"string\",\"title\":\"Image\",\"format\":\"uri\",\"x-order\":3,\"nullable\":true,\"description\":\"Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose.\"},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"x-order\":0,\"description\":\"Text prompt for video generation\"},\"duration\":{\"enum\":[4,6,8],\"type\":\"integer\",\"title\":\"duration\",\"description\":\"Video duration in seconds\",\"default\":8,\"x-order\":2},\"resolution\":{\"enum\":[\"720p\",\"1080p\"],\"type\":\"string\",\"title\":\"resolution\",\"description\":\"Resolution of the generated video\",\"default\":\"1080p\",\"x-order\":5},\"aspect_ratio\":{\"enum\":[\"16:9\",\"9:16\"],\"type\":\"string\",\"title\":\"aspect_ratio\",\"description\":\"Video aspect ratio\",\"default\":\"16:9\",\"x-order\":1},\"generate_audio\":{\"type\":\"boolean\",\"title\":\"Generate Audio\",\"default\":true,\"x-order\":6,\"description\":\"Generate audio with the video\"},\"negative_prompt\":{\"type\":\"string\",\"title\":\"Negative Prompt\",\"x-order\":4,\"nullable\":true,\"description\":\"Description of what to exclude from the generated video\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/iY9PbAFJN2LJOBx1imI08Bhz4lJX1ZHBf5WakE1JGNtfKHfpA/tmp8ai_03z8.mp4",
+          "https://replicate.delivery/xezq/VleZE1vtsJyLfUxuKcYzsngzUUFrgeeLlqsQdnLdG7sFNd8TB/tmpva5kimdq.mp4",
+          "https://replicate.delivery/xezq/ecejocRJQkkUGUPfWnMf7AIAIlraKuSCd2bdkoeLdqflj1xPF/tmphuw78wy3.mp4",
+          "https://replicate.delivery/xezq/xKos9IcrsrqrId3eA5bVZxD5m5jWRednYoECfsSaqASM9OeTB/tmpqa0xpc63.mp4",
+          "https://replicate.delivery/xezq/l8u0QcK58uIQF5IUyYRQeMi0eAjISqU01o6XvY6PWqmEcrGVA/tmp9pdz1bfu.mp4",
+          "https://replicate.delivery/pbxt/NSdAcsNDeUPlnK7X5Kpc2O8ZG7wHuqCVbxI8dtUhApopzOK9/Screenshot%202025-08-01%20at%201.17.27%E2%80%AFPM.png"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/iY9PbAFJN2LJOBx1imI08Bhz4lJX1ZHBf5WakE1JGNtfKHfpA/tmp8ai_03z8.mp4",
+          "https://replicate.delivery/xezq/VleZE1vtsJyLfUxuKcYzsngzUUFrgeeLlqsQdnLdG7sFNd8TB/tmpva5kimdq.mp4",
+          "https://replicate.delivery/xezq/ecejocRJQkkUGUPfWnMf7AIAIlraKuSCd2bdkoeLdqflj1xPF/tmphuw78wy3.mp4",
+          "https://replicate.delivery/xezq/xKos9IcrsrqrId3eA5bVZxD5m5jWRednYoECfsSaqASM9OeTB/tmpqa0xpc63.mp4",
+          "https://replicate.delivery/xezq/l8u0QcK58uIQF5IUyYRQeMi0eAjISqU01o6XvY6PWqmEcrGVA/tmp9pdz1bfu.mp4",
+          "https://replicate.delivery/pbxt/NSdAcsNDeUPlnK7X5Kpc2O8ZG7wHuqCVbxI8dtUhApopzOK9/Screenshot%202025-08-01%20at%201.17.27%E2%80%AFPM.png"
+        ]
+      }
+    },
+    {
+      "id": "veo-3.1",
+      "data": {
+        "id": "veo-3.1",
+        "name": "Veo 3.1",
+        "description": "New and improved version of Veo 3, with higher-fidelity video, context-aware audio, reference image and last frame support",
+        "price_per_sec": 40,
+        "default_duration": 4,
+        "duration_options": [
+          4,
+          6,
+          8
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": true,
+        "requires_last_frame": false,
+        "supports_audio": true,
+        "preview_url": "",
+        "replicate_name": "google/veo-3.1",
+        "index": 2,
+        "trending": true,
+        "schema_parameters": [
+          {
+            "name": "seed",
+            "type": "number",
+            "required": false,
+            "nullable": true,
+            "description": "Random seed. Omit for random generations",
+            "title": "Seed"
+          },
+          {
+            "name": "image",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose.",
+            "format": "uri",
+            "title": "Image"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt for video generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Video duration in seconds",
+            "default": 8,
+            "enum": [
+              4,
+              6,
+              8
+            ],
+            "title": "duration"
+          },
+          {
+            "name": "last_frame",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Ending image for interpolation. When provided with an input image, creates a transition between the two images.",
+            "format": "uri",
+            "title": "Last Frame"
+          },
+          {
+            "name": "resolution",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Resolution of the generated video",
+            "default": "1080p",
+            "enum": [
+              "720p",
+              "1080p"
+            ],
+            "title": "resolution"
+          },
+          {
+            "name": "aspect_ratio",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Video aspect ratio",
+            "default": "16:9",
+            "enum": [
+              "16:9",
+              "9:16"
+            ],
+            "title": "aspect_ratio"
+          },
+          {
+            "name": "generate_audio",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Generate audio with the video",
+            "default": true,
+            "title": "Generate Audio"
+          },
+          {
+            "name": "negative_prompt",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Description of what to exclude from the generated video",
+            "title": "Negative Prompt"
+          },
+          {
+            "name": "reference_images",
+            "type": "array",
+            "required": false,
+            "nullable": false,
+            "description": "1 to 3 reference images for subject-consistent generation (reference-to-video, or R2V). Reference images only work with 16:9 aspect ratio and 8-second duration. Last frame is ignored if reference images are provided.",
+            "default": [],
+            "title": "Reference Images"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt for video generation"
+              },
+              {
+                "name": "negative_prompt",
+                "type": "string",
+                "required": false,
+                "description": "Description of what to exclude from the generated video"
+              }
+            ],
+            "numeric": [
+              {
+                "name": "seed",
+                "type": "number",
+                "required": false,
+                "description": "Random seed. Omit for random generations"
+              }
+            ],
+            "boolean": [],
+            "enum": [
+              {
+                "name": "duration",
+                "type": "number",
+                "required": false,
+                "description": "Video duration in seconds",
+                "default": 8,
+                "enum": [
+                  4,
+                  6,
+                  8
+                ]
+              },
+              {
+                "name": "resolution",
+                "type": "enum",
+                "required": false,
+                "description": "Resolution of the generated video",
+                "default": "1080p",
+                "enum": [
+                  "720p",
+                  "1080p"
+                ]
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "enum",
+                "required": false,
+                "description": "Video aspect ratio",
+                "default": "16:9",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "image",
+                "type": "string",
+                "required": false,
+                "description": "Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose.",
+                "format": "uri"
+              },
+              {
+                "name": "last_frame",
+                "type": "string",
+                "required": false,
+                "description": "Ending image for interpolation. When provided with an input image, creates a transition between the two images.",
+                "format": "uri"
+              },
+              {
+                "name": "generate_audio",
+                "type": "boolean",
+                "required": false,
+                "description": "Generate audio with the video"
+              },
+              {
+                "name": "reference_images",
+                "type": "array",
+                "required": false,
+                "description": "1 to 3 reference images for subject-consistent generation (reference-to-video, or R2V). Reference images only work with 16:9 aspect ratio and 8-second duration. Last frame is ignored if reference images are provided."
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"seed\":{\"type\":\"integer\",\"title\":\"Seed\",\"x-order\":9,\"nullable\":true,\"description\":\"Random seed. Omit for random generations\"},\"image\":{\"type\":\"string\",\"title\":\"Image\",\"format\":\"uri\",\"x-order\":3,\"nullable\":true,\"description\":\"Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose.\"},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"x-order\":0,\"description\":\"Text prompt for video generation\"},\"duration\":{\"enum\":[4,6,8],\"type\":\"integer\",\"title\":\"duration\",\"description\":\"Video duration in seconds\",\"default\":8,\"x-order\":2},\"last_frame\":{\"type\":\"string\",\"title\":\"Last Frame\",\"format\":\"uri\",\"x-order\":4,\"nullable\":true,\"description\":\"Ending image for interpolation. When provided with an input image, creates a transition between the two images.\"},\"resolution\":{\"enum\":[\"720p\",\"1080p\"],\"type\":\"string\",\"title\":\"resolution\",\"description\":\"Resolution of the generated video\",\"default\":\"1080p\",\"x-order\":7},\"aspect_ratio\":{\"enum\":[\"16:9\",\"9:16\"],\"type\":\"string\",\"title\":\"aspect_ratio\",\"description\":\"Video aspect ratio\",\"default\":\"16:9\",\"x-order\":1},\"generate_audio\":{\"type\":\"boolean\",\"title\":\"Generate Audio\",\"default\":true,\"x-order\":8,\"description\":\"Generate audio with the video\"},\"negative_prompt\":{\"type\":\"string\",\"title\":\"Negative Prompt\",\"x-order\":6,\"nullable\":true,\"description\":\"Description of what to exclude from the generated video\"},\"reference_images\":{\"type\":\"array\",\"items\":{\"type\":\"string\",\"format\":\"uri\"},\"title\":\"Reference Images\",\"default\":[],\"x-order\":5,\"description\":\"1 to 3 reference images for subject-consistent generation (reference-to-video, or R2V). Reference images only work with 16:9 aspect ratio and 8-second duration. Last frame is ignored if reference images are provided.\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/WoC3evx2EQQHLCHq9vEfjhIq9ZotfQhQWmBEd54iLhvVUleVB/tmpk07h98l4.mp4",
+          "https://replicate.delivery/xezq/MDBpHsfnFuS2TiCNuXM0QGghQ83rAuHikI5x9heoWs2mqTfqA/tmp62g_gnbr.mp4",
+          "https://replicate.delivery/xezq/69ok3gifKESec04GfPMaTU2YShWMSL37elrN7dQ3QJmeD56rC/tmpvruiwe2d.mp4",
+          "https://replicate.delivery/xezq/hpxa0wn2og7aIRife9Xlvu0OGeS1qaz45bl43foW3rL58t9VB/tmpgnyhwssx.mp4",
+          "https://replicate.delivery/pbxt/Nt8bL90QO5In3RDkC82HtqeXqNdITglTVpaicTgrdT8mtjiW/0_1.webp",
+          "https://replicate.delivery/pbxt/Nt8bLbk1uz4EIMWhIQ0DyjO8BGJYYeAgQWgEnFUWNMOGEpbU/Screenshot%202025-08-26%20at%205.30.12%E2%80%AFPM.png"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/WoC3evx2EQQHLCHq9vEfjhIq9ZotfQhQWmBEd54iLhvVUleVB/tmpk07h98l4.mp4",
+          "https://replicate.delivery/xezq/MDBpHsfnFuS2TiCNuXM0QGghQ83rAuHikI5x9heoWs2mqTfqA/tmp62g_gnbr.mp4",
+          "https://replicate.delivery/xezq/69ok3gifKESec04GfPMaTU2YShWMSL37elrN7dQ3QJmeD56rC/tmpvruiwe2d.mp4",
+          "https://replicate.delivery/xezq/hpxa0wn2og7aIRife9Xlvu0OGeS1qaz45bl43foW3rL58t9VB/tmpgnyhwssx.mp4",
+          "https://replicate.delivery/pbxt/Nt8bL90QO5In3RDkC82HtqeXqNdITglTVpaicTgrdT8mtjiW/0_1.webp",
+          "https://replicate.delivery/pbxt/Nt8bLbk1uz4EIMWhIQ0DyjO8BGJYYeAgQWgEnFUWNMOGEpbU/Screenshot%202025-08-26%20at%205.30.12%E2%80%AFPM.png"
+        ]
+      }
+    },
+    {
+      "id": "veo-3.1-fast",
+      "data": {
+        "id": "veo-3.1-fast",
+        "name": "Veo 3.1 Fast",
+        "description": "New and improved version of Veo 3 Fast, with higher-fidelity video, context-aware audio and last frame support",
+        "price_per_sec": 15,
+        "default_duration": 4,
+        "duration_options": [
+          4,
+          6,
+          8
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": false,
+        "supports_last_frame": true,
+        "requires_last_frame": false,
+        "supports_audio": true,
+        "preview_url": "",
+        "replicate_name": "google/veo-3.1-fast",
+        "index": 3,
+        "trending": true,
+        "schema_parameters": [
+          {
+            "name": "seed",
+            "type": "number",
+            "required": false,
+            "nullable": true,
+            "description": "Random seed. Omit for random generations",
+            "title": "Seed"
+          },
+          {
+            "name": "image",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose.",
+            "format": "uri",
+            "title": "Image"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt for video generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Video duration in seconds",
+            "default": 8,
+            "enum": [
+              4,
+              6,
+              8
+            ],
+            "title": "duration"
+          },
+          {
+            "name": "last_frame",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Ending image for interpolation. When provided with an input image, creates a transition between the two images.",
+            "format": "uri",
+            "title": "Last Frame"
+          },
+          {
+            "name": "resolution",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Resolution of the generated video",
+            "default": "1080p",
+            "enum": [
+              "720p",
+              "1080p"
+            ],
+            "title": "resolution"
+          },
+          {
+            "name": "aspect_ratio",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Video aspect ratio",
+            "default": "16:9",
+            "enum": [
+              "16:9",
+              "9:16"
+            ],
+            "title": "aspect_ratio"
+          },
+          {
+            "name": "generate_audio",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Generate audio with the video",
+            "default": true,
+            "title": "Generate Audio"
+          },
+          {
+            "name": "negative_prompt",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Description of what to exclude from the generated video",
+            "title": "Negative Prompt"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt for video generation"
+              },
+              {
+                "name": "negative_prompt",
+                "type": "string",
+                "required": false,
+                "description": "Description of what to exclude from the generated video"
+              }
+            ],
+            "numeric": [
+              {
+                "name": "seed",
+                "type": "number",
+                "required": false,
+                "description": "Random seed. Omit for random generations"
+              }
+            ],
+            "boolean": [],
+            "enum": [
+              {
+                "name": "duration",
+                "type": "number",
+                "required": false,
+                "description": "Video duration in seconds",
+                "default": 8,
+                "enum": [
+                  4,
+                  6,
+                  8
+                ]
+              },
+              {
+                "name": "resolution",
+                "type": "enum",
+                "required": false,
+                "description": "Resolution of the generated video",
+                "default": "1080p",
+                "enum": [
+                  "720p",
+                  "1080p"
+                ]
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "enum",
+                "required": false,
+                "description": "Video aspect ratio",
+                "default": "16:9",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "image",
+                "type": "string",
+                "required": false,
+                "description": "Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose.",
+                "format": "uri"
+              },
+              {
+                "name": "last_frame",
+                "type": "string",
+                "required": false,
+                "description": "Ending image for interpolation. When provided with an input image, creates a transition between the two images.",
+                "format": "uri"
+              },
+              {
+                "name": "generate_audio",
+                "type": "boolean",
+                "required": false,
+                "description": "Generate audio with the video"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"seed\":{\"type\":\"integer\",\"title\":\"Seed\",\"x-order\":8,\"nullable\":true,\"description\":\"Random seed. Omit for random generations\"},\"image\":{\"type\":\"string\",\"title\":\"Image\",\"format\":\"uri\",\"x-order\":3,\"nullable\":true,\"description\":\"Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose.\"},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"x-order\":0,\"description\":\"Text prompt for video generation\"},\"duration\":{\"enum\":[4,6,8],\"type\":\"integer\",\"title\":\"duration\",\"description\":\"Video duration in seconds\",\"default\":8,\"x-order\":2},\"last_frame\":{\"type\":\"string\",\"title\":\"Last Frame\",\"format\":\"uri\",\"x-order\":4,\"nullable\":true,\"description\":\"Ending image for interpolation. When provided with an input image, creates a transition between the two images.\"},\"resolution\":{\"enum\":[\"720p\",\"1080p\"],\"type\":\"string\",\"title\":\"resolution\",\"description\":\"Resolution of the generated video\",\"default\":\"1080p\",\"x-order\":6},\"aspect_ratio\":{\"enum\":[\"16:9\",\"9:16\"],\"type\":\"string\",\"title\":\"aspect_ratio\",\"description\":\"Video aspect ratio\",\"default\":\"16:9\",\"x-order\":1},\"generate_audio\":{\"type\":\"boolean\",\"title\":\"Generate Audio\",\"default\":true,\"x-order\":7,\"description\":\"Generate audio with the video\"},\"negative_prompt\":{\"type\":\"string\",\"title\":\"Negative Prompt\",\"x-order\":5,\"nullable\":true,\"description\":\"Description of what to exclude from the generated video\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/aOYeXeCcnHhDiELUfr7GJR0IkfcGabYRUWiTShhvdJCTEQ9VB/tmpafbwmta5.mp4",
+          "https://replicate.delivery/xezq/1B4tYHYfzWzDA6QU9CEDxkCnStf8YeysV0TlfnKktgG3la9VB/tmpyxaslbuk.mp4",
+          "https://replicate.delivery/xezq/Z3Ix0cUxzkqcL18AfbOu0B5pXJFfsqfscQQzenO288McMb9VB/tmp2vogi5sn.mp4",
+          "https://replicate.delivery/xezq/8ZOMlNOoESqDDZXc9SwJNselA7lTLS1MBx3HgSx0lTzwhrvKA/tmpyid0s5l4.mp4",
+          "https://replicate.delivery/pbxt/NtDCMBJNIQTOU0mZtlnlrqrPLgYvTvpCISbFIiweYPsotGY5/replicate-prediction-gn4tnddn5drme0csx1yt3jvy4c.jpeg",
+          "https://replicate.delivery/pbxt/NtDCLnwTQaPfLhgaNDmLevN8QivDFS8V91M8pCwEpDNIN9uA/replicate-prediction-8m82ekaj7hrma0csx1xrkmqjhm.jpeg"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/aOYeXeCcnHhDiELUfr7GJR0IkfcGabYRUWiTShhvdJCTEQ9VB/tmpafbwmta5.mp4",
+          "https://replicate.delivery/xezq/1B4tYHYfzWzDA6QU9CEDxkCnStf8YeysV0TlfnKktgG3la9VB/tmpyxaslbuk.mp4",
+          "https://replicate.delivery/xezq/Z3Ix0cUxzkqcL18AfbOu0B5pXJFfsqfscQQzenO288McMb9VB/tmp2vogi5sn.mp4",
+          "https://replicate.delivery/xezq/8ZOMlNOoESqDDZXc9SwJNselA7lTLS1MBx3HgSx0lTzwhrvKA/tmpyid0s5l4.mp4",
+          "https://replicate.delivery/pbxt/NtDCMBJNIQTOU0mZtlnlrqrPLgYvTvpCISbFIiweYPsotGY5/replicate-prediction-gn4tnddn5drme0csx1yt3jvy4c.jpeg",
+          "https://replicate.delivery/pbxt/NtDCLnwTQaPfLhgaNDmLevN8QivDFS8V91M8pCwEpDNIN9uA/replicate-prediction-8m82ekaj7hrma0csx1xrkmqjhm.jpeg"
+        ]
+      }
+    },
+    {
+      "id": "wan-2.2-t2v-fast",
+      "data": {
+        "id": "wan-2.2-t2v-fast",
+        "name": "Wan 2.2 T2v Fast",
+        "description": "Fast Wan 2.2 text to video with 480p. Ultra-fast open source text to video model. Video model under 30 second output.",
+        "price_per_sec": 5,
+        "default_duration": 5,
+        "duration_options": [
+          5
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16"
+        ],
+        "supports_first_frame": false,
+        "requires_first_frame": false,
+        "supports_last_frame": false,
+        "requires_last_frame": false,
+        "supports_audio": false,
+        "preview_url": "",
+        "replicate_name": "wan-video/wan-2.2-t2v-fast",
+        "index": 13,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "seed",
+            "type": "number",
+            "required": false,
+            "nullable": true,
+            "description": "Random seed. Leave blank for random",
+            "title": "Seed"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Prompt for video generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "go_fast",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Go fast",
+            "default": true,
+            "title": "Go Fast"
+          },
+          {
+            "name": "num_frames",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Number of video frames. 81 frames give the best results",
+            "default": 81,
+            "min": 81,
+            "max": 121,
+            "title": "Num Frames"
+          },
+          {
+            "name": "resolution",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Resolution of video. 16:9 corresponds to 832x480px, and 9:16 is 480x832px",
+            "default": "480p",
+            "enum": [
+              "480p",
+              "720p"
+            ],
+            "title": "resolution"
+          },
+          {
+            "name": "aspect_ratio",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Aspect ratio of video. 16:9 corresponds to 832x480px, and 9:16 is 480x832px",
+            "default": "16:9",
+            "enum": [
+              "16:9",
+              "9:16"
+            ],
+            "title": "aspect_ratio"
+          },
+          {
+            "name": "sample_shift",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Sample shift factor",
+            "default": 12,
+            "min": 1,
+            "max": 20,
+            "title": "Sample Shift"
+          },
+          {
+            "name": "optimize_prompt",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Translate prompt to Chinese before generation",
+            "default": false,
+            "title": "Optimize Prompt"
+          },
+          {
+            "name": "frames_per_second",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Frames per second. Note that the pricing of this model is based on the video duration at 16 fps",
+            "default": 16,
+            "min": 5,
+            "max": 30,
+            "title": "Frames Per Second"
+          },
+          {
+            "name": "interpolate_output",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Interpolate the generated video to 30 FPS using ffmpeg",
+            "default": true,
+            "title": "Interpolate Output"
+          },
+          {
+            "name": "disable_safety_checker",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "Disable safety checker for generated video.",
+            "default": false,
+            "title": "Disable Safety Checker"
+          },
+          {
+            "name": "lora_scale_transformer",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Determines how strongly the transformer LoRA should be applied.",
+            "default": 1,
+            "title": "Lora Scale Transformer"
+          },
+          {
+            "name": "lora_scale_transformer_2",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Determines how strongly the transformer_2 LoRA should be applied.",
+            "default": 1,
+            "title": "Lora Scale Transformer 2"
+          },
+          {
+            "name": "lora_weights_transformer",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Load LoRA weights for transformer. Supports arbitrary .safetensors URLs from the Internet (for example, 'https://huggingface.co/Viktor1717/scandinavian-interior-style1/resolve/main/my_first_flux_lora_v1.safetensors')",
+            "title": "Lora Weights Transformer"
+          },
+          {
+            "name": "lora_weights_transformer_2",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Load LoRA weights for transformer_2. Supports arbitrary .safetensors URLs from the Internet. Can be different from transformer LoRA.",
+            "title": "Lora Weights Transformer 2"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Prompt for video generation"
+              },
+              {
+                "name": "lora_weights_transformer",
+                "type": "string",
+                "required": false,
+                "description": "Load LoRA weights for transformer. Supports arbitrary .safetensors URLs from the Internet (for example, 'https://huggingface.co/Viktor1717/scandinavian-interior-style1/resolve/main/my_first_flux_lora_v1.safetensors')"
+              },
+              {
+                "name": "lora_weights_transformer_2",
+                "type": "string",
+                "required": false,
+                "description": "Load LoRA weights for transformer_2. Supports arbitrary .safetensors URLs from the Internet. Can be different from transformer LoRA."
+              }
+            ],
+            "numeric": [
+              {
+                "name": "seed",
+                "type": "number",
+                "required": false,
+                "description": "Random seed. Leave blank for random"
+              },
+              {
+                "name": "sample_shift",
+                "type": "number",
+                "required": false,
+                "description": "Sample shift factor",
+                "default": 12,
+                "min": 1,
+                "max": 20
+              },
+              {
+                "name": "lora_scale_transformer",
+                "type": "number",
+                "required": false,
+                "description": "Determines how strongly the transformer LoRA should be applied.",
+                "default": 1
+              },
+              {
+                "name": "lora_scale_transformer_2",
+                "type": "number",
+                "required": false,
+                "description": "Determines how strongly the transformer_2 LoRA should be applied.",
+                "default": 1
+              }
+            ],
+            "boolean": [
+              {
+                "name": "go_fast",
+                "type": "boolean",
+                "required": false,
+                "description": "Go fast",
+                "default": true
+              },
+              {
+                "name": "optimize_prompt",
+                "type": "boolean",
+                "required": false,
+                "description": "Translate prompt to Chinese before generation",
+                "default": false
+              },
+              {
+                "name": "interpolate_output",
+                "type": "boolean",
+                "required": false,
+                "description": "Interpolate the generated video to 30 FPS using ffmpeg",
+                "default": true
+              },
+              {
+                "name": "disable_safety_checker",
+                "type": "boolean",
+                "required": false,
+                "description": "Disable safety checker for generated video.",
+                "default": false
+              }
+            ],
+            "enum": [
+              {
+                "name": "resolution",
+                "type": "enum",
+                "required": false,
+                "description": "Resolution of video. 16:9 corresponds to 832x480px, and 9:16 is 480x832px",
+                "default": "480p",
+                "enum": [
+                  "480p",
+                  "720p"
+                ]
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "enum",
+                "required": false,
+                "description": "Aspect ratio of video. 16:9 corresponds to 832x480px, and 9:16 is 480x832px",
+                "default": "16:9",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "num_frames",
+                "type": "number",
+                "required": false,
+                "description": "Number of video frames. 81 frames give the best results"
+              },
+              {
+                "name": "frames_per_second",
+                "type": "number",
+                "required": false,
+                "description": "Frames per second. Note that the pricing of this model is based on the video duration at 16 fps"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"seed\":{\"type\":\"integer\",\"title\":\"Seed\",\"x-order\":9,\"nullable\":true,\"description\":\"Random seed. Leave blank for random\"},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"x-order\":0,\"description\":\"Prompt for video generation\"},\"go_fast\":{\"type\":\"boolean\",\"title\":\"Go Fast\",\"default\":true,\"x-order\":7,\"description\":\"Go fast\"},\"num_frames\":{\"type\":\"integer\",\"title\":\"Num Frames\",\"default\":81,\"maximum\":121,\"minimum\":81,\"x-order\":2,\"description\":\"Number of video frames. 81 frames give the best results\"},\"resolution\":{\"enum\":[\"480p\",\"720p\"],\"type\":\"string\",\"title\":\"resolution\",\"description\":\"Resolution of video. 16:9 corresponds to 832x480px, and 9:16 is 480x832px\",\"default\":\"480p\",\"x-order\":4},\"aspect_ratio\":{\"enum\":[\"16:9\",\"9:16\"],\"type\":\"string\",\"title\":\"aspect_ratio\",\"description\":\"Aspect ratio of video. 16:9 corresponds to 832x480px, and 9:16 is 480x832px\",\"default\":\"16:9\",\"x-order\":3},\"sample_shift\":{\"type\":\"number\",\"title\":\"Sample Shift\",\"default\":12,\"maximum\":20,\"minimum\":1,\"x-order\":8,\"description\":\"Sample shift factor\"},\"optimize_prompt\":{\"type\":\"boolean\",\"title\":\"Optimize Prompt\",\"default\":false,\"x-order\":1,\"description\":\"Translate prompt to Chinese before generation\"},\"frames_per_second\":{\"type\":\"integer\",\"title\":\"Frames Per Second\",\"default\":16,\"maximum\":30,\"minimum\":5,\"x-order\":5,\"description\":\"Frames per second. Note that the pricing of this model is based on the video duration at 16 fps\"},\"interpolate_output\":{\"type\":\"boolean\",\"title\":\"Interpolate Output\",\"default\":true,\"x-order\":6,\"description\":\"Interpolate the generated video to 30 FPS using ffmpeg\"},\"disable_safety_checker\":{\"type\":\"boolean\",\"title\":\"Disable Safety Checker\",\"default\":false,\"x-order\":10,\"description\":\"Disable safety checker for generated video.\"},\"lora_scale_transformer\":{\"type\":\"number\",\"title\":\"Lora Scale Transformer\",\"default\":1,\"x-order\":12,\"description\":\"Determines how strongly the transformer LoRA should be applied.\"},\"lora_scale_transformer_2\":{\"type\":\"number\",\"title\":\"Lora Scale Transformer 2\",\"default\":1,\"x-order\":14,\"description\":\"Determines how strongly the transformer_2 LoRA should be applied.\"},\"lora_weights_transformer\":{\"type\":\"string\",\"title\":\"Lora Weights Transformer\",\"x-order\":11,\"nullable\":true,\"description\":\"Load LoRA weights for transformer. Supports arbitrary .safetensors URLs from the Internet (for example, 'https://huggingface.co/Viktor1717/scandinavian-interior-style1/resolve/main/my_first_flux_lora_v1.safetensors')\"},\"lora_weights_transformer_2\":{\"type\":\"string\",\"title\":\"Lora Weights Transformer 2\",\"x-order\":13,\"nullable\":true,\"description\":\"Load LoRA weights for transformer_2. Supports arbitrary .safetensors URLs from the Internet. Can be different from transformer LoRA.\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/fLIizBaYWBWwBKFAL7JRKQsfmqSeHfI5fQH8RitXfQ7w65eiKA/output.mp4",
+          "https://replicate.delivery/xezq/PNTe7b9VBLxFPKB35GDhzrMYaph7WKspkexwtxeRPxJqfuXUB/output.mp4",
+          "https://replicate.delivery/xezq/j71Ii2YrWfRpGilHFUkqMSPhrV9rPu0ee4EiSV1H7CD3PhvqA/output_30fps.mp4",
+          "https://replicate.delivery/xezq/FxmknjDK8SqlBRoWWFnfxsOMwnuUMnpj1w6joZljM3D6m4iKA/output.mp4"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/fLIizBaYWBWwBKFAL7JRKQsfmqSeHfI5fQH8RitXfQ7w65eiKA/output.mp4",
+          "https://replicate.delivery/xezq/PNTe7b9VBLxFPKB35GDhzrMYaph7WKspkexwtxeRPxJqfuXUB/output.mp4",
+          "https://replicate.delivery/xezq/j71Ii2YrWfRpGilHFUkqMSPhrV9rPu0ee4EiSV1H7CD3PhvqA/output_30fps.mp4",
+          "https://replicate.delivery/xezq/FxmknjDK8SqlBRoWWFnfxsOMwnuUMnpj1w6joZljM3D6m4iKA/output.mp4"
+        ]
+      }
+    },
+    {
+      "id": "wan-2.5-i2v",
+      "data": {
+        "id": "wan-2.5-i2v",
+        "name": "Wan 2.5 I2v",
+        "description": "Alibaba WAN 2.5 is an advanced image-to-video model. It can generate high-quality 480p/720p/1080p videos from image inputs",
+        "price_per_sec": 5,
+        "default_duration": 5,
+        "duration_options": [
+          5,
+          10
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16"
+        ],
+        "supports_first_frame": true,
+        "requires_first_frame": true,
+        "supports_last_frame": false,
+        "requires_last_frame": false,
+        "supports_audio": true,
+        "preview_url": "",
+        "replicate_name": "wan-video/wan-2.5-i2v",
+        "index": 7,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "seed",
+            "type": "number",
+            "required": false,
+            "nullable": true,
+            "description": "Random seed for reproducible generation",
+            "title": "Seed"
+          },
+          {
+            "name": "audio",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Audio file (wav/mp3, 3-30s, ≤15MB) for voice/music synchronization",
+            "format": "uri",
+            "title": "Audio"
+          },
+          {
+            "name": "image",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Input image for video generation",
+            "format": "uri",
+            "title": "Image"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt for video generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Duration of the generated video in seconds",
+            "default": 5,
+            "enum": [
+              5,
+              10
+            ],
+            "title": "duration"
+          },
+          {
+            "name": "resolution",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Video resolution",
+            "default": "720p",
+            "enum": [
+              "480p",
+              "720p",
+              "1080p"
+            ],
+            "title": "resolution"
+          },
+          {
+            "name": "negative_prompt",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "Negative prompt to avoid certain elements",
+            "default": "",
+            "title": "Negative Prompt"
+          },
+          {
+            "name": "enable_prompt_expansion",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "If set to true, the prompt optimizer will be enabled",
+            "default": true,
+            "title": "Enable Prompt Expansion"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "image",
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt for video generation"
+              },
+              {
+                "name": "negative_prompt",
+                "type": "string",
+                "required": false,
+                "description": "Negative prompt to avoid certain elements",
+                "default": ""
+              }
+            ],
+            "numeric": [
+              {
+                "name": "seed",
+                "type": "number",
+                "required": false,
+                "description": "Random seed for reproducible generation"
+              }
+            ],
+            "boolean": [
+              {
+                "name": "enable_prompt_expansion",
+                "type": "boolean",
+                "required": false,
+                "description": "If set to true, the prompt optimizer will be enabled",
+                "default": true
+              }
+            ],
+            "enum": [
+              {
+                "name": "duration",
+                "type": "number",
+                "required": false,
+                "description": "Duration of the generated video in seconds",
+                "default": 5,
+                "enum": [
+                  5,
+                  10
+                ]
+              },
+              {
+                "name": "resolution",
+                "type": "enum",
+                "required": false,
+                "description": "Video resolution",
+                "default": "720p",
+                "enum": [
+                  "480p",
+                  "720p",
+                  "1080p"
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "audio",
+                "type": "string",
+                "required": false,
+                "description": "Audio file (wav/mp3, 3-30s, ≤15MB) for voice/music synchronization",
+                "format": "uri"
+              },
+              {
+                "name": "image",
+                "type": "string",
+                "required": true,
+                "description": "Input image for video generation",
+                "format": "uri"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"image\",\"prompt\"],\"properties\":{\"seed\":{\"type\":\"integer\",\"title\":\"Seed\",\"nullable\":true,\"description\":\"Random seed for reproducible generation\"},\"audio\":{\"type\":\"string\",\"title\":\"Audio\",\"format\":\"uri\",\"nullable\":true,\"description\":\"Audio file (wav/mp3, 3-30s, ≤15MB) for voice/music synchronization\"},\"image\":{\"type\":\"string\",\"title\":\"Image\",\"format\":\"uri\",\"description\":\"Input image for video generation\"},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"description\":\"Text prompt for video generation\"},\"duration\":{\"enum\":[5,10],\"type\":\"integer\",\"title\":\"duration\",\"description\":\"Duration of the generated video in seconds\",\"default\":5,\"x-order\":5},\"resolution\":{\"enum\":[\"480p\",\"720p\",\"1080p\"],\"type\":\"string\",\"title\":\"resolution\",\"description\":\"Video resolution\",\"default\":\"720p\",\"x-order\":4},\"negative_prompt\":{\"type\":\"string\",\"title\":\"Negative Prompt\",\"default\":\"\",\"description\":\"Negative prompt to avoid certain elements\"},\"enable_prompt_expansion\":{\"type\":\"boolean\",\"title\":\"Enable Prompt Expansion\",\"default\":true,\"description\":\"If set to true, the prompt optimizer will be enabled\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/KUdYQBcySHanKZzAiCcz7DRqCZ59QLp6zKUvkzUBDPUueMsKA/tmpyol7xiil.mp4",
+          "https://replicate.delivery/xezq/P33ke99FZTTWDKYainJQXizgxr7NxAMBYlK4QemCm0dsigYVA/tmp1l37lz4s.mp4",
+          "https://replicate.delivery/xezq/nQec5ARx2fnWXE5dRUNwHizbSZ9uH5IXeZSsqF27M7XQWBxqA/tmpho4736hc.mp4",
+          "https://replicate.delivery/xezq/AdX9KfAKEs1qMidbHzseSmefdOtfIEBg9HrulHeCf6tRzYQsKA/tmpvphmgf3e.mp4",
+          "https://replicate.delivery/pbxt/NliewIc4bFNWJIfiDSRMzvozuAl3dLwIx1fldasrYoXpME3g/image.png"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/KUdYQBcySHanKZzAiCcz7DRqCZ59QLp6zKUvkzUBDPUueMsKA/tmpyol7xiil.mp4",
+          "https://replicate.delivery/xezq/P33ke99FZTTWDKYainJQXizgxr7NxAMBYlK4QemCm0dsigYVA/tmp1l37lz4s.mp4",
+          "https://replicate.delivery/xezq/nQec5ARx2fnWXE5dRUNwHizbSZ9uH5IXeZSsqF27M7XQWBxqA/tmpho4736hc.mp4",
+          "https://replicate.delivery/xezq/AdX9KfAKEs1qMidbHzseSmefdOtfIEBg9HrulHeCf6tRzYQsKA/tmpvphmgf3e.mp4",
+          "https://replicate.delivery/pbxt/NliewIc4bFNWJIfiDSRMzvozuAl3dLwIx1fldasrYoXpME3g/image.png"
+        ]
+      }
+    },
+    {
+      "id": "wan-2.5-t2v-fast",
+      "data": {
+        "id": "wan-2.5-t2v-fast",
+        "name": "Wan 2.5 T2v Fast",
+        "description": "Wan 2.5 text-to-video, optimized for speed",
+        "price_per_sec": 7,
+        "default_duration": 5,
+        "duration_options": [
+          5,
+          10
+        ],
+        "aspect_ratios": [
+          "16:9",
+          "9:16"
+        ],
+        "supports_first_frame": false,
+        "requires_first_frame": false,
+        "supports_last_frame": false,
+        "requires_last_frame": false,
+        "supports_audio": true,
+        "preview_url": "",
+        "replicate_name": "wan-video/wan-2.5-t2v-fast",
+        "index": 5,
+        "trending": false,
+        "schema_parameters": [
+          {
+            "name": "seed",
+            "type": "number",
+            "required": false,
+            "nullable": true,
+            "description": "Random seed for reproducible generation",
+            "title": "Seed"
+          },
+          {
+            "name": "size",
+            "type": "enum",
+            "required": false,
+            "nullable": false,
+            "description": "Video resolution and aspect ratio",
+            "default": "1280*720",
+            "enum": [
+              "1280*720",
+              "720*1280",
+              "1920*1080",
+              "1080*1920"
+            ],
+            "title": "size"
+          },
+          {
+            "name": "audio",
+            "type": "string",
+            "required": false,
+            "nullable": true,
+            "description": "Audio file (wav/mp3, 3-30s, ≤15MB) for voice/music synchronization",
+            "format": "uri",
+            "title": "Audio"
+          },
+          {
+            "name": "prompt",
+            "type": "string",
+            "required": true,
+            "nullable": false,
+            "description": "Text prompt for video generation",
+            "title": "Prompt"
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "required": false,
+            "nullable": false,
+            "description": "Duration of the generated video in seconds",
+            "default": 5,
+            "enum": [
+              5,
+              10
+            ],
+            "title": "duration"
+          },
+          {
+            "name": "negative_prompt",
+            "type": "string",
+            "required": false,
+            "nullable": false,
+            "description": "Negative prompt to avoid certain elements",
+            "default": "",
+            "title": "Negative Prompt"
+          },
+          {
+            "name": "enable_prompt_expansion",
+            "type": "boolean",
+            "required": false,
+            "nullable": false,
+            "description": "If set to true, the prompt optimizer will be enabled",
+            "default": true,
+            "title": "Enable Prompt Expansion"
+          }
+        ],
+        "schema_metadata": {
+          "required_fields": [
+            "prompt"
+          ],
+          "categorized": {
+            "text": [
+              {
+                "name": "prompt",
+                "type": "string",
+                "required": true,
+                "description": "Text prompt for video generation"
+              },
+              {
+                "name": "negative_prompt",
+                "type": "string",
+                "required": false,
+                "description": "Negative prompt to avoid certain elements",
+                "default": ""
+              }
+            ],
+            "numeric": [
+              {
+                "name": "seed",
+                "type": "number",
+                "required": false,
+                "description": "Random seed for reproducible generation"
+              }
+            ],
+            "boolean": [
+              {
+                "name": "enable_prompt_expansion",
+                "type": "boolean",
+                "required": false,
+                "description": "If set to true, the prompt optimizer will be enabled",
+                "default": true
+              }
+            ],
+            "enum": [
+              {
+                "name": "size",
+                "type": "enum",
+                "required": false,
+                "description": "Video resolution and aspect ratio",
+                "default": "1280*720",
+                "enum": [
+                  "1280*720",
+                  "720*1280",
+                  "1920*1080",
+                  "1080*1920"
+                ]
+              },
+              {
+                "name": "duration",
+                "type": "number",
+                "required": false,
+                "description": "Duration of the generated video in seconds",
+                "default": 5,
+                "enum": [
+                  5,
+                  10
+                ]
+              }
+            ],
+            "file": [
+              {
+                "name": "audio",
+                "type": "string",
+                "required": false,
+                "description": "Audio file (wav/mp3, 3-30s, ≤15MB) for voice/music synchronization",
+                "format": "uri"
+              }
+            ]
+          }
+        },
+        "input_schema": "{\"type\":\"object\",\"title\":\"Input\",\"required\":[\"prompt\"],\"properties\":{\"seed\":{\"type\":\"integer\",\"title\":\"Seed\",\"nullable\":true,\"description\":\"Random seed for reproducible generation\"},\"size\":{\"enum\":[\"1280*720\",\"720*1280\",\"1920*1080\",\"1080*1920\"],\"type\":\"string\",\"title\":\"size\",\"description\":\"Video resolution and aspect ratio\",\"default\":\"1280*720\",\"x-order\":3},\"audio\":{\"type\":\"string\",\"title\":\"Audio\",\"format\":\"uri\",\"nullable\":true,\"description\":\"Audio file (wav/mp3, 3-30s, ≤15MB) for voice/music synchronization\"},\"prompt\":{\"type\":\"string\",\"title\":\"Prompt\",\"description\":\"Text prompt for video generation\"},\"duration\":{\"enum\":[5,10],\"type\":\"integer\",\"title\":\"duration\",\"description\":\"Duration of the generated video in seconds\",\"default\":5,\"x-order\":4},\"negative_prompt\":{\"type\":\"string\",\"title\":\"Negative Prompt\",\"default\":\"\",\"description\":\"Negative prompt to avoid certain elements\"},\"enable_prompt_expansion\":{\"type\":\"boolean\",\"title\":\"Enable Prompt Expansion\",\"default\":true,\"description\":\"If set to true, the prompt optimizer will be enabled\"}}}",
+        "example_video_url": [
+          "https://replicate.delivery/xezq/G2SgiLJaDrYpGJnBezzhrqwdA7Z6cO4PHUKrkBbuFaaZwPsKA/tmpmb4xgltj.mp4"
+        ],
+        "example_video_urls": [
+          "https://replicate.delivery/xezq/G2SgiLJaDrYpGJnBezzhrqwdA7Z6cO4PHUKrkBbuFaaZwPsKA/tmpmb4xgltj.mp4"
+        ]
+      }
+    }
+  ]
+}
