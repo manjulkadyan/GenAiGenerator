@@ -1,5 +1,7 @@
 package com.manjul.genai.videogenerator.ui.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoAwesome
@@ -31,10 +33,12 @@ sealed class AppDestination(
     data object Profile : AppDestination(R.string.destination_profile, Icons.Outlined.Face)
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun GenAiRoot() {
     var currentRoute by remember { mutableStateOf<AppDestination>(AppDestination.Models) }
     var selectedModelId by remember { mutableStateOf<String?>(null) }
+    var highlightModelId by remember { mutableStateOf<String?>(null) }
     val destinations = remember { listOf(AppDestination.Models, AppDestination.Generate, AppDestination.History, AppDestination.Profile) }
 
     Scaffold(
@@ -44,11 +48,14 @@ fun GenAiRoot() {
                     NavigationBarItem(
                         selected = destination == currentRoute,
                         onClick = { 
-                            currentRoute = destination
-                            // Clear selected model when navigating away from Generate
-                            if (destination != AppDestination.Generate) {
+                            // When navigating back to Models from Generate, preserve the selected model for highlighting
+                            if (destination == AppDestination.Models && currentRoute == AppDestination.Generate && selectedModelId != null) {
+                                highlightModelId = selectedModelId
+                            } else if (destination != AppDestination.Generate) {
                                 selectedModelId = null
+                                highlightModelId = null
                             }
+                            currentRoute = destination
                         },
                         icon = { Icon(destination.icon, contentDescription = stringResource(destination.labelRes)) },
                         label = { Text(text = stringResource(destination.labelRes)) }
@@ -62,13 +69,20 @@ fun GenAiRoot() {
                 modifier = Modifier.padding(innerPadding),
                 onModelClick = { modelId ->
                     selectedModelId = modelId
+                    highlightModelId = null
                     currentRoute = AppDestination.Generate
-                }
+                },
+                highlightModelId = highlightModelId,
+                onHighlightCleared = { highlightModelId = null }
             )
             AppDestination.Generate -> GenerateScreen(
                 modifier = Modifier.padding(innerPadding),
                 preselectedModelId = selectedModelId,
-                onModelSelected = { selectedModelId = null }
+                onModelSelected = { selectedModelId = null },
+                onBackToModels = { 
+                    highlightModelId = selectedModelId
+                    currentRoute = AppDestination.Models
+                }
             )
             AppDestination.History -> HistoryScreen(modifier = Modifier.padding(innerPadding))
             AppDestination.Profile -> ProfileScreen(modifier = Modifier.padding(innerPadding))

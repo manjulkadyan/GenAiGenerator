@@ -15,7 +15,9 @@ import kotlinx.coroutines.flow.update
 data class AIModelsState(
     val isLoading: Boolean = true,
     val errorMessage: String? = null,
-    val models: List<AIModel> = emptyList()
+    val models: List<AIModel> = emptyList(),
+    val savedScrollIndex: Int = 0,
+    val savedScrollOffset: Int = 0
 )
 
 class AIModelsViewModel(
@@ -34,15 +36,26 @@ class AIModelsViewModel(
         viewModelScope.launch {
             runCatching { repository.fetchModels() }
                 .onSuccess { models ->
-                    _state.value = AIModelsState(isLoading = false, models = models)
+                    _state.update { currentState ->
+                        currentState.copy(
+                            isLoading = false,
+                            models = models
+                        )
+                    }
                 }
                 .onFailure { throwable ->
-                    _state.value = AIModelsState(
+                    _state.update { currentState ->
+                        currentState.copy(
                         isLoading = false,
                         errorMessage = throwable.message ?: "Unable to load models"
                     )
                 }
         }
+        }
+    }
+
+    fun saveScrollPosition(index: Int, offset: Int) {
+        _state.update { it.copy(savedScrollIndex = index, savedScrollOffset = offset) }
     }
 
     companion object {

@@ -1,0 +1,63 @@
+Firebase Storage Security Rules
+
+Copy and paste these rules into your Firebase Console:
+1. Go to Firebase Console → Storage → Rules
+2. Replace the existing rules with the rules below
+3. Click "Publish"
+
+===========================================
+RULES:
+===========================================
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow authenticated users to read/write their own files
+    match /users/{userId}/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Optional: Allow read access to public files (if needed)
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}
+
+===========================================
+EXPLANATION:
+===========================================
+
+- `users/{userId}/{allPaths=**}` - Matches all paths under users/{userId}/
+  This includes:
+  - users/{userId}/inputs/*.jpeg (for first/last frame uploads)
+  - users/{userId}/effects/*.jpeg (if you add effects later)
+  - Any other files under the user's directory
+
+- `request.auth != null` - User must be authenticated
+- `request.auth.uid == userId` - User can only access their own files
+
+This ensures:
+✅ Authenticated users can upload files to their own directory
+✅ Users cannot access other users' files
+✅ Unauthenticated users cannot upload or read files
+
+===========================================
+ALTERNATIVE (More Permissive - for testing):
+===========================================
+
+If you want to test quickly (NOT for production):
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+
+This allows any authenticated user to read/write anywhere.
+Use only for testing!
+

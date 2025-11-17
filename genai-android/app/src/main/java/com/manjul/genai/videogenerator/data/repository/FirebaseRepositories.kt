@@ -11,7 +11,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.Source
 import com.google.firebase.functions.FirebaseFunctions
+import android.content.Context
+import android.content.SharedPreferences
 import com.google.firebase.storage.FirebaseStorage
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.manjul.genai.videogenerator.data.model.AIModel
 import com.manjul.genai.videogenerator.data.model.CategorizedParameters
 import com.manjul.genai.videogenerator.data.model.GenerateRequest
@@ -29,13 +33,72 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 class FirebaseVideoFeatureRepository(
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val context: Context? = null
 ) : VideoFeatureRepository {
+    private val gson = Gson()
+    private val cacheKey = "cached_models"
+    private val cacheTimestampKey = "cached_models_timestamp"
+    private val cacheValidityHours = 24L
+    
     override suspend fun fetchModels(): List<AIModel> {
+        // Try to load from cache first
+        val cachedModels = loadFromCache()
+        if (cachedModels != null) {
+            return cachedModels
+        }
+        
+        // If cache is invalid or missing, fetch from server
         return runCatching {
-            queryModels(Source.SERVER)
+            val models = queryModels(Source.SERVER)
+            // Save to cache
+            saveToCache(models)
+            models
         }.getOrElse {
+            // If server fetch fails, try cache as fallback
             queryModels(Source.CACHE)
+        }
+    }
+    
+    private fun loadFromCache(): List<AIModel>? {
+        if (context == null) return null
+        val prefs = context.getSharedPreferences("models_cache", Context.MODE_PRIVATE)
+        val timestamp = prefs.getLong(cacheTimestampKey, 0)
+        val cachedJson = prefs.getString(cacheKey, null)
+        
+        if (cachedJson == null || timestamp == 0L) {
+            return null
+        }
+        
+        // Check if cache is still valid (less than 24 hours old)
+        val cacheAge = System.currentTimeMillis() - timestamp
+        val cacheValidityMs = cacheValidityHours * 60 * 60 * 1000
+        if (cacheAge > cacheValidityMs) {
+            // Cache expired
+            return null
+        }
+        
+        // Parse cached models
+        return try {
+            val type = object : TypeToken<List<AIModel>>() {}.type
+            gson.fromJson<List<AIModel>>(cachedJson, type) ?: emptyList()
+        } catch (e: Exception) {
+            android.util.Log.e("ModelsCache", "Failed to parse cached models", e)
+            null
+        }
+    }
+    
+    private fun saveToCache(models: List<AIModel>) {
+        if (context == null) return
+        try {
+            val prefs = context.getSharedPreferences("models_cache", Context.MODE_PRIVATE)
+            val json = gson.toJson(models)
+            prefs.edit()
+                .putString(cacheKey, json)
+                .putLong(cacheTimestampKey, System.currentTimeMillis())
+                .apply()
+        } catch (e: Exception) {
+            android.util.Log.e("ModelsCache", "Failed to save models to cache", e)
         }
     }
 
@@ -199,11 +262,55 @@ class FirebaseVideoGenerateRepository(
     override suspend fun uploadReferenceFrame(uri: Uri): Result<String> {
         val uid = auth.currentUser?.uid
             ?: return Result.failure(IllegalStateException("User not authenticated"))
-        val fileName = "users/$uid/inputs/${UUID.randomUUID()}.jpeg"
-        val ref = storage.reference.child(fileName)
+        
+        // Ensure the inputs directory exists by creating a placeholder if needed
+        val inputsRef = storage.reference.child("users/$uid/inputs")
+        val fileName = "${UUID.randomUUID()}.jpeg"
+        val ref = inputsRef.child(fileName)
+        
         return runCatching {
-            ref.putFile(uri).await()
-            ref.downloadUrl.await().toString()
+            // Upload with metadata to ensure proper content type
+            val uploadTask = ref.putFile(uri)
+            // await() will throw an exception if upload fails
+            val snapshot = uploadTask.await()
+            
+            // If we get here, upload was successful
+            // Get download URL
+            val downloadUrl = ref.downloadUrl.await().toString()
+            Result.success(downloadUrl)
+        }.getOrElse { exception ->
+            // Enhanced error handling
+            android.util.Log.e("StorageUpload", "Upload failed", exception)
+            when {
+                exception.message?.contains("404") == true || 
+                exception.message?.contains("Not Found") == true -> {
+                    Result.failure(
+                        Exception(
+                            "Storage bucket not configured. Please check Firebase Storage settings.",
+                            exception
+                        )
+                    )
+                }
+                exception.message?.contains("permission") == true ||
+                exception.message?.contains("403") == true ||
+                (exception is com.google.firebase.storage.StorageException && 
+                 exception.errorCode == com.google.firebase.storage.StorageException.ERROR_NOT_AUTHORIZED) -> {
+                    Result.failure(
+                        Exception(
+                            "Permission denied. Please configure Firebase Storage rules to allow authenticated users to upload files. See firebase-storage-rules.txt for the correct rules.",
+                            exception
+                        )
+                    )
+                }
+                else -> {
+                    Result.failure(
+                        Exception(
+                            "Upload failed: ${exception.message ?: "Unknown error"}",
+                            exception
+                        )
+                    )
+                }
+            }
         }
     }
 
@@ -258,9 +365,16 @@ object RepositoryProvider {
     private val firestore by lazy { FirebaseFirestore.getInstance() }
     private val functions by lazy { FirebaseFunctions.getInstance() }
     private val storage by lazy { FirebaseStorage.getInstance() }
+    
+    // Context will be set when app initializes
+    private var appContext: Context? = null
+    
+    fun initialize(context: Context) {
+        appContext = context.applicationContext
+    }
 
     val videoFeatureRepository: VideoFeatureRepository by lazy {
-        FirebaseVideoFeatureRepository(firestore)
+        FirebaseVideoFeatureRepository(firestore, appContext)
     }
     val creditsRepository: CreditsRepository by lazy {
         FirebaseCreditsRepository(auth, firestore)
