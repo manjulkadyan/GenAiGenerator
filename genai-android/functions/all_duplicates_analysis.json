@@ -1,0 +1,138 @@
+{
+  "analyzed_at": "2025-11-17T16:43:41.501Z",
+  "total_duplicates": 9,
+  "duplicates": [
+    {
+      "replicateName": "google/veo-3.1",
+      "documents": [
+        {
+          "id": "google-veo-3-1",
+          "name": "Veo 3.1"
+        },
+        {
+          "id": "veo-3.1",
+          "name": "Veo 3.1"
+        }
+      ],
+      "status": "✅ Both patterns exist"
+    },
+    {
+      "replicateName": "google/veo-3.1-fast",
+      "documents": [
+        {
+          "id": "google-veo-3-1-fast",
+          "name": "Veo 3.1 Fast"
+        },
+        {
+          "id": "veo-3.1-fast",
+          "name": "Veo 3.1 Fast"
+        }
+      ],
+      "status": "✅ Both patterns exist"
+    },
+    {
+      "replicateName": "minimax/hailuo-2.3-fast",
+      "documents": [
+        {
+          "id": "hailuo-2.3-fast",
+          "name": "Hailuo 2.3 Fast"
+        },
+        {
+          "id": "minimax-hailuo-2-3-fast",
+          "name": "Hailuo 2.3 Fast"
+        }
+      ],
+      "status": "✅ Both patterns exist"
+    },
+    {
+      "replicateName": "kwaivgi/kling-v2.1-master",
+      "documents": [
+        {
+          "id": "kling-v2.1-master",
+          "name": "Kling V2.1 Master"
+        },
+        {
+          "id": "kwaivgi-kling-v2-1-master",
+          "name": "Kling v2.1 Master"
+        }
+      ],
+      "status": "✅ Both patterns exist"
+    },
+    {
+      "replicateName": "kwaivgi/kling-v2.5-turbo-pro",
+      "documents": [
+        {
+          "id": "kling-v2.5-turbo-pro",
+          "name": "Kling V2.5 Turbo Pro"
+        },
+        {
+          "id": "kwaivgi-kling-v2-5-turbo-pro",
+          "name": "Kling v2.5 Turbo Pro"
+        }
+      ],
+      "status": "✅ Both patterns exist"
+    },
+    {
+      "replicateName": "leonardoai/motion-2.0",
+      "documents": [
+        {
+          "id": "leonardoai-motion-2-0",
+          "name": "Motion 2.0"
+        },
+        {
+          "id": "motion-2.0",
+          "name": "Motion 2.0"
+        }
+      ],
+      "status": "✅ Both patterns exist"
+    },
+    {
+      "replicateName": "wan-video/wan-2.2-t2v-fast",
+      "documents": [
+        {
+          "id": "wan-2.2-t2v-fast",
+          "name": "Wan 2.2 T2v Fast"
+        },
+        {
+          "id": "wan-video-wan-2-2-t2v-fast",
+          "name": "Wan 2.2 T2V Fast"
+        }
+      ],
+      "status": "✅ Both patterns exist"
+    },
+    {
+      "replicateName": "wan-video/wan-2.5-i2v",
+      "documents": [
+        {
+          "id": "wan-2.5-i2v",
+          "name": "Wan 2.5 I2v"
+        },
+        {
+          "id": "wan-video-wan-2-5-i2v",
+          "name": "Wan 2.5 I2V"
+        }
+      ],
+      "status": "✅ Both patterns exist"
+    },
+    {
+      "replicateName": "wan-video/wan-2.5-t2v-fast",
+      "documents": [
+        {
+          "id": "wan-2.5-t2v-fast",
+          "name": "Wan 2.5 T2v Fast"
+        },
+        {
+          "id": "wan-video-wan-2-5-t2v-fast",
+          "name": "Wan 2.5 T2V Fast"
+        }
+      ],
+      "status": "✅ Both patterns exist"
+    }
+  ],
+  "summary": {
+    "both_patterns": 9,
+    "only_with_prefix": 0,
+    "only_without_prefix": 0,
+    "different_patterns": 0
+  }
+}

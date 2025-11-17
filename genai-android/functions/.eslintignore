@@ -1,0 +1,20 @@
+# Ignore built files
+lib/
+generated/
+
+# Ignore utility/seed scripts (not deployed)
+src/seed*.ts
+src/scrape*.ts
+src/fetch*.ts
+src/preview*.ts
+src/create*.ts
+src/analyze*.ts
+src/check*.ts
+src/test*.ts
+src/verify*.ts
+src/extractAllSchemaParameters.ts
+src/index_backup.ts
+
+# Only lint the production code
+# src/index.ts is the only file that gets deployed
+

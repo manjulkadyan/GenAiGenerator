@@ -1,0 +1,146 @@
+[
+  {
+    "modelId": "openai-sora-2-pro",
+    "modelName": "Sora 2 Pro",
+    "replicateName": "openai/sora-2-pro",
+    "currentPrice": 1,
+    "newPrice": 20,
+    "multiplier": 20
+  },
+  {
+    "modelId": "openai-sora-2",
+    "modelName": "Sora 2",
+    "replicateName": "openai/sora-2",
+    "currentPrice": 1,
+    "newPrice": 20,
+    "multiplier": 20
+  },
+  {
+    "modelId": "google-veo-3-1",
+    "modelName": "Veo 3.1",
+    "replicateName": "google/veo-3.1",
+    "currentPrice": 1,
+    "newPrice": 20,
+    "multiplier": 20
+  },
+  {
+    "modelId": "google-veo-3-1-fast",
+    "modelName": "Veo 3.1 Fast",
+    "replicateName": "google/veo-3.1-fast",
+    "currentPrice": 1,
+    "newPrice": 20,
+    "multiplier": 20
+  },
+  {
+    "modelId": "google-veo-3",
+    "modelName": "Veo 3",
+    "replicateName": "google/veo-3",
+    "currentPrice": 1,
+    "newPrice": 20,
+    "multiplier": 20
+  },
+  {
+    "modelId": "wan-video-wan-2-5-t2v-hd",
+    "modelName": "Wan 2.5 T2V HD",
+    "replicateName": "wan-video/wan-2.5-t2v-hd",
+    "currentPrice": 10,
+    "newPrice": 200,
+    "multiplier": 20
+  },
+  {
+    "modelId": "bytedance-seedance-1-lite",
+    "modelName": "Seedance 1 Lite",
+    "replicateName": "bytedance/seedance-1-lite",
+    "currentPrice": 1,
+    "newPrice": 20,
+    "multiplier": 20
+  },
+  {
+    "modelId": "wan-video-wan-2-5-i2v",
+    "modelName": "Wan 2.5 I2V",
+    "replicateName": "wan-video/wan-2.5-i2v",
+    "currentPrice": 1,
+    "newPrice": 20,
+    "multiplier": 20
+  },
+  {
+    "modelId": "google-veo-3-fast",
+    "modelName": "Veo 3 Fast",
+    "replicateName": "google/veo-3-fast",
+    "currentPrice": 1,
+    "newPrice": 20,
+    "multiplier": 20
+  },
+  {
+    "modelId": "minimax-hailuo-2-3-fast",
+    "modelName": "Hailuo 2.3 Fast",
+    "replicateName": "minimax/hailuo-2.3-fast",
+    "currentPrice": 1,
+    "newPrice": 20,
+    "multiplier": 20
+  },
+  {
+    "modelId": "bytedance-seedance-1-pro",
+    "modelName": "Seedance 1 Pro",
+    "replicateName": "bytedance/seedance-1-pro",
+    "currentPrice": 1,
+    "newPrice": 20,
+    "multiplier": 20
+  },
+  {
+    "modelId": "minimax-hailuo-02",
+    "modelName": "Hailuo 02",
+    "replicateName": "minimax/hailuo-02",
+    "currentPrice": 1,
+    "newPrice": 20,
+    "multiplier": 20
+  },
+  {
+    "modelId": "kwaivgi-kling-v2-1-master",
+    "modelName": "Kling v2.1 Master",
+    "replicateName": "kwaivgi/kling-v2.1-master",
+    "currentPrice": 1,
+    "newPrice": 20,
+    "multiplier": 20
+  },
+  {
+    "modelId": "wan-video-wan-2-2-t2v-fast",
+    "modelName": "Wan 2.2 T2V Fast",
+    "replicateName": "wan-video/wan-2.2-t2v-fast",
+    "currentPrice": 15,
+    "newPrice": 300,
+    "multiplier": 20
+  },
+  {
+    "modelId": "pixverse-pixverse-v5",
+    "modelName": "Pixverse v5",
+    "replicateName": "pixverse/pixverse-v5",
+    "currentPrice": 1,
+    "newPrice": 20,
+    "multiplier": 20
+  },
+  {
+    "modelId": "kwaivgi-kling-v2-5-turbo-pro",
+    "modelName": "Kling v2.5 Turbo Pro",
+    "replicateName": "kwaivgi/kling-v2.5-turbo-pro",
+    "currentPrice": 1,
+    "newPrice": 20,
+    "multiplier": 20
+  },
+  {
+    "modelId": "runway-gen-4-turbo",
+    "modelName": "Gen 4 Turbo",
+    "replicateName": "runway/gen-4-turbo",
+    "currentPrice": 10,
+    "newPrice": 200,
+    "multiplier": 20
+  },
+  {
+    "modelId": "luma-ray-2-720p",
+    "modelName": "Ray 2 720p",
+    "replicateName": "luma/ray-2-720p",
+    "currentPrice": 1,
+    "newPrice": 20,
+    "multiplier": 20
+  }
+]

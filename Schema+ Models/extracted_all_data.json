@@ -1,0 +1,3387 @@
+{
+  "openai/sora-2-pro": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "x-order": 1,
+          "description": "A text description of the video to generate"
+        },
+        "seconds": {
+          "enum": [
+            4,
+            8,
+            12
+          ],
+          "type": "integer",
+          "title": "seconds",
+          "description": "Duration of the video in seconds",
+          "default": 4,
+          "x-order": 3
+        },
+        "resolution": {
+          "enum": [
+            "standard",
+            "high"
+          ],
+          "type": "string",
+          "title": "resolution",
+          "description": "Resolution quality. Standard is 720p, high is 1024p",
+          "default": "standard",
+          "x-order": 5
+        },
+        "aspect_ratio": {
+          "enum": [
+            "portrait",
+            "landscape"
+          ],
+          "type": "string",
+          "title": "aspect_ratio",
+          "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720",
+          "default": "portrait",
+          "x-order": 4
+        },
+        "openai_api_key": {
+          "type": "string",
+          "title": "Openai Api Key",
+          "format": "password",
+          "x-order": 0,
+          "nullable": true,
+          "writeOnly": true,
+          "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.",
+          "x-cog-secret": true
+        },
+        "input_reference": {
+          "type": "string",
+          "title": "Input Reference",
+          "format": "uri",
+          "x-order": 2,
+          "nullable": true,
+          "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "sora-2-pro-standard",
+          "variant_name": "Standard quality",
+          "price_per_second": 0.3,
+          "description": "or around 33 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "sora-2-pro-high",
+          "variant_name": "High quality",
+          "price_per_second": 0.5,
+          "description": "or 20 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [
+              {
+                "description": "sora-2-pro-own-key",
+                "subtype": "string",
+                "title": "model variant",
+                "type": "equals",
+                "value": "sora-2-pro-own-key"
+              }
+            ],
+            "description": "You pay OpenAI directly via your API key.",
+            "prices": [],
+            "title": "OpenAI (own key)"
+          },
+          {
+            "criteria": [
+              {
+                "description": "sora-2-pro-standard",
+                "subtype": "string",
+                "title": "model variant",
+                "type": "equals",
+                "value": "sora-2-pro-standard"
+              }
+            ],
+            "description": "Charged per second of generated video.",
+            "prices": [
+              {
+                "description": "or around 33 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.30",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": "Standard quality"
+          },
+          {
+            "criteria": [
+              {
+                "description": "sora-2-pro-high",
+                "subtype": "string",
+                "title": "model variant",
+                "type": "equals",
+                "value": "sora-2-pro-high"
+              }
+            ],
+            "description": "Charged per second of generated video.",
+            "prices": [
+              {
+                "description": "or 20 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.50",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": "High quality"
+          }
+        ]
+      }
+    }
+  },
+  "openai/sora-2": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "x-order": 1,
+          "description": "A text description of the video to generate"
+        },
+        "seconds": {
+          "enum": [
+            4,
+            8,
+            12
+          ],
+          "type": "integer",
+          "title": "seconds",
+          "description": "Duration of the video in seconds",
+          "default": 4,
+          "x-order": 3
+        },
+        "aspect_ratio": {
+          "enum": [
+            "portrait",
+            "landscape"
+          ],
+          "type": "string",
+          "title": "aspect_ratio",
+          "description": "Aspect ratio of the video. Portrait is 720x1280, landscape is 1280x720",
+          "default": "portrait",
+          "x-order": 4
+        },
+        "openai_api_key": {
+          "type": "string",
+          "title": "Openai Api Key",
+          "format": "password",
+          "x-order": 0,
+          "nullable": true,
+          "writeOnly": true,
+          "description": "Optional: Your OpenAI API key. If you use your own OpenAI API key, you will be charged directly by OpenAI.",
+          "x-cog-secret": true
+        },
+        "input_reference": {
+          "type": "string",
+          "title": "Input Reference",
+          "format": "uri",
+          "x-order": 2,
+          "nullable": true,
+          "description": "An optional image to use as the first frame of the video. The image must be the same aspect ratio as the video."
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "sora-2",
+          "variant_name": "Standard quality",
+          "price_per_second": 0.1,
+          "description": "or 10 seconds for $1",
+          "metric": "video_output_duration_seconds"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [
+              {
+                "description": "sora-2-own-key",
+                "subtype": "string",
+                "title": "model variant",
+                "type": "equals",
+                "value": "sora-2-own-key"
+              }
+            ],
+            "description": "You pay OpenAI directly via your API key.",
+            "prices": [],
+            "title": "OpenAI (own key)"
+          },
+          {
+            "criteria": [
+              {
+                "description": "sora-2",
+                "subtype": "string",
+                "title": "model variant",
+                "type": "equals",
+                "value": "sora-2"
+              }
+            ],
+            "description": "Charged per second of generated video.",
+            "prices": [
+              {
+                "description": "or 10 seconds for $1",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.10",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": "Standard quality"
+          }
+        ]
+      }
+    }
+  },
+  "google/veo-3.1": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "seed": {
+          "type": "integer",
+          "title": "Seed",
+          "x-order": 9,
+          "nullable": true,
+          "description": "Random seed. Omit for random generations"
+        },
+        "image": {
+          "type": "string",
+          "title": "Image",
+          "format": "uri",
+          "x-order": 3,
+          "nullable": true,
+          "description": "Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose."
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "x-order": 0,
+          "description": "Text prompt for video generation"
+        },
+        "duration": {
+          "enum": [
+            4,
+            6,
+            8
+          ],
+          "type": "integer",
+          "title": "duration",
+          "description": "Video duration in seconds",
+          "default": 8,
+          "x-order": 2
+        },
+        "last_frame": {
+          "type": "string",
+          "title": "Last Frame",
+          "format": "uri",
+          "x-order": 4,
+          "nullable": true,
+          "description": "Ending image for interpolation. When provided with an input image, creates a transition between the two images."
+        },
+        "resolution": {
+          "enum": [
+            "720p",
+            "1080p"
+          ],
+          "type": "string",
+          "title": "resolution",
+          "description": "Resolution of the generated video",
+          "default": "1080p",
+          "x-order": 7
+        },
+        "aspect_ratio": {
+          "enum": [
+            "16:9",
+            "9:16"
+          ],
+          "type": "string",
+          "title": "aspect_ratio",
+          "description": "Video aspect ratio",
+          "default": "16:9",
+          "x-order": 1
+        },
+        "generate_audio": {
+          "type": "boolean",
+          "title": "Generate Audio",
+          "default": true,
+          "x-order": 8,
+          "description": "Generate audio with the video"
+        },
+        "negative_prompt": {
+          "type": "string",
+          "title": "Negative Prompt",
+          "x-order": 6,
+          "nullable": true,
+          "description": "Description of what to exclude from the generated video"
+        },
+        "reference_images": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": "Reference Images",
+          "default": [],
+          "x-order": 5,
+          "description": "1 to 3 reference images for subject-consistent generation (reference-to-video, or R2V). Reference images only work with 16:9 aspect ratio and 8-second duration. Last frame is ignored if reference images are provided."
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "with_audio",
+          "variant_name": null,
+          "price_per_second": 0.4,
+          "description": "or 25 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "without_audio",
+          "variant_name": null,
+          "price_per_second": 0.2,
+          "description": "or 50 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [
+              {
+                "description": "with_audio",
+                "subtype": "string",
+                "title": "model variant",
+                "type": "equals",
+                "value": "with_audio"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or 25 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.40",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "without_audio",
+                "subtype": "string",
+                "title": "model variant",
+                "type": "equals",
+                "value": "without_audio"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or 50 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.20",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "google/veo-3.1-fast": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "seed": {
+          "type": "integer",
+          "title": "Seed",
+          "x-order": 8,
+          "nullable": true,
+          "description": "Random seed. Omit for random generations"
+        },
+        "image": {
+          "type": "string",
+          "title": "Image",
+          "format": "uri",
+          "x-order": 3,
+          "nullable": true,
+          "description": "Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose."
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "x-order": 0,
+          "description": "Text prompt for video generation"
+        },
+        "duration": {
+          "enum": [
+            4,
+            6,
+            8
+          ],
+          "type": "integer",
+          "title": "duration",
+          "description": "Video duration in seconds",
+          "default": 8,
+          "x-order": 2
+        },
+        "last_frame": {
+          "type": "string",
+          "title": "Last Frame",
+          "format": "uri",
+          "x-order": 4,
+          "nullable": true,
+          "description": "Ending image for interpolation. When provided with an input image, creates a transition between the two images."
+        },
+        "resolution": {
+          "enum": [
+            "720p",
+            "1080p"
+          ],
+          "type": "string",
+          "title": "resolution",
+          "description": "Resolution of the generated video",
+          "default": "1080p",
+          "x-order": 6
+        },
+        "aspect_ratio": {
+          "enum": [
+            "16:9",
+            "9:16"
+          ],
+          "type": "string",
+          "title": "aspect_ratio",
+          "description": "Video aspect ratio",
+          "default": "16:9",
+          "x-order": 1
+        },
+        "generate_audio": {
+          "type": "boolean",
+          "title": "Generate Audio",
+          "default": true,
+          "x-order": 7,
+          "description": "Generate audio with the video"
+        },
+        "negative_prompt": {
+          "type": "string",
+          "title": "Negative Prompt",
+          "x-order": 5,
+          "nullable": true,
+          "description": "Description of what to exclude from the generated video"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "with_audio",
+          "variant_name": null,
+          "price_per_second": 0.15,
+          "description": "or around 66 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "without_audio",
+          "variant_name": null,
+          "price_per_second": 0.1,
+          "description": "or 10 seconds for $1",
+          "metric": "video_output_duration_seconds"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [
+              {
+                "description": "with_audio",
+                "subtype": "string",
+                "title": "model variant",
+                "type": "equals",
+                "value": "with_audio"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 66 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.15",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "without_audio",
+                "subtype": "string",
+                "title": "model variant",
+                "type": "equals",
+                "value": "without_audio"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or 10 seconds for $1",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.10",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "google/veo-3": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "seed": {
+          "type": "integer",
+          "title": "Seed",
+          "x-order": 7,
+          "nullable": true,
+          "description": "Random seed. Omit for random generations"
+        },
+        "image": {
+          "type": "string",
+          "title": "Image",
+          "format": "uri",
+          "x-order": 3,
+          "nullable": true,
+          "description": "Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose."
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "x-order": 0,
+          "description": "Text prompt for video generation"
+        },
+        "duration": {
+          "enum": [
+            4,
+            6,
+            8
+          ],
+          "type": "integer",
+          "title": "duration",
+          "description": "Video duration in seconds",
+          "default": 8,
+          "x-order": 2
+        },
+        "resolution": {
+          "enum": [
+            "720p",
+            "1080p"
+          ],
+          "type": "string",
+          "title": "resolution",
+          "description": "Resolution of the generated video",
+          "default": "1080p",
+          "x-order": 5
+        },
+        "aspect_ratio": {
+          "enum": [
+            "16:9",
+            "9:16"
+          ],
+          "type": "string",
+          "title": "aspect_ratio",
+          "description": "Video aspect ratio",
+          "default": "16:9",
+          "x-order": 1
+        },
+        "generate_audio": {
+          "type": "boolean",
+          "title": "Generate Audio",
+          "default": true,
+          "x-order": 6,
+          "description": "Generate audio with the video"
+        },
+        "negative_prompt": {
+          "type": "string",
+          "title": "Negative Prompt",
+          "x-order": 4,
+          "nullable": true,
+          "description": "Description of what to exclude from the generated video"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "with_audio",
+          "variant_name": null,
+          "price_per_second": 0.4,
+          "description": "or 25 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "without_audio",
+          "variant_name": null,
+          "price_per_second": 0.2,
+          "description": "or 50 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [
+              {
+                "description": "with_audio",
+                "subtype": "string",
+                "title": "model variant",
+                "type": "equals",
+                "value": "with_audio"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or 25 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.40",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "without_audio",
+                "subtype": "string",
+                "title": "model variant",
+                "type": "equals",
+                "value": "without_audio"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or 50 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.20",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "wan-video/wan-2.5-t2v-fast": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "seed": {
+          "type": "integer",
+          "title": "Seed",
+          "nullable": true,
+          "description": "Random seed for reproducible generation"
+        },
+        "size": {
+          "enum": [
+            "1280*720",
+            "720*1280",
+            "1920*1080",
+            "1080*1920"
+          ],
+          "type": "string",
+          "title": "size",
+          "description": "Video resolution and aspect ratio",
+          "default": "1280*720",
+          "x-order": 3
+        },
+        "audio": {
+          "type": "string",
+          "title": "Audio",
+          "format": "uri",
+          "nullable": true,
+          "description": "Audio file (wav/mp3, 3-30s, \u226415MB) for voice/music synchronization"
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "description": "Text prompt for video generation"
+        },
+        "duration": {
+          "enum": [
+            5,
+            10
+          ],
+          "type": "integer",
+          "title": "duration",
+          "description": "Duration of the generated video in seconds",
+          "default": 5,
+          "x-order": 4
+        },
+        "negative_prompt": {
+          "type": "string",
+          "title": "Negative Prompt",
+          "default": "",
+          "description": "Negative prompt to avoid certain elements"
+        },
+        "enable_prompt_expansion": {
+          "type": "boolean",
+          "title": "Enable Prompt Expansion",
+          "default": true,
+          "description": "If set to true, the prompt optimizer will be enabled"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "720p",
+          "variant_name": null,
+          "price_per_second": 0.068,
+          "description": "or around 14 seconds for $1",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "1080p",
+          "variant_name": null,
+          "price_per_second": 0.102,
+          "description": "or around 98 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [
+              {
+                "description": "720p",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "720p"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 14 seconds for $1",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.068",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "1080p",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "1080p"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 98 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.102",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "bytedance/seedance-1-lite": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "fps": {
+          "enum": [
+            24
+          ],
+          "type": "integer",
+          "title": "fps",
+          "description": "Frame rate (frames per second)",
+          "default": 24,
+          "x-order": 7
+        },
+        "seed": {
+          "type": "integer",
+          "title": "Seed",
+          "x-order": 9,
+          "nullable": true,
+          "description": "Random seed. Set for reproducible generation"
+        },
+        "image": {
+          "type": "string",
+          "title": "Image",
+          "format": "uri",
+          "x-order": 1,
+          "nullable": true,
+          "description": "Input image for image-to-video generation"
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "x-order": 0,
+          "description": "Text prompt for video generation"
+        },
+        "duration": {
+          "type": "integer",
+          "title": "Duration",
+          "default": 5,
+          "maximum": 12,
+          "minimum": 2,
+          "x-order": 4,
+          "description": "Video duration in seconds"
+        },
+        "resolution": {
+          "enum": [
+            "480p",
+            "720p",
+            "1080p"
+          ],
+          "type": "string",
+          "title": "resolution",
+          "description": "Video resolution",
+          "default": "720p",
+          "x-order": 5
+        },
+        "aspect_ratio": {
+          "enum": [
+            "16:9",
+            "4:3",
+            "1:1",
+            "3:4",
+            "9:16",
+            "21:9",
+            "9:21"
+          ],
+          "type": "string",
+          "title": "aspect_ratio",
+          "description": "Video aspect ratio. Ignored if an image is used.",
+          "default": "16:9",
+          "x-order": 6
+        },
+        "camera_fixed": {
+          "type": "boolean",
+          "title": "Camera Fixed",
+          "default": false,
+          "x-order": 8,
+          "description": "Whether to fix camera position"
+        },
+        "last_frame_image": {
+          "type": "string",
+          "title": "Last Frame Image",
+          "format": "uri",
+          "x-order": 2,
+          "nullable": true,
+          "description": "Input image for last frame generation. This only works if an image start frame is given too."
+        },
+        "reference_images": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "anyOf": [],
+            "format": "uri"
+          },
+          "title": "Reference Images",
+          "x-order": 3,
+          "nullable": true,
+          "description": "Reference images (1-4 images) to guide video generation for characters, avatars, clothing, environments, or multi-character interactions. Reference images cannot be used with 1080p resolution or first frame or last frame images."
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "480p",
+          "variant_name": null,
+          "price_per_second": 0.018,
+          "description": "or around 55 seconds for $1",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "720p",
+          "variant_name": null,
+          "price_per_second": 0.036,
+          "description": "or around 27 seconds for $1",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "1080p",
+          "variant_name": null,
+          "price_per_second": 0.072,
+          "description": "or around 13 seconds for $1",
+          "metric": "video_output_duration_seconds"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [
+              {
+                "description": "480p",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "480p"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 55 seconds for $1",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.018",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "720p",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "720p"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 27 seconds for $1",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.036",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "1080p",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "1080p"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 13 seconds for $1",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.072",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "wan-video/wan-2.5-i2v": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "image",
+        "prompt"
+      ],
+      "properties": {
+        "seed": {
+          "type": "integer",
+          "title": "Seed",
+          "nullable": true,
+          "description": "Random seed for reproducible generation"
+        },
+        "audio": {
+          "type": "string",
+          "title": "Audio",
+          "format": "uri",
+          "nullable": true,
+          "description": "Audio file (wav/mp3, 3-30s, \u226415MB) for voice/music synchronization"
+        },
+        "image": {
+          "type": "string",
+          "title": "Image",
+          "format": "uri",
+          "description": "Input image for video generation"
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "description": "Text prompt for video generation"
+        },
+        "duration": {
+          "enum": [
+            5,
+            10
+          ],
+          "type": "integer",
+          "title": "duration",
+          "description": "Duration of the generated video in seconds",
+          "default": 5,
+          "x-order": 5
+        },
+        "resolution": {
+          "enum": [
+            "480p",
+            "720p",
+            "1080p"
+          ],
+          "type": "string",
+          "title": "resolution",
+          "description": "Video resolution",
+          "default": "720p",
+          "x-order": 4
+        },
+        "negative_prompt": {
+          "type": "string",
+          "title": "Negative Prompt",
+          "default": "",
+          "description": "Negative prompt to avoid certain elements"
+        },
+        "enable_prompt_expansion": {
+          "type": "boolean",
+          "title": "Enable Prompt Expansion",
+          "default": true,
+          "description": "If set to true, the prompt optimizer will be enabled"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "480p",
+          "variant_name": null,
+          "price_per_second": 0.05,
+          "description": "or 20 seconds for $1",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "720p",
+          "variant_name": null,
+          "price_per_second": 0.1,
+          "description": "or 10 seconds for $1",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "1080p",
+          "variant_name": null,
+          "price_per_second": 0.15,
+          "description": "or around 66 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [
+              {
+                "description": "480p",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "480p"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or 20 seconds for $1",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.05",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "720p",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "720p"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or 10 seconds for $1",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.10",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "1080p",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "1080p"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 66 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.15",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "google/veo-3-fast": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "seed": {
+          "type": "integer",
+          "title": "Seed",
+          "x-order": 7,
+          "nullable": true,
+          "description": "Random seed. Omit for random generations"
+        },
+        "image": {
+          "type": "string",
+          "title": "Image",
+          "format": "uri",
+          "x-order": 3,
+          "nullable": true,
+          "description": "Input image to start generating from. Ideal images are 16:9 or 9:16 and 1280x720 or 720x1280, depending on the aspect ratio you choose."
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "x-order": 0,
+          "description": "Text prompt for video generation"
+        },
+        "duration": {
+          "enum": [
+            4,
+            6,
+            8
+          ],
+          "type": "integer",
+          "title": "duration",
+          "description": "Video duration in seconds",
+          "default": 8,
+          "x-order": 2
+        },
+        "resolution": {
+          "enum": [
+            "720p",
+            "1080p"
+          ],
+          "type": "string",
+          "title": "resolution",
+          "description": "Resolution of the generated video",
+          "default": "1080p",
+          "x-order": 5
+        },
+        "aspect_ratio": {
+          "enum": [
+            "16:9",
+            "9:16"
+          ],
+          "type": "string",
+          "title": "aspect_ratio",
+          "description": "Video aspect ratio",
+          "default": "16:9",
+          "x-order": 1
+        },
+        "generate_audio": {
+          "type": "boolean",
+          "title": "Generate Audio",
+          "default": true,
+          "x-order": 6,
+          "description": "Generate audio with the video"
+        },
+        "negative_prompt": {
+          "type": "string",
+          "title": "Negative Prompt",
+          "x-order": 4,
+          "nullable": true,
+          "description": "Description of what to exclude from the generated video"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "with_audio",
+          "variant_name": null,
+          "price_per_second": 0.15,
+          "description": "or around 66 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "without_audio",
+          "variant_name": null,
+          "price_per_second": 0.1,
+          "description": "or 10 seconds for $1",
+          "metric": "video_output_duration_seconds"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [
+              {
+                "description": "with_audio",
+                "subtype": "string",
+                "title": "model variant",
+                "type": "equals",
+                "value": "with_audio"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 66 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.15",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "without_audio",
+                "subtype": "string",
+                "title": "model variant",
+                "type": "equals",
+                "value": "without_audio"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or 10 seconds for $1",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.10",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "minimax/hailuo-2.3-fast": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt",
+        "first_frame_image"
+      ],
+      "properties": {
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "description": "Text prompt for generation"
+        },
+        "duration": {
+          "enum": [
+            6,
+            10
+          ],
+          "type": "integer",
+          "title": "duration",
+          "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.",
+          "default": 6,
+          "x-order": 2
+        },
+        "resolution": {
+          "enum": [
+            "768p",
+            "1080p"
+          ],
+          "type": "string",
+          "title": "resolution",
+          "description": "Pick between 768p or 1080p resolution. 1080p supports only 6-second duration.",
+          "default": "768p",
+          "x-order": 3
+        },
+        "prompt_optimizer": {
+          "type": "boolean",
+          "title": "Prompt Optimizer",
+          "default": true,
+          "description": "Use prompt optimizer"
+        },
+        "first_frame_image": {
+          "type": "string",
+          "title": "First Frame Image",
+          "format": "uri",
+          "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "768P",
+          "variant_name": null,
+          "price_per_second": 0.19,
+          "description": "or around 52 videos for $10",
+          "metric": "video_output_count"
+        },
+        {
+          "variant": "768P",
+          "variant_name": null,
+          "price_per_second": 0.32,
+          "description": "or around 31 videos for $10",
+          "metric": "video_output_count"
+        },
+        {
+          "variant": "1080P",
+          "variant_name": null,
+          "price_per_second": 0.33,
+          "description": "or around 30 videos for $10",
+          "metric": "video_output_count"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [
+              {
+                "description": "768P",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "768P"
+              },
+              {
+                "description": "6",
+                "subtype": "number",
+                "title": "second of output video",
+                "type": "equals",
+                "value": 6
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 52 videos for $10",
+                "metric": "video_output_count",
+                "metric_display": "output video",
+                "price": "$0.19",
+                "title": "per output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "768P",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "768P"
+              },
+              {
+                "description": "10",
+                "subtype": "number",
+                "title": "second of output video",
+                "type": "equals",
+                "value": 10
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 31 videos for $10",
+                "metric": "video_output_count",
+                "metric_display": "output video",
+                "price": "$0.32",
+                "title": "per output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "1080P",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "1080P"
+              },
+              {
+                "description": "6",
+                "subtype": "number",
+                "title": "second of output video",
+                "type": "equals",
+                "value": 6
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 30 videos for $10",
+                "metric": "video_output_count",
+                "metric_display": "output video",
+                "price": "$0.33",
+                "title": "per output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "bytedance/seedance-1-pro": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "fps": {
+          "enum": [
+            24
+          ],
+          "type": "integer",
+          "title": "fps",
+          "description": "Frame rate (frames per second)",
+          "default": 24,
+          "x-order": 6
+        },
+        "seed": {
+          "type": "integer",
+          "title": "Seed",
+          "x-order": 8,
+          "nullable": true,
+          "description": "Random seed. Set for reproducible generation"
+        },
+        "image": {
+          "type": "string",
+          "title": "Image",
+          "format": "uri",
+          "x-order": 1,
+          "nullable": true,
+          "description": "Input image for image-to-video generation"
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "x-order": 0,
+          "description": "Text prompt for video generation"
+        },
+        "duration": {
+          "type": "integer",
+          "title": "Duration",
+          "default": 5,
+          "maximum": 12,
+          "minimum": 2,
+          "x-order": 3,
+          "description": "Video duration in seconds"
+        },
+        "resolution": {
+          "enum": [
+            "480p",
+            "720p",
+            "1080p"
+          ],
+          "type": "string",
+          "title": "resolution",
+          "description": "Video resolution",
+          "default": "1080p",
+          "x-order": 4
+        },
+        "aspect_ratio": {
+          "enum": [
+            "16:9",
+            "4:3",
+            "1:1",
+            "3:4",
+            "9:16",
+            "21:9",
+            "9:21"
+          ],
+          "type": "string",
+          "title": "aspect_ratio",
+          "description": "Video aspect ratio. Ignored if an image is used.",
+          "default": "16:9",
+          "x-order": 5
+        },
+        "camera_fixed": {
+          "type": "boolean",
+          "title": "Camera Fixed",
+          "default": false,
+          "x-order": 7,
+          "description": "Whether to fix camera position"
+        },
+        "last_frame_image": {
+          "type": "string",
+          "title": "Last Frame Image",
+          "format": "uri",
+          "x-order": 2,
+          "nullable": true,
+          "description": "Input image for last frame generation. This only works if an image start frame is given too."
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "480p",
+          "variant_name": null,
+          "price_per_second": 0.03,
+          "description": "or around 33 seconds for $1",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "720p",
+          "variant_name": null,
+          "price_per_second": 0.06,
+          "description": "or around 16 seconds for $1",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "1080p",
+          "variant_name": null,
+          "price_per_second": 0.15,
+          "description": "or around 66 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [
+              {
+                "description": "480p",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "480p"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 33 seconds for $1",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.03",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "720p",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "720p"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 16 seconds for $1",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.06",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "1080p",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "1080p"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 66 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.15",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "minimax/hailuo-02": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "description": "Text prompt for generation"
+        },
+        "duration": {
+          "enum": [
+            6,
+            10
+          ],
+          "type": "integer",
+          "title": "duration",
+          "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.",
+          "default": 6,
+          "x-order": 3
+        },
+        "resolution": {
+          "enum": [
+            "512p",
+            "768p",
+            "1080p"
+          ],
+          "type": "string",
+          "title": "resolution",
+          "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.",
+          "default": "1080p",
+          "x-order": 4
+        },
+        "last_frame_image": {
+          "type": "string",
+          "title": "Last Frame Image",
+          "format": "uri",
+          "description": "Last frame image for video generation. The final frame of the output video will match this image."
+        },
+        "prompt_optimizer": {
+          "type": "boolean",
+          "title": "Prompt Optimizer",
+          "default": true,
+          "description": "Use prompt optimizer"
+        },
+        "first_frame_image": {
+          "type": "string",
+          "title": "First Frame Image",
+          "format": "uri",
+          "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "512P",
+          "variant_name": null,
+          "price_per_second": 0.1,
+          "description": "or 10 videos for $1",
+          "metric": "video_output_count"
+        },
+        {
+          "variant": "512P",
+          "variant_name": null,
+          "price_per_second": 0.15,
+          "description": "or around 66 videos for $10",
+          "metric": "video_output_count"
+        },
+        {
+          "variant": "768P",
+          "variant_name": null,
+          "price_per_second": 0.27,
+          "description": "or around 37 videos for $10",
+          "metric": "video_output_count"
+        },
+        {
+          "variant": "768P",
+          "variant_name": null,
+          "price_per_second": 0.45,
+          "description": "or around 22 videos for $10",
+          "metric": "video_output_count"
+        },
+        {
+          "variant": "1080P",
+          "variant_name": null,
+          "price_per_second": 0.48,
+          "description": "or around 20 videos for $10",
+          "metric": "video_output_count"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [
+              {
+                "description": "512P",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "512P"
+              },
+              {
+                "description": "6",
+                "subtype": "number",
+                "title": "second of output video",
+                "type": "equals",
+                "value": 6
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or 10 videos for $1",
+                "metric": "video_output_count",
+                "metric_display": "output video",
+                "price": "$0.10",
+                "title": "per output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "512P",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "512P"
+              },
+              {
+                "description": "10",
+                "subtype": "number",
+                "title": "second of output video",
+                "type": "equals",
+                "value": 10
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 66 videos for $10",
+                "metric": "video_output_count",
+                "metric_display": "output video",
+                "price": "$0.15",
+                "title": "per output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "768P",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "768P"
+              },
+              {
+                "description": "6",
+                "subtype": "number",
+                "title": "second of output video",
+                "type": "equals",
+                "value": 6
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 37 videos for $10",
+                "metric": "video_output_count",
+                "metric_display": "output video",
+                "price": "$0.27",
+                "title": "per output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "768P",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "768P"
+              },
+              {
+                "description": "10",
+                "subtype": "number",
+                "title": "second of output video",
+                "type": "equals",
+                "value": 10
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 22 videos for $10",
+                "metric": "video_output_count",
+                "metric_display": "output video",
+                "price": "$0.45",
+                "title": "per output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "1080P",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "1080P"
+              },
+              {
+                "description": "6",
+                "subtype": "number",
+                "title": "second of output video",
+                "type": "equals",
+                "value": 6
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 20 videos for $10",
+                "metric": "video_output_count",
+                "metric_display": "output video",
+                "price": "$0.48",
+                "title": "per output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "kwaivgi/kling-v2.1-master": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "description": "Text prompt for video generation"
+        },
+        "duration": {
+          "enum": [
+            5,
+            10
+          ],
+          "type": "integer",
+          "title": "duration",
+          "description": "Duration of the video in seconds",
+          "default": 5,
+          "x-order": 4
+        },
+        "start_image": {
+          "type": "string",
+          "title": "Start Image",
+          "format": "uri",
+          "description": "First frame of the video"
+        },
+        "aspect_ratio": {
+          "enum": [
+            "16:9",
+            "9:16",
+            "1:1"
+          ],
+          "type": "string",
+          "title": "aspect_ratio",
+          "description": "Aspect ratio of the video. Ignored if start_image is provided.",
+          "default": "16:9",
+          "x-order": 3
+        },
+        "negative_prompt": {
+          "type": "string",
+          "title": "Negative Prompt",
+          "default": "",
+          "description": "Things you do not want to see in the video"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "",
+          "variant_name": null,
+          "price_per_second": 0.28,
+          "description": "or around 35 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 35 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.28",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "wan-video/wan-2.2-t2v-fast": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "seed": {
+          "type": "integer",
+          "title": "Seed",
+          "x-order": 9,
+          "nullable": true,
+          "description": "Random seed. Leave blank for random"
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "x-order": 0,
+          "description": "Prompt for video generation"
+        },
+        "go_fast": {
+          "type": "boolean",
+          "title": "Go Fast",
+          "default": true,
+          "x-order": 7,
+          "description": "Go fast"
+        },
+        "num_frames": {
+          "type": "integer",
+          "title": "Num Frames",
+          "default": 81,
+          "maximum": 121,
+          "minimum": 81,
+          "x-order": 2,
+          "description": "Number of video frames. 81 frames give the best results"
+        },
+        "resolution": {
+          "enum": [
+            "480p",
+            "720p"
+          ],
+          "type": "string",
+          "title": "resolution",
+          "description": "Resolution of video. 16:9 corresponds to 832x480px, and 9:16 is 480x832px",
+          "default": "480p",
+          "x-order": 4
+        },
+        "aspect_ratio": {
+          "enum": [
+            "16:9",
+            "9:16"
+          ],
+          "type": "string",
+          "title": "aspect_ratio",
+          "description": "Aspect ratio of video. 16:9 corresponds to 832x480px, and 9:16 is 480x832px",
+          "default": "16:9",
+          "x-order": 3
+        },
+        "sample_shift": {
+          "type": "number",
+          "title": "Sample Shift",
+          "default": 12,
+          "maximum": 20,
+          "minimum": 1,
+          "x-order": 8,
+          "description": "Sample shift factor"
+        },
+        "optimize_prompt": {
+          "type": "boolean",
+          "title": "Optimize Prompt",
+          "default": false,
+          "x-order": 1,
+          "description": "Translate prompt to Chinese before generation"
+        },
+        "frames_per_second": {
+          "type": "integer",
+          "title": "Frames Per Second",
+          "default": 16,
+          "maximum": 30,
+          "minimum": 5,
+          "x-order": 5,
+          "description": "Frames per second. Note that the pricing of this model is based on the video duration at 16 fps"
+        },
+        "interpolate_output": {
+          "type": "boolean",
+          "title": "Interpolate Output",
+          "default": true,
+          "x-order": 6,
+          "description": "Interpolate the generated video to 30 FPS using ffmpeg"
+        },
+        "disable_safety_checker": {
+          "type": "boolean",
+          "title": "Disable Safety Checker",
+          "default": false,
+          "x-order": 10,
+          "description": "Disable safety checker for generated video."
+        },
+        "lora_scale_transformer": {
+          "type": "number",
+          "title": "Lora Scale Transformer",
+          "default": 1,
+          "x-order": 12,
+          "description": "Determines how strongly the transformer LoRA should be applied."
+        },
+        "lora_scale_transformer_2": {
+          "type": "number",
+          "title": "Lora Scale Transformer 2",
+          "default": 1,
+          "x-order": 14,
+          "description": "Determines how strongly the transformer_2 LoRA should be applied."
+        },
+        "lora_weights_transformer": {
+          "type": "string",
+          "title": "Lora Weights Transformer",
+          "x-order": 11,
+          "nullable": true,
+          "description": "Load LoRA weights for transformer. Supports arbitrary .safetensors URLs from the Internet (for example, 'https://huggingface.co/Viktor1717/scandinavian-interior-style1/resolve/main/my_first_flux_lora_v1.safetensors')"
+        },
+        "lora_weights_transformer_2": {
+          "type": "string",
+          "title": "Lora Weights Transformer 2",
+          "x-order": 13,
+          "nullable": true,
+          "description": "Load LoRA weights for transformer_2. Supports arbitrary .safetensors URLs from the Internet. Can be different from transformer LoRA."
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "480p",
+          "variant_name": null,
+          "price_per_second": 0.05,
+          "description": "or 20 videos for $1",
+          "metric": "video_output_count"
+        },
+        {
+          "variant": "720p",
+          "variant_name": null,
+          "price_per_second": 0.1,
+          "description": "or 10 videos for $1",
+          "metric": "video_output_count"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [
+              {
+                "description": "480p",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "480p"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or 20 videos for $1",
+                "metric": "video_output_count",
+                "metric_display": "output video",
+                "price": "$0.05",
+                "title": "per output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "720p",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "720p"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or 10 videos for $1",
+                "metric": "video_output_count",
+                "metric_display": "output video",
+                "price": "$0.10",
+                "title": "per output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "pixverse/pixverse-v5": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "seed": {
+          "type": "integer",
+          "title": "Seed",
+          "nullable": true,
+          "description": "Random seed. Set for reproducible generation"
+        },
+        "image": {
+          "type": "string",
+          "title": "Image",
+          "format": "uri",
+          "nullable": true,
+          "description": "Image to use for the first frame of the video"
+        },
+        "effect": {
+          "enum": [
+            "None",
+            "Let's YMCA!",
+            "Subject 3 Fever",
+            "Ghibli Live!",
+            "Suit Swagger",
+            "Muscle Surge",
+            "360\u00b0 Microwave",
+            "Warmth of Jesus",
+            "Emergency Beat",
+            "Anything, Robot",
+            "Kungfu Club",
+            "Mint in Box",
+            "Retro Anime Pop",
+            "Vogue Walk",
+            "Mega Dive",
+            "Evil Trigger"
+          ],
+          "type": "string",
+          "title": "effect",
+          "description": "Special effect to apply to the video. V5 supports effects. Does not work with last_frame_image.",
+          "default": "None",
+          "x-order": 8
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "description": "Text prompt for video generation"
+        },
+        "quality": {
+          "enum": [
+            "360p",
+            "540p",
+            "720p",
+            "1080p"
+          ],
+          "type": "string",
+          "title": "quality",
+          "description": "Resolution of the video. 360p and 540p cost the same, but 720p and 1080p cost more. V5 supports 1080p with 8 second duration.",
+          "default": "540p",
+          "x-order": 3
+        },
+        "duration": {
+          "enum": [
+            5,
+            8
+          ],
+          "type": "integer",
+          "title": "duration",
+          "description": "Duration of the video in seconds. 8 second videos cost twice as much as 5 second videos. V5 supports 1080p with 8 second duration.",
+          "default": 5,
+          "x-order": 5
+        },
+        "aspect_ratio": {
+          "enum": [
+            "16:9",
+            "9:16",
+            "1:1"
+          ],
+          "type": "string",
+          "title": "aspect_ratio",
+          "description": "Aspect ratio of the video",
+          "default": "16:9",
+          "x-order": 4
+        },
+        "negative_prompt": {
+          "type": "string",
+          "title": "Negative Prompt",
+          "default": "",
+          "description": "Negative prompt to avoid certain elements in the video"
+        },
+        "last_frame_image": {
+          "type": "string",
+          "title": "Last Frame Image",
+          "format": "uri",
+          "nullable": true,
+          "description": "Use to generate a video that transitions from the first image to the last image. Must be used with image."
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "",
+          "variant_name": null,
+          "price_per_second": 0.01,
+          "description": "or 100 units for $1",
+          "metric": "unspecified_billing_metric"
+        }
+      ],
+      "billing_config": {
+        "current_description": "<table>\n<thead>\n<tr>\n<th>Duration</th>\n<th>Resolution</th>\n<th>Motion</th>\n<th>Units</th>\n<th>Cost ($)</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>5s</td>\n<td>360p</td>\n<td>normal</td>\n<td>30</td>\n<td>0.30</td>\n</tr>\n<tr>\n<td>5s</td>\n<td>360p</td>\n<td>smooth</td>\n<td>60</td>\n<td>0.60</td>\n</tr>\n<tr>\n<td>8s</td>\n<td>360p</td>\n<td>normal</td>\n<td>60</td>\n<td>0.60</td>\n</tr>\n<tr>\n<td>5s</td>\n<td>540p</td>\n<td>normal</td>\n<td>30</td>\n<td>0.30</td>\n</tr>\n<tr>\n<td>5s</td>\n<td>540p</td>\n<td>smooth</td>\n<td>60</td>\n<td>0.60</td>\n</tr>\n<tr>\n<td>8s</td>\n<td>540p</td>\n<td>normal</td>\n<td>60</td>\n<td>0.60</td>\n</tr>\n<tr>\n<td>5s</td>\n<td>720p</td>\n<td>normal</td>\n<td>40</td>\n<td>0.40</td>\n</tr>\n<tr>\n<td>5s</td>\n<td>720p</td>\n<td>smooth</td>\n<td>80</td>\n<td>0.80</td>\n</tr>\n<tr>\n<td>8s</td>\n<td>720p</td>\n<td>normal</td>\n<td>80</td>\n<td>0.80</td>\n</tr>\n<tr>\n<td>5s</td>\n<td>1080p</td>\n<td>normal</td>\n<td>80</td>\n<td>0.80</td>\n</tr>\n<tr>\n<td>8s</td>\n<td>1080p</td>\n<td>normal</td>\n<td>160</td>\n<td>1.60</td>\n</tr>\n</tbody>\n</table>",
+        "current_tiers": [
+          {
+            "criteria": [],
+            "description": null,
+            "prices": [
+              {
+                "description": "or 100 units for $1",
+                "metric": "unspecified_billing_metric",
+                "metric_display": "unit",
+                "price": "$0.01",
+                "title": "per unit",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "kwaivgi/kling-v2.5-turbo-pro": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "title": "Image",
+          "format": "uri",
+          "nullable": true,
+          "deprecated": true,
+          "description": "Deprecated: Use start_image instead."
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "description": "Text prompt for video generation"
+        },
+        "duration": {
+          "enum": [
+            5,
+            10
+          ],
+          "type": "integer",
+          "title": "duration",
+          "description": "Duration of the video in seconds",
+          "default": 5,
+          "x-order": 4
+        },
+        "start_image": {
+          "type": "string",
+          "title": "Start Image",
+          "format": "uri",
+          "description": "First frame of the video"
+        },
+        "aspect_ratio": {
+          "enum": [
+            "16:9",
+            "9:16",
+            "1:1"
+          ],
+          "type": "string",
+          "title": "aspect_ratio",
+          "description": "Aspect ratio of the video. Ignored if start_image is provided.",
+          "default": "16:9",
+          "x-order": 3
+        },
+        "negative_prompt": {
+          "type": "string",
+          "title": "Negative Prompt",
+          "default": "",
+          "description": "Things you do not want to see in the video"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "",
+          "variant_name": null,
+          "price_per_second": 0.07,
+          "description": "or around 14 seconds for $1",
+          "metric": "video_output_duration_seconds"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 14 seconds for $1",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.07",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "runwayml/gen4-image-turbo": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "seed": {
+          "type": "integer",
+          "title": "Seed",
+          "nullable": true,
+          "description": "Random seed. Set for reproducible generation"
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "description": "Text prompt for image generation"
+        },
+        "resolution": {
+          "enum": [
+            "720p",
+            "1080p"
+          ],
+          "type": "string",
+          "title": "resolution",
+          "description": "Image resolution",
+          "default": "1080p",
+          "x-order": 3
+        },
+        "aspect_ratio": {
+          "enum": [
+            "16:9",
+            "9:16",
+            "4:3",
+            "3:4",
+            "1:1",
+            "21:9"
+          ],
+          "type": "string",
+          "title": "aspect_ratio",
+          "description": "Image aspect ratio",
+          "default": "16:9",
+          "x-order": 2
+        },
+        "reference_tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "Reference Tags",
+          "default": [],
+          "description": "An optional tag for each of your reference images. Tags must be alphanumeric and start with a letter. You can reference them in your prompt using @tag_name. Tags must be between 3 and 15 characters."
+        },
+        "reference_images": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": "Reference Images",
+          "default": [],
+          "description": "You must give at least one reference image. Up to 3 reference images are supported. Images must be between 0.5 and 2 aspect ratio."
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "",
+          "variant_name": null,
+          "price_per_second": 0.03,
+          "description": "or around 33 images for $1",
+          "metric": "image_output_count"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 33 images for $1",
+                "metric": "image_output_count",
+                "metric_display": "output image",
+                "price": "$0.03",
+                "title": "per output image",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "lightricks/ltx-2-fast": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "title": "Image",
+          "format": "uri",
+          "description": "First frame image for optional image-to-video generation"
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "description": "Text prompt describing the video to generate"
+        },
+        "duration": {
+          "enum": [
+            6,
+            8,
+            10,
+            12,
+            14,
+            16,
+            18,
+            20
+          ],
+          "type": "integer",
+          "title": "duration",
+          "description": "Duration of the video in seconds. Durations longer than 10 seconds are only available with 1080p resolution.",
+          "default": 6,
+          "x-order": 3
+        },
+        "resolution": {
+          "enum": [
+            "1080p",
+            "2k",
+            "4k"
+          ],
+          "type": "string",
+          "title": "resolution",
+          "description": "Resolution quality of the generated video",
+          "default": "1080p",
+          "x-order": 2
+        },
+        "generate_audio": {
+          "type": "boolean",
+          "title": "Generate Audio",
+          "default": true,
+          "description": "Generate audio for the video"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "1080p",
+          "variant_name": null,
+          "price_per_second": 0.04,
+          "description": "or 25 seconds for $1",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "2k",
+          "variant_name": null,
+          "price_per_second": 0.08,
+          "description": "or around 12 seconds for $1",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "4k",
+          "variant_name": null,
+          "price_per_second": 0.16,
+          "description": "or around 62 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [
+              {
+                "description": "1080p",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "1080p"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or 25 seconds for $1",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.04",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "2k",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "2k"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 12 seconds for $1",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.08",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "4k",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "4k"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 62 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.16",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "leonardoai/motion-2.0": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "title": "Image",
+          "format": "uri",
+          "description": "Image to use for the first frame of the video"
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "description": "Text prompt for generation"
+        },
+        "vibe_style": {
+          "enum": [
+            "None",
+            "clay",
+            "color_sketch",
+            "logo",
+            "papercraft",
+            "pro_photo",
+            "sci_fi",
+            "sketch",
+            "stock_footage",
+            "streetshot"
+          ],
+          "type": "string",
+          "title": "vibe_style",
+          "description": "Style for the overall vibe of the video. Ignored if image is provided.",
+          "default": "None",
+          "x-order": 6
+        },
+        "aspect_ratio": {
+          "enum": [
+            "9:16",
+            "16:9",
+            "2:3",
+            "4:5"
+          ],
+          "type": "string",
+          "title": "aspect_ratio",
+          "description": "Aspect ratio of the output video. Ignored if image is provided.",
+          "default": "16:9",
+          "x-order": 2
+        },
+        "lighting_style": {
+          "enum": [
+            "None",
+            "backlight",
+            "candle_lit",
+            "chiaroscuro",
+            "film_haze",
+            "foggy",
+            "golden_hour",
+            "hardlight",
+            "lens_flare",
+            "light_art",
+            "low_key",
+            "luminous",
+            "mystical",
+            "rainy",
+            "soft_light",
+            "volumetric"
+          ],
+          "type": "string",
+          "title": "lighting_style",
+          "description": "Style for the lighting of the video. Ignored if image is provided.",
+          "default": "None",
+          "x-order": 7
+        },
+        "prompt_enhance": {
+          "type": "boolean",
+          "title": "Prompt Enhance",
+          "default": true,
+          "description": "Whether to enhance the prompt"
+        },
+        "negative_prompt": {
+          "type": "string",
+          "title": "Negative Prompt",
+          "nullable": true,
+          "description": "The negative prompt used for the video generation"
+        },
+        "shot_type_style": {
+          "enum": [
+            "None",
+            "bokeh",
+            "cinematic",
+            "close_up",
+            "overhead",
+            "spiritual",
+            "spooky"
+          ],
+          "type": "string",
+          "title": "shot_type_style",
+          "description": "Style for the shot type of the video. Ignored if image is provided.",
+          "default": "None",
+          "x-order": 8
+        },
+        "color_theme_style": {
+          "enum": [
+            "None",
+            "autumn",
+            "complimentary",
+            "cool",
+            "dark",
+            "earthy",
+            "electric",
+            "iridescent",
+            "pastel",
+            "split",
+            "terracotta_teal",
+            "ultraviolet",
+            "vibrant",
+            "warm"
+          ],
+          "type": "string",
+          "title": "color_theme_style",
+          "description": "Style for the color theme of the video. Ignored if image is provided.",
+          "default": "None",
+          "x-order": 9
+        },
+        "frame_interpolation": {
+          "type": "boolean",
+          "title": "Frame Interpolation",
+          "default": true,
+          "description": "Smoothly blend frames for fluid video transitions"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "",
+          "variant_name": null,
+          "price_per_second": 0.3,
+          "description": "or around 33 videos for $10",
+          "metric": "video_output_count"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 33 videos for $10",
+                "metric": "video_output_count",
+                "metric_display": "output video",
+                "price": "$0.30",
+                "title": "per output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "lightricks/ltx-2-pro": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "title": "Image",
+          "format": "uri",
+          "description": "First frame image for optional image-to-video generation"
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "description": "Text prompt describing the video to generate"
+        },
+        "duration": {
+          "enum": [
+            6,
+            8,
+            10
+          ],
+          "type": "integer",
+          "title": "duration",
+          "description": "Duration of the video in seconds",
+          "default": 6,
+          "x-order": 3
+        },
+        "resolution": {
+          "enum": [
+            "1080p",
+            "2k",
+            "4k"
+          ],
+          "type": "string",
+          "title": "resolution",
+          "description": "Resolution quality of the generated video",
+          "default": "1080p",
+          "x-order": 2
+        },
+        "generate_audio": {
+          "type": "boolean",
+          "title": "Generate Audio",
+          "default": true,
+          "description": "Generate audio for the video"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "1080p",
+          "variant_name": null,
+          "price_per_second": 0.06,
+          "description": "or around 16 seconds for $1",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "2k",
+          "variant_name": null,
+          "price_per_second": 0.12,
+          "description": "or around 83 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        },
+        {
+          "variant": "4k",
+          "variant_name": null,
+          "price_per_second": 0.24,
+          "description": "or around 41 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [
+              {
+                "description": "1080p",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "1080p"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 16 seconds for $1",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.06",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "2k",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "2k"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 83 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.12",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          },
+          {
+            "criteria": [
+              {
+                "description": "4k",
+                "subtype": "string",
+                "title": "target resolution",
+                "type": "equals",
+                "value": "4k"
+              }
+            ],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 41 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.24",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "character-ai/ovi-i2v": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt",
+        "image"
+      ],
+      "properties": {
+        "seed": {
+          "type": "integer",
+          "title": "Seed",
+          "x-order": 2,
+          "nullable": true,
+          "description": "Random seed. Set for reproducible generation."
+        },
+        "image": {
+          "type": "string",
+          "title": "Image",
+          "format": "uri",
+          "x-order": 1,
+          "description": "Input image to generate video from."
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "x-order": 0,
+          "description": "Prompt for generated video."
+        },
+        "audio_negative_prompt": {
+          "type": "string",
+          "title": "Audio Negative Prompt",
+          "default": "robotic, muffled, echo, distorted",
+          "x-order": 4,
+          "description": "Negative prompt for audio generation."
+        },
+        "video_negative_prompt": {
+          "type": "string",
+          "title": "Video Negative Prompt",
+          "default": "jitter, bad hands, blur, distortion",
+          "x-order": 3,
+          "description": "Negative prompt for video generation."
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "",
+          "variant_name": null,
+          "price_per_second": 0.2,
+          "description": "or 50 videos for $10",
+          "metric": "video_output_count"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [],
+            "description": null,
+            "prices": [
+              {
+                "description": "or 50 videos for $10",
+                "metric": "video_output_count",
+                "metric_display": "output video",
+                "price": "$0.20",
+                "title": "per output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  },
+  "luma/ray-2-720p": {
+    "input_schema": {
+      "type": "object",
+      "title": "Input",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "loop": {
+          "type": "boolean",
+          "title": "Loop",
+          "default": false,
+          "description": "Whether the video should loop, with the last frame matching the first frame for smooth, continuous playback."
+        },
+        "prompt": {
+          "type": "string",
+          "title": "Prompt",
+          "description": "Text prompt for video generation"
+        },
+        "concepts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "Concepts",
+          "description": "List of camera concepts to apply to the video generation. Concepts include: truck_left, pan_right, pedestal_down, low_angle, pedestal_up, selfie, pan_left, roll_right, zoom_in, over_the_shoulder, orbit_right, orbit_left, static, tiny_planet, high_angle, bolt_cam, dolly_zoom, overhead, zoom_out, handheld, roll_left, pov, aerial_drone, push_in, crane_down, truck_right, tilt_down, elevator_doors, tilt_up, ground_level, pull_out, aerial, crane_up, eye_level"
+        },
+        "duration": {
+          "enum": [
+            5,
+            9
+          ],
+          "type": "integer",
+          "title": "duration",
+          "description": "Duration of the video in seconds",
+          "default": 5,
+          "x-order": 3
+        },
+        "end_image": {
+          "type": "string",
+          "title": "End Image",
+          "format": "uri",
+          "description": "An optional last frame of the video to use as the ending frame."
+        },
+        "start_image": {
+          "type": "string",
+          "title": "Start Image",
+          "format": "uri",
+          "description": "An optional first frame of the video to use as the starting frame."
+        },
+        "aspect_ratio": {
+          "enum": [
+            "1:1",
+            "3:4",
+            "4:3",
+            "9:16",
+            "16:9",
+            "9:21",
+            "21:9"
+          ],
+          "type": "string",
+          "title": "aspect_ratio",
+          "description": "Aspect ratio of the generated video",
+          "default": "16:9",
+          "x-order": 4
+        },
+        "end_image_url": {
+          "type": "string",
+          "title": "End Image Url",
+          "deprecated": true,
+          "description": "Deprecated: Use end_image instead"
+        },
+        "start_image_url": {
+          "type": "string",
+          "title": "Start Image Url",
+          "deprecated": true,
+          "description": "Deprecated: Use start_image instead"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "string",
+      "title": "Output",
+      "format": "uri"
+    },
+    "pricing": {
+      "variants": [
+        {
+          "variant": "",
+          "variant_name": null,
+          "price_per_second": 0.18,
+          "description": "or around 55 seconds for $10",
+          "metric": "video_output_duration_seconds"
+        }
+      ],
+      "billing_config": {
+        "current_description": null,
+        "current_tiers": [
+          {
+            "criteria": [],
+            "description": null,
+            "prices": [
+              {
+                "description": "or around 55 seconds for $10",
+                "metric": "video_output_duration_seconds",
+                "metric_display": "second of output video",
+                "price": "$0.18",
+                "title": "per second of output video",
+                "type": "per-unit"
+              }
+            ],
+            "title": null
+          }
+        ]
+      }
+    }
+  }
+}

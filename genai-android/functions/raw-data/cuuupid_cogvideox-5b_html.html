@@ -1,0 +1,1199 @@
+
+
+<!DOCTYPE html>
+<html lang="en"
+      class="">
+
+  <head>
+    <meta charset="utf-8" />
+    <title>
+      
+  
+    cuuupid/cogvideox-5b | Run with an API on Replicate
+  
+
+    </title>
+
+    
+      
+      <meta name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+
+    <link id="favicon-ico"
+          rel="icon"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/favicon.121ea3afd763.ico"
+          sizes="any" />
+    <link id="favicon-png"
+          rel="icon"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/favicon.fdf5ef8729cc.png"
+          type="image/png" />
+    <link rel="mask-icon"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/safari-pinned-tab.4c32b8e091a9.svg"
+          color="#FFFFFF" />
+    <link rel="apple-touch-icon"
+          sizes="180x180"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/apple-touch-icon.39c0aa0659e3.png" />
+
+    
+  <script nonce="Q9EFlEGu3LAabXoqPKnTBQ==">
+    /* beautify ignore:start */
+    window.dataLayer = window.dataLayer || [];
+    
+    
+    dataLayer.push({
+      'event': 'user_anonymous',
+      'user_type': 'anonymous',
+      
+      'anonymous_session_id': '100f54b8-bee4-42fd-b55c-d2a189c668a8'
+      
+    });
+    
+    /* beautify ignore:end */
+  </script>
+  <script nonce="Q9EFlEGu3LAabXoqPKnTBQ==">
+    (function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-KZDCFZR9');
+  </script>
+
+
+
+    
+    
+
+    <link  rel="stylesheet" href="https://d31rfu1d3w8e4q.cloudfront.net/static/dist/index-BxwK8EBg.css" />
+<script type="module" crossorigin="" src="https://d31rfu1d3w8e4q.cloudfront.net/static/dist/index-BK0wCkVE.js"></script>
+
+    <link rel="stylesheet"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/dist/indexCss-D5iwNvwU.css" />
+
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="Blog (RSS)"
+          href="https://replicate.com/blog/rss" />
+    <link rel="alternate"
+          type="application/atom+xml"
+          title="Blog (Atom)"
+          href="https://replicate.com/blog/atom" />
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="Changelog (RSS)"
+          href="https://replicate.com/changelog/rss" />
+    <link rel="alternate"
+          type="application/atom+xml"
+          title="Changelog (Atom)"
+          href="https://replicate.com/changelog/atom" />
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="Status (RSS)"
+          href="https://replicatestatus.com/feed" />
+
+    
+      <link rel="dns-prefetch"
+            href="https://replicate.delivery" />
+    
+      <link rel="dns-prefetch"
+            href="https://tjzk.replicate.delivery" />
+    
+
+    
+
+    <link rel="canonical"
+          href="https://replicate.com/cuuupid/cogvideox-5b" />
+
+    
+  
+  
+    
+  
+
+  <meta name="twitter:card"
+        content="summary_large_image" />
+
+
+<meta name="twitter:site"
+      content="@replicate" />
+
+
+  <meta name="twitter:image"
+        content="https://og-api.replicateassets.com/api/models/cuuupid/cogvideox-5b" />
+  <meta property="og:image"
+        content="https://og-api.replicateassets.com/api/models/cuuupid/cogvideox-5b" />
+
+
+
+
+  <meta name="twitter:title"
+        content="cuuupid/cogvideox-5b – Replicate" />
+  <meta name="twitter:description"
+        content="Generate high quality videos from a prompt" />
+  <meta property="og:image"
+        content="https://og-api.replicateassets.com/api/models/cuuupid/cogvideox-5b" />
+  <meta property="twitter:image"
+        content="https://og-api.replicateassets.com/api/models/cuuupid/cogvideox-5b" />
+
+  
+
+  
+    <meta name="description"
+          content="Generate high quality videos from a prompt" />
+  
+
+
+    <meta name="sentry-dsn-js"
+          content="https://3dc017e574684610bbc7fd3b5519a4e8@o255771.ingest.sentry.io/5909364" />
+    
+    
+      <meta name="anonymous-id"
+            content="100f54b8-bee4-42fd-b55c-d2a189c668a8" />
+    
+
+    
+      <script nonce="Q9EFlEGu3LAabXoqPKnTBQ==">
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (prefersDarkScheme) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.add("light");
+        }
+      </script>
+    
+
+    
+  </head>
+
+  
+
+  <body class="font-sans overflow-y-scroll antialiased flex min-h-screen flex-col">
+    
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KZDCFZR9"
+        height="0"
+        width="0"
+        style="display:none;
+               visibility:hidden"></iframe></noscript>
+
+
+    
+
+      
+
+      
+        
+
+<div class="h-[var(--header-height)] mb-6 no-focus">
+  
+    <script id="react-component-props-5d422b74-ee11-406d-8a45-11ad4695e7ea" type="application/json">{"activePath": "/cuuupid/cogvideox-5b", "isAuthenticated": false, "theme": "", "__flags": {"show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false, "show-pylon-widget": false}}</script>
+
+<div data-component="Navigation"
+     data-props="react-component-props-5d422b74-ee11-406d-8a45-11ad4695e7ea">
+  
+</div>
+
+  
+</div>
+
+        
+
+
+
+      
+
+      
+      
+
+      
+      
+
+      
+
+      <main class="layout-main flex-1">
+        
+
+        
+          
+
+  
+  
+  
+    
+      
+
+    
+      
+    
+
+    
+
+    
+      
+
+<header class="space-y-4 pb-10 lg:pb-4"
+        aria-label="cuuupid/cogvideox-5b">
+
+  
+
+<div class="flex gap-8 gap-y-4 w-full flex-wrap justify-between items-center">
+  <div class="space-y-4">
+    <div class="flex-wrap flex flex-col gap-1">
+
+      <div class="flex gap-2 sm:gap-3 w-full">
+
+        <h3 aria-label="cuuupid/cogvideox-5b"
+            class="sr-only">
+          cuuupid/cogvideox-5b
+        </h3>
+
+        <div translate="no"
+             aria-hidden="true"
+             class="flex relative items-center gap-1 flex-1 flex-wrap">
+          <div class="flex items-center gap-3 whitespace-nowrap">
+            
+              
+
+
+  <img class="avatar size-9 flex-shrink-0 rounded-full"
+       src="https://github.com/cuuupid.png"
+       alt=""
+       role="presentation"
+       onerror="this.onerror=null; this.src='https://d31rfu1d3w8e4q.cloudfront.net/static/placeholder-avatar-user.bf244ea0452a.svg'" />
+
+
+            
+            <div class="text-r8-gray-11 text-lg font-heading">
+              
+                <a href="https://replicate.com/cuuupid">cuuupid</a>
+              
+            </div>
+            <div class="text-r8-gray-11 text-lg font-heading">
+              /
+            </div>
+          </div>
+          <div>
+            <span class="text-lg font-heading">
+              cogvideox-5b
+            </span>
+            <span class="[&>div]:inline">
+              
+                <script id="react-component-props-0d8d48c8-c114-4849-8a5e-159eda00da27" type="application/json">{"identifier": "cuuupid/cogvideox-5b:5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c", "__flags": {"show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false, "show-pylon-widget": false}}</script>
+
+<div data-component="CopyIdentifierButton"
+     data-props="react-component-props-0d8d48c8-c114-4849-8a5e-159eda00da27">
+  
+</div>
+
+              
+            </span>
+          </div>
+        </div>
+      </div>
+
+      
+
+    </div>
+  </div>
+
+  <div class="relative flex flex-wrap gap-2 md:justify-end w-full md:w-auto">
+
+    
+
+    
+
+    <div>
+      <script id="react-component-props-ebe43bbe-51d4-4de0-acd0-fab3616b9454" type="application/json">{"model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_cover_image/38e76a44-6cce-41e9-9bab-dd356cb00a87/replicate-prediction-r44_fJbecDY.webp", "description": "Generate high quality videos from a prompt", "hardware": "A100 (80GB)", "latest_version": {"id": "5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c"}, "name": "cogvideox-5b", "owner": "cuuupid", "url": "https://replicate.com/cuuupid/cogvideox-5b", "visibility": "public", "_extras": {"name": "cuuupid/cogvideox-5b", "is_official": false, "is_pipeline": false}}, "__flags": {"show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false, "show-pylon-widget": false}}</script>
+
+<div data-component="ModelDetailButton"
+     data-props="react-component-props-ebe43bbe-51d4-4de0-acd0-fab3616b9454">
+  
+</div>
+
+    </div>
+  </div>
+</div>
+
+
+  
+
+
+
+<div class="flex flex-col gap-2 w-full">
+  
+    <div class="flex gap-4 flex-col md:flex-row items-start">
+      
+        <p class="max-w-3xl text-r8-lg [overflow-wrap:anywhere] text-pretty">
+          
+            Generate high quality videos from a prompt
+            
+          
+        </p>
+      
+    </div>
+  
+
+  
+</div>
+
+<div class="w-full">
+  <div class="space-y-4 @container">
+
+    <div class="gap-y-2 items-start @xl:items-center grid @xl:flex @xl:flex-wrap @xl:flex-row @xs:grid-cols-2 gap-x-2 @xl:gap-x-6">
+
+      
+        <div class="flex items-center">
+          <script id="react-component-props-fdbe3d89-aeda-4d1c-b2c0-28516607120f" type="application/json">{"initialStatus": "offline", "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_cover_image/38e76a44-6cce-41e9-9bab-dd356cb00a87/replicate-prediction-r44_fJbecDY.webp", "description": "Generate high quality videos from a prompt", "hardware": "A100 (80GB)", "latest_version": {"id": "5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c"}, "name": "cogvideox-5b", "owner": "cuuupid", "url": "https://replicate.com/cuuupid/cogvideox-5b", "visibility": "public", "_extras": {"name": "cuuupid/cogvideox-5b", "is_official": false, "is_pipeline": false}}, "isOfficialModel": "", "__flags": {"show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false, "show-pylon-widget": false}}</script>
+
+  <div data-react-placeholder="ModelStatusIndicator">
+    <div class="flex items-center">
+  <div class="rounded-full bg-r8-gray-3 animate-pulse w-[64px] h-[29px]">
+  </div>
+</div>
+
+  </div>
+
+<div data-component="ModelStatusIndicator"
+     data-props="react-component-props-fdbe3d89-aeda-4d1c-b2c0-28516607120f">
+  
+</div>
+
+        </div>
+      
+
+      <div class="flex items-start gap-2">
+        
+          <span class="flex-shrink-0 -mt-0.5">
+            
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <circle cx="12" cy="12" r="10"></circle>
+  <line x1="2" y1="12" x2="22" y2="12"></line>
+  <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z">
+  </path>
+</svg>
+
+          </span>
+          <span class="text-r8-sm">Public</span>
+        
+      </div>
+
+      
+        <div class="flex items-start gap-2">
+          <span class="flex-shrink-0 -mt-0.5">
+            
+<svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     width="24"
+     height="24">
+  <path fill="currentColor" fill-rule="evenodd" d="M20.322.75a10.75 10.75 0 00-7.373 2.926l-1.304 1.23A23.743 23.743 0 0010.103 6.5H5.066a1.75 1.75 0 00-1.5.85l-2.71 4.514a.75.75 0 00.49 1.12l4.571.963c.039.049.082.096.129.14L8.04 15.96l1.872 1.994c.044.047.091.09.14.129l.963 4.572a.75.75 0 001.12.488l4.514-2.709a1.75 1.75 0 00.85-1.5v-5.038a23.741 23.741 0 001.596-1.542l1.228-1.304a10.75 10.75 0 002.925-7.374V2.499A1.75 1.75 0 0021.498.75h-1.177zM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 00.121-.214v-3.822zm-10.092-2.7L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 00-.214.121l-2.167 3.612 3.223.679zm8.07-7.644a9.25 9.25 0 016.344-2.518h1.177a.25.25 0 01.25.25v1.176a9.25 9.25 0 01-2.517 6.346l-1.228 1.303a22.248 22.248 0 01-3.854 3.257l-3.288 2.192-1.743-1.858a.764.764 0 00-.034-.034l-1.859-1.744 2.193-3.29a22.248 22.248 0 013.255-3.851l1.304-1.23zM17.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-11 13c.9-.9.9-2.6 0-3.5-.9-.9-2.6-.9-3.5 0-1.209 1.209-1.445 3.901-1.49 4.743a.232.232 0 00.247.247c.842-.045 3.534-.281 4.743-1.49z">
+  </path>
+</svg>
+
+          </span>
+          <span class="text-r8-sm whitespace-nowrap">2.5K
+            runs
+          </span>
+        </div>
+
+        
+          <div class="[&>div]:flex">
+            
+            <script id="react-component-props-a1f6dd01-624d-459f-9b28-4cf2631ea93d" type="application/json">{"version": {"id": "5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c", "created_at": "2024-08-27T18:14:21.592793Z", "_extras": {"arch": "gpu", "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/ready": {"get": {"summary": "Ready", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Ready Ready Get"}}}, "description": "Successful Response"}}, "operationId": "ready_ready_get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "disabled_for_predictions": false, "disabled_for_trainings": false, "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_cover_image/38e76a44-6cce-41e9-9bab-dd356cb00a87/replicate-prediction-r44_fJbecDY.webp", "description": "Generate high quality videos from a prompt", "hardware": "A100 (80GB)", "latest_version": {"id": "5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c"}, "name": "cogvideox-5b", "owner": "cuuupid", "url": "https://replicate.com/cuuupid/cogvideox-5b", "visibility": "public", "_extras": {"name": "cuuupid/cogvideox-5b", "is_official": false, "is_pipeline": false}}, "name": "cuuupid/cogvideox-5b:5b14e2c2", "release_notes": null, "short_id": "5b14e2c2", "url": "https://replicate.com/cuuupid/cogvideox-5b/versions/5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c"}}, "hardware": "A100 (80GB)", "billingConfig": "", "price": "$0.0014 per second", "p50price": "$0.32", "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_cover_image/38e76a44-6cce-41e9-9bab-dd356cb00a87/replicate-prediction-r44_fJbecDY.webp", "description": "Generate high quality videos from a prompt", "hardware": "A100 (80GB)", "latest_version": {"id": "5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c"}, "name": "cogvideox-5b", "owner": "cuuupid", "url": "https://replicate.com/cuuupid/cogvideox-5b", "visibility": "public", "_extras": {"name": "cuuupid/cogvideox-5b", "is_official": false, "is_pipeline": false}}, "__flags": {"show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false, "show-pylon-widget": false}}</script>
+
+<div data-component="ModelPricePopover"
+     data-props="react-component-props-a1f6dd01-624d-459f-9b28-4cf2631ea93d">
+  
+</div>
+
+          </div>
+        
+      
+
+      
+        <div class="flex items-start gap-2">
+          <i class="-mt-0.5">
+            
+<svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+  <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z">
+  </path>
+  <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z">
+  </path>
+  <path d="M7 21h10">
+  </path>
+  <path d="M12 3v18">
+  </path>
+  <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2">
+  </path>
+</svg>
+
+          </i>
+          <a href="https://github.com/THUDM/CogVideo/blob/main/MODEL_LICENSE"
+             target="_blank"
+             class="text-r8-sm">
+            License
+          </a>
+        </div>
+      
+
+      
+
+        <div class="flex items-start gap-2">
+          <i class="-mt-0.5">
+            
+<svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="2"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22">
+  </path>
+</svg>
+
+          </i>
+          <a href="https://github.com/cuuupid/cog-cogvideox"
+             target="_blank"
+             class="text-r8-sm">
+            GitHub
+          </a>
+        </div>
+      
+
+      
+
+      
+
+        <div class="flex items-start gap-2">
+          <i class="-mt-0.5">
+            
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z">
+  </path>
+  <polyline points="14 2 14 8 20 8"></polyline>
+  <line x1="16" y1="13" x2="8" y2="13"></line>
+  <line x1="16" y1="17" x2="8" y2="17"></line>
+  <line x1="10" y1="9" x2="8" y2="9"></line>
+</svg>
+
+          </i>
+          <a href="https://arxiv.org/abs/2408.06072"
+             target="_blank"
+             class="text-r8-sm">
+            Paper
+          </a>
+        </div>
+      
+
+    </div>
+
+    
+
+  </div>
+</div>
+
+
+</header>
+
+    
+    
+      
+        <div class="border-b border-r8-gray-6">
+          
+
+
+
+
+
+
+<div class="r8-tabs r8-tabs--bordered r8-tabs--md top-px relative flex-wrap">
+  
+    <a href="/cuuupid/cogvideox-5b"
+       aria-selected="true"
+       class="r8-tabs__tab no-underline">
+      <span class="r8-tabs__start-icon">
+        <svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+
+</svg>
+
+      </span>
+      <span>Playground</span>
+    </a>
+  
+
+  
+    
+      <a href="/cuuupid/cogvideox-5b/api"
+         
+         class="r8-tabs__tab no-underline">
+
+        <span class="r8-tabs__start-icon">
+          
+<svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     width="24"
+     height="24">
+  <path fill="currentColor" fill-rule="evenodd" d="M20.322.75a10.75 10.75 0 00-7.373 2.926l-1.304 1.23A23.743 23.743 0 0010.103 6.5H5.066a1.75 1.75 0 00-1.5.85l-2.71 4.514a.75.75 0 00.49 1.12l4.571.963c.039.049.082.096.129.14L8.04 15.96l1.872 1.994c.044.047.091.09.14.129l.963 4.572a.75.75 0 001.12.488l4.514-2.709a1.75 1.75 0 00.85-1.5v-5.038a23.741 23.741 0 001.596-1.542l1.228-1.304a10.75 10.75 0 002.925-7.374V2.499A1.75 1.75 0 0021.498.75h-1.177zM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 00.121-.214v-3.822zm-10.092-2.7L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 00-.214.121l-2.167 3.612 3.223.679zm8.07-7.644a9.25 9.25 0 016.344-2.518h1.177a.25.25 0 01.25.25v1.176a9.25 9.25 0 01-2.517 6.346l-1.228 1.303a22.248 22.248 0 01-3.854 3.257l-3.288 2.192-1.743-1.858a.764.764 0 00-.034-.034l-1.859-1.744 2.193-3.29a22.248 22.248 0 013.255-3.851l1.304-1.23zM17.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-11 13c.9-.9.9-2.6 0-3.5-.9-.9-2.6-.9-3.5 0-1.209 1.209-1.445 3.901-1.49 4.743a.232.232 0 00.247.247c.842-.045 3.534-.281 4.743-1.49z">
+  </path>
+</svg>
+
+        </span>
+        <span>API</span>
+      </a>
+    
+  
+
+  
+    <a href="/cuuupid/cogvideox-5b/examples"
+       
+       class="r8-tabs__tab no-underline">
+      <span class="r8-tabs__start-icon">
+        <svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+  <polyline points="11 3 11 11 14 8 17 11 17 3"></polyline>
+</svg>
+
+      </span>
+      <span>Examples</span>
+    </a>
+  
+
+  
+
+  <a href="/cuuupid/cogvideox-5b/readme"
+     
+     class="r8-tabs__tab no-underline">
+    <span class="r8-tabs__start-icon">
+      
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z">
+  </path>
+  <polyline points="14 2 14 8 20 8"></polyline>
+  <line x1="16" y1="13" x2="8" y2="13"></line>
+  <line x1="16" y1="17" x2="8" y2="17"></line>
+  <line x1="10" y1="9" x2="8" y2="9"></line>
+</svg>
+
+    </span>
+    <span>README</span>
+  </a>
+
+  
+    <a href="/cuuupid/cogvideox-5b/versions"
+       
+       class="r8-tabs__tab no-underline">
+      <span class="r8-tabs__start-icon">
+        
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <path d="M3 3v5h5">
+  </path>
+  <path d="M3.05 13A9 9 0 106 5.3L3 8">
+  </path>
+  <path d="M12 7v5l4 2">
+  </path>
+</svg>
+
+      </span>
+      <span>Versions</span>
+    </a>
+  
+
+  
+
+  
+
+  
+</div>
+
+        </div>
+      
+    
+
+    
+      
+
+
+
+    
+
+  
+    
+  
+
+
+  
+    <div class="model-content mt-lh">
+      
+  
+    
+
+<div class="mb-2lh">
+  
+  
+  
+    
+      <script id="react-component-props-20f0fdd7-aaec-47d6-9c70-4242ab804733" type="application/json">{"initialPrediction": {"completed_at": "2024-08-27T18:19:35.831777Z", "created_at": "2024-08-27T18:14:28.426000Z", "data_removed": false, "error": null, "id": "apxzqs6x99rj20chjm5sqp7p0m", "input": {"seed": 42, "steps": 50, "prompt": "A pink tiger running through the snow under the northern lights", "guidance": 6, "num_outputs": 1, "extend_prompt": true}, "logs": "Tue Aug 27 18:15:41 2024\n+---------------------------------------------------------------------------------------+\n| NVIDIA-SMI 535.161.07             Driver Version: 535.161.07   CUDA Version: 12.2     |\n|-----------------------------------------+----------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |\n|                                         |                      |               MIG M. |\n|=========================================+======================+======================|\n|   0  NVIDIA A100-SXM4-80GB          On  | 00000000:51:00.0 Off |                    0 |\n| N/A   30C    P0              87W / 400W |  18393MiB / 81920MiB |      0%      Default |\n|                                         |                      |             Disabled |\n+-----------------------------------------+----------------------+----------------------+\n+---------------------------------------------------------------------------------------+\n| Processes:                                                                            |\n|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |\n|        ID   ID                                                             Usage      |\n|=======================================================================================|\n+---------------------------------------------------------------------------------------+\nExtended prompt:\nIn a mesmerizing scene, a majestic pink tiger with a sleek, silver coat sprints gracefully through a pristine snow-covered forest, its paws barely leaving a trace on the glistening white surface. The sky above is painted with a breathtaking display of vibrant northern lights, casting an ethereal glow that dances around the tiger's silhouette. The tiger's eyes gleam with a mix of curiosity and exhilaration as it navigates the silent, snow-kissed landscape, its every leap and bound a testament to its wild beauty.\n  0%|          | 0/50 [00:00\u003C?, ?it/s]\n  2%|\u258f         | 1/50 [00:10\u003C08:28, 10.38s/it]\n  4%|\u258d         | 2/50 [00:14\u003C05:21,  6.69s/it]\n  6%|\u258c         | 3/50 [00:18\u003C04:18,  5.51s/it]\n  8%|\u258a         | 4/50 [00:22\u003C03:48,  4.96s/it]\n 10%|\u2588         | 5/50 [00:26\u003C03:29,  4.66s/it]\n 12%|\u2588\u258f        | 6/50 [00:30\u003C03:16,  4.47s/it]\n 14%|\u2588\u258d        | 7/50 [00:35\u003C03:07,  4.36s/it]\n 16%|\u2588\u258c        | 8/50 [00:39\u003C02:59,  4.29s/it]\n 18%|\u2588\u258a        | 9/50 [00:43\u003C02:53,  4.24s/it]\n 20%|\u2588\u2588        | 10/50 [00:47\u003C02:48,  4.21s/it]\n 22%|\u2588\u2588\u258f       | 11/50 [00:51\u003C02:43,  4.19s/it]\n 24%|\u2588\u2588\u258d       | 12/50 [00:55\u003C02:38,  4.17s/it]\n 26%|\u2588\u2588\u258c       | 13/50 [00:59\u003C02:34,  4.17s/it]\n 28%|\u2588\u2588\u258a       | 14/50 [01:04\u003C02:29,  4.16s/it]\n 30%|\u2588\u2588\u2588       | 15/50 [01:08\u003C02:25,  4.16s/it]\n 32%|\u2588\u2588\u2588\u258f      | 16/50 [01:12\u003C02:21,  4.15s/it]\n 34%|\u2588\u2588\u2588\u258d      | 17/50 [01:16\u003C02:17,  4.15s/it]\n 36%|\u2588\u2588\u2588\u258c      | 18/50 [01:20\u003C02:12,  4.15s/it]\n 38%|\u2588\u2588\u2588\u258a      | 19/50 [01:24\u003C02:08,  4.15s/it]\n 40%|\u2588\u2588\u2588\u2588      | 20/50 [01:28\u003C02:04,  4.15s/it]\n 42%|\u2588\u2588\u2588\u2588\u258f     | 21/50 [01:33\u003C02:00,  4.15s/it]\n 44%|\u2588\u2588\u2588\u2588\u258d     | 22/50 [01:37\u003C01:56,  4.16s/it]\n 46%|\u2588\u2588\u2588\u2588\u258c     | 23/50 [01:41\u003C01:52,  4.16s/it]\n 48%|\u2588\u2588\u2588\u2588\u258a     | 24/50 [01:45\u003C01:48,  4.16s/it]\n 50%|\u2588\u2588\u2588\u2588\u2588     | 25/50 [01:49\u003C01:43,  4.16s/it]\n 52%|\u2588\u2588\u2588\u2588\u2588\u258f    | 26/50 [01:53\u003C01:39,  4.16s/it]\n 54%|\u2588\u2588\u2588\u2588\u2588\u258d    | 27/50 [01:58\u003C01:35,  4.16s/it]\n 56%|\u2588\u2588\u2588\u2588\u2588\u258c    | 28/50 [02:02\u003C01:31,  4.16s/it]\n 58%|\u2588\u2588\u2588\u2588\u2588\u258a    | 29/50 [02:06\u003C01:27,  4.16s/it]\n 60%|\u2588\u2588\u2588\u2588\u2588\u2588    | 30/50 [02:10\u003C01:23,  4.16s/it]\n 62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258f   | 31/50 [02:14\u003C01:19,  4.16s/it]\n 64%|\u2588\u2588\u2588\u2588\u2588\u2588\u258d   | 32/50 [02:18\u003C01:14,  4.16s/it]\n 66%|\u2588\u2588\u2588\u2588\u2588\u2588\u258c   | 33/50 [02:23\u003C01:10,  4.16s/it]\n 68%|\u2588\u2588\u2588\u2588\u2588\u2588\u258a   | 34/50 [02:27\u003C01:06,  4.16s/it]\n 70%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588   | 35/50 [02:31\u003C01:02,  4.16s/it]\n 72%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f  | 36/50 [02:35\u003C00:58,  4.16s/it]\n 74%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d  | 37/50 [02:39\u003C00:54,  4.16s/it]\n 76%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 38/50 [02:43\u003C00:49,  4.16s/it]\n 78%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a  | 39/50 [02:47\u003C00:45,  4.16s/it]\n 80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588  | 40/50 [02:52\u003C00:41,  4.16s/it]\n 82%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f | 41/50 [02:56\u003C00:37,  4.16s/it]\n 84%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d | 42/50 [03:00\u003C00:33,  4.16s/it]\n 86%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c | 43/50 [03:04\u003C00:29,  4.16s/it]\n 88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 44/50 [03:08\u003C00:24,  4.16s/it]\n 90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 45/50 [03:12\u003C00:20,  4.16s/it]\n 92%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f| 46/50 [03:17\u003C00:16,  4.16s/it]\n 94%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d| 47/50 [03:21\u003C00:12,  4.16s/it]\n 96%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 48/50 [03:25\u003C00:08,  4.16s/it]\n 98%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a| 49/50 [03:29\u003C00:04,  4.16s/it]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 50/50 [03:33\u003C00:00,  4.15s/it]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 50/50 [03:33\u003C00:00,  4.27s/it]\nExporting to MP4...", "metrics": {"predict_time": 234.210865862, "total_time": 307.405777}, "output": "https://replicate.delivery/yhqm/HxgtwZCNSF5cGJTl7IP6kGUGaKls7ul6h306cNeKWAobVeWTA/output.mp4", "started_at": "2024-08-27T18:15:41.620911Z", "status": "succeeded", "urls": {"get": "https://api.replicate.com/v1/predictions/apxzqs6x99rj20chjm5sqp7p0m", "cancel": "https://api.replicate.com/v1/predictions/apxzqs6x99rj20chjm5sqp7p0m/cancel"}, "_extras": {"api_token_name": null, "created_by": {"kind": "user", "url": "https://replicate.com/cuuupid", "username": "cuuupid"}, "input_files": [], "is_immutable": false, "is_shared": true, "is_waiting_for_boot": null, "may_have_sensitive_output": false, "output_files": ["https://replicate.delivery/yhqm/HxgtwZCNSF5cGJTl7IP6kGUGaKls7ul6h306cNeKWAobVeWTA/output.mp4"], "pipeline_child_predictions": [], "ran_on": {"capabilities": {"hotswap": false, "run": true, "stream": false, "train": false}, "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/ready": {"get": {"summary": "Ready", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Ready Ready Get"}}}, "description": "Successful Response"}}, "operationId": "ready_ready_get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "hardware": {"arch": "gpu", "display_name": "Nvidia A100 (80GB) GPU", "short_display_name": "A100 (80GB)", "sku": "gpu-a100-large"}, "has_special_pricing": false, "is_official": false, "kind": "version", "model": {"name": "cogvideox-5b", "username": "cuuupid", "visibility": "public"}, "supports_cancelation": true, "url": "https://replicate.com/cuuupid/cogvideox-5b/versions/5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c", "version": {"id": "5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c"}}, "source": "web", "total_child_predictions": 0}, "version": "5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c"}, "initialPredictionVersion": {"id": "5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c", "created_at": "2024-08-27T18:14:21.592793Z", "_extras": {"arch": "gpu", "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/ready": {"get": {"summary": "Ready", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Ready Ready Get"}}}, "description": "Successful Response"}}, "operationId": "ready_ready_get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "disabled_for_predictions": false, "disabled_for_trainings": false, "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_cover_image/38e76a44-6cce-41e9-9bab-dd356cb00a87/replicate-prediction-r44_fJbecDY.webp", "description": "Generate high quality videos from a prompt", "hardware": "A100 (80GB)", "latest_version": {"id": "5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c"}, "name": "cogvideox-5b", "owner": "cuuupid", "url": "https://replicate.com/cuuupid/cogvideox-5b", "visibility": "public", "_extras": {"name": "cuuupid/cogvideox-5b", "is_official": false, "is_pipeline": false}}, "name": "cuuupid/cogvideox-5b:5b14e2c2", "release_notes": null, "short_id": "5b14e2c2", "url": "https://replicate.com/cuuupid/cogvideox-5b/versions/5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c"}}, "isAuthenticated": false, "features": {"show_pipeline_steps": false, "show_before_after_slider_output": false, "show_goo_shader_output": false, "link_to_video_upscaler": false, "link_to_image_upscaler": false, "link_to_playground": true, "link_to_audio_adder": false, "pixelate_images": false}, "permissions": {"create_example": false, "debug": false, "edit_featured_inputs": false, "report": true, "run": false, "tweak": true, "delete": false, "share": true}, "schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/ready": {"get": {"summary": "Ready", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Ready Ready Get"}}}, "description": "Successful Response"}}, "operationId": "ready_ready_get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "version": {"id": "5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c", "created_at": "2024-08-27T18:14:21.592793Z", "_extras": {"arch": "gpu", "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/ready": {"get": {"summary": "Ready", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Ready Ready Get"}}}, "description": "Successful Response"}}, "operationId": "ready_ready_get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"seed": {"type": "integer", "title": "Seed", "default": 42, "x-order": 5, "description": "Seed for reproducibility."}, "steps": {"type": "integer", "title": "Steps", "default": 50, "maximum": 120, "minimum": 1, "x-order": 2, "description": "# of inference steps, more steps can improve quality."}, "prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Prompt"}, "guidance": {"type": "number", "title": "Guidance", "default": 6, "maximum": 12, "minimum": 0, "x-order": 3, "description": "The scale for classifier-free guidance, higher guidance can improve adherence to your prompt."}, "num_outputs": {"type": "integer", "title": "Num Outputs", "default": 1, "x-order": 4, "description": "# of output videos"}, "extend_prompt": {"type": "boolean", "title": "Extend Prompt", "default": true, "x-order": 1, "description": "If enabled, will use GLM-4 to make the prompt long (as intended for CogVideoX)."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "disabled_for_predictions": false, "disabled_for_trainings": false, "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_cover_image/38e76a44-6cce-41e9-9bab-dd356cb00a87/replicate-prediction-r44_fJbecDY.webp", "description": "Generate high quality videos from a prompt", "hardware": "A100 (80GB)", "latest_version": {"id": "5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c"}, "name": "cogvideox-5b", "owner": "cuuupid", "url": "https://replicate.com/cuuupid/cogvideox-5b", "visibility": "public", "_extras": {"name": "cuuupid/cogvideox-5b", "is_official": false, "is_pipeline": false}}, "name": "cuuupid/cogvideox-5b:5b14e2c2", "release_notes": null, "short_id": "5b14e2c2", "url": "https://replicate.com/cuuupid/cogvideox-5b/versions/5b14e2c2c648efecc8d36c6353576552f8a124e690587212f8e8bb17ecda3d8c"}}, "token": "", "modelStatus": "offline", "modelInputSettings": null, "requiresCredit": true, "__flags": {"show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false, "show-pylon-widget": false}}</script>
+
+  <div data-react-placeholder="APIPlayground">
+    <div class="input-output-grid">
+  <div class="flex flex-col md:flex-row">
+    <div class="input-col relative md:flex-1 pb-4 min-w-0">
+      <div class="mb-2 flex items-center justify-between">
+        <div class="flex-1">
+          <div class="mb-4 bg-r8-gray-4 animate-pulse h-8 w-24">
+          </div>
+        </div>
+      </div>
+      <div class="h-8 bg-r8-gray-4 animate-pulse mb-6">
+      </div>
+      <div class="space-y-4">
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <div class="input-output-grid--divider flex-shrink-0 md:mx-6 mb-6 md:my-0"
+         role="separator">
+      <div class="bg-r8-gray-6 md:w-px md:h-full h-px w-full">
+      </div>
+    </div>
+    <div class="output-col md:flex-1 pb-4 min-w-0">
+      <div class="flex flex-col">
+        <div class="flex-1">
+          <div class="mb-4 bg-r8-gray-4 animate-pulse h-8 w-24">
+          </div>
+        </div>
+        <div class="h-8 bg-r8-gray-4 animate-pulse mb-6">
+        </div>
+        <div class="aspect-square bg-r8-gray-4 animate-pulse">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+<div data-component="APIPlayground"
+     data-props="react-component-props-20f0fdd7-aaec-47d6-9c70-4242ab804733">
+  
+</div>
+
+    
+  
+</div>
+
+    
+
+
+
+  
+  
+  
+    <div class="pb-2 border-b border-r8-gray-5 mb-lh flex">
+      <h2 class="inline-block flex-grow text-r8-2xl">
+        Examples
+      </h2>
+
+      <p>
+        <a href="/cuuupid/cogvideox-5b/examples"
+           class="no-default">
+          View more <span class="hidden sm:inline">examples</span><span class="relative -top-0.5">
+          
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <line x1="7" y1="17" x2="17" y2="7"></line>
+  <polyline points="7 7 17 7 17 17"></polyline>
+</svg>
+
+        </span></a>
+      </p>
+    </div>
+
+    <div class="mb-2lh h-40 overflow-hidden ">
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/cuuupid/cogvideox-5b/examples#apxzqs6x99rj20chjm5sqp7p0m">
+
+              
+                <video data-src="https://replicate.delivery/yhqm/HxgtwZCNSF5cGJTl7IP6kGUGaKls7ul6h306cNeKWAobVeWTA/output.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/cuuupid/cogvideox-5b/examples#x5bpm7assdrj60chjmcrssnwwr">
+
+              
+                <video data-src="https://replicate.delivery/yhqm/GmcOtlamgHq7AJ9Hrgklmtz78biKKu2M2nbgCv2OUudCOv1E/output.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/cuuupid/cogvideox-5b/examples#8a35hnsn4srj00chjmfazwtht0">
+
+              
+                <video data-src="https://replicate.delivery/yhqm/Kep9kmFb3rwHTC6CqfD8uaB0WD0NdulC9NTcBawzcaFg88WTA/output.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+    </div>
+  
+
+
+
+
+    
+      
+
+<div id="pricing"
+     class="mb-2lh">
+  <a id="performance"></a>
+
+  <h2 class="mb-lh pb-2 border-b border-r8-gray-5 text-r8-2xl">
+    Run time and cost
+  </h2>
+
+  
+
+  
+
+    
+      
+        <p class="mb-lh">
+          This model costs approximately $0.32 to run on Replicate, or 3 runs per $1, but this varies depending on your inputs. It is also open source and you can <a href="/cuuupid/cogvideox-5b/api">run it on your own computer with Docker</a>.
+        </p>
+      
+    
+
+    
+
+    <p class="mb-lh">
+      
+        This model runs on <a href="https://replicate.com/docs/billing">Nvidia A100 (80GB) GPU hardware</a>.
+      
+      
+
+      
+        Predictions typically complete within 4 minutes.
+
+        
+      
+    </p>
+  
+</div>
+
+    
+
+    
+
+<article class="mb-2lh">
+  
+    <div id="readme"
+         class="border-b border-r8-gray-5 pb-2 mb-lh flex items-center gap-2">
+      <h2 class="inline-block text-r8-2xl">
+        Readme
+      </h2>
+      
+    </div>
+  
+  
+    <div class="readme-prose max-w-4xl">
+      <p>CogVideoX is an open-source version of the video generation model originating from <a href="https://chatglm.cn/video?fr=osm_cogvideo" rel="nofollow ugc">QingYing</a>. The table below displays the list of video generation models we currently offer, along with their foundational information.</p>
+<table>
+<tbody><tr>
+<th>Model Name</th>
+<th>CogVideoX-2B</th>
+<th>CogVideoX-5B</th>
+</tr>
+<tr>
+<td>Model Description</td>
+<td>Entry-level model, balancing compatibility. Low cost for running and secondary development.</td>
+<td>Larger model with higher video generation quality and better visual effects.</td>
+</tr>
+<tr>
+<td>Inference Precision</td>
+<td><b>FP16* (Recommended)</b>, BF16, FP32, FP8*, INT8, no support for INT4</td>
+<td><b>BF16 (Recommended)</b>, FP16, FP32, FP8*, INT8, no support for INT4</td>
+</tr>
+<tr>
+<td>Single GPU VRAM Consumption</td>
+<td>FP16: 18GB using <a href="https://github.com/THUDM/SwissArmyTransformer" rel="nofollow ugc">SAT</a> / <b>12.5GB* using diffusers</b><br/><b>INT8: 7.8GB* using diffusers</b></td>
+<td>BF16: 26GB using <a href="https://github.com/THUDM/SwissArmyTransformer" rel="nofollow ugc">SAT</a> / <b>20.7GB* using diffusers</b><br/><b>INT8: 11.4GB* using diffusers</b></td>
+</tr>
+<tr>
+<td>Multi-GPU Inference VRAM Consumption</td>
+<td><b>FP16: 10GB* using diffusers</b></td>
+<td><b>BF16: 15GB* using diffusers</b></td>
+</tr>
+<tr>
+<td>Inference Speed<br/>(Step = 50, FP/BF16)</td>
+<td>Single A100: ~90 seconds<br/>Single H100: ~45 seconds</td>
+<td>Single A100: ~180 seconds<br/>Single H100: ~90 seconds</td>
+</tr>
+<tr>
+<td>Fine-tuning Precision</td>
+<td><b>FP16</b></td>
+<td><b>BF16</b></td>
+</tr>
+<tr>
+<td>Fine-tuning VRAM Consumption (per GPU)</td>
+<td>47 GB (bs=1, LORA)<br/> 61 GB (bs=2, LORA)<br/> 62GB (bs=1, SFT)</td>
+<td>63 GB (bs=1, LORA)<br/> 80 GB (bs=2, LORA)<br/> 75GB (bs=1, SFT)</td>
+</tr>
+<tr>
+<td>Prompt Language</td>
+<td>English*</td>
+</tr>
+<tr>
+<td>Prompt Length Limit</td>
+<td>226 Tokens</td>
+</tr>
+<tr>
+<td>Video Length</td>
+<td>6 Seconds</td>
+</tr>
+<tr>
+<td>Frame Rate</td>
+<td>8 Frames per Second</td>
+</tr>
+<tr>
+<td>Video Resolution</td>
+<td>720 x 480, no support for other resolutions (including fine-tuning)</td>
+</tr>
+<tr>
+<td>Positional Encoding</td>
+<td>3d_sincos_pos_embed</td>
+<td>3d_rope_pos_embed</td>
+</tr>
+<tr>
+<td>Download Page (Diffusers)</td>
+<td><a href="https://huggingface.co/THUDM/CogVideoX-2b" rel="nofollow ugc">🤗 HuggingFace</a><br/><a href="https://modelscope.cn/models/ZhipuAI/CogVideoX-2b" rel="nofollow ugc">🤖 ModelScope</a><br/><a href="https://wisemodel.cn/models/ZhipuAI/CogVideoX-2b" rel="nofollow ugc">🟣 WiseModel</a></td>
+<td><a href="https://huggingface.co/THUDM/CogVideoX-5b" rel="nofollow ugc">🤗 HuggingFace</a><br/><a href="https://modelscope.cn/models/ZhipuAI/CogVideoX-5b" rel="nofollow ugc">🤖 ModelScope</a><br/><a href="https://wisemodel.cn/models/ZhipuAI/CogVideoX-5b" rel="nofollow ugc">🟣 WiseModel</a></td>
+</tr>
+<tr>
+<td>Download Page (SAT)</td>
+<td><a href="./sat/README.md" rel="nofollow ugc">SAT</a></td>
+</tr>
+</tbody></table>
+<p><strong>Data Explanation</strong></p>
+<ul>
+<li>When testing with the diffusers library, the <code>enable_model_cpu_offload()</code> option and <code>pipe.vae.enable_tiling()</code> optimization were enabled. This solution has not been tested for actual VRAM/memory usage on devices other than <strong>NVIDIA A100/H100</strong>. Generally, this solution can be adapted to all devices with <strong>NVIDIA Ampere architecture</strong> and above. If optimization is disabled, VRAM usage will increase significantly, with peak VRAM approximately 3 times the value in the table.</li>
+<li>When performing multi-GPU inference, the <code>enable_model_cpu_offload()</code> optimization needs to be disabled.</li>
+<li>Using an INT8 model will result in reduced inference speed. This is done to accommodate GPUs with lower VRAM, allowing inference to run properly with minimal video quality loss, though the inference speed will be significantly reduced.</li>
+<li>The 2B model is trained using <code>FP16</code> precision, while the 5B model is trained using <code>BF16</code> precision. It is recommended to use the precision used in model training for inference.</li>
+<li><code>FP8</code> precision must be used on <code>NVIDIA H100</code> and above devices, requiring source installation of the <code>torch</code>, <code>torchao</code>, <code>diffusers</code>, and <code>accelerate</code> Python packages. <code>CUDA 12.4</code> is recommended.</li>
+<li>Inference speed testing also used the aforementioned VRAM optimization scheme. Without VRAM optimization, inference speed increases by about 10%. Only models using <code>diffusers</code> support quantization.</li>
+<li>The model only supports English input; other languages can be translated to English during large model refinements.</li>
+</ul>
+<h2 id="citation">Citation</h2>
+<p>🌟 If you find our work helpful, please leave us a star and cite our paper.</p>
+<pre><code>@article{yang2024cogvideox,
+  title={CogVideoX: Text-to-Video Diffusion Models with An Expert Transformer},
+  author={Yang, Zhuoyi and Teng, Jiayan and Zheng, Wendi and Ding, Ming and Huang, Shiyu and Xu, Jiazheng and Yang, Yuanming and Hong, Wenyi and Zhang, Xiaohan and Feng, Guanyu and others},
+  journal={arXiv preprint arXiv:2408.06072},
+  year={2024}
+}
+@article{hong2022cogvideo,
+  title={CogVideo: Large-scale Pretraining for Text-to-Video Generation via Transformers},
+  author={Hong, Wenyi and Ding, Ming and Zheng, Wendi and Liu, Xinghan and Tang, Jie},
+  journal={arXiv preprint arXiv:2205.15868},
+  year={2022}
+}
+</code></pre>
+    </div>
+  
+</article>
+
+    
+
+
+
+
+    <script id="react-component-props-995b0964-a42d-4d06-ae58-981bc453e324" type="application/json">{"name": "cuuupid/cogvideox-5b", "__flags": {"show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false, "show-pylon-widget": false}}</script>
+
+<div data-component="RelatedModels"
+     data-props="react-component-props-995b0964-a42d-4d06-ae58-981bc453e324">
+  
+</div>
+
+  </div>
+
+
+    </div>
+  
+
+  <div class="model-content mt-2lh">
+    
+
+
+
+  </div>
+
+
+
+          
+        
+      </main>
+
+      
+        
+
+<div class="footer no-focus">
+  <script id="react-component-props-881684f6-0345-41a7-ae1d-063c66bff361" type="application/json">{"theme": "", "__flags": {"show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": false, "show-pylon-widget": false}}</script>
+
+<div data-component="Footer"
+     data-props="react-component-props-881684f6-0345-41a7-ae1d-063c66bff361">
+  
+</div>
+
+</div>
+
+      
+
+    
+
+    <script nonce="Q9EFlEGu3LAabXoqPKnTBQ==">
+      window.VIDEOJS_NO_DYNAMIC_STYLE = true;
+    </script>
+
+    <script nonce="Q9EFlEGu3LAabXoqPKnTBQ==">
+      const header = document.getElementById("app-header");
+
+      function monitorHeaderStickiness() {
+        if (header) {
+          header.setAttribute("data-stuck", window.scrollY > 0);
+        }
+      }
+
+      monitorHeaderStickiness();
+
+      document.addEventListener("scroll", (event) => {
+        monitorHeaderStickiness();
+      });
+
+      // Prevent mousewheel from being able to change the value of a numeric input.
+      // This "feature" often causes issues when users scroll from a focused input field
+      // to the submit button and accidentally increment the contents of the field.
+      document.addEventListener("wheel", (event) => {
+        if (document.activeElement && document.activeElement.matches('input[type=number]') && document.activeElement === event.target) {
+          event.preventDefault();
+        }
+      }, {
+        passive: false
+      });
+    </script>
+
+    
+    
+    
+
+  </body>
+
+</html>

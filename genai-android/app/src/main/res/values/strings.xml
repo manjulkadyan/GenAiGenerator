@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">GenAi Video</string>
+    <string name="destination_models">Models</string>
+    <string name="destination_generate">Generate</string>
+    <string name="destination_history">History</string>
+    <string name="destination_profile">Profile</string>
+
+    <string name="placeholder_models">Browse all AI models configured in Firestore once the data layer is wired up.</string>
+    <string name="placeholder_generate">Start composing prompts here. The final screen will include prompt inputs, duration selectors, and credit details.</string>
+    <string name="placeholder_history">Completed and in-progress generations will appear here after we hook up Firestore listeners.</string>
+    <string name="placeholder_profile">User info, credits, and subscription controls will live on this tab.</string>
+</resources>

@@ -1,0 +1,52 @@
+{
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "seed:models": "npm run build && node lib/seedModels.js",
+    "seed:popular": "npm run build && node lib/seedPopularModels.js",
+    "seed:all": "npm run build && REPLICATE_API_TOKEN=${REPLICATE_API_TOKEN} node lib/fetchAllVideoModels.js",
+    "seed:fetch": "REPLICATE_API_TOKEN=${REPLICATE_API_TOKEN} npx ts-node src/fetchReplicateModels.ts",
+    "seed:scrape": "npm run build && node lib/scrapeReplicateSearch.js",
+    "seed:specific": "npm run build && node lib/scrapeSpecificModels.js",
+    "preview:specific": "npm run build && node lib/previewSpecificModels.js",
+    "pricing:mapping": "npm run build && node lib/createPricingMapping.js",
+    "seed:specific:firestore": "npm run build && node lib/seedSpecificModels.js",
+    "seed:normalized": "npm run build && node lib/seedNormalizedModels.js",
+    "update:seedance": "npm run build && node lib/updateSeedanceModel.js",
+    "check:seedance": "npm run build && node lib/checkSeedanceModel.js",
+    "export:firestore": "npm run build && node lib/exportFirestoreData.js",
+    "merge:duplicates": "npm run build && node lib/mergeAndDeduplicateModels.js",
+    "find:all:duplicates": "npm run build && node lib/findAllDuplicates.js",
+    "list:unmatched": "npm run build && node lib/listUnmatchedPairs.js",
+    "verify:firestore": "npm run build && node lib/verifyFirestoreData.js",
+    "seed:and:verify": "npm run build && node lib/seedAndVerify.js",
+    "check:robots": "npm run build && node lib/checkRobotsAndRateLimits.js",
+    "update:missing:urls": "npm run build && node lib/updateMissingExampleUrls.js"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^5.7.3"
+  },
+  "private": true
+}

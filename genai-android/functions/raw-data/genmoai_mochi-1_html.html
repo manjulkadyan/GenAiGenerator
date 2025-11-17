@@ -1,0 +1,1270 @@
+
+
+<!DOCTYPE html>
+<html lang="en"
+      class="">
+
+  <head>
+    <meta charset="utf-8" />
+    <title>
+      
+  
+    genmoai/mochi-1 | Run with an API on Replicate
+  
+
+    </title>
+
+    
+      
+      <meta name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+
+    <link id="favicon-ico"
+          rel="icon"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/favicon.121ea3afd763.ico"
+          sizes="any" />
+    <link id="favicon-png"
+          rel="icon"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/favicon.fdf5ef8729cc.png"
+          type="image/png" />
+    <link rel="mask-icon"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/safari-pinned-tab.4c32b8e091a9.svg"
+          color="#FFFFFF" />
+    <link rel="apple-touch-icon"
+          sizes="180x180"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/apple-touch-icon.39c0aa0659e3.png" />
+
+    
+  <script nonce="TArWEljA7HBnB40d40SPjg==">
+    /* beautify ignore:start */
+    window.dataLayer = window.dataLayer || [];
+    
+    
+    dataLayer.push({
+      'event': 'user_anonymous',
+      'user_type': 'anonymous',
+      
+      'anonymous_session_id': '581d9013-5609-4e4d-bb62-681c70255410'
+      
+    });
+    
+    /* beautify ignore:end */
+  </script>
+  <script nonce="TArWEljA7HBnB40d40SPjg==">
+    (function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-KZDCFZR9');
+  </script>
+
+
+
+    
+    
+
+    <link  rel="stylesheet" href="https://d31rfu1d3w8e4q.cloudfront.net/static/dist/index-BxwK8EBg.css" />
+<script type="module" crossorigin="" src="https://d31rfu1d3w8e4q.cloudfront.net/static/dist/index-BK0wCkVE.js"></script>
+
+    <link rel="stylesheet"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/dist/indexCss-D5iwNvwU.css" />
+
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="Blog (RSS)"
+          href="https://replicate.com/blog/rss" />
+    <link rel="alternate"
+          type="application/atom+xml"
+          title="Blog (Atom)"
+          href="https://replicate.com/blog/atom" />
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="Changelog (RSS)"
+          href="https://replicate.com/changelog/rss" />
+    <link rel="alternate"
+          type="application/atom+xml"
+          title="Changelog (Atom)"
+          href="https://replicate.com/changelog/atom" />
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="Status (RSS)"
+          href="https://replicatestatus.com/feed" />
+
+    
+      <link rel="dns-prefetch"
+            href="https://replicate.delivery" />
+    
+      <link rel="dns-prefetch"
+            href="https://tjzk.replicate.delivery" />
+    
+
+    
+
+    <link rel="canonical"
+          href="https://replicate.com/genmoai/mochi-1" />
+
+    
+  
+  
+    
+  
+
+  <meta name="twitter:card"
+        content="summary_large_image" />
+
+
+<meta name="twitter:site"
+      content="@replicate" />
+
+
+  <meta name="twitter:image"
+        content="https://og-api.replicateassets.com/api/models/genmoai/mochi-1" />
+  <meta property="og:image"
+        content="https://og-api.replicateassets.com/api/models/genmoai/mochi-1" />
+
+
+
+
+  <meta name="twitter:title"
+        content="genmoai/mochi-1 – Replicate" />
+  <meta name="twitter:description"
+        content="Mochi 1 preview is an open video generation model with high-fidelity motion and strong prompt adherence in preliminary evaluation" />
+  <meta property="og:image"
+        content="https://og-api.replicateassets.com/api/models/genmoai/mochi-1" />
+  <meta property="twitter:image"
+        content="https://og-api.replicateassets.com/api/models/genmoai/mochi-1" />
+
+  
+
+  
+    <meta name="description"
+          content="Mochi 1 preview is an open video generation model with high-fidelity motion and strong prompt adherence in preliminary evaluation" />
+  
+
+
+    <meta name="sentry-dsn-js"
+          content="https://3dc017e574684610bbc7fd3b5519a4e8@o255771.ingest.sentry.io/5909364" />
+    
+    
+      <meta name="anonymous-id"
+            content="581d9013-5609-4e4d-bb62-681c70255410" />
+    
+
+    
+      <script nonce="TArWEljA7HBnB40d40SPjg==">
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (prefersDarkScheme) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.add("light");
+        }
+      </script>
+    
+
+    
+  </head>
+
+  
+
+  <body class="font-sans overflow-y-scroll antialiased flex min-h-screen flex-col">
+    
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KZDCFZR9"
+        height="0"
+        width="0"
+        style="display:none;
+               visibility:hidden"></iframe></noscript>
+
+
+    
+
+      
+
+      
+        
+
+<div class="h-[var(--header-height)] mb-6 no-focus">
+  
+    <script id="react-component-props-ba18f7e2-b0a5-47b3-ae6e-fdb76f496878" type="application/json">{"activePath": "/genmoai/mochi-1", "isAuthenticated": false, "theme": "", "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": true}}</script>
+
+<div data-component="Navigation"
+     data-props="react-component-props-ba18f7e2-b0a5-47b3-ae6e-fdb76f496878">
+  
+</div>
+
+  
+</div>
+
+        
+
+
+
+      
+
+      
+      
+
+      
+      
+
+      
+
+      <main class="layout-main flex-1">
+        
+
+        
+          
+
+  
+  
+  
+    
+      
+
+    
+      
+    
+
+    
+
+    
+      
+
+<header class="space-y-4 pb-10 lg:pb-4"
+        aria-label="genmoai/mochi-1">
+
+  
+
+<div class="flex gap-8 gap-y-4 w-full flex-wrap justify-between items-center">
+  <div class="space-y-4">
+    <div class="flex-wrap flex flex-col gap-1">
+
+      <div class="flex gap-2 sm:gap-3 w-full">
+
+        <h3 aria-label="genmoai/mochi-1"
+            class="sr-only">
+          genmoai/mochi-1
+        </h3>
+
+        <div translate="no"
+             aria-hidden="true"
+             class="flex relative items-center gap-1 flex-1 flex-wrap">
+          <div class="flex items-center gap-3 whitespace-nowrap">
+            
+              
+
+
+  <img class="avatar size-9 flex-shrink-0"
+       src="https://github.com/genmoai.png"
+       alt=""
+       role="presentation"
+       onerror="this.onerror=null; this.src='https://d31rfu1d3w8e4q.cloudfront.net/static/placeholder-avatar-organization.ff98795474e8.svg'" />
+
+
+            
+            <div class="text-r8-gray-11 text-lg font-heading">
+              
+                <a href="https://replicate.com/genmoai">genmoai</a>
+              
+            </div>
+            <div class="text-r8-gray-11 text-lg font-heading">
+              /
+            </div>
+          </div>
+          <div>
+            <span class="text-lg font-heading">
+              mochi-1
+            </span>
+            <span class="[&>div]:inline">
+              
+                <script id="react-component-props-11a825ea-40e9-45f7-8dbb-c277417335ad" type="application/json">{"identifier": "genmoai/mochi-1:1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460", "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": true}}</script>
+
+<div data-component="CopyIdentifierButton"
+     data-props="react-component-props-11a825ea-40e9-45f7-8dbb-c277417335ad">
+  
+</div>
+
+              
+            </span>
+          </div>
+        </div>
+      </div>
+
+      
+
+    </div>
+  </div>
+
+  <div class="relative flex flex-wrap gap-2 md:justify-end w-full md:w-auto">
+
+    
+
+    
+
+    <div>
+      <script id="react-component-props-d8da27f2-e1a9-4eb2-99a2-b395294bdb8a" type="application/json">{"model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/09b67ebb-1d74-4972-bb9c-acfcf1c27902/mochi-1-preview.webp", "description": "Mochi 1 preview is an open video generation model with high-fidelity motion and strong prompt adherence in preliminary evaluation", "hardware": "H100", "latest_version": {"id": "1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460"}, "name": "mochi-1", "owner": "genmoai", "url": "https://replicate.com/genmoai/mochi-1", "visibility": "public", "_extras": {"name": "genmoai/mochi-1", "is_official": false, "is_pipeline": false}}, "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": true}}</script>
+
+<div data-component="ModelDetailButton"
+     data-props="react-component-props-d8da27f2-e1a9-4eb2-99a2-b395294bdb8a">
+  
+</div>
+
+    </div>
+  </div>
+</div>
+
+
+  
+
+
+
+<div class="flex flex-col gap-2 w-full">
+  
+    <div class="flex gap-4 flex-col md:flex-row items-start">
+      
+        <p class="max-w-3xl text-r8-lg [overflow-wrap:anywhere] text-pretty">
+          
+            Mochi 1 preview is an open video generation model with high-fidelity motion and strong prompt adherence in preliminary evaluation
+            
+          
+        </p>
+      
+    </div>
+  
+
+  
+</div>
+
+<div class="w-full">
+  <div class="space-y-4 @container">
+
+    <div class="gap-y-2 items-start @xl:items-center grid @xl:flex @xl:flex-wrap @xl:flex-row @xs:grid-cols-2 gap-x-2 @xl:gap-x-6">
+
+      
+        <div class="flex items-center">
+          <script id="react-component-props-86ba0d3b-d2ff-4b4a-8476-310f10e6739b" type="application/json">{"initialStatus": "offline", "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/09b67ebb-1d74-4972-bb9c-acfcf1c27902/mochi-1-preview.webp", "description": "Mochi 1 preview is an open video generation model with high-fidelity motion and strong prompt adherence in preliminary evaluation", "hardware": "H100", "latest_version": {"id": "1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460"}, "name": "mochi-1", "owner": "genmoai", "url": "https://replicate.com/genmoai/mochi-1", "visibility": "public", "_extras": {"name": "genmoai/mochi-1", "is_official": false, "is_pipeline": false}}, "isOfficialModel": "", "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": true}}</script>
+
+  <div data-react-placeholder="ModelStatusIndicator">
+    <div class="flex items-center">
+  <div class="rounded-full bg-r8-gray-3 animate-pulse w-[64px] h-[29px]">
+  </div>
+</div>
+
+  </div>
+
+<div data-component="ModelStatusIndicator"
+     data-props="react-component-props-86ba0d3b-d2ff-4b4a-8476-310f10e6739b">
+  
+</div>
+
+        </div>
+      
+
+      <div class="flex items-start gap-2">
+        
+          <span class="flex-shrink-0 -mt-0.5">
+            
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <circle cx="12" cy="12" r="10"></circle>
+  <line x1="2" y1="12" x2="22" y2="12"></line>
+  <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z">
+  </path>
+</svg>
+
+          </span>
+          <span class="text-r8-sm">Public</span>
+        
+      </div>
+
+      
+        <div class="flex items-start gap-2">
+          <span class="flex-shrink-0 -mt-0.5">
+            
+<svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     width="24"
+     height="24">
+  <path fill="currentColor" fill-rule="evenodd" d="M20.322.75a10.75 10.75 0 00-7.373 2.926l-1.304 1.23A23.743 23.743 0 0010.103 6.5H5.066a1.75 1.75 0 00-1.5.85l-2.71 4.514a.75.75 0 00.49 1.12l4.571.963c.039.049.082.096.129.14L8.04 15.96l1.872 1.994c.044.047.091.09.14.129l.963 4.572a.75.75 0 001.12.488l4.514-2.709a1.75 1.75 0 00.85-1.5v-5.038a23.741 23.741 0 001.596-1.542l1.228-1.304a10.75 10.75 0 002.925-7.374V2.499A1.75 1.75 0 0021.498.75h-1.177zM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 00.121-.214v-3.822zm-10.092-2.7L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 00-.214.121l-2.167 3.612 3.223.679zm8.07-7.644a9.25 9.25 0 016.344-2.518h1.177a.25.25 0 01.25.25v1.176a9.25 9.25 0 01-2.517 6.346l-1.228 1.303a22.248 22.248 0 01-3.854 3.257l-3.288 2.192-1.743-1.858a.764.764 0 00-.034-.034l-1.859-1.744 2.193-3.29a22.248 22.248 0 013.255-3.851l1.304-1.23zM17.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-11 13c.9-.9.9-2.6 0-3.5-.9-.9-2.6-.9-3.5 0-1.209 1.209-1.445 3.901-1.49 4.743a.232.232 0 00.247.247c.842-.045 3.534-.281 4.743-1.49z">
+  </path>
+</svg>
+
+          </span>
+          <span class="text-r8-sm whitespace-nowrap">3K
+            runs
+          </span>
+        </div>
+
+        
+          <div class="[&>div]:flex">
+            
+            <script id="react-component-props-f22b9803-8289-4188-9fc7-0ae426935557" type="application/json">{"version": {"id": "1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460", "created_at": "2024-12-01T02:52:52.222875Z", "_extras": {"arch": "gpu", "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "disabled_for_predictions": false, "disabled_for_trainings": false, "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/09b67ebb-1d74-4972-bb9c-acfcf1c27902/mochi-1-preview.webp", "description": "Mochi 1 preview is an open video generation model with high-fidelity motion and strong prompt adherence in preliminary evaluation", "hardware": "H100", "latest_version": {"id": "1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460"}, "name": "mochi-1", "owner": "genmoai", "url": "https://replicate.com/genmoai/mochi-1", "visibility": "public", "_extras": {"name": "genmoai/mochi-1", "is_official": false, "is_pipeline": false}}, "name": "genmoai/mochi-1:1944af04", "release_notes": "", "short_id": "1944af04", "url": "https://replicate.com/genmoai/mochi-1/versions/1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460"}}, "hardware": "H100", "billingConfig": "", "price": "$0.001525 per second", "p50price": "$0.42", "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/09b67ebb-1d74-4972-bb9c-acfcf1c27902/mochi-1-preview.webp", "description": "Mochi 1 preview is an open video generation model with high-fidelity motion and strong prompt adherence in preliminary evaluation", "hardware": "H100", "latest_version": {"id": "1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460"}, "name": "mochi-1", "owner": "genmoai", "url": "https://replicate.com/genmoai/mochi-1", "visibility": "public", "_extras": {"name": "genmoai/mochi-1", "is_official": false, "is_pipeline": false}}, "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": true}}</script>
+
+<div data-component="ModelPricePopover"
+     data-props="react-component-props-f22b9803-8289-4188-9fc7-0ae426935557">
+  
+</div>
+
+          </div>
+        
+      
+
+      
+        <div class="flex items-start gap-2">
+          <i class="-mt-0.5">
+            
+<svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+  <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z">
+  </path>
+  <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z">
+  </path>
+  <path d="M7 21h10">
+  </path>
+  <path d="M12 3v18">
+  </path>
+  <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2">
+  </path>
+</svg>
+
+          </i>
+          <a href="https://huggingface.co/datasets/choosealicense/licenses/blob/main/markdown/apache-2.0.md"
+             target="_blank"
+             class="text-r8-sm">
+            License
+          </a>
+        </div>
+      
+
+      
+
+        <div class="flex items-start gap-2">
+          <i class="-mt-0.5">
+            
+<svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="2"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22">
+  </path>
+</svg>
+
+          </i>
+          <a href="https://github.com/lucataco/cog-mochi-1"
+             target="_blank"
+             class="text-r8-sm">
+            GitHub
+          </a>
+        </div>
+      
+
+      
+
+        <div class="flex items-start gap-2">
+          <i class="-mt-0.5">
+            
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="2"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <circle cx="12" cy="5" r="3" />
+  <path d="M6.5 8a2 2 0 0 0-1.905 1.46L2.1 18.5A2 2 0 0 0 4 21h16a2 2 0 0 0 1.925-2.54L19.4 9.5A2 2 0 0 0 17.48 8Z" />
+</svg>
+
+          </i>
+          <a href="https://huggingface.co/genmo/mochi-1-preview"
+             target="_blank"
+             class="text-r8-sm">
+            Weights
+          </a>
+        </div>
+      
+
+      
+
+    </div>
+
+    
+
+  </div>
+</div>
+
+
+</header>
+
+    
+    
+      
+        <div class="border-b border-r8-gray-6">
+          
+
+
+
+
+
+
+<div class="r8-tabs r8-tabs--bordered r8-tabs--md top-px relative flex-wrap">
+  
+    <a href="/genmoai/mochi-1"
+       aria-selected="true"
+       class="r8-tabs__tab no-underline">
+      <span class="r8-tabs__start-icon">
+        <svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+
+</svg>
+
+      </span>
+      <span>Playground</span>
+    </a>
+  
+
+  
+    
+      <a href="/genmoai/mochi-1/api"
+         
+         class="r8-tabs__tab no-underline">
+
+        <span class="r8-tabs__start-icon">
+          
+<svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     width="24"
+     height="24">
+  <path fill="currentColor" fill-rule="evenodd" d="M20.322.75a10.75 10.75 0 00-7.373 2.926l-1.304 1.23A23.743 23.743 0 0010.103 6.5H5.066a1.75 1.75 0 00-1.5.85l-2.71 4.514a.75.75 0 00.49 1.12l4.571.963c.039.049.082.096.129.14L8.04 15.96l1.872 1.994c.044.047.091.09.14.129l.963 4.572a.75.75 0 001.12.488l4.514-2.709a1.75 1.75 0 00.85-1.5v-5.038a23.741 23.741 0 001.596-1.542l1.228-1.304a10.75 10.75 0 002.925-7.374V2.499A1.75 1.75 0 0021.498.75h-1.177zM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 00.121-.214v-3.822zm-10.092-2.7L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 00-.214.121l-2.167 3.612 3.223.679zm8.07-7.644a9.25 9.25 0 016.344-2.518h1.177a.25.25 0 01.25.25v1.176a9.25 9.25 0 01-2.517 6.346l-1.228 1.303a22.248 22.248 0 01-3.854 3.257l-3.288 2.192-1.743-1.858a.764.764 0 00-.034-.034l-1.859-1.744 2.193-3.29a22.248 22.248 0 013.255-3.851l1.304-1.23zM17.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-11 13c.9-.9.9-2.6 0-3.5-.9-.9-2.6-.9-3.5 0-1.209 1.209-1.445 3.901-1.49 4.743a.232.232 0 00.247.247c.842-.045 3.534-.281 4.743-1.49z">
+  </path>
+</svg>
+
+        </span>
+        <span>API</span>
+      </a>
+    
+  
+
+  
+    <a href="/genmoai/mochi-1/examples"
+       
+       class="r8-tabs__tab no-underline">
+      <span class="r8-tabs__start-icon">
+        <svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+  <polyline points="11 3 11 11 14 8 17 11 17 3"></polyline>
+</svg>
+
+      </span>
+      <span>Examples</span>
+    </a>
+  
+
+  
+
+  <a href="/genmoai/mochi-1/readme"
+     
+     class="r8-tabs__tab no-underline">
+    <span class="r8-tabs__start-icon">
+      
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z">
+  </path>
+  <polyline points="14 2 14 8 20 8"></polyline>
+  <line x1="16" y1="13" x2="8" y2="13"></line>
+  <line x1="16" y1="17" x2="8" y2="17"></line>
+  <line x1="10" y1="9" x2="8" y2="9"></line>
+</svg>
+
+    </span>
+    <span>README</span>
+  </a>
+
+  
+    <a href="/genmoai/mochi-1/versions"
+       
+       class="r8-tabs__tab no-underline">
+      <span class="r8-tabs__start-icon">
+        
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <path d="M3 3v5h5">
+  </path>
+  <path d="M3.05 13A9 9 0 106 5.3L3 8">
+  </path>
+  <path d="M12 7v5l4 2">
+  </path>
+</svg>
+
+      </span>
+      <span>Versions</span>
+    </a>
+  
+
+  
+
+  
+
+  
+</div>
+
+        </div>
+      
+    
+
+    
+      
+
+
+
+    
+
+  
+    
+  
+
+
+  
+    <div class="model-content mt-lh">
+      
+  
+    
+
+<div class="mb-2lh">
+  
+  
+  
+    
+      <script id="react-component-props-acbf8918-a766-4473-8fd6-14f19352758c" type="application/json">{"initialPrediction": {"completed_at": "2024-12-01T03:45:02.340601Z", "created_at": "2024-12-01T03:40:25.695000Z", "data_removed": false, "error": null, "id": "41vmsc96vxrm80ckg17awwyc6m", "input": {"fps": 24, "prompt": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "num_frames": 121, "guidance_scale": 5.5, "num_inference_steps": 30}, "logs": "Using seed: 48484\n  0%|          | 0/30 [00:00\u003C?, ?it/s]\n  3%|\u258e         | 1/30 [00:16\u003C07:48, 16.16s/it]\n  7%|\u258b         | 2/30 [00:21\u003C04:39,  9.99s/it]\n 10%|\u2588         | 3/30 [00:28\u003C03:46,  8.39s/it]\n 13%|\u2588\u258e        | 4/30 [00:34\u003C03:18,  7.64s/it]\n 17%|\u2588\u258b        | 5/30 [00:41\u003C03:00,  7.23s/it]\n 20%|\u2588\u2588        | 6/30 [00:47\u003C02:47,  6.99s/it]\n 23%|\u2588\u2588\u258e       | 7/30 [00:54\u003C02:37,  6.84s/it]\n 27%|\u2588\u2588\u258b       | 8/30 [01:00\u003C02:28,  6.74s/it]\n 30%|\u2588\u2588\u2588       | 9/30 [01:07\u003C02:20,  6.67s/it]\n 33%|\u2588\u2588\u2588\u258e      | 10/30 [01:13\u003C02:12,  6.62s/it]\n 37%|\u2588\u2588\u2588\u258b      | 11/30 [01:20\u003C02:05,  6.59s/it]\n 40%|\u2588\u2588\u2588\u2588      | 12/30 [01:26\u003C01:58,  6.57s/it]\n 43%|\u2588\u2588\u2588\u2588\u258e     | 13/30 [01:33\u003C01:51,  6.55s/it]\n 47%|\u2588\u2588\u2588\u2588\u258b     | 14/30 [01:39\u003C01:44,  6.54s/it]\n 50%|\u2588\u2588\u2588\u2588\u2588     | 15/30 [01:46\u003C01:37,  6.53s/it]\n 53%|\u2588\u2588\u2588\u2588\u2588\u258e    | 16/30 [01:52\u003C01:31,  6.52s/it]\n 57%|\u2588\u2588\u2588\u2588\u2588\u258b    | 17/30 [01:59\u003C01:24,  6.52s/it]\n 60%|\u2588\u2588\u2588\u2588\u2588\u2588    | 18/30 [02:06\u003C01:18,  6.51s/it]\n 63%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 19/30 [02:12\u003C01:11,  6.51s/it]\n 67%|\u2588\u2588\u2588\u2588\u2588\u2588\u258b   | 20/30 [02:19\u003C01:05,  6.51s/it]\n 70%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588   | 21/30 [02:25\u003C00:58,  6.51s/it]\n 73%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e  | 22/30 [02:31\u003C00:52,  6.50s/it]\n 77%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b  | 23/30 [02:38\u003C00:45,  6.50s/it]\n 80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588  | 24/30 [02:44\u003C00:38,  6.49s/it]\n 83%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e | 25/30 [02:51\u003C00:32,  6.49s/it]\n 87%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b | 26/30 [02:57\u003C00:25,  6.49s/it]\n 90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 27/30 [03:04\u003C00:19,  6.49s/it]\n 93%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e| 28/30 [03:11\u003C00:13,  6.52s/it]\n 97%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b| 29/30 [03:17\u003C00:06,  6.51s/it]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 30/30 [03:24\u003C00:00,  6.51s/it]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 30/30 [03:24\u003C00:00,  6.80s/it]", "metrics": {"predict_time": 221.469770524, "total_time": 276.645601}, "output": "https://replicate.delivery/xezq/AF0YFy7wRq4YOJC20hGKxkN7Q0y7opcXkQdfx3mG21Df2Y2TA/output.mp4", "started_at": "2024-12-01T03:41:20.870831Z", "status": "succeeded", "urls": {"stream": "https://stream.replicate.com/v1/files/bcwr-7e4enlphbmwnz6o5ulpjnkzcjd2bnobfkjzfwn4penkqivlf6s7q", "get": "https://api.replicate.com/v1/predictions/41vmsc96vxrm80ckg17awwyc6m", "cancel": "https://api.replicate.com/v1/predictions/41vmsc96vxrm80ckg17awwyc6m/cancel"}, "_extras": {"api_token_name": null, "created_by": {"kind": "user", "url": "https://replicate.com/lucataco", "username": "lucataco"}, "input_files": [], "is_immutable": false, "is_shared": true, "is_waiting_for_boot": null, "may_have_sensitive_output": false, "output_files": ["https://replicate.delivery/xezq/AF0YFy7wRq4YOJC20hGKxkN7Q0y7opcXkQdfx3mG21Df2Y2TA/output.mp4"], "pipeline_child_predictions": [], "ran_on": {"capabilities": {"hotswap": false, "run": true, "stream": false, "train": false}, "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "hardware": {"arch": "gpu", "display_name": "Nvidia H100 GPU", "short_display_name": "H100", "sku": "gpu-h100"}, "has_special_pricing": false, "is_official": false, "kind": "version", "model": {"name": "mochi-1", "username": "genmoai", "visibility": "public"}, "supports_cancelation": true, "url": "https://replicate.com/genmoai/mochi-1/versions/1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460", "version": {"id": "1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460"}}, "source": "web", "total_child_predictions": 0}, "version": "1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460"}, "initialPredictionVersion": {"id": "1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460", "created_at": "2024-12-01T02:52:52.222875Z", "_extras": {"arch": "gpu", "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "disabled_for_predictions": false, "disabled_for_trainings": false, "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/09b67ebb-1d74-4972-bb9c-acfcf1c27902/mochi-1-preview.webp", "description": "Mochi 1 preview is an open video generation model with high-fidelity motion and strong prompt adherence in preliminary evaluation", "hardware": "H100", "latest_version": {"id": "1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460"}, "name": "mochi-1", "owner": "genmoai", "url": "https://replicate.com/genmoai/mochi-1", "visibility": "public", "_extras": {"name": "genmoai/mochi-1", "is_official": false, "is_pipeline": false}}, "name": "genmoai/mochi-1:1944af04", "release_notes": "", "short_id": "1944af04", "url": "https://replicate.com/genmoai/mochi-1/versions/1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460"}}, "isAuthenticated": false, "features": {"show_pipeline_steps": false, "show_before_after_slider_output": false, "show_goo_shader_output": false, "link_to_video_upscaler": false, "link_to_image_upscaler": false, "link_to_playground": true, "link_to_audio_adder": false, "pixelate_images": false}, "permissions": {"create_example": false, "debug": false, "edit_featured_inputs": false, "report": true, "run": false, "tweak": true, "delete": false, "share": true}, "schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "version": {"id": "1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460", "created_at": "2024-12-01T02:52:52.222875Z", "_extras": {"arch": "gpu", "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "properties": {"fps": {"type": "integer", "title": "Fps", "default": 30, "maximum": 60, "minimum": 10, "x-order": 4, "description": "Frames per second"}, "seed": {"type": "integer", "title": "Seed", "x-order": 5, "description": "Random seed"}, "prompt": {"type": "string", "title": "Prompt", "default": "Close-up of a chameleon's eye, with its scaly skin changing color. Ultra high resolution 4k.", "x-order": 0, "description": "Focus on a single, central subject. Structure the prompt from coarse to fine details. Start with 'a close shot' or 'a medium shot' if applicable. Append 'high resolution 4k' to reduce warping"}, "num_frames": {"type": "integer", "title": "Num Frames", "default": 163, "maximum": 170, "minimum": 30, "x-order": 1, "description": "Number of frames to generate"}, "guidance_scale": {"type": "number", "title": "Guidance Scale", "default": 6, "maximum": 10, "minimum": 0.1, "x-order": 3, "description": "The guidance scale for the model"}, "num_inference_steps": {"type": "integer", "title": "Num Inference Steps", "default": 64, "maximum": 200, "minimum": 10, "x-order": 2, "description": "Number of inference steps"}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "disabled_for_predictions": false, "disabled_for_trainings": false, "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/09b67ebb-1d74-4972-bb9c-acfcf1c27902/mochi-1-preview.webp", "description": "Mochi 1 preview is an open video generation model with high-fidelity motion and strong prompt adherence in preliminary evaluation", "hardware": "H100", "latest_version": {"id": "1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460"}, "name": "mochi-1", "owner": "genmoai", "url": "https://replicate.com/genmoai/mochi-1", "visibility": "public", "_extras": {"name": "genmoai/mochi-1", "is_official": false, "is_pipeline": false}}, "name": "genmoai/mochi-1:1944af04", "release_notes": "", "short_id": "1944af04", "url": "https://replicate.com/genmoai/mochi-1/versions/1944af04d098ef69bed7f9d335d102e652203f268ec4aaa2d836f6217217e460"}}, "token": "", "modelStatus": "offline", "modelInputSettings": {"hidden": []}, "requiresCredit": true, "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": true}}</script>
+
+  <div data-react-placeholder="APIPlayground">
+    <div class="input-output-grid">
+  <div class="flex flex-col md:flex-row">
+    <div class="input-col relative md:flex-1 pb-4 min-w-0">
+      <div class="mb-2 flex items-center justify-between">
+        <div class="flex-1">
+          <div class="mb-4 bg-r8-gray-4 animate-pulse h-8 w-24">
+          </div>
+        </div>
+      </div>
+      <div class="h-8 bg-r8-gray-4 animate-pulse mb-6">
+      </div>
+      <div class="space-y-4">
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <div class="input-output-grid--divider flex-shrink-0 md:mx-6 mb-6 md:my-0"
+         role="separator">
+      <div class="bg-r8-gray-6 md:w-px md:h-full h-px w-full">
+      </div>
+    </div>
+    <div class="output-col md:flex-1 pb-4 min-w-0">
+      <div class="flex flex-col">
+        <div class="flex-1">
+          <div class="mb-4 bg-r8-gray-4 animate-pulse h-8 w-24">
+          </div>
+        </div>
+        <div class="h-8 bg-r8-gray-4 animate-pulse mb-6">
+        </div>
+        <div class="aspect-square bg-r8-gray-4 animate-pulse">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+<div data-component="APIPlayground"
+     data-props="react-component-props-acbf8918-a766-4473-8fd6-14f19352758c">
+  
+</div>
+
+    
+  
+</div>
+
+    
+
+
+
+  
+  
+  
+    <div class="pb-2 border-b border-r8-gray-5 mb-lh flex">
+      <h2 class="inline-block flex-grow text-r8-2xl">
+        Examples
+      </h2>
+
+      <p>
+        <a href="/genmoai/mochi-1/examples"
+           class="no-default">
+          View more <span class="hidden sm:inline">examples</span><span class="relative -top-0.5">
+          
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <line x1="7" y1="17" x2="17" y2="7"></line>
+  <polyline points="7 7 17 7 17 17"></polyline>
+</svg>
+
+        </span></a>
+      </p>
+    </div>
+
+    <div class="mb-2lh h-40 overflow-hidden ">
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/genmoai/mochi-1/examples#41vmsc96vxrm80ckg17awwyc6m">
+
+              
+                <video data-src="https://replicate.delivery/xezq/AF0YFy7wRq4YOJC20hGKxkN7Q0y7opcXkQdfx3mG21Df2Y2TA/output.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/genmoai/mochi-1/examples#tacc8z4y21rma0ckg1p80h5q0w">
+
+              
+                <video data-src="https://replicate.delivery/xezq/wuOouGD6Zb5nNpUARxKNOB9FYwTWYU0rjtpOZuwLDnoTVm9E/output.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/genmoai/mochi-1/examples#rpdpe90ca5rma0ckg1sv7grd74">
+
+              
+                <video data-src="https://replicate.delivery/xezq/DqWEOdDh3iJmABefdYzUmwHaAfDsIyynEeHeKWBZ9o03kLzeE/output.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/genmoai/mochi-1/examples#xkj2dcjcsxrm80ckg2f9parpd0">
+
+              
+                <video data-src="https://replicate.delivery/xezq/2rbEOImswKJHGRzkDKRFsTTU7iibkUvmpeZNKSOOEqfIIa2TA/output.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/genmoai/mochi-1/examples#c1a1ntq8edrmc0ckg2p8b70tzw">
+
+              
+                <video data-src="https://replicate.delivery/xezq/m8PfqG2Cu1V1MqnXKfs0YDuuBjkyTdDP2mlXjSULuMeEu0snA/output.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/genmoai/mochi-1/examples#jxt1wjz0ksrm80ckg2r8y8z1f0">
+
+              
+                <video data-src="https://replicate.delivery/xezq/HCgAIg0vze0kPqihi8NtfBVG05PCbOnLVTCdWJUyiLNHba2TA/output.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/genmoai/mochi-1/examples#7ge51m603drm80ckh5csvqc6s8">
+
+              
+                <video data-src="https://replicate.delivery/xezq/ZjfSNx8MiQxvZi26mtztzne27JaT7VjIIq5fd4v7MoVUy7tnA/output.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/genmoai/mochi-1/examples#q05ry6t8y1rmc0ckh8za2zf4sc">
+
+              
+                <video data-src="https://replicate.delivery/xezq/CfKnavergFottkJmh9Qzizc82XSjm3e081aoeETAyMEsSGcPB/output.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+    </div>
+  
+
+
+
+
+    
+      
+
+<div id="pricing"
+     class="mb-2lh">
+  <a id="performance"></a>
+
+  <h2 class="mb-lh pb-2 border-b border-r8-gray-5 text-r8-2xl">
+    Run time and cost
+  </h2>
+
+  
+
+  
+
+    
+      
+        <p class="mb-lh">
+          This model costs approximately $0.42 to run on Replicate, or 2 runs per $1, but this varies depending on your inputs. It is also open source and you can <a href="/genmoai/mochi-1/api">run it on your own computer with Docker</a>.
+        </p>
+      
+    
+
+    
+
+    <p class="mb-lh">
+      
+        This model runs on <a href="https://replicate.com/docs/billing">Nvidia H100 GPU hardware</a>.
+      
+      
+
+      
+        Predictions typically complete within 5 minutes.
+
+        
+          The predict time for this model varies significantly based on the inputs.
+        
+      
+    </p>
+  
+</div>
+
+    
+
+    
+
+<article class="mb-2lh">
+  
+    <div id="readme"
+         class="border-b border-r8-gray-5 pb-2 mb-lh flex items-center gap-2">
+      <h2 class="inline-block text-r8-2xl">
+        Readme
+      </h2>
+      
+    </div>
+  
+  
+    <div class="readme-prose max-w-4xl">
+      <h1 id="mochi-1">Mochi 1</h1>
+<p><a href="https://www.genmo.ai/blog" rel="nofollow ugc">Blog</a> | <a href="https://huggingface.co/genmo/mochi-1-preview" rel="nofollow ugc">Hugging Face</a> | <a href="https://www.genmo.ai/play" rel="nofollow ugc">Playground</a> | <a href="https://jobs.ashbyhq.com/genmo" rel="nofollow ugc">Careers</a></p>
+<p>A state of the art video generation model by <a href="https://genmo.ai" rel="nofollow ugc">Genmo</a>.</p>
+<p><img alt="board" src="https://huggingface.co/genmo/mochi-1-preview/resolve/main/assets/grid.gif"/></p>
+<h2 id="overview">Overview</h2>
+<p>Mochi 1 preview is an open state-of-the-art video generation model with high-fidelity motion and strong prompt adherence in preliminary evaluation. This model dramatically closes the gap between closed and open video generation systems. We’re releasing the model under a permissive Apache 2.0 license. Try this model for free on <a href="https://genmo.ai/play" rel="nofollow ugc">our playground</a>.</p>
+<h2 id="model-architecture">Model Architecture</h2>
+<p>Mochi 1 represents a significant advancement in open-source video generation, featuring a 10 billion parameter diffusion model built on our novel Asymmetric Diffusion Transformer (AsymmDiT) architecture. Trained entirely from scratch, it is the largest video generative model ever openly released. And best of all, it’s a simple, hackable architecture. Additionally, we are releasing an inference harness that includes an efficient context parallel implementation. </p>
+<p>Alongside Mochi, we are open-sourcing our video AsymmVAE. We use an asymmetric encoder-decoder structure to build an efficient high quality compression model. Our AsymmVAE causally compresses videos to a 128x smaller size, with an 8x8 spatial and a 6x temporal compression to a 12-channel latent space. </p>
+<h3 id="asymmvae-model-specs">AsymmVAE Model Specs</h3>
+<table>
+<thead>
+<tr>
+<th>Params <br/> Count</th>
+<th>Enc Base <br/>  Channels</th>
+<th>Dec Base <br/> Channels</th>
+<th>Latent <br/> Dim</th>
+<th>Spatial <br/> Compression</th>
+<th>Temporal <br/> Compression</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>362M</td>
+<td>64</td>
+<td>128</td>
+<td>12</td>
+<td>8x8</td>
+<td>6x</td>
+</tr>
+</tbody>
+</table>
+<p>An AsymmDiT efficiently processes user prompts alongside compressed video tokens by streamlining text processing and focusing neural network capacity on visual reasoning. AsymmDiT jointly attends to text and visual tokens with multi-modal self-attention and learns separate MLP layers for each modality, similar to Stable Diffusion 3. However, our visual stream has nearly 4 times as many parameters as the text stream via a larger hidden dimension. To unify the modalities in self-attention, we use non-square QKV and output projection layers. This asymmetric design reduces inference memory requirements.
+Many modern diffusion models use multiple pretrained language models to represent user prompts. In contrast, Mochi 1 simply encodes prompts with a single T5-XXL language model.</p>
+<h3 id="asymmdit-model-specs">AsymmDiT Model Specs</h3>
+<table>
+<thead>
+<tr>
+<th>Params <br/> Count</th>
+<th>Num <br/> Layers</th>
+<th>Num <br/> Heads</th>
+<th>Visual <br/> Dim</th>
+<th>Text <br/> Dim</th>
+<th>Visual <br/> Tokens</th>
+<th>Text <br/> Tokens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10B</td>
+<td>48</td>
+<td>24</td>
+<td>3072</td>
+<td>1536</td>
+<td>44520</td>
+<td>256</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hardware-requirements">Hardware Requirements</h2>
+<p>The repository supports both multi-GPU operation (splitting the model across multiple graphics cards) and single-GPU operation, though it requires approximately 60GB VRAM when running on a single GPU. While ComfyUI can optimize Mochi to run on less than 20GB VRAM, this implementation prioritizes flexibility over memory efficiency. When using this repository, we recommend using at least 1 H100 GPU.</p>
+<h2 id="safety">Safety</h2>
+<p>Genmo video models are general text-to-video diffusion models that inherently reflect the biases and preconceptions found in their training data. While steps have been taken to limit NSFW content, organizations should implement additional safety protocols and careful consideration before deploying these model weights in any commercial services or products.</p>
+<h2 id="limitations">Limitations</h2>
+<p>Under the research preview, Mochi 1 is a living and evolving checkpoint. There are a few known limitations. The initial release generates videos at 480p today. In some edge cases with extreme motion, minor warping and distortions can also occur. Mochi 1 is also optimized for photorealistic styles so does not perform well with animated content. We also anticipate that the community will fine-tune the model to suit various aesthetic preferences.</p>
+<h2 id="related-work">Related Work</h2>
+<ul>
+<li><a href="https://github.com/kijai/ComfyUI-MochiWrapper" rel="nofollow ugc">ComfyUI-MochiWrapper</a> adds ComfyUI support for Mochi. The integration of Pytorch’s SDPA attention was taken from their repository.</li>
+<li><a href="https://github.com/xdit-project/mochi-xdit" rel="nofollow ugc">mochi-xdit</a> is a fork of this repository and improve the parallel inference speed with <a href="https://github.com/xdit-project/xdit" rel="nofollow ugc">xDiT</a>.</li>
+</ul>
+<h2 id="bibtex">BibTeX</h2>
+<pre><code>@misc{genmo2024mochi,
+      title={Mochi 1},
+      author={Genmo Team},
+      year={2024},
+      publisher = {GitHub},
+      journal = {GitHub repository},
+      howpublished={\url{<a href="https://github.com/genmoai/models" rel="nofollow ugc">https://github.com/genmoai/models</a>}}
+}
+</code></pre>
+    </div>
+  
+</article>
+
+    
+
+
+
+
+    <script id="react-component-props-5b35d222-f560-4bf3-a50b-6a19c4b289e7" type="application/json">{"name": "genmoai/mochi-1", "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": true}}</script>
+
+<div data-component="RelatedModels"
+     data-props="react-component-props-5b35d222-f560-4bf3-a50b-6a19c4b289e7">
+  
+</div>
+
+  </div>
+
+
+    </div>
+  
+
+  <div class="model-content mt-2lh">
+    
+
+
+
+  </div>
+
+
+
+          
+        
+      </main>
+
+      
+        
+
+<div class="footer no-focus">
+  <script id="react-component-props-21a946a4-847e-414b-9b63-2d83915c64eb" type="application/json">{"theme": "", "__flags": {"show-pylon-widget": false, "show-open-ai-api-instructions": false, "assign-support-tickets-to-ai": true}}</script>
+
+<div data-component="Footer"
+     data-props="react-component-props-21a946a4-847e-414b-9b63-2d83915c64eb">
+  
+</div>
+
+</div>
+
+      
+
+    
+
+    <script nonce="TArWEljA7HBnB40d40SPjg==">
+      window.VIDEOJS_NO_DYNAMIC_STYLE = true;
+    </script>
+
+    <script nonce="TArWEljA7HBnB40d40SPjg==">
+      const header = document.getElementById("app-header");
+
+      function monitorHeaderStickiness() {
+        if (header) {
+          header.setAttribute("data-stuck", window.scrollY > 0);
+        }
+      }
+
+      monitorHeaderStickiness();
+
+      document.addEventListener("scroll", (event) => {
+        monitorHeaderStickiness();
+      });
+
+      // Prevent mousewheel from being able to change the value of a numeric input.
+      // This "feature" often causes issues when users scroll from a focused input field
+      // to the submit button and accidentally increment the contents of the field.
+      document.addEventListener("wheel", (event) => {
+        if (document.activeElement && document.activeElement.matches('input[type=number]') && document.activeElement === event.target) {
+          event.preventDefault();
+        }
+      }, {
+        passive: false
+      });
+    </script>
+
+    
+    
+    
+
+  </body>
+
+</html>

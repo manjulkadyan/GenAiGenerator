@@ -1,0 +1,222 @@
+package com.manjul.genai.videogenerator.ui.viewmodel
+
+import android.net.Uri
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.manjul.genai.videogenerator.data.model.AIModel
+import com.manjul.genai.videogenerator.data.model.GenerateRequest
+import com.manjul.genai.videogenerator.data.repository.RepositoryProvider
+import com.manjul.genai.videogenerator.data.repository.VideoFeatureRepository
+import com.manjul.genai.videogenerator.data.repository.VideoGenerateRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+data class GenerateScreenState(
+    val isLoading: Boolean = true,
+    val models: List<AIModel> = emptyList(),
+    val selectedModel: AIModel? = null,
+    val prompt: String = "",
+    val negativePrompt: String = "",
+    val selectedDuration: Int? = null,
+    val selectedAspectRatio: String? = null,
+    val usePromptOptimizer: Boolean = true,
+    val enableAudio: Boolean = false,
+    val firstFrameUri: Uri? = null,
+    val lastFrameUri: Uri? = null,
+    val uploadMessage: String? = null,
+    val isGenerating: Boolean = false,
+    val errorMessage: String? = null,
+    val successMessage: String? = null,
+) {
+    val estimatedCost: Int
+        get() {
+            val baseCost = (selectedModel?.pricePerSecond ?: 0) * (selectedDuration ?: 0)
+            // Double the cost if audio is enabled
+            return if (enableAudio) baseCost * 2 else baseCost
+        }
+
+    val canGenerate: Boolean
+        get() {
+            // Check if required fields are missing (only check if model supports the feature)
+            val missingFirst = selectedModel?.supportsFirstFrame == true && 
+                              selectedModel.requiresFirstFrame && 
+                              firstFrameUri == null
+            val missingLast = selectedModel?.supportsLastFrame == true && 
+                             selectedModel.requiresLastFrame && 
+                             lastFrameUri == null
+            return !isLoading &&
+                !isGenerating &&
+                !missingFirst &&
+                !missingLast &&
+                prompt.isNotBlank() &&
+                selectedModel != null &&
+                selectedDuration != null &&
+                selectedAspectRatio != null
+        }
+}
+
+class VideoGenerateViewModel(
+    private val featureRepository: VideoFeatureRepository,
+    private val generateRepository: VideoGenerateRepository,
+) : ViewModel() {
+
+    private val _state = MutableStateFlow(GenerateScreenState())
+    val state: StateFlow<GenerateScreenState> = _state
+
+    init {
+        viewModelScope.launch {
+            val models = featureRepository.fetchModels()
+            val firstModel = models.firstOrNull()
+            _state.update {
+                it.copy(
+                    isLoading = false,
+                    models = models,
+                    selectedModel = firstModel,
+                    selectedDuration = firstModel?.defaultDuration ?: firstModel?.durationOptions?.firstOrNull(),
+                    selectedAspectRatio = firstModel?.aspectRatios?.firstOrNull()
+                )
+            }
+        }
+    }
+
+    fun selectModel(model: AIModel) {
+        _state.update {
+            val supportsNegativePrompt = model.schemaMetadata?.categorized?.text?.any { it.name == "negative_prompt" } == true
+            it.copy(
+                selectedModel = model,
+                selectedDuration = model.defaultDuration.takeIf { duration -> duration > 0 }
+                    ?: model.durationOptions.firstOrNull(),
+                selectedAspectRatio = model.aspectRatios.firstOrNull(),
+                firstFrameUri = it.firstFrameUri,
+                lastFrameUri = it.lastFrameUri,
+                enableAudio = if (model.supportsAudio) it.enableAudio else false, // Reset audio if model doesn't support it
+                negativePrompt = if (supportsNegativePrompt) it.negativePrompt else "", // Reset negative prompt if model doesn't support it
+                errorMessage = null,
+                successMessage = null
+            )
+        }
+    }
+
+    fun updatePrompt(prompt: String) {
+        _state.update { it.copy(prompt = prompt, errorMessage = null, successMessage = null) }
+    }
+
+    fun updateNegativePrompt(negativePrompt: String) {
+        _state.update { it.copy(negativePrompt = negativePrompt, errorMessage = null, successMessage = null) }
+    }
+
+    fun updateDuration(duration: Int) {
+        _state.update { it.copy(selectedDuration = duration, errorMessage = null, successMessage = null) }
+    }
+
+    fun updateAspectRatio(ratio: String) {
+        _state.update { it.copy(selectedAspectRatio = ratio, errorMessage = null, successMessage = null) }
+    }
+
+    fun togglePromptOptimizer(enabled: Boolean) {
+        _state.update { it.copy(usePromptOptimizer = enabled) }
+    }
+
+    fun toggleAudio(enabled: Boolean) {
+        _state.update { it.copy(enableAudio = enabled) }
+    }
+
+    fun setFirstFrameUri(uri: Uri?) {
+        _state.update { it.copy(firstFrameUri = uri, errorMessage = null, successMessage = null) }
+    }
+
+    fun setLastFrameUri(uri: Uri?) {
+        _state.update { it.copy(lastFrameUri = uri, errorMessage = null, successMessage = null) }
+    }
+
+    fun generate() {
+        val snapshot = _state.value
+        val model = snapshot.selectedModel
+        val duration = snapshot.selectedDuration
+        val ratio = snapshot.selectedAspectRatio
+        if (!snapshot.canGenerate || model == null || duration == null || ratio == null) {
+            return
+        }
+        viewModelScope.launch {
+            _state.update { it.copy(isGenerating = true, uploadMessage = null, errorMessage = null, successMessage = null) }
+            val firstUrl = snapshot.firstFrameUri?.let { uri ->
+                uploadReferenceFrame(uri, "first frame") ?: return@launch
+            }
+            val lastUrl = snapshot.lastFrameUri?.let { uri ->
+                uploadReferenceFrame(uri, "last frame") ?: return@launch
+            }
+
+            _state.update { it.copy(uploadMessage = "Submitting generation request...") }
+            val request = GenerateRequest(
+                model = model,
+                prompt = snapshot.prompt.trim(),
+                negativePrompt = snapshot.negativePrompt.takeIf { it.isNotBlank() },
+                durationSeconds = duration,
+                aspectRatio = ratio,
+                cost = snapshot.estimatedCost,
+                usePromptOptimizer = snapshot.usePromptOptimizer,
+                enableAudio = snapshot.enableAudio,
+                firstFrameUrl = firstUrl,
+                lastFrameUrl = lastUrl
+            )
+
+            generateRepository.requestVideoGeneration(request)
+                .onSuccess {
+                    _state.update {
+                        it.copy(
+                            isGenerating = false,
+                            uploadMessage = null,
+                            successMessage = "Generation queued successfully!"
+                        )
+                    }
+                }
+                .onFailure { throwable ->
+                    _state.update {
+                        it.copy(
+                            isGenerating = false,
+                            uploadMessage = null,
+                            errorMessage = throwable.message ?: "Unable to start generation"
+                        )
+                    }
+                }
+        }
+    }
+
+    private suspend fun uploadReferenceFrame(uri: Uri, label: String): String? {
+        _state.update { it.copy(uploadMessage = "Uploading $label...") }
+        val result = generateRepository.uploadReferenceFrame(uri)
+        return result.getOrElse {
+            Log.e(TAG, "Failed to upload $label", it)
+            _state.update {
+                it.copy(
+                    isGenerating = false,
+                    uploadMessage = null,
+                    errorMessage = "Failed to upload $label. Please try again."
+                )
+            }
+            null
+        }
+    }
+
+    fun dismissMessage() {
+        _state.update { it.copy(errorMessage = null, successMessage = null) }
+    }
+
+    companion object {
+        private const val TAG = "VideoGenerateVM"
+
+        val Factory = viewModelFactory {
+            initializer {
+                VideoGenerateViewModel(
+                    featureRepository = RepositoryProvider.videoFeatureRepository,
+                    generateRepository = RepositoryProvider.videoGenerateRepository
+                )
+            }
+        }
+    }
+}

@@ -1,0 +1,138 @@
+{
+  "analyzed_at": "2025-11-17T16:44:36.543Z",
+  "total_pairs": 23,
+  "pairs": [
+    {
+      "replicateName": "runwayml/gen4-image-turbo",
+      "status": "⚠️  Only without prefix",
+      "withoutPrefixId": "gen4-image-turbo"
+    },
+    {
+      "replicateName": "google/veo-3.1",
+      "status": "✅ Both exist",
+      "withPrefixId": "google-veo-3-1",
+      "withoutPrefixId": "veo-3.1"
+    },
+    {
+      "replicateName": "google/veo-3.1-fast",
+      "status": "✅ Both exist",
+      "withPrefixId": "google-veo-3-1-fast",
+      "withoutPrefixId": "veo-3.1-fast"
+    },
+    {
+      "replicateName": "minimax/hailuo-02",
+      "status": "⚠️  Only without prefix",
+      "withoutPrefixId": "hailuo-02"
+    },
+    {
+      "replicateName": "minimax/hailuo-2.3-fast",
+      "status": "✅ Both exist",
+      "withPrefixId": "minimax-hailuo-2-3-fast",
+      "withoutPrefixId": "hailuo-2.3-fast"
+    },
+    {
+      "replicateName": "kwaivgi/kling-v2.1-master",
+      "status": "✅ Both exist",
+      "withPrefixId": "kwaivgi-kling-v2-1-master",
+      "withoutPrefixId": "kling-v2.1-master"
+    },
+    {
+      "replicateName": "kwaivgi/kling-v2.5-turbo-pro",
+      "status": "✅ Both exist",
+      "withPrefixId": "kwaivgi-kling-v2-5-turbo-pro",
+      "withoutPrefixId": "kling-v2.5-turbo-pro"
+    },
+    {
+      "replicateName": "leonardoai/motion-2.0",
+      "status": "✅ Both exist",
+      "withPrefixId": "leonardoai-motion-2-0",
+      "withoutPrefixId": "motion-2.0"
+    },
+    {
+      "replicateName": "lightricks/ltx-2-fast",
+      "status": "⚠️  Only without prefix",
+      "withoutPrefixId": "ltx-2-fast"
+    },
+    {
+      "replicateName": "lightricks/ltx-2-pro",
+      "status": "⚠️  Only without prefix",
+      "withoutPrefixId": "ltx-2-pro"
+    },
+    {
+      "replicateName": "character-ai/ovi-i2v",
+      "status": "⚠️  Only without prefix",
+      "withoutPrefixId": "ovi-i2v"
+    },
+    {
+      "replicateName": "pixverse/pixverse-v5",
+      "status": "⚠️  Only without prefix",
+      "withoutPrefixId": "pixverse-v5"
+    },
+    {
+      "replicateName": "luma/ray-2-720p",
+      "status": "⚠️  Only without prefix",
+      "withoutPrefixId": "ray-2-720p"
+    },
+    {
+      "replicateName": "bytedance/seedance-1-lite",
+      "status": "⚠️  Only without prefix",
+      "withoutPrefixId": "seedance-1-lite"
+    },
+    {
+      "replicateName": "bytedance/seedance-1-pro",
+      "status": "⚠️  Only without prefix",
+      "withoutPrefixId": "seedance-1-pro"
+    },
+    {
+      "replicateName": "openai/sora-2",
+      "status": "⚠️  Only without prefix",
+      "withoutPrefixId": "sora-2"
+    },
+    {
+      "replicateName": "openai/sora-2-pro",
+      "status": "⚠️  Only without prefix",
+      "withoutPrefixId": "sora-2-pro"
+    },
+    {
+      "replicateName": "google/veo-3",
+      "status": "⚠️  Only without prefix",
+      "withoutPrefixId": "veo-3"
+    },
+    {
+      "replicateName": "google/veo-3-fast",
+      "status": "⚠️  Only without prefix",
+      "withoutPrefixId": "veo-3-fast"
+    },
+    {
+      "replicateName": "wan-video/wan-2.2-t2v-fast",
+      "status": "✅ Both exist",
+      "withPrefixId": "wan-video-wan-2-2-t2v-fast",
+      "withoutPrefixId": "wan-2.2-t2v-fast"
+    },
+    {
+      "replicateName": "wan-video/wan-2.5-i2v",
+      "status": "✅ Both exist",
+      "withPrefixId": "wan-video-wan-2-5-i2v",
+      "withoutPrefixId": "wan-2.5-i2v"
+    },
+    {
+      "replicateName": "wan-video/wan-2.5-t2v-fast",
+      "status": "✅ Both exist",
+      "withPrefixId": "wan-video-wan-2-5-t2v-fast",
+      "withoutPrefixId": "wan-2.5-t2v-fast"
+    },
+    {
+      "replicateName": "wan-video/wan-2.5-t2v-hd",
+      "status": "⚠️  Only with prefix",
+      "withPrefixId": "wan-video-wan-2-5-t2v-hd"
+    }
+  ],
+  "name_based_duplicates": [],
+  "summary": {
+    "both_exist": 9,
+    "only_with_prefix": 1,
+    "only_without_prefix": 13,
+    "merged": 9,
+    "deleted": 9
+  }
+}

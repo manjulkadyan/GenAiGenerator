@@ -1,0 +1,1119 @@
+
+
+<!DOCTYPE html>
+<html lang="en"
+      class="">
+
+  <head>
+    <meta charset="utf-8" />
+    <title>
+      
+  
+    Hailuo 2 - generate AI videos using text-to-video and image-to-video
+  
+
+    </title>
+
+    
+      
+      <meta name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+
+    <link id="favicon-ico"
+          rel="icon"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/favicon.121ea3afd763.ico"
+          sizes="any" />
+    <link id="favicon-png"
+          rel="icon"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/favicon.fdf5ef8729cc.png"
+          type="image/png" />
+    <link rel="mask-icon"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/safari-pinned-tab.4c32b8e091a9.svg"
+          color="#FFFFFF" />
+    <link rel="apple-touch-icon"
+          sizes="180x180"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/apple-touch-icon.39c0aa0659e3.png" />
+
+    
+  <script nonce="8EvsidvQoT7FiFkywRLuCA==">
+    /* beautify ignore:start */
+    window.dataLayer = window.dataLayer || [];
+    
+    
+    dataLayer.push({
+      'event': 'user_anonymous',
+      'user_type': 'anonymous',
+      
+      'anonymous_session_id': 'cef0f38d-f6e3-4f09-917e-f7857819d496'
+      
+    });
+    
+    /* beautify ignore:end */
+  </script>
+  <script nonce="8EvsidvQoT7FiFkywRLuCA==">
+    (function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-KZDCFZR9');
+  </script>
+
+
+
+    
+    
+
+    <link  rel="stylesheet" href="https://d31rfu1d3w8e4q.cloudfront.net/static/dist/index-BxwK8EBg.css" />
+<script type="module" crossorigin="" src="https://d31rfu1d3w8e4q.cloudfront.net/static/dist/index-BK0wCkVE.js"></script>
+
+    <link rel="stylesheet"
+          href="https://d31rfu1d3w8e4q.cloudfront.net/static/dist/indexCss-D5iwNvwU.css" />
+
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="Blog (RSS)"
+          href="https://replicate.com/blog/rss" />
+    <link rel="alternate"
+          type="application/atom+xml"
+          title="Blog (Atom)"
+          href="https://replicate.com/blog/atom" />
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="Changelog (RSS)"
+          href="https://replicate.com/changelog/rss" />
+    <link rel="alternate"
+          type="application/atom+xml"
+          title="Changelog (Atom)"
+          href="https://replicate.com/changelog/atom" />
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="Status (RSS)"
+          href="https://replicatestatus.com/feed" />
+
+    
+      <link rel="dns-prefetch"
+            href="https://replicate.delivery" />
+    
+      <link rel="dns-prefetch"
+            href="https://tjzk.replicate.delivery" />
+    
+
+    
+
+    <link rel="canonical"
+          href="https://replicate.com/minimax/hailuo-02" />
+
+    
+  
+  
+    
+  
+
+  <meta name="twitter:card"
+        content="summary_large_image" />
+
+
+<meta name="twitter:site"
+      content="@replicate" />
+
+
+  <meta name="twitter:image"
+        content="https://og-api.replicateassets.com/api/models/minimax/hailuo-02" />
+  <meta property="og:image"
+        content="https://og-api.replicateassets.com/api/models/minimax/hailuo-02" />
+
+
+
+
+  <meta name="twitter:title"
+        content="Hailuo 2 - generate AI videos using text-to-video and image-to-video" />
+  <meta name="twitter:description"
+        content="Hailuo 2 is a text-to-video and image-to-video model that can make 6s or 10s videos at 768p (standard) or 1080p (pro). It excels at real world physics." />
+  <meta property="og:image"
+        content="https://og-api.replicateassets.com/api/models/minimax/hailuo-02" />
+  <meta property="twitter:image"
+        content="https://og-api.replicateassets.com/api/models/minimax/hailuo-02" />
+
+  
+
+  
+    <meta name="description"
+          content="Hailuo 2 is a text-to-video and image-to-video model that can make 6s or 10s videos at 768p (standard) or 1080p (pro). It excels at real world physics." />
+  
+
+
+    <meta name="sentry-dsn-js"
+          content="https://3dc017e574684610bbc7fd3b5519a4e8@o255771.ingest.sentry.io/5909364" />
+    
+    
+      <meta name="anonymous-id"
+            content="cef0f38d-f6e3-4f09-917e-f7857819d496" />
+    
+
+    
+      <script nonce="8EvsidvQoT7FiFkywRLuCA==">
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (prefersDarkScheme) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.add("light");
+        }
+      </script>
+    
+
+    
+  </head>
+
+  
+
+  <body class="font-sans overflow-y-scroll antialiased flex min-h-screen flex-col">
+    
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KZDCFZR9"
+        height="0"
+        width="0"
+        style="display:none;
+               visibility:hidden"></iframe></noscript>
+
+
+    
+
+      
+
+      
+        
+
+<div class="h-[var(--header-height)] mb-6 no-focus">
+  
+    <script id="react-component-props-54ef7282-5d91-4b65-8516-b83fd9db0027" type="application/json">{"activePath": "/minimax/hailuo-02", "isAuthenticated": false, "theme": "", "__flags": {"show-pylon-widget": false, "assign-support-tickets-to-ai": false, "show-open-ai-api-instructions": false}}</script>
+
+<div data-component="Navigation"
+     data-props="react-component-props-54ef7282-5d91-4b65-8516-b83fd9db0027">
+  
+</div>
+
+  
+</div>
+
+        
+
+
+
+      
+
+      
+      
+
+      
+      
+
+      
+
+      <main class="layout-main flex-1">
+        
+
+        
+          
+
+  
+  
+  
+    
+      
+
+    
+      
+    
+
+    
+
+    
+      
+
+<header class="space-y-4 pb-10 lg:pb-4"
+        aria-label="minimax/hailuo-02">
+
+  
+
+<div class="flex gap-8 gap-y-4 w-full flex-wrap justify-between items-center">
+  <div class="space-y-4">
+    <div class="flex-wrap flex flex-col gap-1">
+
+      <div class="flex gap-2 sm:gap-3 w-full">
+
+        <h3 aria-label="minimax/hailuo-02"
+            class="sr-only">
+          minimax/hailuo-02
+        </h3>
+
+        <div translate="no"
+             aria-hidden="true"
+             class="flex relative items-center gap-1 flex-1 flex-wrap">
+          <div class="flex items-center gap-3 whitespace-nowrap">
+            
+              
+
+
+  <img class="avatar size-9 flex-shrink-0"
+       src="https://tjzk.replicate.delivery/models_organizations_avatar/7fdef700-78e0-418d-b804-4b61ef4efc5e/130440902.png"
+       alt=""
+       role="presentation"
+       onerror="this.onerror=null; this.src='https://d31rfu1d3w8e4q.cloudfront.net/static/placeholder-avatar-organization.ff98795474e8.svg'" />
+
+
+            
+            <div class="text-r8-gray-11 text-lg font-heading">
+              
+                <a href="https://replicate.com/minimax">minimax</a>
+              
+            </div>
+            <div class="text-r8-gray-11 text-lg font-heading">
+              /
+            </div>
+          </div>
+          <div>
+            <span class="text-lg font-heading">
+              hailuo-02
+            </span>
+            <span class="[&>div]:inline">
+              
+                <script id="react-component-props-f308a61a-6466-41b4-8edb-a1190062da59" type="application/json">{"identifier": "minimax/hailuo-02", "__flags": {"show-pylon-widget": false, "assign-support-tickets-to-ai": false, "show-open-ai-api-instructions": false}}</script>
+
+<div data-component="CopyIdentifierButton"
+     data-props="react-component-props-f308a61a-6466-41b4-8edb-a1190062da59">
+  
+</div>
+
+              
+            </span>
+          </div>
+        </div>
+      </div>
+
+      
+
+    </div>
+  </div>
+
+  <div class="relative flex flex-wrap gap-2 md:justify-end w-full md:w-auto">
+
+    
+
+    
+
+    <div>
+      <script id="react-component-props-912d1c33-b836-4af1-bce5-a8cbb58eacc2" type="application/json">{"model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/e2953b9d-ef83-4a4a-b90f-1ef168223bf2/tmpbufkswx1.mp4", "description": "Hailuo 2 is a text-to-video and image-to-video model that can make 6s or 10s videos at 768p (standard) or 1080p (pro). It excels at real world physics.", "hardware": "CPU", "latest_version": {"id": "baaadb886e09b1e711387e270d841930e8253f08775bc6cb176580658f0f2fd9"}, "name": "hailuo-02", "owner": "minimax", "url": "https://replicate.com/minimax/hailuo-02", "visibility": "public", "_extras": {"name": "minimax/hailuo-02", "is_official": true, "is_pipeline": false}}, "__flags": {"show-pylon-widget": false, "assign-support-tickets-to-ai": false, "show-open-ai-api-instructions": false}}</script>
+
+<div data-component="ModelDetailButton"
+     data-props="react-component-props-912d1c33-b836-4af1-bce5-a8cbb58eacc2">
+  
+</div>
+
+    </div>
+  </div>
+</div>
+
+
+  
+
+
+
+<div class="flex flex-col gap-2 w-full">
+  
+    <div class="flex gap-4 flex-col md:flex-row items-start">
+      
+        <p class="max-w-3xl text-r8-lg [overflow-wrap:anywhere] text-pretty">
+          
+            Hailuo 2 is a text-to-video and image-to-video model that can make 6s or 10s videos at 768p (standard) or 1080p (pro). It excels at real world physics.
+            
+          
+        </p>
+      
+    </div>
+  
+
+  
+</div>
+
+<div class="w-full">
+  <div class="space-y-4 @container">
+
+    <div class="gap-y-2 items-start @xl:items-center grid @xl:flex @xl:flex-wrap @xl:flex-row @xs:grid-cols-2 gap-x-2 @xl:gap-x-6">
+
+      
+        <div class="flex items-center">
+          <script id="react-component-props-6656e994-519b-4a41-bd67-4d4c0502387b" type="application/json">{"initialStatus": "online", "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/e2953b9d-ef83-4a4a-b90f-1ef168223bf2/tmpbufkswx1.mp4", "description": "Hailuo 2 is a text-to-video and image-to-video model that can make 6s or 10s videos at 768p (standard) or 1080p (pro). It excels at real world physics.", "hardware": "CPU", "latest_version": {"id": "baaadb886e09b1e711387e270d841930e8253f08775bc6cb176580658f0f2fd9"}, "name": "hailuo-02", "owner": "minimax", "url": "https://replicate.com/minimax/hailuo-02", "visibility": "public", "_extras": {"name": "minimax/hailuo-02", "is_official": true, "is_pipeline": false}}, "isOfficialModel": "", "__flags": {"show-pylon-widget": false, "assign-support-tickets-to-ai": false, "show-open-ai-api-instructions": false}}</script>
+
+  <div data-react-placeholder="ModelStatusIndicator">
+    <div class="flex items-center">
+  <div class="rounded-full bg-r8-gray-3 animate-pulse w-[64px] h-[29px]">
+  </div>
+</div>
+
+  </div>
+
+<div data-component="ModelStatusIndicator"
+     data-props="react-component-props-6656e994-519b-4a41-bd67-4d4c0502387b">
+  
+</div>
+
+        </div>
+      
+
+      <div class="flex items-start gap-2">
+        
+          <span class="flex-shrink-0 -mt-0.5">
+            <svg class="icon"
+     fill="currentColor"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 256 256">
+  <rect width="256" height="256" fill="none" />
+  <path d="M54.46,201.54c-9.2-9.2-3.1-28.53-7.78-39.85C41.82,150,24,140.5,24,128s17.82-22,22.68-33.69C51.36,83,45.26,63.66,54.46,54.46S83,51.36,94.31,46.68C106.05,41.82,115.5,24,128,24S150,41.82,161.69,46.68c11.32,4.68,30.65-1.42,39.85,7.78s3.1,28.53,7.78,39.85C214.18,106.05,232,115.5,232,128S214.18,150,209.32,161.69c-4.68,11.32,1.42,30.65-7.78,39.85s-28.53,3.1-39.85,7.78C150,214.18,140.5,232,128,232s-22-17.82-33.69-22.68C83,204.64,63.66,210.74,54.46,201.54Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" />
+  <polyline points="88 136 112 160 168 104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" />
+</svg>
+
+          </span>
+          <span class="text-r8-sm"><script id="react-component-props-e0a37a8a-8813-438b-8a0d-a76ef53bf800" type="application/json">{"anchorText": "Official", "anchorHref": "https://replicate.com/docs/topics/models/official-models", "tooltipText": "Official models are always on, maintained, and have predictable pricing.", "__flags": {"show-pylon-widget": false, "assign-support-tickets-to-ai": false, "show-open-ai-api-instructions": false}}</script>
+
+<div data-component="TextTooltip"
+     data-props="react-component-props-e0a37a8a-8813-438b-8a0d-a76ef53bf800">
+  
+</div>
+</span>
+        
+      </div>
+
+      
+        <div class="flex items-start gap-2">
+          <span class="flex-shrink-0 -mt-0.5">
+            
+<svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     width="24"
+     height="24">
+  <path fill="currentColor" fill-rule="evenodd" d="M20.322.75a10.75 10.75 0 00-7.373 2.926l-1.304 1.23A23.743 23.743 0 0010.103 6.5H5.066a1.75 1.75 0 00-1.5.85l-2.71 4.514a.75.75 0 00.49 1.12l4.571.963c.039.049.082.096.129.14L8.04 15.96l1.872 1.994c.044.047.091.09.14.129l.963 4.572a.75.75 0 001.12.488l4.514-2.709a1.75 1.75 0 00.85-1.5v-5.038a23.741 23.741 0 001.596-1.542l1.228-1.304a10.75 10.75 0 002.925-7.374V2.499A1.75 1.75 0 0021.498.75h-1.177zM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 00.121-.214v-3.822zm-10.092-2.7L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 00-.214.121l-2.167 3.612 3.223.679zm8.07-7.644a9.25 9.25 0 016.344-2.518h1.177a.25.25 0 01.25.25v1.176a9.25 9.25 0 01-2.517 6.346l-1.228 1.303a22.248 22.248 0 01-3.854 3.257l-3.288 2.192-1.743-1.858a.764.764 0 00-.034-.034l-1.859-1.744 2.193-3.29a22.248 22.248 0 013.255-3.851l1.304-1.23zM17.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-11 13c.9-.9.9-2.6 0-3.5-.9-.9-2.6-.9-3.5 0-1.209 1.209-1.445 3.901-1.49 4.743a.232.232 0 00.247.247c.842-.045 3.534-.281 4.743-1.49z">
+  </path>
+</svg>
+
+          </span>
+          <span class="text-r8-sm whitespace-nowrap">216.2K
+            runs
+          </span>
+        </div>
+
+        
+          <div class="[&>div]:flex">
+            
+            <script id="react-component-props-fcfaad30-c768-4d61-9ef2-2a6b958f03e2" type="application/json">{"version": {"id": "e07720151cb4b8ec44aeddbc52c51429b87dbdbf299b69f5c80c67f09d29f72b", "created_at": "2025-11-07T13:22:56.589911Z", "_extras": {"arch": "cpu", "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 3}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 4}, "last_frame_image": {"type": "string", "title": "Last Frame Image", "format": "uri", "description": "Last frame image for video generation. The final frame of the output video will match this image."}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 3}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 4}, "last_frame_image": {"type": "string", "title": "Last Frame Image", "format": "uri", "description": "Last frame image for video generation. The final frame of the output video will match this image."}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 3}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 4}, "last_frame_image": {"type": "string", "title": "Last Frame Image", "format": "uri", "description": "Last frame image for video generation. The final frame of the output video will match this image."}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 3}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 4}, "last_frame_image": {"type": "string", "title": "Last Frame Image", "format": "uri", "description": "Last frame image for video generation. The final frame of the output video will match this image."}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 3}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 4}, "last_frame_image": {"type": "string", "title": "Last Frame Image", "format": "uri", "description": "Last frame image for video generation. The final frame of the output video will match this image."}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "An enumeration."}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 3}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 4}, "last_frame_image": {"type": "string", "title": "Last Frame Image", "format": "uri", "description": "Last frame image for video generation. The final frame of the output video will match this image."}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 3}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 4}, "last_frame_image": {"type": "string", "title": "Last Frame Image", "format": "uri", "description": "Last frame image for video generation. The final frame of the output video will match this image."}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "disabled_for_predictions": false, "disabled_for_trainings": false, "model": {"cover_image_url": null, "description": null, "hardware": null, "latest_version": {"id": "e07720151cb4b8ec44aeddbc52c51429b87dbdbf299b69f5c80c67f09d29f72b"}, "name": "minimax-hailuo-02-internal", "owner": "replicate", "url": "https://replicate.com/replicate/minimax-hailuo-02-internal", "visibility": "private", "_extras": {"name": "replicate/minimax-hailuo-02-internal", "is_official": false, "is_pipeline": false}}, "name": "replicate/minimax-hailuo-02-internal:e0772015", "release_notes": null, "short_id": "e0772015", "url": "https://replicate.com/replicate/minimax-hailuo-02-internal/versions/e07720151cb4b8ec44aeddbc52c51429b87dbdbf299b69f5c80c67f09d29f72b"}}, "hardware": "CPU", "billingConfig": {"current_description": null, "current_tiers": [{"criteria": [{"description": "512P", "subtype": "string", "title": "target resolution", "type": "equals", "value": "512P"}, {"description": "6", "subtype": "number", "title": "second of output video", "type": "equals", "value": 6}], "description": null, "prices": [{"description": "or 10 videos for $1", "metric": "video_output_count", "metric_display": "output video", "price": "$0.10", "title": "per output video", "type": "per-unit"}], "title": null}, {"criteria": [{"description": "512P", "subtype": "string", "title": "target resolution", "type": "equals", "value": "512P"}, {"description": "10", "subtype": "number", "title": "second of output video", "type": "equals", "value": 10}], "description": null, "prices": [{"description": "or around 66 videos for $10", "metric": "video_output_count", "metric_display": "output video", "price": "$0.15", "title": "per output video", "type": "per-unit"}], "title": null}, {"criteria": [{"description": "768P", "subtype": "string", "title": "target resolution", "type": "equals", "value": "768P"}, {"description": "6", "subtype": "number", "title": "second of output video", "type": "equals", "value": 6}], "description": null, "prices": [{"description": "or around 37 videos for $10", "metric": "video_output_count", "metric_display": "output video", "price": "$0.27", "title": "per output video", "type": "per-unit"}], "title": null}, {"criteria": [{"description": "768P", "subtype": "string", "title": "target resolution", "type": "equals", "value": "768P"}, {"description": "10", "subtype": "number", "title": "second of output video", "type": "equals", "value": 10}], "description": null, "prices": [{"description": "or around 22 videos for $10", "metric": "video_output_count", "metric_display": "output video", "price": "$0.45", "title": "per output video", "type": "per-unit"}], "title": null}, {"criteria": [{"description": "1080P", "subtype": "string", "title": "target resolution", "type": "equals", "value": "1080P"}, {"description": "6", "subtype": "number", "title": "second of output video", "type": "equals", "value": 6}], "description": null, "prices": [{"description": "or around 20 videos for $10", "metric": "video_output_count", "metric_display": "output video", "price": "$0.48", "title": "per output video", "type": "per-unit"}], "title": null}]}, "price": "$0.0001 per second", "p50price": "$0.012", "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/e2953b9d-ef83-4a4a-b90f-1ef168223bf2/tmpbufkswx1.mp4", "description": "Hailuo 2 is a text-to-video and image-to-video model that can make 6s or 10s videos at 768p (standard) or 1080p (pro). It excels at real world physics.", "hardware": "CPU", "latest_version": {"id": "baaadb886e09b1e711387e270d841930e8253f08775bc6cb176580658f0f2fd9"}, "name": "hailuo-02", "owner": "minimax", "url": "https://replicate.com/minimax/hailuo-02", "visibility": "public", "_extras": {"name": "minimax/hailuo-02", "is_official": true, "is_pipeline": false}}, "__flags": {"show-pylon-widget": false, "assign-support-tickets-to-ai": false, "show-open-ai-api-instructions": false}}</script>
+
+<div data-component="ModelPricePopover"
+     data-props="react-component-props-fcfaad30-c768-4d61-9ef2-2a6b958f03e2">
+  
+</div>
+
+          </div>
+        
+      
+
+      
+        <div class="flex items-start gap-2">
+          <i class="-mt-0.5">
+            
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="2"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+
+          </i>
+          <div class="text-r8-sm">
+            <script id="react-component-props-0c6d7eab-8d4e-4122-a910-eeeb3e917fd7" type="application/json">{"anchorHref": null, "anchorText": "Commercial use", "tooltipText": "Outputs from this model can be sold or used in paid products.", "__flags": {"show-pylon-widget": false, "assign-support-tickets-to-ai": false, "show-open-ai-api-instructions": false}}</script>
+
+<div data-component="TextTooltip"
+     data-props="react-component-props-0c6d7eab-8d4e-4122-a910-eeeb3e917fd7">
+  
+</div>
+
+          </div>
+        </div>
+      
+
+      
+
+      
+
+      
+
+    </div>
+
+    
+
+  </div>
+</div>
+
+
+</header>
+
+    
+    
+      
+        <div class="border-b border-r8-gray-6">
+          
+
+
+
+
+
+
+<div class="r8-tabs r8-tabs--bordered r8-tabs--md top-px relative flex-wrap">
+  
+    <a href="/minimax/hailuo-02"
+       aria-selected="true"
+       class="r8-tabs__tab no-underline">
+      <span class="r8-tabs__start-icon">
+        <svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+
+</svg>
+
+      </span>
+      <span>Playground</span>
+    </a>
+  
+
+  
+    
+      <a href="/minimax/hailuo-02/api"
+         
+         class="r8-tabs__tab no-underline">
+
+        <span class="r8-tabs__start-icon">
+          
+<svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     width="24"
+     height="24">
+  <path fill="currentColor" fill-rule="evenodd" d="M20.322.75a10.75 10.75 0 00-7.373 2.926l-1.304 1.23A23.743 23.743 0 0010.103 6.5H5.066a1.75 1.75 0 00-1.5.85l-2.71 4.514a.75.75 0 00.49 1.12l4.571.963c.039.049.082.096.129.14L8.04 15.96l1.872 1.994c.044.047.091.09.14.129l.963 4.572a.75.75 0 001.12.488l4.514-2.709a1.75 1.75 0 00.85-1.5v-5.038a23.741 23.741 0 001.596-1.542l1.228-1.304a10.75 10.75 0 002.925-7.374V2.499A1.75 1.75 0 0021.498.75h-1.177zM16 15.112c-.333.248-.672.487-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 00.121-.214v-3.822zm-10.092-2.7L8.17 9.017c.23-.346.47-.685.717-1.017H5.066a.25.25 0 00-.214.121l-2.167 3.612 3.223.679zm8.07-7.644a9.25 9.25 0 016.344-2.518h1.177a.25.25 0 01.25.25v1.176a9.25 9.25 0 01-2.517 6.346l-1.228 1.303a22.248 22.248 0 01-3.854 3.257l-3.288 2.192-1.743-1.858a.764.764 0 00-.034-.034l-1.859-1.744 2.193-3.29a22.248 22.248 0 013.255-3.851l1.304-1.23zM17.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-11 13c.9-.9.9-2.6 0-3.5-.9-.9-2.6-.9-3.5 0-1.209 1.209-1.445 3.901-1.49 4.743a.232.232 0 00.247.247c.842-.045 3.534-.281 4.743-1.49z">
+  </path>
+</svg>
+
+        </span>
+        <span>API</span>
+      </a>
+    
+  
+
+  
+    <a href="/minimax/hailuo-02/examples"
+       
+       class="r8-tabs__tab no-underline">
+      <span class="r8-tabs__start-icon">
+        <svg class="icon"
+     xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+  <polyline points="11 3 11 11 14 8 17 11 17 3"></polyline>
+</svg>
+
+      </span>
+      <span>Examples</span>
+    </a>
+  
+
+  
+
+  <a href="/minimax/hailuo-02/readme"
+     
+     class="r8-tabs__tab no-underline">
+    <span class="r8-tabs__start-icon">
+      
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z">
+  </path>
+  <polyline points="14 2 14 8 20 8"></polyline>
+  <line x1="16" y1="13" x2="8" y2="13"></line>
+  <line x1="16" y1="17" x2="8" y2="17"></line>
+  <line x1="10" y1="9" x2="8" y2="9"></line>
+</svg>
+
+    </span>
+    <span>README</span>
+  </a>
+
+  
+    
+  
+
+  
+
+  
+
+  
+</div>
+
+        </div>
+      
+    
+
+    
+
+  
+    
+  
+
+
+  
+    <div class="model-content mt-lh">
+      
+  
+    
+
+<div class="mb-2lh">
+  
+  
+  
+    <script id="react-component-props-3745eaaa-605e-4374-b500-d88edb6afc6a" type="application/json">{"initialPrediction": {"completed_at": "2025-08-02T09:37:33.281097Z", "created_at": "2025-08-02T09:33:55.446000Z", "data_removed": false, "error": null, "id": "y6n2cz3sesrma0crd8gr4ed1xm", "input": {"prompt": "a dog speed climbs up a climbing wall at the olympics", "duration": 6, "resolution": "1080p", "prompt_optimizer": false}, "logs": "Generating video...\nStill generating...\nStill generating...\nStill generating...\nStill generating...\nStill generating...\nStill generating...\nGenerated video in 214.7sec\nRetrieving file...\nDownloading 2494671 bytes\nDownloaded 2.38MB in 2.78sec", "metrics": {"predict_time": 217.827414588, "total_time": 217.835097}, "output": "https://replicate.delivery/xezq/eRwX7pg1AIUjFC148S2JpVn2hWS5r9dULdxm15dOMfxd54GVA/tmpou9td0s5.mp4", "started_at": "2025-08-02T09:33:55.453683Z", "status": "succeeded", "urls": {"stream": "https://stream.replicate.com/v1/files/bcwr-iqvo4knodcuxunquruqcvdljow65iutruo24snz34buee7gylaba", "get": "https://api.replicate.com/v1/predictions/y6n2cz3sesrma0crd8gr4ed1xm", "cancel": "https://api.replicate.com/v1/predictions/y6n2cz3sesrma0crd8gr4ed1xm/cancel"}, "_extras": {"api_token_name": null, "created_by": {"kind": "organization", "url": "https://replicate.com/minimax", "username": "minimax"}, "input_files": [], "is_immutable": false, "is_shared": false, "is_waiting_for_boot": null, "may_have_sensitive_output": false, "output_files": ["https://replicate.delivery/xezq/eRwX7pg1AIUjFC148S2JpVn2hWS5r9dULdxm15dOMfxd54GVA/tmpou9td0s5.mp4"], "pipeline_child_predictions": [], "ran_on": {"capabilities": {"hotswap": false, "run": true, "stream": false, "train": false}, "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 2}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 3}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "x-order": 4, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "x-order": 1, "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 2}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 3}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "x-order": 4, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "x-order": 1, "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "context": {"type": "object", "title": "Context", "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 2}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 3}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "x-order": 4, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "x-order": 1, "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 2}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 3}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "x-order": 4, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "x-order": 1, "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "context": {"type": "object", "title": "Context", "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 2}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 3}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "x-order": 4, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "x-order": 1, "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "An enumeration."}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 2}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 3}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "x-order": 4, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "x-order": 1, "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "context": {"type": "object", "title": "Context", "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 2}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 3}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "x-order": 4, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "x-order": 1, "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "hardware": {"arch": "cpu", "display_name": "CPU", "short_display_name": "CPU", "sku": "cpu"}, "has_special_pricing": true, "is_official": true, "kind": "model", "model": {"name": "hailuo-02", "username": "minimax", "visibility": "public"}, "supports_cancelation": false, "url": "https://replicate.com/minimax/hailuo-02"}, "source": "web", "total_child_predictions": 0}, "version": "hidden"}, "initialPredictionVersion": {"id": "e4e9f96199b671841197eb86b646e198d2d9e2571724e3077c9db8be0f873910", "created_at": "2025-07-08T09:27:50.762213Z", "_extras": {"arch": "cpu", "dereferenced_openapi_schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 2}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 3}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "x-order": 4, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "x-order": 1, "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 2}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 3}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "x-order": 4, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "x-order": 1, "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "context": {"type": "object", "title": "Context", "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 2}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 3}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "x-order": 4, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "x-order": 1, "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 2}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 3}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "x-order": 4, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "x-order": 1, "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "context": {"type": "object", "title": "Context", "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 2}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 3}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "x-order": 4, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "x-order": 1, "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "An enumeration."}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 2}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 3}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "x-order": 4, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "x-order": 1, "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "context": {"type": "object", "title": "Context", "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "output_file_prefix": {"type": "string", "title": "Output File Prefix"}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"]}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id"}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error"}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "x-order": 0, "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 2}, "resolution": {"enum": ["768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 3}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "x-order": 4, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "x-order": 1, "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics"}, "version": {"type": "string", "title": "Version"}, "created_at": {"type": "string", "title": "Created At", "format": "date-time"}, "started_at": {"type": "string", "title": "Started At", "format": "date-time"}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time"}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "disabled_for_predictions": false, "disabled_for_trainings": false, "model": {"cover_image_url": null, "description": null, "hardware": null, "latest_version": {"id": "e07720151cb4b8ec44aeddbc52c51429b87dbdbf299b69f5c80c67f09d29f72b"}, "name": "minimax-hailuo-02-internal", "owner": "replicate", "url": "https://replicate.com/replicate/minimax-hailuo-02-internal", "visibility": "private", "_extras": {"name": "replicate/minimax-hailuo-02-internal", "is_official": false, "is_pipeline": false}}, "name": "replicate/minimax-hailuo-02-internal:e4e9f961", "release_notes": null, "short_id": "e4e9f961", "url": "https://replicate.com/replicate/minimax-hailuo-02-internal/versions/e4e9f96199b671841197eb86b646e198d2d9e2571724e3077c9db8be0f873910"}}, "isAuthenticated": false, "features": {"show_pipeline_steps": false, "show_before_after_slider_output": false, "show_goo_shader_output": false, "link_to_video_upscaler": true, "link_to_image_upscaler": false, "link_to_playground": true, "link_to_audio_adder": false, "pixelate_images": false}, "permissions": {"create_example": false, "debug": false, "edit_featured_inputs": false, "report": true, "run": false, "tweak": true, "delete": false, "share": true}, "model": {"cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/e2953b9d-ef83-4a4a-b90f-1ef168223bf2/tmpbufkswx1.mp4", "description": "Hailuo 2 is a text-to-video and image-to-video model that can make 6s or 10s videos at 768p (standard) or 1080p (pro). It excels at real world physics.", "hardware": "CPU", "latest_version": {"id": "baaadb886e09b1e711387e270d841930e8253f08775bc6cb176580658f0f2fd9"}, "name": "hailuo-02", "owner": "minimax", "url": "https://replicate.com/minimax/hailuo-02", "visibility": "public", "_extras": {"name": "minimax/hailuo-02", "is_official": true, "is_pipeline": false}}, "schema": {"info": {"title": "Cog", "version": "0.1.0"}, "paths": {"/": {"get": {"summary": "Root", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Root  Get"}}}, "description": "Successful Response"}}, "operationId": "root__get"}}, "/shutdown": {"post": {"summary": "Start Shutdown", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Start Shutdown Shutdown Post"}}}, "description": "Successful Response"}}, "operationId": "start_shutdown_shutdown_post"}}, "/predictions": {"post": {"summary": "Predict", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 3}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 4}, "last_frame_image": {"type": "string", "title": "Last Frame Image", "format": "uri", "description": "Last frame image for video generation. The final frame of the output video will match this image."}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model", "operationId": "predict_predictions_post", "requestBody": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 3}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 4}, "last_frame_image": {"type": "string", "title": "Last Frame Image", "format": "uri", "description": "Last frame image for video generation. The final frame of the output video will match this image."}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}}}}}}, "/health-check": {"get": {"summary": "Healthcheck", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Healthcheck Health Check Get"}}}, "description": "Successful Response"}}, "operationId": "healthcheck_health_check_get"}}, "/predictions/{prediction_id}": {"put": {"summary": "Predict Idempotent", "responses": {"200": {"content": {"application/json": {"schema": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 3}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 4}, "last_frame_image": {"type": "string", "title": "Last Frame Image", "format": "uri", "description": "Last frame image for video generation. The final frame of the output video will match this image."}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}, {"in": "header", "name": "prefer", "schema": {"type": "string", "title": "Prefer"}, "required": false}], "description": "Run a single prediction on the model (idempotent creation).", "operationId": "predict_idempotent_predictions__prediction_id__put", "requestBody": {"content": {"application/json": {"schema": {"allOf": [{"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 3}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 4}, "last_frame_image": {"type": "string", "title": "Last Frame Image", "format": "uri", "description": "Last frame image for video generation. The final frame of the output video will match this image."}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}], "title": "Prediction Request"}}}, "required": true}}}, "/predictions/{prediction_id}/cancel": {"post": {"summary": "Cancel", "responses": {"200": {"content": {"application/json": {"schema": {"title": "Response Cancel Predictions  Prediction Id  Cancel Post"}}}, "description": "Successful Response"}, "422": {"content": {"application/json": {"schema": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}, "description": "Validation Error"}}, "parameters": [{"in": "path", "name": "prediction_id", "schema": {"type": "string", "title": "Prediction ID"}, "required": true}], "description": "Cancel a running prediction", "operationId": "cancel_predictions__prediction_id__cancel_post"}}}, "openapi": "3.0.2", "components": {"schemas": {"Input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 3}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 4}, "last_frame_image": {"type": "string", "title": "Last Frame Image", "format": "uri", "description": "Last frame image for video generation. The final frame of the output video will match this image."}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "Output": {"type": "string", "title": "Output", "format": "uri"}, "Status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "An enumeration."}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "An enumeration."}, "WebhookEvent": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "ValidationError": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "PredictionRequest": {"type": "object", "title": "PredictionRequest", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 3}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 4}, "last_frame_image": {"type": "string", "title": "Last Frame Image", "format": "uri", "description": "Last frame image for video generation. The final frame of the output video will match this image."}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "context": {"type": "object", "title": "Context", "nullable": true, "additionalProperties": {"type": "string"}}, "webhook": {"type": "string", "title": "Webhook", "format": "uri", "nullable": true, "maxLength": 65536, "minLength": 1}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "output_file_prefix": {"type": "string", "title": "Output File Prefix", "nullable": true}, "webhook_events_filter": {"type": "array", "items": {"enum": ["start", "output", "logs", "completed"], "type": "string", "title": "WebhookEvent", "description": "An enumeration."}, "default": ["start", "output", "logs", "completed"], "nullable": true}}}, "PredictionResponse": {"type": "object", "title": "PredictionResponse", "properties": {"id": {"type": "string", "title": "Id", "nullable": true}, "logs": {"type": "string", "title": "Logs", "default": ""}, "error": {"type": "string", "title": "Error", "nullable": true}, "input": {"type": "object", "title": "Input", "required": ["prompt"], "properties": {"prompt": {"type": "string", "title": "Prompt", "description": "Text prompt for generation"}, "duration": {"enum": [6, 10], "type": "integer", "title": "duration", "description": "Duration of the video in seconds. 10 seconds is only available for 768p resolution.", "default": 6, "x-order": 3}, "resolution": {"enum": ["512p", "768p", "1080p"], "type": "string", "title": "resolution", "description": "Pick between standard 512p, 768p, or pro 1080p resolution. The pro model is not just high resolution, it is also higher quality.", "default": "1080p", "x-order": 4}, "last_frame_image": {"type": "string", "title": "Last Frame Image", "format": "uri", "description": "Last frame image for video generation. The final frame of the output video will match this image."}, "prompt_optimizer": {"type": "boolean", "title": "Prompt Optimizer", "default": true, "description": "Use prompt optimizer"}, "first_frame_image": {"type": "string", "title": "First Frame Image", "format": "uri", "description": "First frame image for video generation. The output video will have the same aspect ratio as this image."}}}, "output": {"type": "string", "title": "Output", "format": "uri"}, "status": {"enum": ["starting", "processing", "succeeded", "canceled", "failed"], "type": "string", "title": "Status", "description": "An enumeration."}, "metrics": {"type": "object", "title": "Metrics", "nullable": true, "additionalProperties": true}, "version": {"type": "string", "title": "Version", "nullable": true}, "created_at": {"type": "string", "title": "Created At", "format": "date-time", "nullable": true}, "started_at": {"type": "string", "title": "Started At", "format": "date-time", "nullable": true}, "completed_at": {"type": "string", "title": "Completed At", "format": "date-time", "nullable": true}}}, "HTTPValidationError": {"type": "object", "title": "HTTPValidationError", "properties": {"detail": {"type": "array", "items": {"type": "object", "title": "ValidationError", "required": ["loc", "msg", "type"], "properties": {"loc": {"type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}}, "title": "Detail"}}}}}}, "token": "", "modelStatus": "online", "modelInputSettings": {"hidden": []}, "requiresCredit": true, "__flags": {"show-pylon-widget": false, "assign-support-tickets-to-ai": false, "show-open-ai-api-instructions": false}}</script>
+
+  <div data-react-placeholder="APIPlayground">
+    <div class="input-output-grid">
+  <div class="flex flex-col md:flex-row">
+    <div class="input-col relative md:flex-1 pb-4 min-w-0">
+      <div class="mb-2 flex items-center justify-between">
+        <div class="flex-1">
+          <div class="mb-4 bg-r8-gray-4 animate-pulse h-8 w-24">
+          </div>
+        </div>
+      </div>
+      <div class="h-8 bg-r8-gray-4 animate-pulse mb-6">
+      </div>
+      <div class="space-y-4">
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+          <div class="flex flex-col space-y-2">
+            <div class="w-24 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-full h-8 bg-r8-gray-4 animate-pulse">
+            </div>
+            <div class="w-3/4 h-4 bg-r8-gray-4 animate-pulse">
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <div class="input-output-grid--divider flex-shrink-0 md:mx-6 mb-6 md:my-0"
+         role="separator">
+      <div class="bg-r8-gray-6 md:w-px md:h-full h-px w-full">
+      </div>
+    </div>
+    <div class="output-col md:flex-1 pb-4 min-w-0">
+      <div class="flex flex-col">
+        <div class="flex-1">
+          <div class="mb-4 bg-r8-gray-4 animate-pulse h-8 w-24">
+          </div>
+        </div>
+        <div class="h-8 bg-r8-gray-4 animate-pulse mb-6">
+        </div>
+        <div class="aspect-square bg-r8-gray-4 animate-pulse">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+<div data-component="APIPlayground"
+     data-props="react-component-props-3745eaaa-605e-4374-b500-d88edb6afc6a">
+  
+</div>
+
+  
+</div>
+
+    
+
+
+
+  
+  
+  
+    <div class="pb-2 border-b border-r8-gray-5 mb-lh flex">
+      <h2 class="inline-block flex-grow text-r8-2xl">
+        Examples
+      </h2>
+
+      <p>
+        <a href="/minimax/hailuo-02/examples"
+           class="no-default">
+          View more <span class="hidden sm:inline">examples</span><span class="relative -top-0.5">
+          
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.5"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     class="icon">
+  <line x1="7" y1="17" x2="17" y2="7"></line>
+  <polyline points="7 7 17 7 17 17"></polyline>
+</svg>
+
+        </span></a>
+      </p>
+    </div>
+
+    <div class="mb-2lh h-40 overflow-hidden ">
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/minimax/hailuo-02/examples#vtczt95wjxrmc0cqsev8mt4kn4">
+
+              
+                <video data-src="https://replicate.delivery/xezq/NLybk0ySU6qKANmOJ5xzKJx28Q8x5rk4PZey7eeoC7qiIg5pA/tmpbufkswx1.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/minimax/hailuo-02/examples#0je4cyecm1rme0cqseysc7ghzc">
+
+              
+                <video data-src="https://replicate.delivery/xezq/yAfwoReEDZl39EeInfkM7nufcc7eeAkB02POD28SGYX7wFYeUA/tmpjeapk4og.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/minimax/hailuo-02/examples#rxzmv04r6nrm80cqseysn7ngaw">
+
+              
+                <video data-src="https://replicate.delivery/xezq/CSPm6I9uOR45JFzXKX6wQKXaEUKE08x4wl0MhGoSDgWEDMPF/tmpeahvppel.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/minimax/hailuo-02/examples#q1epg7n7t9rme0cqsh8rt0sp68">
+
+              
+                <video data-src="https://replicate.delivery/xezq/fjGfQQVNPvjCeJCp2eXRMqzdwBUxKmB4hQcQyBTpVH1NAKzTB/tmpm5vefpnt.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/minimax/hailuo-02/examples#qr9m7q3va1rme0cqshnt5tqsp0">
+
+              
+                <video data-src="https://replicate.delivery/xezq/LEuAxRIjDJKtEBtjJqz7fys54ONyDRUAK3jNxNwCEkKAdZeUA/tmpy89a70ke.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/minimax/hailuo-02/examples#y6n2cz3sesrma0crd8gr4ed1xm">
+
+              
+                <video data-src="https://replicate.delivery/xezq/eRwX7pg1AIUjFC148S2JpVn2hWS5r9dULdxm15dOMfxd54GVA/tmpou9td0s5.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+        
+          <div class="inline-block h-40 w-40 overflow-hidden">
+            <a class="relative"
+               href="/minimax/hailuo-02/examples#36amd83pssrma0crzsfvc342tg">
+
+              
+                <video data-src="https://replicate.delivery/xezq/RrB0vIXdP7YMHx6NJqV9plIbwJ85Rktes9R26txTnjIjCMoKA/tmpoo4_l9xh.mp4"
+                       type="video/mp4"
+                       autoplay
+                       muted
+                       loop
+                       role="presentation"
+                       class="object-cover object-center w-full h-full lazy" />
+              
+
+            </a>
+          </div>
+        
+      
+    </div>
+  
+
+
+
+
+    
+      
+
+<section id="pricing"
+         class="mb-2lh">
+
+  <script id="react-component-props-57a91c6b-de58-45cf-812b-10a81e2b9e68" type="application/json">{"billingConfig": {"current_description": null, "current_tiers": [{"criteria": [{"description": "512P", "subtype": "string", "title": "target resolution", "type": "equals", "value": "512P"}, {"description": "6", "subtype": "number", "title": "second of output video", "type": "equals", "value": 6}], "description": null, "prices": [{"description": "or 10 videos for $1", "metric": "video_output_count", "metric_display": "output video", "price": "$0.10", "title": "per output video", "type": "per-unit"}], "title": null}, {"criteria": [{"description": "512P", "subtype": "string", "title": "target resolution", "type": "equals", "value": "512P"}, {"description": "10", "subtype": "number", "title": "second of output video", "type": "equals", "value": 10}], "description": null, "prices": [{"description": "or around 66 videos for $10", "metric": "video_output_count", "metric_display": "output video", "price": "$0.15", "title": "per output video", "type": "per-unit"}], "title": null}, {"criteria": [{"description": "768P", "subtype": "string", "title": "target resolution", "type": "equals", "value": "768P"}, {"description": "6", "subtype": "number", "title": "second of output video", "type": "equals", "value": 6}], "description": null, "prices": [{"description": "or around 37 videos for $10", "metric": "video_output_count", "metric_display": "output video", "price": "$0.27", "title": "per output video", "type": "per-unit"}], "title": null}, {"criteria": [{"description": "768P", "subtype": "string", "title": "target resolution", "type": "equals", "value": "768P"}, {"description": "10", "subtype": "number", "title": "second of output video", "type": "equals", "value": 10}], "description": null, "prices": [{"description": "or around 22 videos for $10", "metric": "video_output_count", "metric_display": "output video", "price": "$0.45", "title": "per output video", "type": "per-unit"}], "title": null}, {"criteria": [{"description": "1080P", "subtype": "string", "title": "target resolution", "type": "equals", "value": "1080P"}, {"description": "6", "subtype": "number", "title": "second of output video", "type": "equals", "value": 6}], "description": null, "prices": [{"description": "or around 20 videos for $10", "metric": "video_output_count", "metric_display": "output video", "price": "$0.48", "title": "per output video", "type": "per-unit"}], "title": null}]}, "modelName": "minimax/hailuo-02", "showTable": false, "__flags": {"show-pylon-widget": false, "assign-support-tickets-to-ai": false, "show-open-ai-api-instructions": false}}</script>
+
+<div data-component="ModelBilling"
+     data-props="react-component-props-57a91c6b-de58-45cf-812b-10a81e2b9e68">
+  
+</div>
+
+</section>
+
+    
+
+    
+
+<article class="mb-2lh">
+  
+    <div id="readme"
+         class="border-b border-r8-gray-5 pb-2 mb-lh flex items-center gap-2">
+      <h2 class="inline-block text-r8-2xl">
+        Readme
+      </h2>
+      
+    </div>
+  
+  
+    <div class="readme-prose max-w-4xl">
+      <h1 id="minimax-hailuo-02">MiniMax Hailuo 02</h1>
+<p>MiniMax Hailuo 02 is a video generation model designed for high-quality video synthesis from text and image inputs. The model represents a significant architectural advancement over its predecessor, featuring improved efficiency and enhanced capabilities for complex video generation tasks.</p>
+<p>There are two models, standard and pro:</p>
+<ul>
+<li>768p (standard)</li>
+<li>1080p (pro)</li>
+</ul>
+<p>The pro model produces higher quality videos with better physics and coherency.</p>
+<p>Supported Resolutions and Durations for last_frame_image:</p>
+<ul>
+<li>768P (6s, 10s)</li>
+<li>1080P (6s)</li>
+</ul>
+<h2 id="architecture">Architecture</h2>
+<p>The model is built on the Noise-aware Compute Redistribution (NCR) framework, a novel architecture that optimizes computational efficiency during both training and inference. This approach redistributes compute resources based on noise levels in the generation process, achieving 2.5x improvement in training and inference efficiency compared to conventional architectures at similar parameter scales.</p>
+<h2 id="model-specifications">Model Specifications</h2>
+<ul>
+<li><strong>Parameters</strong>: 3x larger than predecessor model</li>
+<li><strong>Training Data</strong>: 4x larger dataset compared to previous version</li>
+<li><strong>Native Resolution</strong>: 1080p output capability</li>
+<li><strong>Output Formats</strong>: </li>
+<li>768p at 6 and 10 seconds</li>
+<li>1080p at 6 seconds</li>
+</ul>
+<h2 id="key-capabilities">Key Capabilities</h2>
+<h3 id="instruction-following">Instruction Following</h3>
+<p>The model demonstrates state-of-the-art performance in interpreting and executing complex text prompts, accurately translating detailed instructions into corresponding video content.</p>
+<h3 id="physics-simulation">Physics Simulation</h3>
+<p>Advanced physics modelling capabilities enable realistic representation of complex physical interactions and movements, including challenging scenarios like gymnastics and intricate motion sequences.</p>
+<h3 id="multi-modal-input">Multi-modal Input</h3>
+<p>Supports both text-to-video (T2V) and image-to-video (I2V) generation workflows, allowing for flexible content creation approaches.</p>
+<h2 id="technical-performance">Technical Performance</h2>
+<ul>
+<li><strong>Efficiency</strong>: 2.5x improvement in computational efficiency over comparable models</li>
+<li><strong>Quality</strong>: Native 1080p generation capability</li>
+<li><strong>Stability</strong>: Enhanced alignment and generation success rates</li>
+<li><strong>Versatility</strong>: Handles complex scenarios requiring precise physics simulation</li>
+</ul>
+<h2 id="training-details">Training Details</h2>
+<p>The model was trained on a significantly expanded dataset featuring improved data quality and diversity. Training incorporated user feedback and usage patterns from the predecessor model to optimize performance on real-world video generation tasks.</p>
+<h2 id="limitations">Limitations</h2>
+<ul>
+<li>Generation speed continues to be an area for improvement</li>
+<li>Model alignment and stability, while enhanced, remain ongoing development focuses</li>
+<li>Current capabilities are primarily focused on T2V and I2V tasks</li>
+</ul>
+<h2 id="model-card">Model Card</h2>
+<p><strong>Model Type</strong>: Video Generation<br/>
+<strong>Architecture</strong>: Noise-aware Compute Redistribution (NCR)<br/>
+<strong>Input Modalities</strong>: Text, Image<br/>
+<strong>Output Modality</strong>: Video<br/>
+<strong>Maximum Resolution</strong>: 1080p<br/>
+<strong>Maximum Duration</strong>: 10 seconds  </p>
+<h2 id="development-status">Development Status</h2>
+<p>This model represents an active development effort with ongoing improvements planned for:</p>
+<ul>
+<li>Generation speed optimization</li>
+<li>Enhanced model alignment and stability</li>
+<li>Expansion beyond current T2V and I2V capabilities</li>
+</ul>
+<h2 id="privacy-policy">Privacy policy</h2>
+<p>Data from this model is sent from Replicate to MiniMax.</p>
+<p>Check their Privacy Policy for details:</p>
+<p><a href="https://intl.minimaxi.com/protocol/privacy-policy" rel="nofollow ugc">https://intl.minimaxi.com/protocol/privacy-policy</a></p>
+<h2 id="terms-of-service">Terms of Service</h2>
+<p><a href="https://intl.minimaxi.com/protocol/terms-of-service" rel="nofollow ugc">https://intl.minimaxi.com/protocol/terms-of-service</a></p>
+    </div>
+  
+</article>
+
+    
+
+
+
+
+    <script id="react-component-props-53d43d78-0ff9-4d4e-b267-755dd0d1afd7" type="application/json">{"name": "minimax/hailuo-02", "__flags": {"show-pylon-widget": false, "assign-support-tickets-to-ai": false, "show-open-ai-api-instructions": false}}</script>
+
+<div data-component="RelatedModels"
+     data-props="react-component-props-53d43d78-0ff9-4d4e-b267-755dd0d1afd7">
+  
+</div>
+
+  </div>
+
+
+    </div>
+  
+
+  <div class="model-content mt-2lh">
+    
+
+
+
+  </div>
+
+
+
+          
+        
+      </main>
+
+      
+        
+
+<div class="footer no-focus">
+  <script id="react-component-props-4e985ef2-a2ce-4f6e-8847-342a3cbc5905" type="application/json">{"theme": "", "__flags": {"show-pylon-widget": false, "assign-support-tickets-to-ai": false, "show-open-ai-api-instructions": false}}</script>
+
+<div data-component="Footer"
+     data-props="react-component-props-4e985ef2-a2ce-4f6e-8847-342a3cbc5905">
+  
+</div>
+
+</div>
+
+      
+
+    
+
+    <script nonce="8EvsidvQoT7FiFkywRLuCA==">
+      window.VIDEOJS_NO_DYNAMIC_STYLE = true;
+    </script>
+
+    <script nonce="8EvsidvQoT7FiFkywRLuCA==">
+      const header = document.getElementById("app-header");
+
+      function monitorHeaderStickiness() {
+        if (header) {
+          header.setAttribute("data-stuck", window.scrollY > 0);
+        }
+      }
+
+      monitorHeaderStickiness();
+
+      document.addEventListener("scroll", (event) => {
+        monitorHeaderStickiness();
+      });
+
+      // Prevent mousewheel from being able to change the value of a numeric input.
+      // This "feature" often causes issues when users scroll from a focused input field
+      // to the submit button and accidentally increment the contents of the field.
+      document.addEventListener("wheel", (event) => {
+        if (document.activeElement && document.activeElement.matches('input[type=number]') && document.activeElement === event.target) {
+          event.preventDefault();
+        }
+      }, {
+        passive: false
+      });
+    </script>
+
+    
+    
+    
+
+  </body>
+
+</html>
