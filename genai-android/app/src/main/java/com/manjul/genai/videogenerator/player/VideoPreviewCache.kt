@@ -11,6 +11,7 @@ import java.io.File
 
 @UnstableApi
 object VideoPreviewCache {
+    // Increased cache size to prevent rebuffering - 200 MB for better caching
     private const val CACHE_SIZE_BYTES = 200L * 1024 * 1024 // 200 MB
     @Volatile
     private var cache: Cache? = null
@@ -24,6 +25,54 @@ object VideoPreviewCache {
                 LeastRecentlyUsedCacheEvictor(CACHE_SIZE_BYTES),
                 StandaloneDatabaseProvider(appContext)
             ).also { cache = it }
+        }
+    }
+    
+    /**
+     * Check if a video URL is cached
+     * Returns true if the video exists in cache (simplified check)
+     */
+    @OptIn(UnstableApi::class)
+    fun isCached(videoUrl: String, startPosition: Long, endPosition: Long): Boolean {
+        return synchronized(this) {
+            cache?.let {
+                try {
+                    // Check if the URL exists in cache keys
+                    // ExoPlayer uses the URL as the cache key
+                    val keys = it.keys
+                    val isInCache = keys.any { key -> 
+                        key == videoUrl || key.contains(videoUrl) || videoUrl.contains(key)
+                    }
+                    isInCache
+                } catch (e: Exception) {
+                    android.util.Log.e("VideoPreviewCache", "Error checking cache", e)
+                    false
+                }
+            } ?: false
+        }
+    }
+    
+    /**
+     * Clear cache to free memory if needed
+     */
+    @OptIn(UnstableApi::class)
+    fun clearCache() {
+        synchronized(this) {
+            cache?.let {
+                try {
+                    // Clear all cached data by evicting everything
+                    val keys = it.keys
+                    keys.forEach { key ->
+                        try {
+                            it.removeResource(key)
+                        } catch (e: Exception) {
+                            // Ignore individual errors
+                        }
+                    }
+                } catch (e: Exception) {
+                    android.util.Log.e("VideoPreviewCache", "Error clearing cache", e)
+                }
+            }
         }
     }
 }
