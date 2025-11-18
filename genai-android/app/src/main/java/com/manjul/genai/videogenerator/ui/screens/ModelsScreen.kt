@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -80,6 +81,7 @@ import com.manjul.genai.videogenerator.player.VideoPreviewCache
 import com.manjul.genai.videogenerator.ui.components.AppToolbar
 import com.manjul.genai.videogenerator.ui.viewmodel.AIModelsViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 private const val PLAYER_PREFETCH_DISTANCE = 0 // Only play visible items to save memory
@@ -644,6 +646,10 @@ internal fun ModelVideoPlayer(
     var hasError by remember(videoUrl) { mutableStateOf(false) }
     var isPlaying by remember(videoUrl) { mutableStateOf(false) }
     var exoPlayer by remember(videoUrl) { mutableStateOf<ExoPlayer?>(null) }
+    
+    // Progress tracking for Instagram Reels-style progress bar
+    var currentPosition by remember(videoUrl) { mutableStateOf(0L) }
+    var duration by remember(videoUrl) { mutableStateOf(0L) }
 
     // Room DB cache for video metadata
     val database = remember { AppDatabase.getDatabase(context) }
@@ -909,6 +915,16 @@ internal fun ModelVideoPlayer(
     LaunchedEffect(initialVolume, exoPlayer) {
         exoPlayer?.volume = initialVolume
     }
+    
+    // Update progress in real-time (Instagram Reels style)
+    LaunchedEffect(exoPlayer, isPlaying) {
+        val player = exoPlayer ?: return@LaunchedEffect
+        while (isActive && player.playbackState != Player.STATE_ENDED) {
+            currentPosition = player.currentPosition
+            duration = if (player.duration > 0) player.duration else duration
+            kotlinx.coroutines.delay(100) // Update every 100ms for smooth progress bar
+        }
+    }
 
     // CRITICAL: Always release player on dispose
     // This ensures players are properly cleaned up when composable is removed
@@ -949,6 +965,11 @@ internal fun ModelVideoPlayer(
                 isBuffering = playbackState == Player.STATE_BUFFERING
                 isPlaying = player.isPlaying && playbackState == Player.STATE_READY
                 onPlayingStateChanged?.invoke(isPlaying)
+                
+                // Update duration when video is ready
+                if (playbackState == Player.STATE_READY) {
+                    duration = player.duration
+                }
 
                 // Update cache status when video is ready
                 if (playbackState == Player.STATE_READY) {
@@ -980,6 +1001,14 @@ internal fun ModelVideoPlayer(
             override fun onIsPlayingChanged(isPlayingNow: Boolean) {
                 isPlaying = isPlayingNow && player.playbackState == Player.STATE_READY
                 onPlayingStateChanged?.invoke(isPlaying)
+            }
+            
+            override fun onPositionDiscontinuity(
+                oldPosition: Player.PositionInfo,
+                newPosition: Player.PositionInfo,
+                reason: Int
+            ) {
+                currentPosition = player.currentPosition
             }
 
             override fun onPlayerError(error: PlaybackException) {
@@ -1127,6 +1156,25 @@ internal fun ModelVideoPlayer(
                 }
             )
 
+            // Progress bar overlay at bottom (Instagram Reels style)
+            if (duration > 0 && player != null) {
+                val progress = (currentPosition.toFloat() / duration.toFloat()).coerceIn(0f, 1f)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(3.dp)
+                        .align(Alignment.BottomCenter)
+                        .background(Color.White.copy(alpha = 0.3f))
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(progress)
+                            .fillMaxSize()
+                            .background(Color.White)
+                    )
+                }
+            }
+            
             // Only show error overlay - ExoPlayer will handle video display
             // This allows cached videos to show immediately without blocking overlay
             if (hasError) {
