@@ -446,7 +446,7 @@ private fun ModelCard(
                             .fillMaxWidth()
                             .aspectRatio(16f / 9f),
                         shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
-                    )
+                )
                 }
             } else {
                 // Placeholder for models without preview

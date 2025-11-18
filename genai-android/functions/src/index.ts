@@ -21,6 +21,7 @@ type GenerateRequest = {
   cost?: number;
   usePromptOptimizer?: boolean;
   enableAudio?: boolean; // Audio support - doubles the cost
+  negativePrompt?: string; // Negative prompt for models that support it
 };
 
 type EffectRequest = {
@@ -232,6 +233,270 @@ export const callReplicateVeoAPIV2 = onCall<GenerateRequest>(
       predictionId: result.id,
       status: result.status,
       webhook: result.urls?.get ?? "",
+    };
+  },
+);
+
+/**
+ * Example video URLs from replicate-specific-models.txt
+ * These are real example videos from various AI models on Replicate
+ */
+const EXAMPLE_VIDEO_URLS = [
+  "https://replicate.delivery/xezq/6AV71MwvhV7nINq376qBf27eo7k3KMBZtrM9KhejLz8uhfDWB/tmpkoheyvn2.mp4",
+  "https://replicate.delivery/xezq/TjiHWxnCNgp2O5sJJJ7QjcVRQQUmg6WdoqOUuVuO3huwZiYF/tmp72b74bmb.mp4",
+  "https://replicate.delivery/xezq/rf7jDpzBdvVoUCKMV5eavWwKmrtzbiX5YJ4jMdiCXH1if9BrA/tmpot52l9ao.mp4",
+  "https://replicate.delivery/xezq/269LKn0Xu5LPHVjcELGzgNmIY0ujGLUAOjIXfF6gcjby5gwKA/tmp95uk29hk.mp4",
+  "https://replicate.delivery/xezq/WoC3evx2EQQHLCHq9vEfjhIq9ZotfQhQWmBEd54iLhvVUleVB/tmpk07h98l4.mp4",
+  "https://replicate.delivery/xezq/MDBpHsfnFuS2TiCNuXM0QGghQ83rAuHikI5x9heoWs2mqTfqA/tmp62g_gnbr.mp4",
+  "https://replicate.delivery/xezq/69ok3gifKESec04GfPMaTU2YShWMSL37elrN7dQ3QJmeD56rC/tmpvruiwe2d.mp4",
+  "https://replicate.delivery/xezq/hpxa0wn2og7aIRife9Xlvu0OGeS1qaz45bl43foW3rL58t9VB/tmpgnyhwssx.mp4",
+  "https://replicate.delivery/xezq/aOYeXeCcnHhDiELUfr7GJR0IkfcGabYRUWiTShhvdJCTEQ9VB/tmpafbwmta5.mp4",
+  "https://replicate.delivery/xezq/1B4tYHYfzWzDA6QU9CEDxkCnStf8YeysV0TlfnKktgG3la9VB/tmpyxaslbuk.mp4",
+  "https://replicate.delivery/xezq/Z3Ix0cUxzkqcL18AfbOu0B5pXJFfsqfscQQzenO288McMb9VB/tmp2vogi5sn.mp4",
+  "https://replicate.delivery/xezq/8ZOMlNOoESqDDZXc9SwJNselA7lTLS1MBx3HgSx0lTzwhrvKA/tmpyid0s5l4.mp4",
+  "https://replicate.delivery/xezq/xfz0U06bqSw1AyiJsw7LjOjVXOBpmjJfe7K9XtRLifW26q7SB/tmpi29yh_f0.mp4",
+  "https://replicate.delivery/xezq/Hlc4n4H0hJYsARpeGdaOLCdaWLyRUyaWNqsg5vosHdnvJgXKA/tmpsz1voe2j.mp4",
+  "https://replicate.delivery/xezq/IZvJUH7VaYo9BBq9lhMjAHXCz1WJUuOWyXx2fFGcKXcrlaYKA/tmpxsomu815.mp4",
+  "https://replicate.delivery/xezq/lZfr3rskBEVLDCytear4lUo92fOpAcoblFWzk6e06WEnC3PTB/tmpny051d_c.mp4",
+  "https://replicate.delivery/xezq/mryc62SvSpp3NpOedDNQD7njZlmd5re5e8ClPltdEwWF7BopA/tmp7uoz8hjv.mp4",
+  "https://replicate.delivery/xezq/ZdvQyoLLXgKNKtgU8Kdy5HBdIDaHVTl4Iws4zufK38e4WrGVA/tmpov6h3v3s.mp4",
+  "https://replicate.delivery/xezq/G2SgiLJaDrYpGJnBezzhrqwdA7Z6cO4PHUKrkBbuFaaZwPsKA/tmpmb4xgltj.mp4",
+  "https://replicate.delivery/xezq/L4f180LhnhSCHihiHQ1vX7ZfEG7XOK2WCKNlGGd81xGr7v4UA/tmpeywvj5rm.mp4",
+  "https://replicate.delivery/xezq/TdE8PqxZMNKOABO3KIok1RVXuXxEBDJcDrWI9ewQhMAeDw4UA/tmpt6y3sy01.mp4",
+  "https://replicate.delivery/xezq/BxhvfwlsVtXnByBxMw7lxS2hSPVZJ1Uc6urvVtQqx0eXIw4UA/tmpjj2pfqsg.mp4",
+  "https://replicate.delivery/xezq/ucdza5hh5hJlA92SgLwAen9EQiSxXmuJj38FrvJdvxfnfR9pA/tmplwb84b03.mp4",
+  "https://replicate.delivery/xezq/KUdYQBcySHanKZzAiCcz7DRqCZ59QLp6zKUvkzUBDPUueMsKA/tmpyol7xiil.mp4",
+  "https://replicate.delivery/xezq/P33ke99FZTTWDKYainJQXizgxr7NxAMBYlK4QemCm0dsigYVA/tmp1l37lz4s.mp4",
+  "https://replicate.delivery/xezq/nQec5ARx2fnWXE5dRUNwHizbSZ9uH5IXeZSsqF27M7XQWBxqA/tmpho4736hc.mp4",
+  "https://replicate.delivery/xezq/AdX9KfAKEs1qMidbHzseSmefdOtfIEBg9HrulHeCf6tRzYQsKA/tmpvphmgf3e.mp4",
+  "https://replicate.delivery/xezq/iY9PbAFJN2LJOBx1imI08Bhz4lJX1ZHBf5WakE1JGNtfKHfpA/tmp8ai_03z8.mp4",
+  "https://replicate.delivery/xezq/VleZE1vtsJyLfUxuKcYzsngzUUFrgeeLlqsQdnLdG7sFNd8TB/tmpva5kimdq.mp4",
+  "https://replicate.delivery/xezq/ecejocRJQkkUGUPfWnMf7AIAIlraKuSCd2bdkoeLdqflj1xPF/tmphuw78wy3.mp4",
+  "https://replicate.delivery/xezq/xKos9IcrsrqrId3eA5bVZxD5m5jWRednYoECfsSaqASM9OeTB/tmpqa0xpc63.mp4",
+  "https://replicate.delivery/xezq/l8u0QcK58uIQF5IUyYRQeMi0eAjISqU01o6XvY6PWqmEcrGVA/tmp9pdz1bfu.mp4",
+  "https://replicate.delivery/xezq/NohwkQMfXYWKAS5QciHGFng9b9H0wVEbvol7WJAEmkN8MixKA/tmp5hxzqzw4.mp4",
+  "https://replicate.delivery/xezq/xMBu3hve9jUTUyeijFeZNPBWT9sAxaQ0shKrsxltREUHdgGrA/tmp5teqjfsk.mp4",
+  "https://replicate.delivery/xezq/OH4Ubefa0NiZwUneg3eS0LqcPYtNmxVJlSsZMFl6JpvFu4NWB/tmp6hdm26gd.mp4",
+  "https://replicate.delivery/xezq/fXRgtIXwL2RfiEnoeaIZKfgVee8q8FUFqHxlcLCtrPonAl3YF/tmplcgybmlt.mp4",
+  "https://replicate.delivery/xezq/ClgDLn4vlLosCtQeNCBMfAFxFefS9CwjWr6XkppFrQ2saYoTB/tmp4csnp1gw.mp4",
+  "https://replicate.delivery/xezq/DfgnKlBwYW38OSSOyeeJ2seBqpDLjX1e7FxJxXFpahkDfhhOF/tmp0ht3v7vp.mp4",
+  "https://replicate.delivery/xezq/NLybk0ySU6qKANmOJ5xzKJx28Q8x5rk4PZey7eeoC7qiIg5pA/tmpbufkswx1.mp4",
+  "https://replicate.delivery/xezq/yAfwoReEDZl39EeInfkM7nufcc7eeAkB02POD28SGYX7wFYeUA/tmpjeapk4og.mp4",
+  "https://replicate.delivery/xezq/CSPm6I9uOR45JFzXKX6wQKXaEUKE08x4wl0MhGoSDgWEDMPF/tmpeahvppel.mp4",
+  "https://replicate.delivery/xezq/fjGfQQVNPvjCeJCp2eXRMqzdwBUxKmB4hQcQyBTpVH1NAKzTB/tmpm5vefpnt.mp4",
+  "https://replicate.delivery/xezq/LEuAxRIjDJKtEBtjJqz7fys54ONyDRUAK3jNxNwCEkKAdZeUA/tmpy89a70ke.mp4",
+  "https://replicate.delivery/xezq/eRwX7pg1AIUjFC148S2JpVn2hWS5r9dULdxm15dOMfxd54GVA/tmpou9td0s5.mp4",
+  "https://replicate.delivery/xezq/RrB0vIXdP7YMHx6NJqV9plIbwJ85Rktes9R26txTnjIjCMoKA/tmpoo4_l9xh.mp4",
+  "https://replicate.delivery/xezq/9uK7fv8Ahn3Kbam2dLehxXjxzsFiedPdWG086eeBRPdDZLEnC/tmp_07jswu0.mp4",
+  "https://replicate.delivery/xezq/XYrfXEU8EJQjDqcHG7Pt6fDlIKQWyleZuRV58eEtX3IxaGiTB/tmpunco8ebh.mp4",
+  "https://replicate.delivery/xezq/eOagYC8PA4zYRajq2EjDbTtO7120oD4AHFAlmhC3NFlLHRcKA/tmp5bp3oxgh.mp4",
+  "https://replicate.delivery/xezq/D0S2kFge6F1KXahOjV77ifxqLb5PFp8y1vHayeCZhgJgmJxpA/tmpooyiogo4.mp4",
+  "https://replicate.delivery/xezq/fLIizBaYWBWwBKFAL7JRKQsfmqSeHfI5fQH8RitXfQ7w65eiKA/output.mp4",
+  "https://replicate.delivery/xezq/PNTe7b9VBLxFPKB35GDhzrMYaph7WKspkexwtxeRPxJqfuXUB/output.mp4",
+  "https://replicate.delivery/xezq/j71Ii2YrWfRpGilHFUkqMSPhrV9rPu0ee4EiSV1H7CD3PhvqA/output_30fps.mp4",
+  "https://replicate.delivery/xezq/FxmknjDK8SqlBRoWWFnfxsOMwnuUMnpj1w6joZljM3D6m4iKA/output.mp4",
+  "https://replicate.delivery/xezq/cGWRn81blVZGKFocNncx5MHgLtvho90zLaTn3gtQpySLxzTF/tmppcyih9pj.mp4",
+  "https://replicate.delivery/xezq/ljc6TxrXY1bOLhvnbL3ukFK6T2161ptYcIgLyiFXReNCknnKA/tmp3s3i7nns.mp4",
+  "https://replicate.delivery/xezq/ZpcwMRwOww7iKJ6f7Tqv9XxXDS9liCOQokaIDbUFwIF7lnnKA/tmp2sgncxf1.mp4",
+  "https://replicate.delivery/xezq/17c3JG1SzH6NCduMiKp1Cxyqvpad0GXRf507Pqq5GOqNsZsKA/tmpg4w3kyjz.mp4",
+  "https://replicate.delivery/xezq/ssJoLMbvdLIgIRdWaDY26XEmUJmQfH1Af6He1Z2XHLtqIoxqA/tmpp3vqjumh.mp4",
+  "https://replicate.delivery/xezq/Fez1ZQegP1tyC0f18Qr1WyVpVeGWEYS0GPemdGCI9ayvDhGrC/tmp4s6vgmpf.mp4",
+  "https://replicate.delivery/xezq/EnlmUfQrjDTzGaMakDffU94SfsNnrSIcGdK9AlRGi0uDBRjVB/tmptifj8gul.mp4",
+  "https://replicate.delivery/xezq/Lzq3zWbgAH7vCRFyf7xef9AEqfNOK1fYk2ZJfprfEdHaZUasKA/tmpmpzrg66r.mp4",
+  "https://replicate.delivery/xezq/VUdJthWRZxJMOdVL2lBFR1K9J2nLUUjngDiyagPbjAejvehVA/tmplkv0_7wi.mp4",
+  "https://replicate.delivery/xezq/OZDRKjW01V54BNhZll1lo9CVPIU2pbD8yGGSvFRy1MAAmfwKA/tmpoahhx6gd.mp4",
+  "https://replicate.delivery/xezq/zsD7zCTyuL7eW68mhR2To8DZoS4OT2BQd2oXP3ZOK1U0MfhVA/tmp8un0w8yy.mp4",
+  "https://replicate.delivery/xezq/ZuMzPe5GtOxtVK59EO2a4F8hDrDESMTPUshVB86dffS538DrA/tmp55nt3l_c.mp4",
+  "https://replicate.delivery/xezq/qZJqNQUGOQZBL11GKYyMf6j9zebygo2QxsbmGztcezBQ48DrA/tmpycq8b_l0.mp4",
+  "https://replicate.delivery/xezq/C5lKtwHSBloDJB5LmasPpsRZdVUgqTnwdK2BjASYOe4rRfhVA/tmp69__x443.mp4",
+  "https://replicate.delivery/xezq/Xe3HUYeQMIlJzEmRW2RFdH6Vifeg8Z1PkAmhlc5eS0pqrLQsC/tmpzqz2e09l.mp4",
+  "https://replicate.delivery/xezq/FvR9AwLdbzIKNRQ0y2pwEDf0BgF0Ez1sQE8eZteW1J7XcfGWB/tmpan00ukuq.mp4",
+  "https://replicate.delivery/xezq/ONOR9TevnKSldi2E5yObpoByieYhuGDePh1Fl0DA0tiOoWipA/tmpwfxoip00.mp4",
+  "https://replicate.delivery/xezq/Up5cK7j9ZgJALVZjTvCfQeDWibaoABcjh6qfGlzyXLEwoWipA/tmps5gv28ej.mp4",
+  "https://replicate.delivery/xezq/M8krcmsXwRrSK1DuufUjOpLjfHs9KGF7zgespA2hugJ1V7DrA/tmpc_m94ikd.mp4",
+  "https://replicate.delivery/xezq/GPXMuvvmsJp9P5zhA8iXvkFVETpel5tiMdhtUhWjsBD8RfhVA/tmp3_rwznmf.mp4",
+  "https://replicate.delivery/xezq/SKUPcbemc2VNE6B3ykiKKIYn3w7S3BQaMg4YIf4kN0zHoeDrA/tmpjk5lvmjy.mp4",
+  "https://replicate.delivery/xezq/FN4X6kFZhRKEMJNH8pDa1mtg3kcGdfDrINIg38FCqalbWfhVA/tmp3q56smse.mp4",
+  "https://replicate.delivery/xezq/10DE4e0psL1EBiQqZA9rc7JdCBmdGKpc0NoeaJLfzuRic9DrA/tmpaxus5iln.mp4",
+  "https://replicate.delivery/xezq/OdK1NDj7x6rwNdfLRGCHzrz3OS20dbBlW6dGI73Y09eYzeDrA/tmpujshdc0p.mp4",
+  "https://replicate.delivery/xezq/7spwly6repRhAqQZw5FbNGkexFMxLIdJ83r0Q11sJ2Tw0acVA/output.mp4",
+  "https://replicate.delivery/xezq/IgZWgrUkXsL3Ihf7ftHhOiaeE9K8Hcv6e7H1jLxOPYXVdrxVB/output.mp4",
+  "https://replicate.delivery/xezq/vMy749nMtroXLVHYAfNTKXEruMVcCyEZSYockVN7j0yTcNuKA/output.mp4",
+  "https://replicate.delivery/xezq/4ZbQqkJIuuLtCpMMz2Sfj0uFFytvCm562B1WZiPftamgwycVA/output.mp4",
+  "https://replicate.delivery/xezq/oUGT0YvX1tqoGFPvBukW4DFSXvJEptXX8U6Kt36jkhaBrFXF/output.mp4",
+  "https://replicate.delivery/czjl/QAYtRuTghFrPH1qgCx3C0a8WrQggBsGJ0yCCZLsSVuye8pEKA/tmpkq6t05vs.mp4",
+  "https://replicate.delivery/czjl/DPQLyUb0KH6eKafJafajZJMYUkdK5NFpLrzHNKqE1Jv1MoSoA/tmp501exz8a.mp4",
+  "https://replicate.delivery/czjl/qQJQ3L2pDgIaPBET4YjZergziQu776uXRJnllTJCOSynDqEKA/tmpmxs3uoat.mp4",
+  "https://replicate.delivery/czjl/DW5uByT9o5K3EpK4aryN5lT0Le8o9wMrDdElpxYtx3FiFqEKA/tmp850eff5d.mp4",
+  "https://replicate.delivery/czjl/Q6jWYYtvlAauJlWqS5oYvzaWZrBERcXTXb9Evyp3yH1sCVCF/tmpn8nwwjak.mp4",
+];
+
+/**
+ * Get a random example video URL from the list
+ * @return {string} A random example video URL
+ */
+function getRandomExampleVideoUrl(): string {
+  const randomIndex = Math.floor(Math.random() * EXAMPLE_VIDEO_URLS.length);
+  return EXAMPLE_VIDEO_URLS[randomIndex] || EXAMPLE_VIDEO_URLS[0] || "";
+}
+
+/**
+ * TEST FUNCTION: Mimics credit deduction and job creation
+ * without calling Replicate API. Use this for testing credit
+ * charging functionality without incurring Replicate costs.
+ *
+ * Usage in Android app:
+ * Change the function name from "callReplicateVeoAPIV2" to
+ * "testCallReplicateVeoAPIV2" in FirebaseRepositories.kt
+ */
+export const testCallReplicateVeoAPIV2 = onCall<GenerateRequest>(
+  async ({data, auth}) => {
+    if (!auth) {
+      throw new Error("Missing auth.");
+    }
+
+    const userId = data.userId || auth.uid;
+
+    // 1. Ensure user document exists, then check and deduct credits
+    const userRef = firestore.collection("users").doc(userId);
+    let userDoc = await userRef.get();
+
+    // Create user document if it doesn't exist
+    if (!userDoc.exists) {
+      await userRef.set({
+        credits: 0,
+        created_at: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      userDoc = await userRef.get();
+    }
+
+    const currentCredits = (userDoc.data()?.credits as number) || 0;
+    const cost = data.cost || 0;
+
+    if (currentCredits < cost) {
+      throw new Error(
+        `Insufficient credits. Required: ${cost}, Available: ${currentCredits}`,
+      );
+    }
+
+    // Deduct credits immediately (same as production)
+    await userRef.update({
+      credits: admin.firestore.FieldValue.increment(-cost),
+    });
+
+    console.log(
+      `[TEST] Deducted ${cost} credits from user ${userId}. ` +
+        `Remaining: ${currentCredits - cost}`,
+    );
+
+    // Generate a fake prediction ID for testing
+    const fakePredictionId =
+      `test_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+
+    // Create job document with TEST status (so you can identify test jobs)
+    await writeJobDocument({
+      uid: userId,
+      jobId: fakePredictionId,
+      payload: {
+        prompt: data.prompt,
+        model_id: data.modelId,
+        model_name: data.replicateName,
+        duration_seconds: data.durationSeconds,
+        aspect_ratio: data.aspectRatio,
+        status: "PROCESSING", // Will be updated to COMPLETE after delay
+        replicate_prediction_id: fakePredictionId,
+        cost: cost,
+        credits_deducted: cost,
+        enable_audio: data.enableAudio || false,
+        first_frame_url: data.firstFrameUrl || null,
+        last_frame_url: data.lastFrameUrl || null,
+        negative_prompt: data.negativePrompt || null,
+        created_at: admin.firestore.FieldValue.serverTimestamp(),
+        is_test: true, // Flag to identify test jobs
+      },
+    });
+
+    // Simulate video generation by updating status to COMPLETE
+    // after 5 seconds. In production, this would be done by
+    // Replicate webhook. Use a random example video URL.
+    setTimeout(async () => {
+      const randomVideoUrl = getRandomExampleVideoUrl();
+      await firestore
+        .collection("users")
+        .doc(userId)
+        .collection("jobs")
+        .doc(fakePredictionId)
+        .update({
+          status: "COMPLETE",
+          storage_url: randomVideoUrl,
+          preview_url: randomVideoUrl,
+          completed_at: admin.firestore.FieldValue.serverTimestamp(),
+        });
+      console.log(
+        `[TEST] Job ${fakePredictionId} marked as COMPLETE ` +
+          `with video: ${randomVideoUrl}`,
+      );
+    }, 5000); // 5 second delay to simulate generation
+
+    return {
+      predictionId: fakePredictionId,
+      status: "PROCESSING",
+      webhook: "",
+      message:
+        "TEST MODE: Credits deducted, job created. " +
+        "Will complete in 5 seconds with random example video.",
+    };
+  },
+);
+
+/**
+ * Helper function to add test credits to a user account
+ *
+ * Usage:
+ * - Call from Android app or Firebase Console
+ * - data: { userId: "user_id", credits: 1000 }
+ */
+export const addTestCredits = onCall<{userId?: string; credits: number}>(
+  async ({data, auth}) => {
+    if (!auth) {
+      throw new Error("Missing auth.");
+    }
+
+    const userId = data.userId || auth.uid;
+    const creditsToAdd = data.credits || 1000;
+
+    const userRef = firestore.collection("users").doc(userId);
+    let userDoc = await userRef.get();
+
+    // Create user document if it doesn't exist
+    if (!userDoc.exists) {
+      await userRef.set({
+        credits: 0,
+        created_at: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      userDoc = await userRef.get();
+    }
+
+    const currentCredits = (userDoc.data()?.credits as number) || 0;
+
+    // Add credits
+    await userRef.update({
+      credits: admin.firestore.FieldValue.increment(creditsToAdd),
+    });
+
+    const newCredits = currentCredits + creditsToAdd;
+
+    console.log(
+      `[TEST] Added ${creditsToAdd} credits to user ${userId}. ` +
+        `New balance: ${newCredits}`,
+    );
+
+    return {
+      success: true,
+      userId,
+      creditsAdded: creditsToAdd,
+      previousBalance: currentCredits,
+      newBalance: newCredits,
     };
   },
 );

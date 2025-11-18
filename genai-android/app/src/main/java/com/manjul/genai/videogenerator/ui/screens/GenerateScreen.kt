@@ -107,9 +107,9 @@ fun GenerateScreen(
     val scrollState = rememberScrollState()
 
     Box(modifier = modifier.fillMaxSize()) {
-        Column(
+    Column(
             modifier = Modifier
-                .fillMaxSize()
+            .fillMaxSize()
                 .verticalScroll(scrollState)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -118,7 +118,7 @@ fun GenerateScreen(
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
+    ) {
                 Text(
                     text = "Create Your Video",
                     style = MaterialTheme.typography.headlineMedium,
@@ -143,11 +143,11 @@ fun GenerateScreen(
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                ModelSelector(
-                    models = state.models,
-                    selected = state.selectedModel,
-                    onSelected = viewModel::selectModel
-                )
+        ModelSelector(
+            models = state.models,
+            selected = state.selectedModel,
+            onSelected = viewModel::selectModel
+        )
             }
 
             // Prompt Section - Simplified
@@ -161,12 +161,12 @@ fun GenerateScreen(
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = state.prompt,
-                    onValueChange = viewModel::updatePrompt,
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = state.prompt,
+            onValueChange = viewModel::updatePrompt,
                     placeholder = { Text("Describe what you want to generate...") },
-                    singleLine = false,
+            singleLine = false,
                     maxLines = 5,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -194,11 +194,11 @@ fun GenerateScreen(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    DurationSelector(
-                        model = state.selectedModel,
-                        selected = state.selectedDuration,
-                        onSelected = viewModel::updateDuration
-                    )
+        DurationSelector(
+            model = state.selectedModel,
+            selected = state.selectedDuration,
+            onSelected = viewModel::updateDuration
+        )
                 }
 
                 // Aspect Ratio
@@ -212,42 +212,42 @@ fun GenerateScreen(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    AspectRatioSelector(
-                        options = state.selectedModel?.aspectRatios.orEmpty(),
-                        selected = state.selectedAspectRatio,
-                        onSelected = viewModel::updateAspectRatio
-                    )
+        AspectRatioSelector(
+            options = state.selectedModel?.aspectRatios.orEmpty(),
+            selected = state.selectedAspectRatio,
+            onSelected = viewModel::updateAspectRatio
+        )
                 }
             }
 
-            // Audio toggle - only show if model supports audio
-            if (state.selectedModel?.supportsAudio == true) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+        // Audio toggle - only show if model supports audio
+        if (state.selectedModel?.supportsAudio == true) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Enable Audio",
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Enable Audio",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
-                        )
-                        if (state.enableAudio) {
-                            Text(
-                                text = "Cost will be doubled",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.error
-                            )
-                        }
-                    }
-                    Switch(
-                        checked = state.enableAudio,
-                        onCheckedChange = viewModel::toggleAudio
                     )
+                        if (state.enableAudio) {
+                    Text(
+                                text = "Cost will be doubled",
+                        style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.error
+                    )
+                        }
                 }
+                Switch(
+                    checked = state.enableAudio,
+                    onCheckedChange = viewModel::toggleAudio
+                )
             }
+        }
 
             // Reference Frames Section - Simplified
             if (state.selectedModel?.supportsFirstFrame == true || state.selectedModel?.supportsLastFrame == true) {
@@ -261,27 +261,27 @@ fun GenerateScreen(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    
-                    // Only show first frame picker if model supports it
-                    if (state.selectedModel?.supportsFirstFrame == true) {
-                        ReferenceFramePicker(
-                            label = "First frame",
-                            required = state.selectedModel?.requiresFirstFrame ?: false,
-                            uri = state.firstFrameUri,
-                            onPick = { pickFirstFrame.launch("image/*") },
-                            onClear = { viewModel.setFirstFrameUri(null) }
-                        )
-                    }
 
-                    // Only show last frame picker if model supports it
-                    if (state.selectedModel?.supportsLastFrame == true) {
-                        ReferenceFramePicker(
-                            label = "Last frame",
+        // Only show first frame picker if model supports it
+        if (state.selectedModel?.supportsFirstFrame == true) {
+            ReferenceFramePicker(
+                label = "First frame",
+                            required = state.selectedModel?.requiresFirstFrame ?: false,
+                uri = state.firstFrameUri,
+                onPick = { pickFirstFrame.launch("image/*") },
+                onClear = { viewModel.setFirstFrameUri(null) }
+            )
+        }
+
+        // Only show last frame picker if model supports it
+        if (state.selectedModel?.supportsLastFrame == true) {
+            ReferenceFramePicker(
+                label = "Last frame",
                             required = state.selectedModel?.requiresLastFrame ?: false,
-                            uri = state.lastFrameUri,
-                            onPick = { pickLastFrame.launch("image/*") },
-                            onClear = { viewModel.setLastFrameUri(null) }
-                        )
+                uri = state.lastFrameUri,
+                onPick = { pickLastFrame.launch("image/*") },
+                onClear = { viewModel.setLastFrameUri(null) }
+            )
                     }
                 }
             }
@@ -314,7 +314,7 @@ fun GenerateScreen(
                         shape = RoundedCornerShape(12.dp)
                     )
                 }
-            }
+        }
 
         state.uploadMessage?.let {
                 Surface(
@@ -370,16 +370,16 @@ fun GenerateScreen(
                     Column {
                         Text(
                             text = "Estimated Cost",
-                            style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
                             text = "${state.estimatedCost} credits",
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
                     if (state.enableAudio) {
                         Surface(
                             shape = RoundedCornerShape(8.dp),
@@ -399,6 +399,8 @@ fun GenerateScreen(
                 // Generate Button - Simplified
                 Button(
                     onClick = {
+                        // Dismiss any existing messages before starting
+                        viewModel.dismissMessage()
                         viewModel.generate()
                         if (state.canGenerate) {
                             onGenerateStarted()
@@ -463,7 +465,12 @@ fun GenerateScreen(
         }
     }
 
-    val message = state.errorMessage ?: state.successMessage
+    // Only show alert dialog if not generating (to avoid blocking generating screen)
+    val message = if (!state.isGenerating) {
+        state.errorMessage ?: state.successMessage
+    } else {
+        null
+    }
     if (message != null) {
         AlertDialog(
             onDismissRequest = viewModel::dismissMessage,
