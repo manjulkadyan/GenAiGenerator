@@ -11,23 +11,32 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ScreenRotation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.AspectRatioFrameLayout
@@ -68,15 +77,12 @@ class FullscreenVideoActivity : ComponentActivity() {
         val aspectRatioString = intent.getStringExtra(EXTRA_ASPECT_RATIO)
         val aspectRatio = parseAspectRatio(aspectRatioString)
         
-        // Set orientation based on aspect ratio
-        // 1:1 (aspectRatio = 1.0) -> Portrait
-        // 16:9 (aspectRatio ≈ 1.78) -> Landscape
-        // 9:16 (aspectRatio ≈ 0.56) -> Portrait
-        val isPortraitOriented = aspectRatio <= 1.0f
-        requestedOrientation = if (isPortraitOriented) {
-            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        } else {
-            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        // Restore saved orientation or use default (unspecified)
+        val savedOrientation = savedInstanceState?.getInt("saved_orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+        if (savedOrientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
+            if (savedOrientation != null) {
+                requestedOrientation = savedOrientation
+            }
         }
         
         enableEdgeToEdge()
@@ -85,10 +91,19 @@ class FullscreenVideoActivity : ComponentActivity() {
                 FullscreenVideoContent(
                     videoUrl = videoUrl,
                     aspectRatio = aspectRatio,
-                    onClose = { finish() }
+                    onClose = { finish() },
+                    onRotateClick = { targetOrientation ->
+                        requestedOrientation = targetOrientation
+                    }
                 )
             }
         }
+    }
+    
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // Save current orientation
+        outState.putInt("saved_orientation", requestedOrientation)
     }
     
     override fun onDestroy() {
@@ -106,8 +121,23 @@ class FullscreenVideoActivity : ComponentActivity() {
 private fun FullscreenVideoContent(
     videoUrl: String,
     aspectRatio: Float,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    onRotateClick: (Int) -> Unit
 ) {
+    val context = LocalContext.current
+    val activity = context as? ComponentActivity
+    
+    // Track current orientation state
+    var currentOrientation by remember {
+        mutableStateOf<Int?>(
+            activity?.requestedOrientation?.takeIf { 
+                it != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED 
+            }
+        )
+    }
+    
+    // Determine optimal orientation based on aspect ratio for initial suggestion
+    val isPortraitOriented = aspectRatio <= 1.0f
     DisposableEffect(videoUrl) {
         onDispose {
             VideoPlayerManager.unregisterPlayer(videoUrl)
@@ -119,27 +149,7 @@ private fun FullscreenVideoContent(
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        // Close button
-        Surface(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
-                .size(40.dp)
-                .clip(CircleShape)
-                .clickable(onClick = onClose),
-            color = Color.White.copy(alpha = 0.3f)
-        ) {
-            Box(contentAlignment = Alignment.Center) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Close",
-                    modifier = Modifier.size(24.dp),
-                    tint = Color.White
-                )
-            }
-        }
-        
-        // Video player
+        // Video player (behind buttons)
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -157,6 +167,73 @@ private fun FullscreenVideoContent(
                 resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT,
                 onVideoClick = null
             )
+        }
+        
+        // Buttons container with status bar padding (on top of video)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.statusBars)
+        ) {
+            // Close button
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .clickable(onClick = onClose),
+                color = Color.White.copy(alpha = 0.3f)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close",
+                        modifier = Modifier.size(24.dp),
+                        tint = Color.White
+                    )
+                }
+            }
+            
+            // Rotation button
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(16.dp)
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .clickable {
+                        // Toggle between portrait and landscape
+                        val targetOrientation = when (currentOrientation) {
+                            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT -> {
+                                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                            }
+                            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE -> {
+                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                            }
+                            else -> {
+                                // Default to optimal orientation based on aspect ratio
+                                if (isPortraitOriented) {
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                } else {
+                                    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                                }
+                            }
+                        }
+                        currentOrientation = targetOrientation
+                        onRotateClick(targetOrientation)
+                    },
+                color = Color.White.copy(alpha = 0.3f)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.Default.ScreenRotation,
+                        contentDescription = "Rotate",
+                        modifier = Modifier.size(24.dp),
+                        tint = Color.White
+                    )
+                }
+            }
         }
     }
 }
