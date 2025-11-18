@@ -67,6 +67,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.manjul.genai.videogenerator.data.model.AIModel
+import com.manjul.genai.videogenerator.ui.components.AppToolbar
 import com.manjul.genai.videogenerator.ui.viewmodel.VideoGenerateViewModel
 
 @Composable
@@ -106,31 +107,20 @@ fun GenerateScreen(
 
     val scrollState = rememberScrollState()
 
-    Box(modifier = modifier.fillMaxSize()) {
-    Column(
+    Column(modifier = modifier.fillMaxSize()) {
+        AppToolbar(
+            title = "Create Your Video",
+            subtitle = "Choose a model and describe your vision",
+            showBorder = false
+        )
+        
+        Column(
             modifier = Modifier
-            .fillMaxSize()
+                .fillMaxSize()
                 .verticalScroll(scrollState)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            // Simplified Header
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-                Text(
-                    text = "Create Your Video",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = "Choose a model and describe your vision",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
 
             // Model Selection - Simplified
             Column(

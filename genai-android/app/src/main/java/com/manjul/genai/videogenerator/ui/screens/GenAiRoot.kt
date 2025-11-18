@@ -2,17 +2,20 @@ package com.manjul.genai.videogenerator.ui.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Alignment
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.ViewInAr
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import com.manjul.genai.videogenerator.ui.components.GlassmorphicNavigationBar
+import com.manjul.genai.videogenerator.ui.components.NavigationItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.clickable
@@ -51,6 +54,7 @@ fun GenAiRoot() {
     var showGeneratingScreen by remember { mutableStateOf(false) }
     var resultJob by remember { mutableStateOf<com.manjul.genai.videogenerator.data.model.VideoJob?>(null) }
     var pendingJobId by remember { mutableStateOf<String?>(null) }
+    var showBuyCreditsScreen by remember { mutableStateOf(false) }
     val destinations = remember { listOf(AppDestination.Models, AppDestination.Generate, AppDestination.History, AppDestination.Profile) }
     
     // Watch for job completion when generating
@@ -95,35 +99,59 @@ fun GenAiRoot() {
         }
     }
 
+    // Get string resources outside of remember
+    val modelsLabel = stringResource(R.string.destination_models)
+    val generateLabel = stringResource(R.string.destination_generate)
+    val historyLabel = stringResource(R.string.destination_history)
+    val profileLabel = stringResource(R.string.destination_profile)
+    
+    val navigationItems = remember(modelsLabel, generateLabel, historyLabel, profileLabel) {
+        listOf(
+            NavigationItem(icon = Icons.Outlined.ViewInAr, label = modelsLabel),
+            NavigationItem(icon = Icons.Outlined.AutoAwesome, label = generateLabel),
+            NavigationItem(icon = Icons.Outlined.History, label = historyLabel),
+            NavigationItem(icon = Icons.Outlined.Face, label = profileLabel)
+        )
+    }
+    
+    val selectedNavigationItem = remember(currentRoute, navigationItems) {
+        navigationItems[destinations.indexOf(currentRoute)]
+    }
+    
     Scaffold(
         bottomBar = {
-            NavigationBar {
-                destinations.forEach { destination ->
-                    NavigationBarItem(
-                        selected = destination == currentRoute,
-                        onClick = { 
-                            // When navigating back to Models from Generate, preserve the selected model for highlighting
-                            if (destination == AppDestination.Models && currentRoute == AppDestination.Generate && selectedModelId != null) {
-                                highlightModelId = selectedModelId
-                            } else if (destination != AppDestination.Generate) {
-                                selectedModelId = null
-                                highlightModelId = null
-                            }
-                            // Hide generating screen when navigating (user can check History for status)
-                            if (showGeneratingScreen && destination != AppDestination.Generate) {
-                                showGeneratingScreen = false
-                                pendingJobId = null
-                            }
-                            // Close results screen when navigating (user can reopen from History)
-                            if (resultJob != null) {
-                                resultJob = null
-                            }
-                            currentRoute = destination
-                        },
-                        icon = { Icon(destination.icon, contentDescription = stringResource(destination.labelRes)) },
-                        label = { Text(text = stringResource(destination.labelRes)) }
-                    )
-                }
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                GlassmorphicNavigationBar(
+                    items = navigationItems,
+                    selectedItem = selectedNavigationItem,
+                    onItemSelected = { item ->
+                        val destination = destinations[navigationItems.indexOf(item)]
+                        // When navigating back to Models from Generate, preserve the selected model for highlighting
+                        if (destination == AppDestination.Models && currentRoute == AppDestination.Generate && selectedModelId != null) {
+                            highlightModelId = selectedModelId
+                        } else if (destination != AppDestination.Generate) {
+                            selectedModelId = null
+                            highlightModelId = null
+                        }
+                        // Hide generating screen when navigating (user can check History for status)
+                        if (showGeneratingScreen && destination != AppDestination.Generate) {
+                            showGeneratingScreen = false
+                            pendingJobId = null
+                        }
+                        // Close results screen when navigating (user can reopen from History)
+                        if (resultJob != null) {
+                            resultJob = null
+                        }
+                        // Reset buy credits screen when navigating away from Profile
+                        if (destination != AppDestination.Profile) {
+                            showBuyCreditsScreen = false
+                        }
+                        currentRoute = destination
+                    }
+                )
             }
         }
     ) { innerPadding ->
@@ -165,7 +193,22 @@ fun GenAiRoot() {
                     }
                 }
             )
-            AppDestination.Profile -> ProfileScreen(modifier = Modifier.padding(innerPadding))
+            AppDestination.Profile -> {
+                if (showBuyCreditsScreen) {
+                    BuyCreditsScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        onBackClick = { showBuyCreditsScreen = false },
+                        onPackageSelected = { packageInfo ->
+                            // TODO: Handle package selection (payment integration)
+                        }
+                    )
+                } else {
+                    ProfileScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        onBuyCreditsClick = { showBuyCreditsScreen = true }
+                    )
+                }
+            }
         }
         
         // Generating Screen Overlay - Non-blocking, allows navigation
