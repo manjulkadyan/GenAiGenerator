@@ -465,13 +465,10 @@ fun GenerateScreen(
         }
     }
 
-    // Only show alert dialog if not generating (to avoid blocking generating screen)
-    val message = if (!state.isGenerating) {
-        state.errorMessage ?: state.successMessage
-    } else {
-        null
-    }
-    if (message != null) {
+    // Don't show any alert dialogs - GeneratingScreen will handle all status/errors
+    // Only show error dialog if generation failed and we're not generating
+    // (This handles edge cases where error occurs before GeneratingScreen is shown)
+    if (!state.isGenerating && state.errorMessage != null) {
         AlertDialog(
             onDismissRequest = viewModel::dismissMessage,
             confirmButton = {
@@ -479,8 +476,8 @@ fun GenerateScreen(
                     Text("OK")
                 }
             },
-            title = { Text(if (state.errorMessage != null) "Alert" else "Success") },
-            text = { Text(message) }
+            title = { Text("Error") },
+            text = { Text(state.errorMessage ?: "Unknown error") }
         )
     }
 }
