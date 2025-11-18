@@ -138,7 +138,12 @@ class FirebaseVideoHistoryRepository(
             completedAt = completedAt,
             failedAt = failedAt,
             cost = getLong("cost")?.toInt() ?: 0,
-            modelId = getString("model_id")
+            modelId = getString("model_id"),
+            negativePrompt = getString("negative_prompt"),
+            enableAudio = getBoolean("enable_audio") ?: false,
+            firstFrameUri = getString("first_frame_url"),
+            lastFrameUri = getString("last_frame_url"),
+            seed = getLong("seed")?.toInt()
         )
     }
 }

@@ -19,6 +19,12 @@ data class VideoJob(
     val failedAt: Instant? = null,
     val cost: Int = 0,
     val modelId: String? = null,
+    // Generation parameters for regeneration
+    val negativePrompt: String? = null,
+    val enableAudio: Boolean = false,
+    val firstFrameUri: String? = null, // URI as string
+    val lastFrameUri: String? = null, // URI as string
+    val seed: Int? = null,
 )
 
 enum class VideoJobStatus {

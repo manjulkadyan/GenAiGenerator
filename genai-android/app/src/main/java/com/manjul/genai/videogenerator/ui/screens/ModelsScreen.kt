@@ -367,7 +367,7 @@ private fun FullscreenVideoDialog(
                 videoUrl = fullscreenKey, // Unique key for separate player instance
                 modifier = Modifier.fillMaxSize(),
                 shape = RoundedCornerShape(0.dp),
-                showControls = true,
+                showControls = false, // No controls anywhere in the app
                 initialVolume = 1f,
                 resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT,
                 playbackEnabled = true,

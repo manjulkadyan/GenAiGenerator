@@ -12,13 +12,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -34,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -52,19 +52,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.AspectRatioFrameLayout
 import com.manjul.genai.videogenerator.data.local.AppDatabase
-import com.manjul.genai.videogenerator.data.local.VideoCacheEntity
 import com.manjul.genai.videogenerator.data.model.VideoJob
 import com.manjul.genai.videogenerator.data.model.VideoJobStatus
 import com.manjul.genai.videogenerator.ui.components.AppToolbar
+import com.manjul.genai.videogenerator.ui.components.VideoThumbnail
 import com.manjul.genai.videogenerator.ui.viewmodel.HistoryViewModel
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.runtime.LaunchedEffect
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.Duration
 import java.time.Instant
-import java.time.temporal.ChronoUnit
 
 enum class HistoryFilter {
     ALL,
@@ -81,9 +75,8 @@ fun HistoryScreen(
     onVideoClick: ((VideoJob) -> Unit)? = null
 ) {
     val jobs by viewModel.jobs.collectAsState()
-    var fullscreenVideoUrl by remember { mutableStateOf<String?>(null) }
     var selectedFilter by remember { mutableStateOf(HistoryFilter.ALL) }
-    
+
     // Filter jobs based on selected filter
     val filteredJobs = when (selectedFilter) {
         HistoryFilter.ALL -> jobs
@@ -91,7 +84,7 @@ fun HistoryScreen(
         HistoryFilter.RUNNING -> jobs.filter { it.status == VideoJobStatus.PROCESSING || it.status == VideoJobStatus.QUEUED }
         HistoryFilter.FAILED -> jobs.filter { it.status == VideoJobStatus.FAILED }
     }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -103,7 +96,7 @@ fun HistoryScreen(
             subtitle = "Your Creations",
             showBorder = true
         )
-        
+
         // Filter Chips Section
         Surface(
             modifier = Modifier
@@ -153,7 +146,7 @@ fun HistoryScreen(
                 }
             }
         }
-        
+
         // Content
         if (filteredJobs.isEmpty()) {
             Column(
@@ -201,9 +194,11 @@ fun HistoryScreen(
                 items(filteredJobs, key = { it.id }) { job ->
                     HistoryJobCard(
                         job = job,
-                        onVideoClick = { url ->
-                            fullscreenVideoUrl = url
-                            onVideoClick?.invoke(job)
+                        onCardClick = {
+                            // Open ResultsScreen for completed videos when clicking anywhere on card
+                            if (job.status == VideoJobStatus.COMPLETE) {
+                                onVideoClick?.invoke(job)
+                            }
                         },
                         onMoreClick = {
                             // TODO: Show options menu
@@ -213,13 +208,8 @@ fun HistoryScreen(
             }
         }
     }
-    
-    fullscreenVideoUrl?.let { url ->
-        FullscreenVideoDialog(
-            videoUrl = url,
-            onDismiss = { fullscreenVideoUrl = null }
-        )
-    }
+
+    // Removed fullscreen dialog - clicking videos now opens ResultsScreen instead
 }
 
 @Composable
@@ -258,21 +248,22 @@ private fun FilterChip(
 @Composable
 private fun HistoryJobCard(
     job: VideoJob,
-    onVideoClick: (String) -> Unit,
+    onCardClick: () -> Unit,
     onMoreClick: () -> Unit
 ) {
     val context = LocalContext.current
     val database = remember { AppDatabase.getDatabase(context) }
     val cacheDao = remember { database.videoCacheDao() }
-    
+
     // Display model name
     val displayModelName = job.modelId?.replace("-", " ")?.replaceFirstChar { it.uppercaseChar() }
-        ?: job.modelName.split("/").lastOrNull()?.replace("-", " ")?.replaceFirstChar { it.uppercaseChar() }
+        ?: job.modelName.split("/").lastOrNull()?.replace("-", " ")
+            ?.replaceFirstChar { it.uppercaseChar() }
         ?: job.modelName
-    
+
     // Format time ago
     val timeAgo = formatTimeAgo(job.createdAt)
-    
+
     // Status configuration
     val (statusText, statusColor, statusBgColor) = when (job.status) {
         VideoJobStatus.COMPLETE -> Triple(
@@ -280,37 +271,44 @@ private fun HistoryJobCard(
             Color(0xFF10B981), // Emerald-500
             Color(0xFF10B981).copy(alpha = 0.1f)
         )
+
         VideoJobStatus.FAILED -> Triple(
             "failed",
             Color(0xFFEF4444), // Red-500
             Color(0xFFEF4444).copy(alpha = 0.1f)
         )
+
         VideoJobStatus.PROCESSING -> Triple(
             "running",
             Color(0xFF3B82F6), // Blue-500
             Color(0xFF3B82F6).copy(alpha = 0.1f)
         )
+
         VideoJobStatus.QUEUED -> Triple(
             "running",
             Color(0xFF3B82F6), // Blue-500
             Color(0xFF3B82F6).copy(alpha = 0.1f)
         )
     }
-    
+
     // Show video if available
     val videoUrl = when {
         job.status == VideoJobStatus.COMPLETE -> {
             job.storageUrl?.takeIf { it.isNotBlank() }
                 ?: job.previewUrl?.takeIf { it.isNotBlank() }
         }
+
         job.status == VideoJobStatus.PROCESSING -> {
             job.previewUrl?.takeIf { it.isNotBlank() }
         }
+
         else -> null
     }
-    
+
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(enabled = job.status == VideoJobStatus.COMPLETE, onClick = onCardClick),
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -330,38 +328,38 @@ private fun HistoryJobCard(
                     .clip(RoundedCornerShape(16.dp))
                     .background(
                         if (videoUrl != null) Color.Black else MaterialTheme.colorScheme.surfaceVariant
-                    )
-                    .clickable(enabled = videoUrl != null) {
-                        videoUrl?.let { onVideoClick(it) }
-                    },
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 if (videoUrl != null) {
-                    // Video thumbnail with play overlay
+                    // Video thumbnail extracted from video
                     Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        // Video preview would go here
-                        // For now, show play icon overlay
-                        Surface(
+                        // Extract and show thumbnail from video
+                        VideoThumbnail(
+                            videoUrl = videoUrl,
                             modifier = Modifier.fillMaxSize(),
-                            color = Color.Black.copy(alpha = 0.2f)
+                            contentScale = androidx.compose.ui.layout.ContentScale.Crop
+                        )
+                        
+                        // Play icon overlay
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
                         ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Surface(
-                                    shape = CircleShape,
-                                    color = Color.White.copy(alpha = 0.95f),
-                                    modifier = Modifier.size(48.dp)
-                                ) {
-                                    Box(contentAlignment = Alignment.Center) {
-                                        Icon(
-                                            imageVector = Icons.Default.PlayArrow,
-                                            contentDescription = "Play",
-                                            modifier = Modifier.size(24.dp),
-                                            tint = MaterialTheme.colorScheme.primary
-                                        )
-                                    }
+                            Surface(
+                                shape = CircleShape,
+                                color = Color.White.copy(alpha = 0.9f),
+                                modifier = Modifier.size(48.dp)
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Icon(
+                                        imageVector = Icons.Default.PlayArrow,
+                                        contentDescription = "Play",
+                                        modifier = Modifier.size(24.dp),
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
                                 }
                             }
                         }
@@ -390,7 +388,7 @@ private fun HistoryJobCard(
                     }
                 }
             }
-            
+
             // Details on right
             Column(
                 modifier = Modifier
@@ -433,14 +431,14 @@ private fun HistoryJobCard(
                         }
                     }
                 }
-                
+
                 // Model name
                 Text(
                     text = displayModelName,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 // Status, duration, and time
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -464,7 +462,7 @@ private fun HistoryJobCard(
                             color = statusColor
                         )
                     }
-                    
+
                     // Duration
                     if (job.status == VideoJobStatus.COMPLETE || job.status == VideoJobStatus.PROCESSING) {
                         Text(
@@ -478,7 +476,7 @@ private fun HistoryJobCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    
+
                     // Time ago
                     Text(
                         text = timeAgo,
@@ -496,7 +494,7 @@ private fun HistoryJobCard(
 private fun formatTimeAgo(createdAt: Instant): String {
     val now = Instant.now()
     val duration = Duration.between(createdAt, now)
-    
+
     return when {
         duration.toMinutes() < 1 -> "Just now"
         duration.toHours() < 1 -> "${duration.toMinutes()}m ago"
@@ -515,8 +513,20 @@ private fun FullscreenVideoDialog(
     videoUrl: String,
     onDismiss: () -> Unit
 ) {
+    // Stop video player when dialog is dismissed
+    DisposableEffect(videoUrl) {
+        onDispose {
+            // Release video player when fullscreen dialog is dismissed
+            com.manjul.genai.videogenerator.player.VideoPlayerManager.unregisterPlayer(videoUrl)
+        }
+    }
+
     Dialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = {
+            // Stop video player before closing
+            com.manjul.genai.videogenerator.player.VideoPlayerManager.unregisterPlayer(videoUrl)
+            onDismiss()
+        },
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
             decorFitsSystemWindows = false
@@ -531,7 +541,7 @@ private fun FullscreenVideoDialog(
                 videoUrl = videoUrl,
                 modifier = Modifier.fillMaxSize(),
                 shape = RoundedCornerShape(0.dp),
-                showControls = true,
+                showControls = false, // No controls anywhere in the app
                 initialVolume = 1f,
                 resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT,
                 playbackEnabled = true,
