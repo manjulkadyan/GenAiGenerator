@@ -28,6 +28,9 @@ interface VideoJobDao {
     @Query("UPDATE video_jobs SET localFilePath = :filePath WHERE id = :id")
     suspend fun updateLocalFilePath(id: String, filePath: String?)
 
+    @Query("UPDATE video_jobs SET thumbnailPath = :thumbnailPath WHERE id = :id")
+    suspend fun updateThumbnailPath(id: String, thumbnailPath: String?)
+
     @Query("UPDATE video_jobs SET status = :status WHERE id = :id")
     suspend fun updateStatus(id: String, status: VideoJobStatus)
 

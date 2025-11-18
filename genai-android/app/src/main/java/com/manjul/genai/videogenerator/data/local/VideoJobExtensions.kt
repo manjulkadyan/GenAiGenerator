@@ -25,6 +25,7 @@ fun VideoJob.toEntity(): VideoJobEntity {
         previewUrl = previewUrl,
         storageUrl = storageUrl,
         localFilePath = null, // Will be set when video is downloaded
+        thumbnailPath = null, // Will be set when thumbnail is cached
         errorMessage = errorMessage,
         replicatePredictionId = replicatePredictionId,
         cost = cost,
