@@ -6,7 +6,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.manjul.genai.videogenerator.data.model.AIModel
 import com.manjul.genai.videogenerator.data.repository.RepositoryProvider
-import com.manjul.genai.videogenerator.data.repository.VideoFeatureRepository
+import com.manjul.genai.videogenerator.data.repository.ModelRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +21,7 @@ data class AIModelsState(
 )
 
 class AIModelsViewModel(
-    private val repository: VideoFeatureRepository
+    private val repository: ModelRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AIModelsState())
@@ -61,7 +61,7 @@ class AIModelsViewModel(
     companion object {
         val Factory = viewModelFactory {
             initializer {
-                AIModelsViewModel(RepositoryProvider.videoFeatureRepository)
+                AIModelsViewModel(RepositoryProvider.modelRepository)
             }
         }
     }

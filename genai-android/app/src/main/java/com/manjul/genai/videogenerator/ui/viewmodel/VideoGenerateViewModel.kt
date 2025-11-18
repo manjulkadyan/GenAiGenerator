@@ -9,7 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.manjul.genai.videogenerator.data.model.AIModel
 import com.manjul.genai.videogenerator.data.model.GenerateRequest
 import com.manjul.genai.videogenerator.data.repository.RepositoryProvider
-import com.manjul.genai.videogenerator.data.repository.VideoFeatureRepository
+import com.manjul.genai.videogenerator.data.repository.ModelRepository
 import com.manjul.genai.videogenerator.data.repository.VideoGenerateRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -61,7 +61,7 @@ data class GenerateScreenState(
 }
 
 class VideoGenerateViewModel(
-    private val featureRepository: VideoFeatureRepository,
+    private val featureRepository: ModelRepository,
     private val generateRepository: VideoGenerateRepository,
 ) : ViewModel() {
 
@@ -213,7 +213,7 @@ class VideoGenerateViewModel(
         val Factory = viewModelFactory {
             initializer {
                 VideoGenerateViewModel(
-                    featureRepository = RepositoryProvider.videoFeatureRepository,
+                    featureRepository = RepositoryProvider.modelRepository,
                     generateRepository = RepositoryProvider.videoGenerateRepository
                 )
             }

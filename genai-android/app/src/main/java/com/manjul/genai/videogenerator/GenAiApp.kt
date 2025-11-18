@@ -29,8 +29,12 @@ class GenAiApp : Application() {
         // Clean up old cache entries on app start (older than 7 days)
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             try {
+                val database = AppDatabase.getDatabase(this@GenAiApp)
                 val sevenDaysAgo = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000L)
-                AppDatabase.getDatabase(this@GenAiApp).videoCacheDao().deleteOldEntries(sevenDaysAgo)
+                // Clean up old video cache entries
+                database.videoCacheDao().deleteOldEntries(sevenDaysAgo)
+                // Clean up old model cache entries (older than 7 days)
+                database.aiModelCacheDao().deleteOldCache(sevenDaysAgo)
             } catch (e: Exception) {
                 android.util.Log.e("GenAiApp", "Error cleaning old cache entries", e)
             }
