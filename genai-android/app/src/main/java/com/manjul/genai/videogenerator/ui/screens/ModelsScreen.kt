@@ -74,6 +74,7 @@ import com.manjul.genai.videogenerator.data.local.AppDatabase
 import com.manjul.genai.videogenerator.data.local.VideoCacheEntity
 import com.manjul.genai.videogenerator.data.model.AIModel
 import com.manjul.genai.videogenerator.player.VideoPreviewCache
+import com.manjul.genai.videogenerator.ui.components.AppToolbar
 import com.manjul.genai.videogenerator.player.VideoPlayerManager
 import com.manjul.genai.videogenerator.player.VideoFileCache
 import com.manjul.genai.videogenerator.ui.viewmodel.AIModelsViewModel
@@ -289,25 +290,11 @@ private fun ModelsList(
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         item {
-            // Header
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = "AI Video Models",
-                    style = MaterialTheme.typography.displaySmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = "${models.size} models available",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            AppToolbar(
+                title = "AI Video Models",
+                subtitle = "${models.size} models available",
+                showBorder = false
+            )
         }
 
         itemsIndexed(models, key = { _, item -> item.id }) { index, model ->
