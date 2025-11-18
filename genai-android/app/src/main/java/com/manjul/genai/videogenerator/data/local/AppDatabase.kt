@@ -6,13 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [VideoCacheEntity::class, AIModelCacheEntity::class],
-    version = 2,
+    entities = [VideoCacheEntity::class, AIModelCacheEntity::class, VideoJobEntity::class],
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun videoCacheDao(): VideoCacheDao
     abstract fun aiModelCacheDao(): AIModelCacheDao
+    abstract fun videoJobDao(): VideoJobDao
     
     companion object {
         @Volatile

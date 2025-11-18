@@ -86,8 +86,8 @@ fun GenAiRoot() {
                 showGeneratingScreen = false
                 resultJob = jobToCheck
                 pendingJobId = null
-                // Clear all messages from GenerateScreen
-                generateViewModel.dismissMessage()
+                // Reset generation state when job completes and ResultsScreen is shown
+                generateViewModel.resetGenerationState()
             }
             
             // Also check for failed jobs
@@ -212,6 +212,16 @@ fun GenAiRoot() {
         }
         
         // Generating Screen Overlay - Non-blocking, allows navigation
+        // Reset isGenerating when GeneratingScreen is shown so GenerateScreen doesn't show progress
+        // GeneratingScreen will handle all progress display
+        LaunchedEffect(showGeneratingScreen) {
+            if (showGeneratingScreen) {
+                // Reset isGenerating so GenerateScreen doesn't show "Generating..." button state
+                // The GeneratingScreen overlay will handle all progress display
+                generateViewModel.resetGenerationState()
+            }
+        }
+        
         if (showGeneratingScreen) {
             GeneratingScreen(
                 modifier = Modifier.fillMaxSize(),
@@ -220,7 +230,7 @@ fun GenAiRoot() {
                 onCancel = { 
                     showGeneratingScreen = false
                     pendingJobId = null
-                    generateViewModel.dismissMessage() // Clear any messages
+                    generateViewModel.resetGenerationState() // Reset state when canceling
                 },
                 onRetry = if (generateState.errorMessage != null) {
                     {
@@ -235,12 +245,20 @@ fun GenAiRoot() {
         resultJob?.let { job ->
             ResultsScreenDialog(
                 job = job,
-                onClose = { resultJob = null },
+                onClose = { 
+                    // Reset generation state when closing result screen
+                    generateViewModel.resetGenerationState()
+                    resultJob = null 
+                },
                 onRegenerate = {
+                    // Load parameters from the job for regeneration
+                    generateViewModel.loadParametersForRegeneration(job)
+                    generateViewModel.resetGenerationState()
                     resultJob = null
                     currentRoute = AppDestination.Generate
                 },
                 onDelete = {
+                    generateViewModel.resetGenerationState()
                     resultJob = null
                     // TODO: Implement delete functionality
                 }

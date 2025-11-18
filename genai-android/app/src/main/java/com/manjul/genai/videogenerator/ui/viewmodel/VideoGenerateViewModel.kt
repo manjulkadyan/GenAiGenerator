@@ -210,6 +210,47 @@ class VideoGenerateViewModel(
         _state.update { it.copy(errorMessage = null, successMessage = null) }
     }
 
+    fun resetGenerationState() {
+        _state.update { 
+            it.copy(
+                isGenerating = false,
+                uploadMessage = null,
+                errorMessage = null,
+                successMessage = null
+            )
+        }
+    }
+
+    /**
+     * Load generation parameters from a VideoJob for regeneration
+     * This pre-fills the GenerateScreen with the same parameters used to generate the video
+     */
+    fun loadParametersForRegeneration(
+        job: com.manjul.genai.videogenerator.data.model.VideoJob
+    ) {
+        viewModelScope.launch {
+            // Find the model by ID
+            val model = _state.value.models.find { it.id == job.modelId }
+                ?: _state.value.models.firstOrNull()
+            
+            _state.update {
+                it.copy(
+                    selectedModel = model,
+                    prompt = job.prompt,
+                    negativePrompt = job.negativePrompt ?: "",
+                    selectedDuration = job.durationSeconds,
+                    selectedAspectRatio = job.aspectRatio,
+                    enableAudio = job.enableAudio,
+                    firstFrameUri = job.firstFrameUri?.let { android.net.Uri.parse(it) },
+                    lastFrameUri = job.lastFrameUri?.let { android.net.Uri.parse(it) },
+                    errorMessage = null,
+                    successMessage = null,
+                    isGenerating = false
+                )
+            }
+        }
+    }
+
     companion object {
         private const val TAG = "VideoGenerateVM"
 
