@@ -167,11 +167,14 @@ class VideoGenerateViewModel(
 
             generateRepository.requestVideoGeneration(request)
                 .onSuccess {
+                    // Don't set success message - GeneratingScreen will handle the flow
+                    // Keep isGenerating = true so GeneratingScreen stays visible
+                    // It will auto-close when job completes
                     _state.update {
                         it.copy(
-                            isGenerating = false,
-                            uploadMessage = null,
-                            successMessage = "Generation queued successfully!"
+                            uploadMessage = "Generation started! Processing...",
+                            errorMessage = null,
+                            successMessage = null // Don't show success popup
                         )
                     }
                 }

@@ -16,10 +16,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -29,13 +31,17 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun GeneratingScreen(
     modifier: Modifier = Modifier,
-    onCancel: () -> Unit = {}
+    statusMessage: String? = null,
+    errorMessage: String? = null,
+    onCancel: () -> Unit = {},
+    onRetry: (() -> Unit)? = null
 ) {
     Box(
         modifier = modifier
@@ -49,36 +55,87 @@ fun GeneratingScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Animated sparkles
-            SparkleAnimation()
-            
-            Spacer(modifier = Modifier.size(32.dp))
-            
-            // Progress text
-            Text(
-                text = "Generating Video...",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 24.sp
-            )
-            
-            Spacer(modifier = Modifier.size(16.dp))
-            
-            // Subtitle
-            Text(
-                text = "This will only take a moment.",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            
-            Spacer(modifier = Modifier.size(4.dp))
-            
-            Text(
-                text = "Please wait..",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            // Show error state or normal generating state
+            if (errorMessage != null) {
+                // Error state
+                Icon(
+                    imageVector = Icons.Default.Error,
+                    contentDescription = null,
+                    modifier = Modifier.size(64.dp),
+                    tint = MaterialTheme.colorScheme.error
+                )
+                
+                Spacer(modifier = Modifier.size(24.dp))
+                
+                Text(
+                    text = "Generation Failed",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 24.sp
+                )
+                
+                Spacer(modifier = Modifier.size(16.dp))
+                
+                Text(
+                    text = errorMessage,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+                
+                Spacer(modifier = Modifier.size(24.dp))
+                
+                // Retry button if available
+                if (onRetry != null) {
+                    TextButton(onClick = onRetry) {
+                        Text("Retry")
+                    }
+                }
+            } else {
+                // Normal generating state
+                // Animated sparkles
+                SparkleAnimation()
+                
+                Spacer(modifier = Modifier.size(32.dp))
+                
+                // Progress text
+                Text(
+                    text = "Generating Video...",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = 24.sp
+                )
+                
+                Spacer(modifier = Modifier.size(16.dp))
+                
+                // Status message (e.g., "Uploading first frame...", "Submitting generation request...")
+                if (statusMessage != null) {
+                    Text(
+                        text = statusMessage,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.size(8.dp))
+                }
+                
+                // Subtitle
+                Text(
+                    text = "This will only take a moment.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                
+                Spacer(modifier = Modifier.size(4.dp))
+                
+                Text(
+                    text = "Please wait..",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }

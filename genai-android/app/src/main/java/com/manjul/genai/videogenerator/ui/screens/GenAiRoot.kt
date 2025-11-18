@@ -29,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.manjul.genai.videogenerator.R
 import com.manjul.genai.videogenerator.data.model.VideoJobStatus
 import com.manjul.genai.videogenerator.ui.viewmodel.HistoryViewModel
+import com.manjul.genai.videogenerator.ui.viewmodel.VideoGenerateViewModel
 import kotlinx.coroutines.launch
 
 sealed class AppDestination(
@@ -56,6 +57,10 @@ fun GenAiRoot() {
     val historyViewModel: HistoryViewModel = viewModel(factory = HistoryViewModel.Factory)
     val jobs by historyViewModel.jobs.collectAsState()
     
+    // Get GenerateViewModel to access state for GeneratingScreen
+    val generateViewModel: VideoGenerateViewModel = viewModel(factory = VideoGenerateViewModel.Factory)
+    val generateState by generateViewModel.state.collectAsState()
+    
     // Auto-navigate to ResultsScreen when job completes
     LaunchedEffect(showGeneratingScreen, jobs) {
         if (showGeneratingScreen) {
@@ -77,6 +82,15 @@ fun GenAiRoot() {
                 showGeneratingScreen = false
                 resultJob = jobToCheck
                 pendingJobId = null
+                // Clear all messages from GenerateScreen
+                generateViewModel.dismissMessage()
+            }
+            
+            // Also check for failed jobs
+            if (jobToCheck != null && jobToCheck.status == VideoJobStatus.FAILED) {
+                // Keep GeneratingScreen visible but show error
+                // Error will be shown in GeneratingScreen via generateState.errorMessage
+                // The job's error_message will be in Firestore, but we can also check generateState
             }
         }
     }
@@ -100,6 +114,10 @@ fun GenAiRoot() {
                                 showGeneratingScreen = false
                                 pendingJobId = null
                             }
+                            // Close results screen when navigating (user can reopen from History)
+                            if (resultJob != null) {
+                                resultJob = null
+                            }
                             currentRoute = destination
                         },
                         icon = { Icon(destination.icon, contentDescription = stringResource(destination.labelRes)) },
@@ -120,20 +138,25 @@ fun GenAiRoot() {
                 highlightModelId = highlightModelId,
                 onHighlightCleared = { highlightModelId = null }
             )
-            AppDestination.Generate -> GenerateScreen(
-                modifier = Modifier.padding(innerPadding),
-                preselectedModelId = selectedModelId,
-                onModelSelected = { selectedModelId = null },
-                onBackToModels = { 
-                    highlightModelId = selectedModelId
-                    currentRoute = AppDestination.Models
-                },
-                onGenerateStarted = { 
-                    showGeneratingScreen = true
-                    // The latest job will appear in the jobs list shortly after generation starts
-                    // We'll detect it in LaunchedEffect below
+            AppDestination.Generate -> {
+                // Only show GenerateScreen if ResultsScreen is not showing
+                if (resultJob == null) {
+                    GenerateScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        preselectedModelId = selectedModelId,
+                        onModelSelected = { selectedModelId = null },
+                        onBackToModels = { 
+                            highlightModelId = selectedModelId
+                            currentRoute = AppDestination.Models
+                        },
+                        onGenerateStarted = { 
+                            showGeneratingScreen = true
+                            // The latest job will appear in the jobs list shortly after generation starts
+                            // We'll detect it in LaunchedEffect below
+                        }
+                    )
                 }
-            )
+            }
             AppDestination.History -> HistoryScreen(
                 modifier = Modifier.padding(innerPadding),
                 onVideoClick = { job ->
@@ -149,17 +172,25 @@ fun GenAiRoot() {
         if (showGeneratingScreen) {
             GeneratingScreen(
                 modifier = Modifier.fillMaxSize(),
+                statusMessage = generateState.uploadMessage,
+                errorMessage = generateState.errorMessage,
                 onCancel = { 
                     showGeneratingScreen = false
                     pendingJobId = null
-                }
+                    generateViewModel.dismissMessage() // Clear any messages
+                },
+                onRetry = if (generateState.errorMessage != null) {
+                    {
+                        generateViewModel.dismissMessage()
+                        generateViewModel.generate()
+                    }
+                } else null
             )
         }
         
-        // Results Screen
+        // Results Screen - Show as Dialog to allow navigation and proper padding
         resultJob?.let { job ->
-            ResultsScreen(
-                modifier = Modifier.fillMaxSize(),
+            ResultsScreenDialog(
                 job = job,
                 onClose = { resultJob = null },
                 onRegenerate = {
