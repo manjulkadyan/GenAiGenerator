@@ -74,6 +74,7 @@ import com.manjul.genai.videogenerator.data.local.VideoCacheEntity
 import com.manjul.genai.videogenerator.data.model.AIModel
 import com.manjul.genai.videogenerator.player.VideoPreviewCache
 import com.manjul.genai.videogenerator.player.VideoPlayerManager
+import com.manjul.genai.videogenerator.player.VideoFileCache
 import com.manjul.genai.videogenerator.ui.viewmodel.AIModelsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -349,20 +350,33 @@ private fun FullscreenVideoDialog(
     videoUrl: String,
     onDismiss: () -> Unit
 ) {
+    // Use a unique key to ensure fullscreen player is separate from thumbnail
+    // This prevents state conflicts but we'll use actual URL for loading
+    val fullscreenKey = remember(videoUrl) { "fullscreen_${System.currentTimeMillis()}_$videoUrl" }
+    
     Dialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = {
+            // Release player before dismissing dialog
+            VideoPlayerManager.unregisterPlayer(fullscreenKey)
+            VideoPlayerManager.unregisterPlayer(videoUrl) // Also release by actual URL
+            onDismiss()
+        },
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
             decorFitsSystemWindows = false
         )
     ) {
+        // Use Box with black background to ensure proper rendering context
+        // Surface might be causing rendering issues with PlayerView in Dialog
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black)
         ) {
+            // Use unique key to create separate player instance
+            // ModelVideoPlayer will extract actual URL from the key
             ModelVideoPlayer(
-                videoUrl = videoUrl,
+                videoUrl = fullscreenKey, // Unique key for separate player instance
                 modifier = Modifier.fillMaxSize(),
                 shape = RoundedCornerShape(0.dp),
                 showControls = true,
@@ -371,6 +385,17 @@ private fun FullscreenVideoDialog(
                 playbackEnabled = true,
                 onVideoClick = null
             )
+        }
+    }
+    
+    // CRITICAL: Ensure player is immediately released when dialog is dismissed
+    // This prevents audio from continuing to play in the background (memory leak prevention)
+    DisposableEffect(videoUrl) {
+        onDispose {
+            // When dialog is dismissed, immediately release the player
+            VideoPlayerManager.unregisterPlayer(fullscreenKey)
+            VideoPlayerManager.unregisterPlayer(videoUrl) // Fallback
+            android.util.Log.d("FullscreenVideoDialog", "Released fullscreen player for: $videoUrl")
         }
     }
 }
@@ -669,23 +694,58 @@ internal fun ModelVideoPlayer(
 
     LaunchedEffect(playbackEnabled, videoUrl, mediaSourceFactory) {
         if (playbackEnabled && exoPlayer == null) {
-            // Check Room DB cache for this video (async)
-            val cacheEntry = kotlinx.coroutines.withContext(Dispatchers.IO) {
-                cacheDao.getCacheEntry(videoUrl)
+            // Extract actual video URL if this is a fullscreen player key
+            // Format: "fullscreen_<timestamp>_<actualUrl>" or "fullscreen_<actualUrl>"
+            val actualVideoUrl = if (videoUrl.startsWith("fullscreen_")) {
+                // Remove "fullscreen_" prefix, then remove timestamp if present
+                val withoutPrefix = videoUrl.removePrefix("fullscreen_")
+                // If it contains underscore after timestamp, extract the actual URL
+                val parts = withoutPrefix.split("_", limit = 2)
+                if (parts.size > 1 && parts[0].all { it.isDigit() }) {
+                    // First part is timestamp, second part is URL
+                    parts[1]
+                } else {
+                    // No timestamp, the whole thing is the URL
+                    withoutPrefix
+                }
+            } else {
+                videoUrl
+            }
+            
+            // Check all caches in parallel: File cache, Room DB, and ExoPlayer cache
+            val (cacheEntry, isExoCached, fileCacheUri) = kotlinx.coroutines.withContext(Dispatchers.IO) {
+                val entry = cacheDao.getCacheEntry(actualVideoUrl)
+                val cache = VideoPreviewCache.get(context)
+                val exoCached = cache.isCached(actualVideoUrl, 0, Long.MAX_VALUE)
+                // Check file cache (persistent storage)
+                val fileUri = VideoFileCache.getCachedFileUri(context, actualVideoUrl)
+                Triple(entry, exoCached, fileUri)
             }
             val lastPosition = cacheEntry?.lastPlayedPosition ?: 0L
             
-            // Very short delay for prefetching - we want videos ready quickly
-            kotlinx.coroutines.delay(50)
+            // Determine which source to use (priority: file cache > ExoPlayer cache > network)
+            val videoSourceUri = fileCacheUri ?: actualVideoUrl
+            val isCached = fileCacheUri != null || isExoCached
             
-            // Double-check playback is still enabled after delay
+            // For fullscreen players in Dialog, add a small delay to ensure Dialog is fully laid out
+            // This prevents black screen issue where video surface isn't attached yet
+            val isFullscreen = videoUrl.startsWith("fullscreen_")
+            if (isFullscreen) {
+                kotlinx.coroutines.delay(100) // Small delay for Dialog to fully render
+            } else if (!isCached) {
+                kotlinx.coroutines.delay(50) // Small delay only for non-cached videos
+            }
+            // No delay for cached videos (unless fullscreen) - they should appear immediately
+            
+            // Double-check playback is still enabled after delay (if any)
         if (playbackEnabled) {
                 // Create player with optimized settings for caching
                 val player = ExoPlayer.Builder(context)
                     .setMediaSourceFactory(mediaSourceFactory)
                     .setHandleAudioBecomingNoisy(true)
                     .build().apply {
-                    val mediaItem = MediaItem.fromUri(videoUrl)
+                    // Use file cache if available, otherwise use URL (ExoPlayer will cache it)
+                    val mediaItem = MediaItem.fromUri(videoSourceUri)
                     setMediaItem(mediaItem)
                     repeatMode = Player.REPEAT_MODE_ONE
                         playWhenReady = true // Start playing immediately
@@ -696,7 +756,23 @@ internal fun ModelVideoPlayer(
                     }
                 exoPlayer = player
                 
+                // If video is not in file cache but is playing from network,
+                // download it to file cache in background for future use
+                if (fileCacheUri == null && !actualVideoUrl.startsWith("file://")) {
+                    // Download to file cache in background (non-blocking)
+                    // Use the existing coroutine scope for async operations
+                    coroutineScope.launch {
+                        try {
+                            VideoFileCache.downloadVideo(context, actualVideoUrl)
+                            android.util.Log.d("ModelVideoPlayer", "Video downloaded to file cache: $actualVideoUrl")
+                        } catch (e: Exception) {
+                            android.util.Log.e("ModelVideoPlayer", "Failed to download video to file cache", e)
+                        }
+                    }
+                }
+                
                 // Register with manager to track and limit concurrent players
+                // Use the videoUrl key (which might be fullscreen_ prefixed) for manager tracking
                 VideoPlayerManager.registerPlayer(videoUrl, player)
                 
                 // Update Room DB cache - mark as accessed (we're already in a coroutine via LaunchedEffect)
@@ -704,12 +780,12 @@ internal fun ModelVideoPlayer(
                 kotlinx.coroutines.withContext(Dispatchers.IO) {
                     try {
                         if (cacheEntry != null) {
-                            cacheDao.updateAccess(videoUrl)
+                            cacheDao.updateAccess(actualVideoUrl) // Use actual URL for cache
                         } else {
                             // Create new cache entry (we'll need model info - for now use placeholder)
                             cacheDao.insertOrUpdate(
                                 VideoCacheEntity(
-                                    videoUrl = videoUrl,
+                                    videoUrl = actualVideoUrl, // Use actual URL for cache
                                     modelId = "",
                                     modelName = "",
                                     lastPlayedPosition = 0L,
@@ -728,9 +804,26 @@ internal fun ModelVideoPlayer(
             }
         } else if (playbackEnabled && exoPlayer != null) {
             // Resume playback immediately if player exists - no rebuffering needed
+            // Extract actual video URL if this is a fullscreen player key
+            // Format: "fullscreen_<timestamp>_<actualUrl>" or "fullscreen_<actualUrl>"
+            val actualVideoUrl = if (videoUrl.startsWith("fullscreen_")) {
+                // Remove "fullscreen_" prefix, then remove timestamp if present
+                val withoutPrefix = videoUrl.removePrefix("fullscreen_")
+                // If it contains underscore after timestamp, extract the actual URL
+                val parts = withoutPrefix.split("_", limit = 2)
+                if (parts.size > 1 && parts[0].all { it.isDigit() }) {
+                    // First part is timestamp, second part is URL
+                    parts[1]
+                } else {
+                    // No timestamp, the whole thing is the URL
+                    withoutPrefix
+                }
+            } else {
+                videoUrl
+            }
             // Check Room DB for last position (async)
             val cacheEntry = kotlinx.coroutines.withContext(Dispatchers.IO) {
-                cacheDao.getCacheEntry(videoUrl)
+                cacheDao.getCacheEntry(actualVideoUrl)
             }
             val lastPosition = cacheEntry?.lastPlayedPosition ?: 0L
             
@@ -742,10 +835,27 @@ internal fun ModelVideoPlayer(
         } else if (!playbackEnabled && exoPlayer != null) {
             // Save playback position to Room DB before pausing
             val currentPosition = exoPlayer?.currentPosition ?: 0L
+            // Extract actual video URL if this is a fullscreen player key
+            // Format: "fullscreen_<timestamp>_<actualUrl>" or "fullscreen_<actualUrl>"
+            val actualVideoUrl = if (videoUrl.startsWith("fullscreen_")) {
+                // Remove "fullscreen_" prefix, then remove timestamp if present
+                val withoutPrefix = videoUrl.removePrefix("fullscreen_")
+                // If it contains underscore after timestamp, extract the actual URL
+                val parts = withoutPrefix.split("_", limit = 2)
+                if (parts.size > 1 && parts[0].all { it.isDigit() }) {
+                    // First part is timestamp, second part is URL
+                    parts[1]
+                } else {
+                    // No timestamp, the whole thing is the URL
+                    withoutPrefix
+                }
+            } else {
+                videoUrl
+            }
             // Use withContext since we're already in a coroutine (LaunchedEffect)
             kotlinx.coroutines.withContext(Dispatchers.IO) {
                 try {
-                    cacheDao.updatePlaybackPosition(videoUrl, currentPosition)
+                    cacheDao.updatePlaybackPosition(actualVideoUrl, currentPosition)
                 } catch (e: Exception) {
                     android.util.Log.e("ModelVideoPlayer", "Error saving playback position", e)
                 }
@@ -762,20 +872,28 @@ internal fun ModelVideoPlayer(
     }
 
     // CRITICAL: Always release player on dispose
-    DisposableEffect(videoUrl, playbackEnabled) {
+    // This ensures players are properly cleaned up when composable is removed
+    DisposableEffect(videoUrl) {
         val player = exoPlayer
         onDispose {
             player?.let {
                 try {
+                    // Immediately pause and stop playback
                     it.pause()
                     it.stop()
+                    // Unregister from manager
                     VideoPlayerManager.unregisterPlayer(videoUrl)
+                    // Release player resources
                     it.release()
+                    android.util.Log.d("ModelVideoPlayer", "Released player for: $videoUrl")
                 } catch (e: Exception) {
-                    android.util.Log.e("ModelVideoPlayer", "Error releasing player", e)
+                    android.util.Log.e("ModelVideoPlayer", "Error releasing player for $videoUrl", e)
                 }
             }
             exoPlayer = null
+            isBuffering = false
+            hasError = false
+            isPlaying = false
         }
     }
 
@@ -783,7 +901,9 @@ internal fun ModelVideoPlayer(
         val player = exoPlayer ?: return@DisposableEffect onDispose {}
         val listener = object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
-                isBuffering = playbackState == Player.STATE_BUFFERING || playbackState == Player.STATE_IDLE
+                // Only set buffering if actually buffering (not ready or idle)
+                // This prevents blocking overlay for cached videos that load instantly
+                isBuffering = playbackState == Player.STATE_BUFFERING
                 isPlaying = player.isPlaying && playbackState == Player.STATE_READY
                 onPlayingStateChanged?.invoke(isPlaying)
                 
@@ -792,15 +912,21 @@ internal fun ModelVideoPlayer(
                     // Use coroutine scope for async operation (Player.Listener is not a coroutine)
                     coroutineScope.launch {
                         try {
+                            // Extract actual video URL if this is a fullscreen player key
+                            val actualVideoUrl = if (videoUrl.startsWith("fullscreen_")) {
+                                videoUrl.removePrefix("fullscreen_")
+                            } else {
+                                videoUrl
+                            }
                             // Check if video is cached by ExoPlayer
                             val cache = VideoPreviewCache.get(context)
-                            val isCached = cache.isCached(videoUrl, 0, Long.MAX_VALUE)
+                            val isCached = cache.isCached(actualVideoUrl, 0, Long.MAX_VALUE)
                             val cacheSize = if (isCached) {
                                 // Estimate cache size (this is approximate)
                                 player.duration * 1000 // Rough estimate
                             } else 0L
                             
-                            cacheDao.updateCacheStatus(videoUrl, isCached, cacheSize)
+                            cacheDao.updateCacheStatus(actualVideoUrl, isCached, cacheSize)
                         } catch (e: Exception) {
                             android.util.Log.e("ModelVideoPlayer", "Error updating cache status", e)
                         }
@@ -868,8 +994,20 @@ internal fun ModelVideoPlayer(
                         useController = showControls
                         controllerAutoShow = showControls
                         this.resizeMode = resizeMode
-                        setShowBuffering(PlayerView.SHOW_BUFFERING_WHEN_PLAYING)
+                        // Don't show buffering overlay - let ExoPlayer show video immediately
+                        // This allows cached videos to display instantly without blocking overlay
+                        setShowBuffering(PlayerView.SHOW_BUFFERING_NEVER)
+                        // Ensure view is visible and properly initialized
+                        visibility = android.view.View.VISIBLE
+                        // Set player after view is created to ensure proper attachment
                         this.player = player
+                        // Force layout to ensure video surface is attached
+                        post {
+                            requestLayout()
+                            invalidate()
+                            // Ensure video surface is visible
+                            visibility = android.view.View.VISIBLE
+                        }
                     }
                 },
                 update = { view ->
@@ -883,6 +1021,17 @@ internal fun ModelVideoPlayer(
                     if (!playbackEnabled) {
                         view.player?.pause()
                     }
+                    // Force view to be visible and request layout
+                    // This is critical for Dialog rendering - ensures video surface is attached
+                    view.visibility = android.view.View.VISIBLE
+                    view.requestLayout()
+                    // Post to ensure layout happens after view is attached (fixes black screen in Dialog)
+                    view.post {
+                        view.requestLayout()
+                        view.invalidate()
+                        // Force video surface to be visible
+                        view.visibility = android.view.View.VISIBLE
+                    }
                 },
                 onRelease = {
                     // Clean up when view is released
@@ -890,16 +1039,19 @@ internal fun ModelVideoPlayer(
                 }
             )
 
-            when {
-                hasError -> Text(
-                    text = "Unable to load preview",
-                    color = Color.White,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                isBuffering -> CircularProgressIndicator(
-                    color = Color.White,
-                    strokeWidth = 2.dp
-                )
+            // Only show error overlay - ExoPlayer will handle video display
+            // This allows cached videos to show immediately without blocking overlay
+            if (hasError) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Unable to load preview",
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
         } else {
             if (!playbackEnabled) {

@@ -9,6 +9,7 @@ import com.manjul.genai.videogenerator.data.local.AppDatabase
 import com.manjul.genai.videogenerator.data.repository.RepositoryProvider
 import com.manjul.genai.videogenerator.player.VideoPlayerManager
 import com.manjul.genai.videogenerator.player.VideoPreviewCache
+import com.manjul.genai.videogenerator.player.VideoFileCache
 import kotlinx.coroutines.launch
 
 class GenAiApp : Application() {
@@ -35,6 +36,8 @@ class GenAiApp : Application() {
                 database.videoCacheDao().deleteOldEntries(sevenDaysAgo)
                 // Clean up old model cache entries (older than 7 days)
                 database.aiModelCacheDao().deleteOldCache(sevenDaysAgo)
+                // Clean up old file cache entries (older than 7 days)
+                VideoFileCache.deleteOldCache(this@GenAiApp, 7)
             } catch (e: Exception) {
                 android.util.Log.e("GenAiApp", "Error cleaning old cache entries", e)
             }
@@ -58,6 +61,10 @@ class GenAiApp : Application() {
         // Aggressively clear cache on high memory pressure
         if (level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL) {
             VideoPreviewCache.clearCache()
+            // Also clear file cache on critical memory pressure
+            kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+                VideoFileCache.clearCache(this@GenAiApp)
+            }
         }
     }
 }
