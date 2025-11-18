@@ -63,6 +63,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
@@ -661,6 +662,10 @@ internal fun ModelVideoPlayer(
     
     // Coroutine scope for async operations
     val coroutineScope = remember { kotlinx.coroutines.CoroutineScope(Dispatchers.IO) }
+    
+    // Store video source URI for error handling (accessible in both LaunchedEffect and DisposableEffect)
+    var currentVideoSourceUri by remember(videoUrl) { mutableStateOf<String?>(null) }
+    var currentActualVideoUrl by remember(videoUrl) { mutableStateOf<String?>(null) }
 
     // Keep players in memory much longer to prevent rebuffering when scrolling back
     // Only release when item is far off-screen for an extended period
@@ -723,9 +728,30 @@ internal fun ModelVideoPlayer(
             }
             val lastPosition = cacheEntry?.lastPlayedPosition ?: 0L
             
-            // Determine which source to use (priority: file cache > ExoPlayer cache > network)
-            val videoSourceUri = fileCacheUri ?: actualVideoUrl
+            // Determine which source to use (priority: ExoPlayer cache > file cache > network)
+            // Prefer ExoPlayer cache first (faster, already validated), then file cache, then network
+            val videoSourceUri = when {
+                isExoCached -> {
+                    // ExoPlayer cache is fastest and most reliable
+                    android.util.Log.d("ModelVideoPlayer", "Using ExoPlayer cache: $actualVideoUrl")
+                    actualVideoUrl
+                }
+                fileCacheUri != null -> {
+                    // File cache is persistent but may have issues, use with fallback
+                    android.util.Log.d("ModelVideoPlayer", "Using file cache: $fileCacheUri")
+                    fileCacheUri
+                }
+                else -> {
+                    // Use network URL (ExoPlayer will cache it)
+                    android.util.Log.d("ModelVideoPlayer", "Using network: $actualVideoUrl")
+                    actualVideoUrl
+                }
+            }
             val isCached = fileCacheUri != null || isExoCached
+            
+            // Store for error handling
+            currentVideoSourceUri = videoSourceUri
+            currentActualVideoUrl = actualVideoUrl
             
             // For fullscreen players in Dialog, add a small delay to ensure Dialog is fully laid out
             // This prevents black screen issue where video surface isn't attached yet
@@ -740,12 +766,27 @@ internal fun ModelVideoPlayer(
             // Double-check playback is still enabled after delay (if any)
         if (playbackEnabled) {
                 // Create player with optimized settings for caching
+                // For file:// URIs, we don't need CacheDataSource (it's already a local file)
+                // For HTTP/HTTPS URIs, use the cache-enabled media source factory
+                val factory = if (videoSourceUri.startsWith("file://")) {
+                    // Use DefaultDataSource for local files (handles file:// URIs properly)
+                    // DefaultDataSource automatically handles file://, http://, https://, etc.
+                    ProgressiveMediaSource.Factory(
+                        DefaultDataSource.Factory(context)
+                    )
+                } else {
+                    // Use cache-enabled factory for network URLs
+                    mediaSourceFactory
+                }
+                
                 val player = ExoPlayer.Builder(context)
-                    .setMediaSourceFactory(mediaSourceFactory)
+                    .setMediaSourceFactory(factory)
                     .setHandleAudioBecomingNoisy(true)
                     .build().apply {
                     // Use file cache if available, otherwise use URL (ExoPlayer will cache it)
-                    val mediaItem = MediaItem.fromUri(videoSourceUri)
+                    // Parse URI properly to handle file:// paths
+                    val uri = android.net.Uri.parse(videoSourceUri)
+                    val mediaItem = MediaItem.fromUri(uri)
                     setMediaItem(mediaItem)
                     repeatMode = Player.REPEAT_MODE_ONE
                         playWhenReady = true // Start playing immediately
@@ -849,7 +890,7 @@ internal fun ModelVideoPlayer(
                     // No timestamp, the whole thing is the URL
                     withoutPrefix
                 }
-            } else {
+        } else {
                 videoUrl
             }
             // Use withContext since we're already in a coroutine (LaunchedEffect)
@@ -943,6 +984,41 @@ internal fun ModelVideoPlayer(
                 hasError = true
                 isPlaying = false
                 android.util.Log.e("ModelVideoPlayer", "Player error for $videoUrl", error)
+                android.util.Log.e("ModelVideoPlayer", "Error message: ${error.message}")
+                android.util.Log.e("ModelVideoPlayer", "Error cause: ${error.cause}")
+                
+                // If error is with file:// URI, try falling back to original URL
+                val sourceUri = currentVideoSourceUri
+                val actualUrl = currentActualVideoUrl
+                if (sourceUri != null && sourceUri.startsWith("file://") && actualUrl != null) {
+                    android.util.Log.w("ModelVideoPlayer", "File cache failed, trying original URL: $actualUrl")
+                    // Try to reload with original URL and cache-enabled factory
+                    coroutineScope.launch(Dispatchers.Main) {
+                        try {
+                            val mediaItem = MediaItem.fromUri(actualUrl)
+                            // Use cache-enabled factory for network URL
+                            val factory = mediaSourceFactory
+                            val newPlayer = ExoPlayer.Builder(context)
+                                .setMediaSourceFactory(factory)
+                                .setHandleAudioBecomingNoisy(true)
+                                .build().apply {
+                                    setMediaItem(mediaItem)
+                                    repeatMode = Player.REPEAT_MODE_ONE
+                                    playWhenReady = true
+                                    volume = initialVolume
+                                    videoScalingMode = androidx.media3.common.C.VIDEO_SCALING_MODE_SCALE_TO_FIT
+                                    prepare()
+                                }
+                            // Release old player and use new one
+                            player.release()
+                            exoPlayer = newPlayer
+                            VideoPlayerManager.registerPlayer(videoUrl, newPlayer)
+                            hasError = false
+                        } catch (e: Exception) {
+                            android.util.Log.e("ModelVideoPlayer", "Failed to fallback to original URL", e)
+                        }
+                    }
+                }
             }
         }
         player.addListener(listener)
@@ -1047,10 +1123,10 @@ internal fun ModelVideoPlayer(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Unable to load preview",
-                        color = Color.White,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                    text = "Unable to load preview",
+                    color = Color.White,
+                    style = MaterialTheme.typography.bodyMedium
+                )
                 }
             }
         } else {
