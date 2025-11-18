@@ -1,0 +1,195 @@
+package com.manjul.genai.videogenerator.ui.screens
+
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlin.math.roundToInt
+
+@Composable
+fun GeneratingScreen(
+    modifier: Modifier = Modifier,
+    progress: Int = 0, // 0-100
+    onCancel: () -> Unit = {}
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            // Animated sparkles
+            SparkleAnimation()
+            
+            Spacer(modifier = Modifier.size(32.dp))
+            
+            // Progress text
+            Text(
+                text = "Generating Video... (${progress}%)",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = 24.sp
+            )
+            
+            Spacer(modifier = Modifier.size(16.dp))
+            
+            // Subtitle
+            Text(
+                text = "This will only take a moment.",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            
+            Spacer(modifier = Modifier.size(4.dp))
+            
+            Text(
+                text = "Please wait..",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun SparkleAnimation() {
+    val infiniteTransition = rememberInfiniteTransition(label = "sparkle")
+    
+    // First sparkle (large, left)
+    val sparkle1Rotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(3000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "sparkle1_rotation"
+    )
+    
+    val sparkle1Alpha by infiniteTransition.animateFloat(
+        initialValue = 0.6f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1500, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "sparkle1_alpha"
+    )
+    
+    // Second sparkle (medium, top right)
+    val sparkle2Rotation by infiniteTransition.animateFloat(
+        initialValue = 360f,
+        targetValue = 0f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "sparkle2_rotation"
+    )
+    
+    val sparkle2Alpha by infiniteTransition.animateFloat(
+        initialValue = 0.7f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1200, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "sparkle2_alpha"
+    )
+    
+    // Third sparkle (small, bottom right)
+    val sparkle3Rotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2500, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "sparkle3_rotation"
+    )
+    
+    val sparkle3Alpha by infiniteTransition.animateFloat(
+        initialValue = 0.5f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1800, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "sparkle3_alpha"
+    )
+    
+    Box(
+        modifier = Modifier.size(120.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        // Large sparkle (left)
+        Icon(
+            imageVector = Icons.Default.AutoAwesome,
+            contentDescription = null,
+            modifier = Modifier
+                .size(64.dp)
+                .alpha(sparkle1Alpha)
+                .rotate(sparkle1Rotation),
+            tint = MaterialTheme.colorScheme.primary
+        )
+        
+        // Medium sparkle (top right)
+        Icon(
+            imageVector = Icons.Default.AutoAwesome,
+            contentDescription = null,
+            modifier = Modifier
+                .size(40.dp)
+                .alpha(sparkle2Alpha)
+                .rotate(sparkle2Rotation)
+                .align(Alignment.TopEnd),
+            tint = MaterialTheme.colorScheme.secondary
+        )
+        
+        // Small sparkle (bottom right)
+        Icon(
+            imageVector = Icons.Default.AutoAwesome,
+            contentDescription = null,
+            modifier = Modifier
+                .size(32.dp)
+                .alpha(sparkle3Alpha)
+                .rotate(sparkle3Rotation)
+                .align(Alignment.BottomEnd),
+            tint = MaterialTheme.colorScheme.tertiary
+        )
+    }
+}
+

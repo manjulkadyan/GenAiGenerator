@@ -2,6 +2,7 @@ package com.manjul.genai.videogenerator.ui.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoAwesome
@@ -39,6 +40,8 @@ fun GenAiRoot() {
     var currentRoute by remember { mutableStateOf<AppDestination>(AppDestination.Models) }
     var selectedModelId by remember { mutableStateOf<String?>(null) }
     var highlightModelId by remember { mutableStateOf<String?>(null) }
+    var showGeneratingScreen by remember { mutableStateOf(false) }
+    var resultJob by remember { mutableStateOf<com.manjul.genai.videogenerator.data.model.VideoJob?>(null) }
     val destinations = remember { listOf(AppDestination.Models, AppDestination.Generate, AppDestination.History, AppDestination.Profile) }
 
     Scaffold(
@@ -82,10 +85,44 @@ fun GenAiRoot() {
                 onBackToModels = { 
                     highlightModelId = selectedModelId
                     currentRoute = AppDestination.Models
+                },
+                onGenerateStarted = { showGeneratingScreen = true }
+            )
+            AppDestination.History -> HistoryScreen(
+                modifier = Modifier.padding(innerPadding),
+                onVideoClick = { job ->
+                    if (job.status == com.manjul.genai.videogenerator.data.model.VideoJobStatus.COMPLETE) {
+                        resultJob = job
+                    }
                 }
             )
-            AppDestination.History -> HistoryScreen(modifier = Modifier.padding(innerPadding))
             AppDestination.Profile -> ProfileScreen(modifier = Modifier.padding(innerPadding))
+        }
+        
+        // Generating Screen Overlay
+        if (showGeneratingScreen) {
+            GeneratingScreen(
+                modifier = Modifier.fillMaxSize(),
+                progress = 0, // TODO: Get actual progress from ViewModel
+                onCancel = { showGeneratingScreen = false }
+            )
+        }
+        
+        // Results Screen
+        resultJob?.let { job ->
+            ResultsScreen(
+                modifier = Modifier.fillMaxSize(),
+                job = job,
+                onClose = { resultJob = null },
+                onRegenerate = {
+                    resultJob = null
+                    currentRoute = AppDestination.Generate
+                },
+                onDelete = {
+                    resultJob = null
+                    // TODO: Implement delete functionality
+                }
+            )
         }
     }
 }
