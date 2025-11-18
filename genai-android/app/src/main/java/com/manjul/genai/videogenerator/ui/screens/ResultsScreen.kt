@@ -170,8 +170,9 @@ fun ResultsScreenDialog(
                 ) {
                     // Video Player Card
                     VideoPlayerCard(
-                            videoUrl = videoUrl,
+                        videoUrl = videoUrl,
                         aspectRatio = aspectRatio,
+                        jobId = job.id,
                         onFullscreenClick = { showFullscreen = true }
                     )
 
@@ -368,6 +369,7 @@ private fun HeaderSection(
 private fun VideoPlayerCard(
     videoUrl: String,
     aspectRatio: Float,
+    jobId: String,
     onFullscreenClick: () -> Unit
 ) {
     Card(
@@ -391,12 +393,13 @@ private fun VideoPlayerCard(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                // Extract and show thumbnail from video
-                VideoThumbnail(
-                    videoUrl = videoUrl,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = androidx.compose.ui.layout.ContentScale.Crop
-                )
+                       // Extract and show thumbnail from video (with DB cache optimization)
+                       VideoThumbnail(
+                           videoUrl = videoUrl,
+                           modifier = Modifier.fillMaxSize(),
+                           contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                           jobId = jobId
+                       )
                 
                 // Play button overlay (centered)
                 Surface(

@@ -332,38 +332,13 @@ private fun HistoryJobCard(
                 contentAlignment = Alignment.Center
             ) {
                 if (videoUrl != null) {
-                    // Video thumbnail extracted from video
-                    Box(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        // Extract and show thumbnail from video
-                        VideoThumbnail(
-                            videoUrl = videoUrl,
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = androidx.compose.ui.layout.ContentScale.Crop
-                        )
-                        
-                        // Play icon overlay
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Surface(
-                                shape = CircleShape,
-                                color = Color.White.copy(alpha = 0.9f),
-                                modifier = Modifier.size(48.dp)
-                            ) {
-                                Box(contentAlignment = Alignment.Center) {
-                                    Icon(
-                                        imageVector = Icons.Default.PlayArrow,
-                                        contentDescription = "Play",
-                                        modifier = Modifier.size(24.dp),
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            }
-                        }
-                    }
+                    // Video thumbnail extracted from video (with DB cache optimization)
+                    VideoThumbnail(
+                        videoUrl = videoUrl,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                        jobId = job.id
+                    )
                 } else if (job.status == VideoJobStatus.PROCESSING) {
                     // Processing state
                     Box(

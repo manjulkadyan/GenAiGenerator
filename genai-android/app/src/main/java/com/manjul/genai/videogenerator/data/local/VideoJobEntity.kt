@@ -27,6 +27,7 @@ data class VideoJobEntity(
     val previewUrl: String? = null,
     val storageUrl: String? = null,
     val localFilePath: String? = null, // Local file path after download
+    val thumbnailPath: String? = null, // Local file path for cached thumbnail
     val errorMessage: String? = null,
     val replicatePredictionId: String? = null,
     val cost: Int = 0,
