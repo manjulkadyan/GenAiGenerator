@@ -12,10 +12,13 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.Source
 import com.google.firebase.functions.FirebaseFunctions
 import android.content.Context
-import android.content.SharedPreferences
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.manjul.genai.videogenerator.data.repository.datasource.FirebaseModelDataSource
+import com.manjul.genai.videogenerator.data.repository.datasource.RoomModelDataSource
+import com.manjul.genai.videogenerator.data.repository.ModelRepository
+import com.manjul.genai.videogenerator.data.repository.ModelRepositoryImpl
 import com.manjul.genai.videogenerator.data.model.AIModel
 import com.manjul.genai.videogenerator.data.model.CategorizedParameters
 import com.manjul.genai.videogenerator.data.model.GenerateRequest
@@ -32,120 +35,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
-class FirebaseVideoFeatureRepository(
-    private val firestore: FirebaseFirestore,
-    private val context: Context? = null
-) : VideoFeatureRepository {
-    private val gson = Gson()
-    private val cacheKey = "cached_models"
-    private val cacheTimestampKey = "cached_models_timestamp"
-    private val cacheValidityHours = 24L
-    
-    override suspend fun fetchModels(): List<AIModel> {
-        // Try to load from cache first
-        val cachedModels = loadFromCache()
-        if (cachedModels != null) {
-            return cachedModels
-        }
-        
-        // If cache is invalid or missing, fetch from server
-        return runCatching {
-            val models = queryModels(Source.SERVER)
-            // Save to cache
-            saveToCache(models)
-            models
-        }.getOrElse {
-            // If server fetch fails, try cache as fallback
-            queryModels(Source.CACHE)
-        }
-    }
-    
-    private fun loadFromCache(): List<AIModel>? {
-        if (context == null) return null
-        val prefs = context.getSharedPreferences("models_cache", Context.MODE_PRIVATE)
-        val timestamp = prefs.getLong(cacheTimestampKey, 0)
-        val cachedJson = prefs.getString(cacheKey, null)
-        
-        if (cachedJson == null || timestamp == 0L) {
-            return null
-        }
-        
-        // Check if cache is still valid (less than 24 hours old)
-        val cacheAge = System.currentTimeMillis() - timestamp
-        val cacheValidityMs = cacheValidityHours * 60 * 60 * 1000
-        if (cacheAge > cacheValidityMs) {
-            // Cache expired
-            return null
-        }
-        
-        // Parse cached models
-        return try {
-            val type = object : TypeToken<List<AIModel>>() {}.type
-            gson.fromJson<List<AIModel>>(cachedJson, type) ?: emptyList()
-        } catch (e: Exception) {
-            android.util.Log.e("ModelsCache", "Failed to parse cached models", e)
-            null
-        }
-    }
-    
-    private fun saveToCache(models: List<AIModel>) {
-        if (context == null) return
-        try {
-            val prefs = context.getSharedPreferences("models_cache", Context.MODE_PRIVATE)
-            val json = gson.toJson(models)
-            prefs.edit()
-                .putString(cacheKey, json)
-                .putLong(cacheTimestampKey, System.currentTimeMillis())
-                .apply()
-        } catch (e: Exception) {
-            android.util.Log.e("ModelsCache", "Failed to save models to cache", e)
-        }
-    }
-
-    private suspend fun queryModels(source: Source): List<AIModel> {
-        val snapshot = firestore.collection("video_features")
-            .orderBy("index", Query.Direction.ASCENDING)
-            .get(source)
-            .await()
-        return snapshot.documents.mapNotNull { it.toAIModel() }
-    }
-
-    private fun DocumentSnapshot.toAIModel(): AIModel? {
-        val name = getString("name") ?: return null
-        val replicateName = getString("replicate_name") ?: return null
-        return AIModel(
-            id = id,
-            name = name,
-            description = getString("description") ?: "",
-            pricePerSecond = getLong("price_per_sec")?.toInt() ?: 0,
-            defaultDuration = getLong("default_duration")?.toInt() ?: 0,
-            durationOptions = getNumberList("duration_options"),
-            aspectRatios = getStringList("aspect_ratios"),
-            supportsFirstFrame = getBoolean("supports_first_frame") ?: false,
-            requiresFirstFrame = getBoolean("requires_first_frame") ?: false,
-            supportsLastFrame = getBoolean("supports_last_frame") ?: false,
-            requiresLastFrame = getBoolean("requires_last_frame") ?: false,
-            previewUrl = getString("preview_url") ?: "",
-            replicateName = replicateName,
-            exampleVideoUrl = getStringList("example_video_urls")
-                .firstOrNull { it.isNotBlank() },
-            // Additional fields
-            supportsReferenceImages = getBoolean("supports_reference_images") ?: false,
-            maxReferenceImages = getLong("max_reference_images")?.toInt(),
-            supportsAudio = getBoolean("supports_audio") ?: false,
-            hardware = getString("hardware"),
-            runCount = getLong("run_count"),
-            tags = getStringList("tags"),
-            githubUrl = getString("github_url"),
-            paperUrl = getString("paper_url"),
-            licenseUrl = getString("license_url"),
-            coverImageUrl = getString("cover_image_url"),
-            // Parse dynamic schema parameters
-            schemaParameters = parseSchemaParameters(get("schema_parameters")),
-            schemaMetadata = parseSchemaMetadata(get("schema_metadata"))
-        )
-    }
-}
+// Old FirebaseVideoFeatureRepository removed - now using ModelRepository with separate data sources
 
 class FirebaseCreditsRepository(
     private val auth: FirebaseAuth,
@@ -373,8 +263,23 @@ object RepositoryProvider {
         appContext = context.applicationContext
     }
 
+    val modelRepository: ModelRepository by lazy {
+        if (appContext == null) {
+            throw IllegalStateException("RepositoryProvider must be initialized with context before accessing modelRepository")
+        }
+        val localDataSource = RoomModelDataSource(appContext!!)
+        val remoteDataSource = FirebaseModelDataSource(firestore)
+        ModelRepositoryImpl(localDataSource, remoteDataSource)
+    }
+    
+    // Keep for backward compatibility - delegates to modelRepository
+    @Deprecated("Use modelRepository instead", ReplaceWith("modelRepository"))
     val videoFeatureRepository: VideoFeatureRepository by lazy {
-        FirebaseVideoFeatureRepository(firestore, appContext)
+        object : VideoFeatureRepository {
+            override suspend fun fetchModels(): List<AIModel> {
+                return modelRepository.fetchModels()
+            }
+        }
     }
     val creditsRepository: CreditsRepository by lazy {
         FirebaseCreditsRepository(auth, firestore)
@@ -387,75 +292,4 @@ object RepositoryProvider {
     }
 }
 
-private fun DocumentSnapshot.getStringList(field: String): List<String> {
-    val raw = get(field)
-    return (raw as? List<*>)?.mapNotNull { it as? String } ?: emptyList()
-}
-
-private fun DocumentSnapshot.getNumberList(field: String): List<Int> {
-    val raw = get(field)
-    return (raw as? List<*>)?.mapNotNull {
-        when (it) {
-            is Number -> it.toInt()
-            is String -> it.toIntOrNull()
-            else -> null
-        }
-    } ?: emptyList()
-}
-
-private fun parseSchemaParameters(data: Any?): List<SchemaParameter> {
-    if (data == null) return emptyList()
-    val list = data as? List<Map<String, Any?>> ?: return emptyList()
-    return list.mapNotNull { paramMap ->
-        try {
-            SchemaParameter(
-                name = paramMap["name"] as? String ?: return@mapNotNull null,
-                type = parseParameterType(paramMap["type"] as? String),
-                required = paramMap["required"] as? Boolean ?: false,
-                nullable = paramMap["nullable"] as? Boolean ?: false,
-                description = paramMap["description"] as? String,
-                defaultValue = paramMap["default"],
-                enumValues = (paramMap["enum"] as? List<*>)?.mapNotNull { it },
-                min = (paramMap["min"] as? Number)?.toDouble(),
-                max = (paramMap["max"] as? Number)?.toDouble(),
-                format = paramMap["format"] as? String,
-                title = paramMap["title"] as? String,
-            )
-        } catch (e: Exception) {
-            null
-        }
-    }
-}
-
-private fun parseParameterType(type: String?): ParameterType {
-    return when (type?.lowercase()) {
-        "number", "integer" -> ParameterType.NUMBER
-        "boolean" -> ParameterType.BOOLEAN
-        "array" -> ParameterType.ARRAY
-        "object" -> ParameterType.OBJECT
-        "enum" -> ParameterType.ENUM
-        else -> ParameterType.STRING
-    }
-}
-
-private fun parseSchemaMetadata(data: Any?): ModelSchemaMetadata? {
-    if (data == null) return null
-    val map = data as? Map<String, Any?> ?: return null
-    return try {
-        val requiredFields = (map["required_fields"] as? List<*>)?.mapNotNull { it as? String } ?: emptyList()
-        val categorized = map["categorized"] as? Map<String, Any?> ?: return null
-        
-        ModelSchemaMetadata(
-            requiredFields = requiredFields,
-            categorized = CategorizedParameters(
-                text = parseSchemaParameters(categorized["text"]),
-                numeric = parseSchemaParameters(categorized["numeric"]),
-                boolean = parseSchemaParameters(categorized["boolean"]),
-                enum = parseSchemaParameters(categorized["enum"]),
-                file = parseSchemaParameters(categorized["file"]),
-            )
-        )
-    } catch (e: Exception) {
-        null
-    }
-}
+// Helper functions moved to FirestoreHelpers.kt
