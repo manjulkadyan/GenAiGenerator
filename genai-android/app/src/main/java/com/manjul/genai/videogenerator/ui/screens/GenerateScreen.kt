@@ -75,7 +75,8 @@ fun GenerateScreen(
     viewModel: VideoGenerateViewModel = viewModel(factory = VideoGenerateViewModel.Factory),
     preselectedModelId: String? = null,
     onModelSelected: () -> Unit = {},
-    onBackToModels: () -> Unit = {}
+    onBackToModels: () -> Unit = {},
+    onGenerateStarted: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
     
@@ -175,34 +176,6 @@ fun GenerateScreen(
                     ),
                     shape = RoundedCornerShape(12.dp)
                 )
-            }
-
-            // Negative prompt - only show if model supports it
-            if (state.selectedModel?.schemaMetadata?.categorized?.text?.any { it.name == "negative_prompt" } == true) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Text(
-                        text = "Negative Prompt (Optional)",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = state.negativePrompt,
-                        onValueChange = viewModel::updateNegativePrompt,
-                        placeholder = { Text("What to avoid (e.g., blurry, low quality)") },
-                        singleLine = false,
-                        maxLines = 3,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                }
             }
 
             // Duration and Aspect Ratio - Simplified
@@ -313,6 +286,36 @@ fun GenerateScreen(
                 }
             }
 
+            // Negative prompt - moved to end, only show if model supports it
+            if (state.selectedModel?.schemaMetadata?.categorized?.text?.any { it.name == "negative_prompt" } == true) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        text = "Negative Prompt (Optional)",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = state.negativePrompt,
+                        onValueChange = viewModel::updateNegativePrompt,
+                        placeholder = { Text("What to avoid (e.g., blurry, low quality)") },
+                        singleLine = false,
+                        maxLines = 3,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                }
+            }
+
         state.uploadMessage?.let {
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
@@ -395,7 +398,12 @@ fun GenerateScreen(
 
                 // Generate Button - Simplified
                 Button(
-                    onClick = viewModel::generate,
+                    onClick = {
+                        viewModel.generate()
+                        if (state.canGenerate) {
+                            onGenerateStarted()
+                        }
+                    },
                     enabled = state.canGenerate && !state.isGenerating,
                     modifier = Modifier
                         .fillMaxWidth()

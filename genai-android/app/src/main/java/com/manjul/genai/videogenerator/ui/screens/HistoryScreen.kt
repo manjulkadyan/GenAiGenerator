@@ -66,7 +66,8 @@ import kotlinx.coroutines.withContext
 @Composable
 fun HistoryScreen(
     modifier: Modifier = Modifier,
-    viewModel: HistoryViewModel = viewModel(factory = HistoryViewModel.Factory)
+    viewModel: HistoryViewModel = viewModel(factory = HistoryViewModel.Factory),
+    onVideoClick: ((com.manjul.genai.videogenerator.data.model.VideoJob) -> Unit)? = null
 ) {
     val jobs by viewModel.jobs.collectAsState()
     var fullscreenVideoUrl by remember { mutableStateOf<String?>(null) }
@@ -117,7 +118,10 @@ fun HistoryScreen(
             items(jobs, key = { it.id }) { job ->
                 JobCard(
                     job = job,
-                    onVideoClick = { url -> fullscreenVideoUrl = url }
+                    onVideoClick = { url -> 
+                        fullscreenVideoUrl = url
+                        onVideoClick?.invoke(job)
+                    }
                 )
             }
         }
