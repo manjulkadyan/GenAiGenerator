@@ -24,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -48,18 +49,24 @@ sealed class AppDestination(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun GenAiRoot() {
-    var currentRoute by remember { mutableStateOf<AppDestination>(AppDestination.Models) }
-    var selectedModelId by remember { mutableStateOf<String?>(null) }
-    var highlightModelId by remember { mutableStateOf<String?>(null) }
-    var showGeneratingScreen by remember { mutableStateOf(false) }
-    var resultJob by remember { mutableStateOf<com.manjul.genai.videogenerator.data.model.VideoJob?>(null) }
-    var pendingJobId by remember { mutableStateOf<String?>(null) }
-    var showBuyCreditsScreen by remember { mutableStateOf(false) }
+    var currentRoute by rememberSaveable { mutableStateOf<AppDestination>(AppDestination.Models) }
+    var selectedModelId by rememberSaveable { mutableStateOf<String?>(null) }
+    var highlightModelId by rememberSaveable { mutableStateOf<String?>(null) }
+    var showGeneratingScreen by rememberSaveable { mutableStateOf(false) }
+    // Store job ID instead of full VideoJob object for orientation change handling
+    var resultJobId by rememberSaveable { mutableStateOf<String?>(null) }
+    var pendingJobId by rememberSaveable { mutableStateOf<String?>(null) }
+    var showBuyCreditsScreen by rememberSaveable { mutableStateOf(false) }
     val destinations = remember { listOf(AppDestination.Models, AppDestination.Generate, AppDestination.History, AppDestination.Profile) }
     
     // Watch for job completion when generating
     val historyViewModel: HistoryViewModel = viewModel(factory = HistoryViewModel.Factory)
     val jobs by historyViewModel.jobs.collectAsState()
+    
+    // Get the actual job from the ViewModel using the saved ID
+    val resultJob = resultJobId?.let { jobId ->
+        jobs.firstOrNull { it.id == jobId }
+    }
     
     // Get GenerateViewModel to access state for GeneratingScreen
     val generateViewModel: VideoGenerateViewModel = viewModel(factory = VideoGenerateViewModel.Factory)
@@ -84,7 +91,7 @@ fun GenAiRoot() {
             
             if (jobToCheck != null && jobToCheck.status == VideoJobStatus.COMPLETE) {
                 showGeneratingScreen = false
-                resultJob = jobToCheck
+                resultJobId = jobToCheck.id
                 pendingJobId = null
                 // Reset generation state when job completes and ResultsScreen is shown
                 generateViewModel.resetGenerationState()
@@ -142,8 +149,8 @@ fun GenAiRoot() {
                             pendingJobId = null
                         }
                         // Close results screen when navigating (user can reopen from History)
-                        if (resultJob != null) {
-                            resultJob = null
+                        if (resultJobId != null) {
+                            resultJobId = null
                         }
                         // Reset buy credits screen when navigating away from Profile
                         if (destination != AppDestination.Profile) {
@@ -189,7 +196,7 @@ fun GenAiRoot() {
                 modifier = Modifier.padding(innerPadding),
                 onVideoClick = { job ->
                     if (job.status == com.manjul.genai.videogenerator.data.model.VideoJobStatus.COMPLETE) {
-                        resultJob = job
+                        resultJobId = job.id
                     }
                 }
             )
@@ -248,18 +255,18 @@ fun GenAiRoot() {
                 onClose = { 
                     // Reset generation state when closing result screen
                     generateViewModel.resetGenerationState()
-                    resultJob = null 
+                    resultJobId = null 
                 },
                 onRegenerate = {
                     // Load parameters from the job for regeneration
                     generateViewModel.loadParametersForRegeneration(job)
                     generateViewModel.resetGenerationState()
-                    resultJob = null
+                    resultJobId = null
                     currentRoute = AppDestination.Generate
                 },
                 onDelete = {
                     generateViewModel.resetGenerationState()
-                    resultJob = null
+                    resultJobId = null
                     // TODO: Implement delete functionality
                 }
             )

@@ -37,6 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -75,7 +76,7 @@ fun HistoryScreen(
     onVideoClick: ((VideoJob) -> Unit)? = null
 ) {
     val jobs by viewModel.jobs.collectAsState()
-    var selectedFilter by remember { mutableStateOf(HistoryFilter.ALL) }
+    var selectedFilter by rememberSaveable { mutableStateOf(HistoryFilter.ALL) }
 
     // Filter jobs based on selected filter
     val filteredJobs = when (selectedFilter) {
