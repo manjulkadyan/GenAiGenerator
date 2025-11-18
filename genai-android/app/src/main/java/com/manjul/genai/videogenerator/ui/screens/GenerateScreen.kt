@@ -107,20 +107,21 @@ fun GenerateScreen(
 
     val scrollState = rememberScrollState()
 
-    Column(modifier = modifier.fillMaxSize()) {
-        AppToolbar(
-            title = "Create Your Video",
-            subtitle = "Choose a model and describe your vision",
-            showBorder = false
-        )
-        
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
+    Box(modifier = modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            AppToolbar(
+                title = "Create Your Video",
+                subtitle = "Choose a model and describe your vision",
+                showBorder = false
+            )
+            
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
 
             // Model Selection - Simplified
             Column(
@@ -334,6 +335,7 @@ fun GenerateScreen(
 
             // Add spacer to ensure content doesn't get hidden behind sticky button
             Spacer(modifier = Modifier.height(120.dp))
+            }
         }
 
         // Sticky bottom section with cost and generate button
@@ -453,7 +455,7 @@ fun GenerateScreen(
                 }
             }
         }
-    }
+        }
 
     // Don't show any alert dialogs - GeneratingScreen will handle all status/errors
     // Only show error dialog if generation failed and we're not generating

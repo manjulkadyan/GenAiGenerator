@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -84,7 +85,7 @@ fun AppToolbar(
                 // Title and Subtitle
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = if (subtitle != null) Arrangement.spacedBy(4.dp) else Arrangement.CenterVertically
+                    verticalArrangement = if (subtitle != null) Arrangement.spacedBy(4.dp) else Arrangement.Center
                 ) {
                     subtitle?.let {
                         Text(

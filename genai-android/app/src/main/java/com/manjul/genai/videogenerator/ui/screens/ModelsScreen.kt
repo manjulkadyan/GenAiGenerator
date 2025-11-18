@@ -73,14 +73,13 @@ import androidx.media3.ui.PlayerView
 import com.manjul.genai.videogenerator.data.local.AppDatabase
 import com.manjul.genai.videogenerator.data.local.VideoCacheEntity
 import com.manjul.genai.videogenerator.data.model.AIModel
+import com.manjul.genai.videogenerator.player.VideoFileCache
+import com.manjul.genai.videogenerator.player.VideoPlayerManager
 import com.manjul.genai.videogenerator.player.VideoPreviewCache
 import com.manjul.genai.videogenerator.ui.components.AppToolbar
-import com.manjul.genai.videogenerator.player.VideoPlayerManager
-import com.manjul.genai.videogenerator.player.VideoFileCache
 import com.manjul.genai.videogenerator.ui.viewmodel.AIModelsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 private const val PLAYER_PREFETCH_DISTANCE = 0 // Only play visible items to save memory
 private const val MAX_CONCURRENT_PLAYERS = 2 // Limit concurrent players
@@ -135,9 +134,9 @@ private fun LoadingState(modifier: Modifier) {
         contentAlignment = Alignment.Center
     ) {
         Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+        ) {
             CircularProgressIndicator(
                 modifier = Modifier.size(48.dp),
                 color = MaterialTheme.colorScheme.primary,
@@ -148,11 +147,11 @@ private fun LoadingState(modifier: Modifier) {
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-        Text(
+            Text(
                 text = "Discovering the latest video generation models...",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-        )
+            )
         }
     }
 }
@@ -167,7 +166,7 @@ private fun ErrorState(modifier: Modifier, message: String) {
     ) {
         Column(
             modifier = Modifier.padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Surface(
@@ -187,12 +186,12 @@ private fun ErrorState(modifier: Modifier, message: String) {
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )
-        Text(
-            text = message,
-            style = MaterialTheme.typography.bodyMedium,
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp)
-        )
+            )
         }
     }
 }
@@ -220,7 +219,8 @@ private fun ModelsList(
     LaunchedEffect(models.isNotEmpty(), highlightModelId, state.savedScrollIndex) {
         if (models.isNotEmpty() &&
             highlightModelId == null &&
-            state.savedScrollIndex > 0) {
+            state.savedScrollIndex > 0
+        ) {
             // Check if we need to restore (if we're at the top or near it)
             val needsRestore = listState.firstVisibleItemIndex == 0 ||
                     (listState.firstVisibleItemIndex < state.savedScrollIndex - 2)
@@ -286,8 +286,7 @@ private fun ModelsList(
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         state = listState,
-        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp)
+        verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         item {
             AppToolbar(
@@ -308,14 +307,15 @@ private fun ModelsList(
                     } else {
                         // Check if this item is visible
                         val isVisible = visibleItems.any { it.index == index }
-                        
+
                         // Also prefetch items that are about to become visible (1 item ahead/behind)
                         val firstVisibleIndex = visibleItems.first().index
                         val lastVisibleIndex = visibleItems.last().index
                         val prefetchRange = 1 // Prefetch 1 item ahead/behind
-                        
-                        val isInPrefetchRange = index in (firstVisibleIndex - prefetchRange)..(lastVisibleIndex + prefetchRange)
-                        
+
+                        val isInPrefetchRange =
+                            index in (firstVisibleIndex - prefetchRange)..(lastVisibleIndex + prefetchRange)
+
                         isVisible || isInPrefetchRange
                     }
                 }
@@ -341,7 +341,7 @@ private fun FullscreenVideoDialog(
     // Use a unique key to ensure fullscreen player is separate from thumbnail
     // This prevents state conflicts but we'll use actual URL for loading
     val fullscreenKey = remember(videoUrl) { "fullscreen_${System.currentTimeMillis()}_$videoUrl" }
-    
+
     Dialog(
         onDismissRequest = {
             // Release player before dismissing dialog
@@ -375,7 +375,7 @@ private fun FullscreenVideoDialog(
             )
         }
     }
-    
+
     // CRITICAL: Ensure player is immediately released when dialog is dismissed
     // This prevents audio from continuing to play in the background (memory leak prevention)
     DisposableEffect(videoUrl) {
@@ -405,6 +405,7 @@ private fun ModelCard(
         modifier = Modifier
             .fillMaxWidth()
             .scale(scale)
+            .padding(vertical = 8.dp, horizontal = 16.dp)
             .clickable(onClick = onModelClick),
         elevation = CardDefaults.cardElevation(
             defaultElevation = if (isHighlighted) 8.dp else 4.dp
@@ -425,15 +426,15 @@ private fun ModelCard(
                 Box(modifier = Modifier.fillMaxWidth()) {
                     // Always create player for visible items and prefetch nearby items
                     // This allows smooth playback without loading delays
-                ModelVideoPlayer(
-                    videoUrl = exampleVideoUrl,
-                    playbackEnabled = playbackEnabled,
+                    ModelVideoPlayer(
+                        videoUrl = exampleVideoUrl,
+                        playbackEnabled = playbackEnabled,
                         onVideoClick = { onVideoClick(exampleVideoUrl) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(16f / 9f),
                         shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
-                )
+                    )
                 }
             } else {
                 // Placeholder for models without preview
@@ -642,14 +643,14 @@ internal fun ModelVideoPlayer(
     var hasError by remember(videoUrl) { mutableStateOf(false) }
     var isPlaying by remember(videoUrl) { mutableStateOf(false) }
     var exoPlayer by remember(videoUrl) { mutableStateOf<ExoPlayer?>(null) }
-    
+
     // Room DB cache for video metadata
     val database = remember { AppDatabase.getDatabase(context) }
     val cacheDao = remember { database.videoCacheDao() }
-    
+
     // Coroutine scope for async operations
     val coroutineScope = remember { kotlinx.coroutines.CoroutineScope(Dispatchers.IO) }
-    
+
     // Store video source URI for error handling (accessible in both LaunchedEffect and DisposableEffect)
     var currentVideoSourceUri by remember(videoUrl) { mutableStateOf<String?>(null) }
     var currentActualVideoUrl by remember(videoUrl) { mutableStateOf<String?>(null) }
@@ -661,7 +662,7 @@ internal fun ModelVideoPlayer(
             // Much longer delay - keep players in memory for 30 seconds
             // This prevents rebuffering when user scrolls back up/down
             kotlinx.coroutines.delay(30000) // 30 seconds delay before releasing
-            
+
             // Double-check playback is still disabled after delay
             if (!playbackEnabled) {
                 exoPlayer?.let { player ->
@@ -703,7 +704,7 @@ internal fun ModelVideoPlayer(
             } else {
                 videoUrl
             }
-            
+
             // Check all caches in parallel: File cache, Room DB, and ExoPlayer cache
             val (cacheEntry, isExoCached, fileCacheUri) = kotlinx.coroutines.withContext(Dispatchers.IO) {
                 val entry = cacheDao.getCacheEntry(actualVideoUrl)
@@ -714,7 +715,7 @@ internal fun ModelVideoPlayer(
                 Triple(entry, exoCached, fileUri)
             }
             val lastPosition = cacheEntry?.lastPlayedPosition ?: 0L
-            
+
             // Determine which source to use (priority: ExoPlayer cache > file cache > network)
             // Prefer ExoPlayer cache first (faster, already validated), then file cache, then network
             val videoSourceUri = when {
@@ -723,11 +724,13 @@ internal fun ModelVideoPlayer(
                     android.util.Log.d("ModelVideoPlayer", "Using ExoPlayer cache: $actualVideoUrl")
                     actualVideoUrl
                 }
+
                 fileCacheUri != null -> {
                     // File cache is persistent but may have issues, use with fallback
                     android.util.Log.d("ModelVideoPlayer", "Using file cache: $fileCacheUri")
                     fileCacheUri
                 }
+
                 else -> {
                     // Use network URL (ExoPlayer will cache it)
                     android.util.Log.d("ModelVideoPlayer", "Using network: $actualVideoUrl")
@@ -735,11 +738,11 @@ internal fun ModelVideoPlayer(
                 }
             }
             val isCached = fileCacheUri != null || isExoCached
-            
+
             // Store for error handling
             currentVideoSourceUri = videoSourceUri
             currentActualVideoUrl = actualVideoUrl
-            
+
             // For fullscreen players in Dialog, add a small delay to ensure Dialog is fully laid out
             // This prevents black screen issue where video surface isn't attached yet
             val isFullscreen = videoUrl.startsWith("fullscreen_")
@@ -749,9 +752,9 @@ internal fun ModelVideoPlayer(
                 kotlinx.coroutines.delay(50) // Small delay only for non-cached videos
             }
             // No delay for cached videos (unless fullscreen) - they should appear immediately
-            
+
             // Double-check playback is still enabled after delay (if any)
-        if (playbackEnabled) {
+            if (playbackEnabled) {
                 // Create player with optimized settings for caching
                 // For file:// URIs, we don't need CacheDataSource (it's already a local file)
                 // For HTTP/HTTPS URIs, use the cache-enabled media source factory
@@ -765,25 +768,25 @@ internal fun ModelVideoPlayer(
                     // Use cache-enabled factory for network URLs
                     mediaSourceFactory
                 }
-                
+
                 val player = ExoPlayer.Builder(context)
                     .setMediaSourceFactory(factory)
                     .setHandleAudioBecomingNoisy(true)
                     .build().apply {
-                    // Use file cache if available, otherwise use URL (ExoPlayer will cache it)
-                    // Parse URI properly to handle file:// paths
-                    val uri = android.net.Uri.parse(videoSourceUri)
-                    val mediaItem = MediaItem.fromUri(uri)
-                    setMediaItem(mediaItem)
-                    repeatMode = Player.REPEAT_MODE_ONE
+                        // Use file cache if available, otherwise use URL (ExoPlayer will cache it)
+                        // Parse URI properly to handle file:// paths
+                        val uri = android.net.Uri.parse(videoSourceUri)
+                        val mediaItem = MediaItem.fromUri(uri)
+                        setMediaItem(mediaItem)
+                        repeatMode = Player.REPEAT_MODE_ONE
                         playWhenReady = true // Start playing immediately
-                    volume = initialVolume
+                        volume = initialVolume
                         videoScalingMode = androidx.media3.common.C.VIDEO_SCALING_MODE_SCALE_TO_FIT
                         // Prepare immediately - ExoPlayer will use cache if available
-                    prepare()
+                        prepare()
                     }
                 exoPlayer = player
-                
+
                 // If video is not in file cache but is playing from network,
                 // download it to file cache in background for future use
                 if (fileCacheUri == null && !actualVideoUrl.startsWith("file://")) {
@@ -792,17 +795,24 @@ internal fun ModelVideoPlayer(
                     coroutineScope.launch {
                         try {
                             VideoFileCache.downloadVideo(context, actualVideoUrl)
-                            android.util.Log.d("ModelVideoPlayer", "Video downloaded to file cache: $actualVideoUrl")
+                            android.util.Log.d(
+                                "ModelVideoPlayer",
+                                "Video downloaded to file cache: $actualVideoUrl"
+                            )
                         } catch (e: Exception) {
-                            android.util.Log.e("ModelVideoPlayer", "Failed to download video to file cache", e)
+                            android.util.Log.e(
+                                "ModelVideoPlayer",
+                                "Failed to download video to file cache",
+                                e
+                            )
                         }
                     }
                 }
-                
+
                 // Register with manager to track and limit concurrent players
                 // Use the videoUrl key (which might be fullscreen_ prefixed) for manager tracking
                 VideoPlayerManager.registerPlayer(videoUrl, player)
-                
+
                 // Update Room DB cache - mark as accessed (we're already in a coroutine via LaunchedEffect)
                 // Use withContext since we're already in a coroutine
                 kotlinx.coroutines.withContext(Dispatchers.IO) {
@@ -826,7 +836,7 @@ internal fun ModelVideoPlayer(
                         android.util.Log.e("ModelVideoPlayer", "Error updating cache", e)
                     }
                 }
-                
+
                 isBuffering = true
                 hasError = false
             }
@@ -854,8 +864,8 @@ internal fun ModelVideoPlayer(
                 cacheDao.getCacheEntry(actualVideoUrl)
             }
             val lastPosition = cacheEntry?.lastPlayedPosition ?: 0L
-            
-                exoPlayer?.playWhenReady = true
+
+            exoPlayer?.playWhenReady = true
             // Seek to last known position if available (within reasonable range)
             if (lastPosition > 0 && lastPosition < (exoPlayer?.duration ?: Long.MAX_VALUE)) {
                 exoPlayer?.seekTo(lastPosition)
@@ -877,7 +887,7 @@ internal fun ModelVideoPlayer(
                     // No timestamp, the whole thing is the URL
                     withoutPrefix
                 }
-        } else {
+            } else {
                 videoUrl
             }
             // Use withContext since we're already in a coroutine (LaunchedEffect)
@@ -888,7 +898,7 @@ internal fun ModelVideoPlayer(
                     android.util.Log.e("ModelVideoPlayer", "Error saving playback position", e)
                 }
             }
-            
+
             // Pause (but don't release) if playback is disabled - keep in memory
             // Player stays in memory for 30 seconds to prevent rebuffering
             exoPlayer?.playWhenReady = false
@@ -915,7 +925,11 @@ internal fun ModelVideoPlayer(
                     it.release()
                     android.util.Log.d("ModelVideoPlayer", "Released player for: $videoUrl")
                 } catch (e: Exception) {
-                    android.util.Log.e("ModelVideoPlayer", "Error releasing player for $videoUrl", e)
+                    android.util.Log.e(
+                        "ModelVideoPlayer",
+                        "Error releasing player for $videoUrl",
+                        e
+                    )
                 }
             }
             exoPlayer = null
@@ -934,7 +948,7 @@ internal fun ModelVideoPlayer(
                 isBuffering = playbackState == Player.STATE_BUFFERING
                 isPlaying = player.isPlaying && playbackState == Player.STATE_READY
                 onPlayingStateChanged?.invoke(isPlaying)
-                
+
                 // Update cache status when video is ready
                 if (playbackState == Player.STATE_READY) {
                     // Use coroutine scope for async operation (Player.Listener is not a coroutine)
@@ -953,7 +967,7 @@ internal fun ModelVideoPlayer(
                                 // Estimate cache size (this is approximate)
                                 player.duration * 1000 // Rough estimate
                             } else 0L
-                            
+
                             cacheDao.updateCacheStatus(actualVideoUrl, isCached, cacheSize)
                         } catch (e: Exception) {
                             android.util.Log.e("ModelVideoPlayer", "Error updating cache status", e)
@@ -961,7 +975,7 @@ internal fun ModelVideoPlayer(
                     }
                 }
             }
-            
+
             override fun onIsPlayingChanged(isPlayingNow: Boolean) {
                 isPlaying = isPlayingNow && player.playbackState == Player.STATE_READY
                 onPlayingStateChanged?.invoke(isPlaying)
@@ -973,12 +987,15 @@ internal fun ModelVideoPlayer(
                 android.util.Log.e("ModelVideoPlayer", "Player error for $videoUrl", error)
                 android.util.Log.e("ModelVideoPlayer", "Error message: ${error.message}")
                 android.util.Log.e("ModelVideoPlayer", "Error cause: ${error.cause}")
-                
+
                 // If error is with file:// URI, try falling back to original URL
                 val sourceUri = currentVideoSourceUri
                 val actualUrl = currentActualVideoUrl
                 if (sourceUri != null && sourceUri.startsWith("file://") && actualUrl != null) {
-                    android.util.Log.w("ModelVideoPlayer", "File cache failed, trying original URL: $actualUrl")
+                    android.util.Log.w(
+                        "ModelVideoPlayer",
+                        "File cache failed, trying original URL: $actualUrl"
+                    )
                     // Try to reload with original URL and cache-enabled factory
                     coroutineScope.launch(Dispatchers.Main) {
                         try {
@@ -993,7 +1010,8 @@ internal fun ModelVideoPlayer(
                                     repeatMode = Player.REPEAT_MODE_ONE
                                     playWhenReady = true
                                     volume = initialVolume
-                                    videoScalingMode = androidx.media3.common.C.VIDEO_SCALING_MODE_SCALE_TO_FIT
+                                    videoScalingMode =
+                                        androidx.media3.common.C.VIDEO_SCALING_MODE_SCALE_TO_FIT
                                     prepare()
                                 }
                             // Release old player and use new one
@@ -1002,7 +1020,11 @@ internal fun ModelVideoPlayer(
                             VideoPlayerManager.registerPlayer(videoUrl, newPlayer)
                             hasError = false
                         } catch (e: Exception) {
-                            android.util.Log.e("ModelVideoPlayer", "Failed to fallback to original URL", e)
+                            android.util.Log.e(
+                                "ModelVideoPlayer",
+                                "Failed to fallback to original URL",
+                                e
+                            )
                         }
                     }
                 }
@@ -1021,16 +1043,18 @@ internal fun ModelVideoPlayer(
                 Lifecycle.Event.ON_STOP, Lifecycle.Event.ON_PAUSE -> {
                     player.pause()
                 }
+
                 Lifecycle.Event.ON_RESUME -> {
                     if (!hasError && playbackEnabled) {
                         player.play()
                     }
                 }
+
                 else -> Unit
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose { 
+        onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
@@ -1110,10 +1134,10 @@ internal fun ModelVideoPlayer(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                    text = "Unable to load preview",
-                    color = Color.White,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                        text = "Unable to load preview",
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
         } else {

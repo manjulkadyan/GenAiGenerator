@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "407437371864",
+    "project_id": "genaivideogenerator",
+    "storage_bucket": "genaivideogenerator.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407437371864:android:638d30eeab7d553d1feaad",
+        "android_client_info": {
+          "package_name": "com.manjul.genai.videogenerator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "407437371864-9dkicne9lg7l8l816jbut5dup9qs7sus.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl8eaY1XbBU5rK21UpXsjYymQGbZmn43o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "407437371864-9dkicne9lg7l8l816jbut5dup9qs7sus.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
