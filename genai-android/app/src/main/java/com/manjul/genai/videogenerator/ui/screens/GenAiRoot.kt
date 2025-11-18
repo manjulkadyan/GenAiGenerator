@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -44,12 +45,36 @@ sealed class AppDestination(
     data object Generate : AppDestination(R.string.destination_generate, Icons.Outlined.AutoAwesome)
     data object History : AppDestination(R.string.destination_history, Icons.Outlined.History)
     data object Profile : AppDestination(R.string.destination_profile, Icons.Outlined.Face)
+    
+    companion object {
+        val Saver: Saver<AppDestination, String> = Saver(
+            save = { destination ->
+                when (destination) {
+                    is AppDestination.Models -> "Models"
+                    is AppDestination.Generate -> "Generate"
+                    is AppDestination.History -> "History"
+                    is AppDestination.Profile -> "Profile"
+                }
+            },
+            restore = { value ->
+                when (value) {
+                    "Models" -> AppDestination.Models
+                    "Generate" -> AppDestination.Generate
+                    "History" -> AppDestination.History
+                    "Profile" -> AppDestination.Profile
+                    else -> AppDestination.Models // Default fallback
+                }
+            }
+        )
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun GenAiRoot() {
-    var currentRoute by rememberSaveable { mutableStateOf<AppDestination>(AppDestination.Models) }
+    var currentRoute by rememberSaveable(
+        stateSaver = AppDestination.Saver
+    ) { mutableStateOf<AppDestination>(AppDestination.Models) }
     var selectedModelId by rememberSaveable { mutableStateOf<String?>(null) }
     var highlightModelId by rememberSaveable { mutableStateOf<String?>(null) }
     var showGeneratingScreen by rememberSaveable { mutableStateOf(false) }
