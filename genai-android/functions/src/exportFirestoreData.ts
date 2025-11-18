@@ -129,7 +129,7 @@ async function exportFirestoreData() {
 
   fs.writeFileSync(summaryPath, JSON.stringify(summary, null, 2));
 
-  console.log(`📋 Summary file created:`);
+  console.log("📋 Summary file created:");
   console.log(`   ${summaryPath}\n`);
 
   process.exit(0);

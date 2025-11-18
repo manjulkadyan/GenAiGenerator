@@ -168,7 +168,7 @@ async function findAllDuplicates() {
   );
 
   console.log("\n" + "=".repeat(80));
-  console.log(`\n✅ Analysis complete!`);
+  console.log("\n✅ Analysis complete!");
   console.log(`   Total duplicates found: ${duplicates.length}`);
   console.log(`   Results saved to: ${outputPath}\n`);
 

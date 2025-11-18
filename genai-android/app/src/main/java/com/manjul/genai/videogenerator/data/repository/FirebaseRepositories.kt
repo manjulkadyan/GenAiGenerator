@@ -237,8 +237,9 @@ class FirebaseVideoGenerateRepository(
 
         return runCatching {
             // Call Firebase Function - it will create the job document
+            // TODO: Switch to "testCallReplicateVeoAPIV2" for testing (see TESTING_CREDITS.md)
             val callableResult = functions
-                .getHttpsCallable("callReplicateVeoAPIV2")
+                .getHttpsCallable("testCallReplicateVeoAPIV2") // Change to "testCallReplicateVeoAPIV2" for testing
                 .call(data)
                 .await()
             

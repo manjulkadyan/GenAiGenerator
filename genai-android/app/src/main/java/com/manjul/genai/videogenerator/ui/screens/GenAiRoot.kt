@@ -15,6 +15,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.clickable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,7 +25,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.manjul.genai.videogenerator.R
+import com.manjul.genai.videogenerator.data.model.VideoJobStatus
+import com.manjul.genai.videogenerator.ui.viewmodel.HistoryViewModel
+import kotlinx.coroutines.launch
 
 sealed class AppDestination(
     val labelRes: Int,
@@ -42,7 +49,37 @@ fun GenAiRoot() {
     var highlightModelId by remember { mutableStateOf<String?>(null) }
     var showGeneratingScreen by remember { mutableStateOf(false) }
     var resultJob by remember { mutableStateOf<com.manjul.genai.videogenerator.data.model.VideoJob?>(null) }
+    var pendingJobId by remember { mutableStateOf<String?>(null) }
     val destinations = remember { listOf(AppDestination.Models, AppDestination.Generate, AppDestination.History, AppDestination.Profile) }
+    
+    // Watch for job completion when generating
+    val historyViewModel: HistoryViewModel = viewModel(factory = HistoryViewModel.Factory)
+    val jobs by historyViewModel.jobs.collectAsState()
+    
+    // Auto-navigate to ResultsScreen when job completes
+    LaunchedEffect(showGeneratingScreen, jobs) {
+        if (showGeneratingScreen) {
+            // If we don't have a pending job ID yet, get the latest job
+            if (pendingJobId == null) {
+                // Wait a bit for the job to appear in Firestore
+                kotlinx.coroutines.delay(1500)
+                pendingJobId = jobs.firstOrNull()?.id
+            }
+            
+            // Check if the pending job (or latest job) has completed
+            val jobToCheck = if (pendingJobId != null) {
+                jobs.firstOrNull { it.id == pendingJobId }
+            } else {
+                jobs.firstOrNull()
+            }
+            
+            if (jobToCheck != null && jobToCheck.status == VideoJobStatus.COMPLETE) {
+                showGeneratingScreen = false
+                resultJob = jobToCheck
+                pendingJobId = null
+            }
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -57,6 +94,11 @@ fun GenAiRoot() {
                             } else if (destination != AppDestination.Generate) {
                                 selectedModelId = null
                                 highlightModelId = null
+                            }
+                            // Hide generating screen when navigating (user can check History for status)
+                            if (showGeneratingScreen && destination != AppDestination.Generate) {
+                                showGeneratingScreen = false
+                                pendingJobId = null
                             }
                             currentRoute = destination
                         },
@@ -86,7 +128,11 @@ fun GenAiRoot() {
                     highlightModelId = selectedModelId
                     currentRoute = AppDestination.Models
                 },
-                onGenerateStarted = { showGeneratingScreen = true }
+                onGenerateStarted = { 
+                    showGeneratingScreen = true
+                    // The latest job will appear in the jobs list shortly after generation starts
+                    // We'll detect it in LaunchedEffect below
+                }
             )
             AppDestination.History -> HistoryScreen(
                 modifier = Modifier.padding(innerPadding),
@@ -99,12 +145,14 @@ fun GenAiRoot() {
             AppDestination.Profile -> ProfileScreen(modifier = Modifier.padding(innerPadding))
         }
         
-        // Generating Screen Overlay
+        // Generating Screen Overlay - Non-blocking, allows navigation
         if (showGeneratingScreen) {
             GeneratingScreen(
                 modifier = Modifier.fillMaxSize(),
-                progress = 0, // TODO: Get actual progress from ViewModel
-                onCancel = { showGeneratingScreen = false }
+                onCancel = { 
+                    showGeneratingScreen = false
+                    pendingJobId = null
+                }
             )
         }
         

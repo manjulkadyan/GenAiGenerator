@@ -352,7 +352,7 @@ async function mergeAndDeduplicate() {
   );
 
   console.log("\n" + "=".repeat(80));
-  console.log(`\n✅ Analysis complete!`);
+  console.log("\n✅ Analysis complete!");
   console.log(`   Total pairs found: ${flaggedPairs.length}`);
   console.log(`   Merged: ${mergedCount}`);
   console.log(`   Deleted: ${deletedCount}`);

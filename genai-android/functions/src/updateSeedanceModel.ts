@@ -242,7 +242,7 @@ async function updateSeedanceModel(): Promise<void> {
   // Update Firestore - use set without merge to ensure all fields are updated
   const collection = firestore.collection("video_features");
   const docRef = collection.doc(model.id);
-  
+
   // First check if document exists to preserve any existing fields we want to keep
   const existingDoc = await docRef.get();
   if (existingDoc.exists) {
@@ -255,7 +255,7 @@ async function updateSeedanceModel(): Promise<void> {
       firestoreDoc.created_at = existingData.created_at;
     }
   }
-  
+
   // Use set to completely replace the document with our new data
   await docRef.set(firestoreDoc);
 

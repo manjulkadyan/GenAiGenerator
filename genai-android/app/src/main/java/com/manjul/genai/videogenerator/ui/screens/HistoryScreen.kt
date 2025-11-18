@@ -121,11 +121,11 @@ fun HistoryScreen(
                     onVideoClick = { url -> 
                         fullscreenVideoUrl = url
                         onVideoClick?.invoke(job)
-                    }
-                )
             }
+                )
         }
     }
+}
 
     fullscreenVideoUrl?.let { url ->
         FullscreenVideoDialog(
@@ -234,9 +234,9 @@ private fun JobCard(
                 verticalAlignment = Alignment.Top
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = job.prompt,
-                        style = MaterialTheme.typography.titleMedium,
+            Text(
+                text = job.prompt,
+                style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
@@ -262,7 +262,7 @@ private fun JobCard(
                                     modifier = Modifier.size(16.dp),
                                     tint = statusColor
                                 )
-                                Text(
+            Text(
                                     text = job.status.name.lowercase().replaceFirstChar { it.titlecase() },
                                     style = MaterialTheme.typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
@@ -300,11 +300,11 @@ private fun JobCard(
                     fontWeight = FontWeight.Medium
                 )
                 timeInfo?.let {
-                    Text(
+            Text(
                         text = it,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+            )
                 }
             }
             
@@ -328,10 +328,10 @@ private fun JobCard(
                             modifier = Modifier.size(20.dp),
                             tint = MaterialTheme.colorScheme.error
                         )
-                        Text(
+                Text(
                             text = error,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -407,7 +407,7 @@ private fun JobCard(
                                 color = MaterialTheme.colorScheme.secondary,
                                 strokeWidth = 3.dp
                             )
-                            Text(
+                Text(
                                 text = "Processing video...",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
