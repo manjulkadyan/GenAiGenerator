@@ -110,7 +110,6 @@ fun ResultsScreenDialog(
 
     // Parse aspect ratio to determine video aspect
     val aspectRatio = parseAspectRatio(job.aspectRatio)
-    var showFullscreen by rememberSaveable { mutableStateOf(false) }
     var isDownloading by rememberSaveable { mutableStateOf(false) }
     var isSharing by rememberSaveable { mutableStateOf(false) }
 
@@ -174,7 +173,14 @@ fun ResultsScreenDialog(
                         videoUrl = videoUrl,
                         aspectRatio = aspectRatio,
                         jobId = job.id,
-                        onFullscreenClick = { showFullscreen = true }
+                        onFullscreenClick = {
+                            // Launch FullscreenVideoActivity
+                            val intent = Intent(context, FullscreenVideoActivity::class.java).apply {
+                                putExtra(FullscreenVideoActivity.EXTRA_VIDEO_URL, videoUrl)
+                                putExtra(FullscreenVideoActivity.EXTRA_ASPECT_RATIO, job.aspectRatio)
+                            }
+                            context.startActivity(intent)
+                        }
                     )
 
                     // Prompt Card
@@ -271,15 +277,6 @@ fun ResultsScreenDialog(
                     )
                 }
             }
-        }
-
-        // Fullscreen Video Dialog
-        if (showFullscreen) {
-            FullscreenVideoDialog(
-                videoUrl = videoUrl,
-                aspectRatio = aspectRatio,
-                onDismiss = { showFullscreen = false }
-            )
         }
     }
 }
@@ -750,74 +747,4 @@ private fun ActionButtonsSection(
     }
 }
 
-@OptIn(UnstableApi::class)
-@Composable
-private fun FullscreenVideoDialog(
-        videoUrl: String,
-        aspectRatio: Float,
-        onDismiss: () -> Unit
-    ) {
-    DisposableEffect(videoUrl) {
-        onDispose {
-            VideoPlayerManager.unregisterPlayer(videoUrl)
-        }
-    }
-
-        Dialog(
-        onDismissRequest = {
-            VideoPlayerManager.unregisterPlayer(videoUrl)
-            onDismiss()
-        },
-            properties = DialogProperties(
-                usePlatformDefaultWidth = false,
-                decorFitsSystemWindows = false
-            )
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black)
-            ) {
-                Surface(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(16.dp)
-                        .size(40.dp)
-                        .clip(CircleShape)
-                    .clickable {
-                        VideoPlayerManager.unregisterPlayer(videoUrl)
-                        onDismiss()
-                    },
-                    color = Color.White.copy(alpha = 0.3f)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(
-                            text = "×",
-                            style = MaterialTheme.typography.titleLarge,
-                            color = Color.White
-                        )
-                    }
-                }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                ModelVideoPlayer(
-                    videoUrl = videoUrl,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(aspectRatio),
-                    playbackEnabled = true,
-                    showControls = false, // No controls anywhere in the app
-                    initialVolume = 1f,
-                    resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT,
-                    onVideoClick = null
-                )
-                }
-            }
-        }
-    }
 
