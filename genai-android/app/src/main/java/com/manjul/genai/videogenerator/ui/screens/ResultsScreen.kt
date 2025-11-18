@@ -45,6 +45,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -109,9 +110,9 @@ fun ResultsScreenDialog(
 
     // Parse aspect ratio to determine video aspect
     val aspectRatio = parseAspectRatio(job.aspectRatio)
-    var showFullscreen by remember { mutableStateOf(false) }
-    var isDownloading by remember { mutableStateOf(false) }
-    var isSharing by remember { mutableStateOf(false) }
+    var showFullscreen by rememberSaveable { mutableStateOf(false) }
+    var isDownloading by rememberSaveable { mutableStateOf(false) }
+    var isSharing by rememberSaveable { mutableStateOf(false) }
 
     // Save job to Room DB when viewing (for regeneration and local storage)
     LaunchedEffect(job.id) {

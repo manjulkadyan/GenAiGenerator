@@ -39,6 +39,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -94,7 +95,7 @@ fun ModelsScreen(
     onHighlightCleared: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
-    var fullscreenVideoUrl by remember { mutableStateOf<String?>(null) }
+    var fullscreenVideoUrl by rememberSaveable { mutableStateOf<String?>(null) }
 
     when {
         state.isLoading -> LoadingState(modifier)
