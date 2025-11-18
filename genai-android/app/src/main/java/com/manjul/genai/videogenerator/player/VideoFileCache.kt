@@ -78,15 +78,27 @@ object VideoFileCache {
     /**
      * Get the cached file URI if it exists, null otherwise
      * Returns file path as URI string for ExoPlayer
+     * Validates that the file is actually readable and has content
      */
     suspend fun getCachedFileUri(context: Context, videoUrl: String): String? {
         return withContext(Dispatchers.IO) {
-            val file = getCachedFile(context, videoUrl)
-            if (file.exists() && file.length() > 0) {
-                // Return file path - ExoPlayer can handle file paths directly
-                // Format: file:///absolute/path/to/file.mp4
-                "file://${file.absolutePath}"
-            } else {
+            try {
+                val file = getCachedFile(context, videoUrl)
+                // Validate file exists, has content, and is readable
+                if (file.exists() && file.length() > 1024 && file.canRead()) {
+                    // Return file path - ExoPlayer can handle file paths directly
+                    // Format: file:///absolute/path/to/file.mp4
+                    "file://${file.absolutePath}"
+                } else {
+                    // File is invalid, delete it
+                    if (file.exists()) {
+                        android.util.Log.w("VideoFileCache", "Invalid cached file detected, deleting: ${file.absolutePath}")
+                        file.delete()
+                    }
+                    null
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("VideoFileCache", "Error getting cached file URI", e)
                 null
             }
         }
