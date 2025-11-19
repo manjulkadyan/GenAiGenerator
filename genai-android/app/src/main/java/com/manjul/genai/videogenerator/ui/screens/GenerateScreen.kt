@@ -1,16 +1,19 @@
 package com.manjul.genai.videogenerator.ui.screens
 
 import android.net.Uri
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,30 +21,35 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -50,25 +58,38 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.manjul.genai.videogenerator.data.model.AIModel
-import com.manjul.genai.videogenerator.ui.components.AppToolbar
+import com.manjul.genai.videogenerator.ui.viewmodel.GenerateScreenState
 import com.manjul.genai.videogenerator.ui.viewmodel.VideoGenerateViewModel
+import kotlinx.coroutines.delay
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 
 @Composable
 fun GenerateScreen(
@@ -80,15 +101,13 @@ fun GenerateScreen(
     onGenerateStarted: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
-    
-    // Handle back button - navigate to Models screen with highlighted model
+
     BackHandler(enabled = true) {
         if (state.selectedModel != null) {
             onBackToModels()
         }
     }
-    
-    // Select the preselected model when it becomes available
+
     LaunchedEffect(preselectedModelId, state.models) {
         if (preselectedModelId != null && state.models.isNotEmpty()) {
             val model = state.models.find { it.id == preselectedModelId }
@@ -98,6 +117,7 @@ fun GenerateScreen(
             }
         }
     }
+
     val pickFirstFrame = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         viewModel.setFirstFrameUri(uri)
     }
@@ -106,360 +126,150 @@ fun GenerateScreen(
     }
 
     val scrollState = rememberScrollState()
+    var generationMode by rememberSaveable { mutableStateOf(GenerationMode.TextToVideo) }
+    var showAdvanced by rememberSaveable { mutableStateOf(true) }
+    var showPricingDialog by rememberSaveable { mutableStateOf(false) }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            AppToolbar(
-                title = "Create Your Video",
-                subtitle = "Choose a model and describe your vision",
-                showBorder = false
-            )
-            
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-
-            // Model Selection - Simplified
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = "AI Model",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-        ModelSelector(
-            models = state.models,
-            selected = state.selectedModel,
-            onSelected = viewModel::selectModel
-        )
-            }
-
-            // Prompt Section - Simplified
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = "Video Prompt",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = state.prompt,
-            onValueChange = viewModel::updatePrompt,
-                    placeholder = { Text("Describe what you want to generate...") },
-            singleLine = false,
-                    maxLines = 5,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                        focusedContainerColor = MaterialTheme.colorScheme.surface,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surface
-                    ),
-                    shape = RoundedCornerShape(12.dp)
-                )
-            }
-
-            // Duration and Aspect Ratio - Simplified
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // Duration
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        when {
+            state.isLoading -> GenerateLoadingState()
+            state.models.isEmpty() -> EmptyGenerateState()
+            else -> {
                 Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Text(
-                        text = "Duration",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-        DurationSelector(
-            model = state.selectedModel,
-            selected = state.selectedDuration,
-            onSelected = viewModel::updateDuration
-        )
-                }
-
-                // Aspect Ratio
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Text(
-                        text = "Aspect Ratio",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-        AspectRatioSelector(
-            options = state.selectedModel?.aspectRatios.orEmpty(),
-            selected = state.selectedAspectRatio,
-            onSelected = viewModel::updateAspectRatio
-        )
-                }
-            }
-
-        // Audio toggle - only show if model supports audio
-        if (state.selectedModel?.supportsAudio == true) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "Enable Audio",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface
-                    )
-                        if (state.enableAudio) {
-                    Text(
-                                text = "Cost will be doubled",
-                        style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.error
-                    )
-                        }
-                }
-                Switch(
-                    checked = state.enableAudio,
-                    onCheckedChange = viewModel::toggleAudio
-                )
-            }
-        }
-
-            // Reference Frames Section - Simplified
-            if (state.selectedModel?.supportsFirstFrame == true || state.selectedModel?.supportsLastFrame == true) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Text(
-                        text = "Reference Frames",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-
-        // Only show first frame picker if model supports it
-        if (state.selectedModel?.supportsFirstFrame == true) {
-            ReferenceFramePicker(
-                label = "First frame",
-                            required = state.selectedModel?.requiresFirstFrame ?: false,
-                uri = state.firstFrameUri,
-                onPick = { pickFirstFrame.launch("image/*") },
-                onClear = { viewModel.setFirstFrameUri(null) }
-            )
-        }
-
-        // Only show last frame picker if model supports it
-        if (state.selectedModel?.supportsLastFrame == true) {
-            ReferenceFramePicker(
-                label = "Last frame",
-                            required = state.selectedModel?.requiresLastFrame ?: false,
-                uri = state.lastFrameUri,
-                onPick = { pickLastFrame.launch("image/*") },
-                onClear = { viewModel.setLastFrameUri(null) }
-            )
-                    }
-                }
-            }
-
-            // Negative prompt - moved to end, only show if model supports it
-            if (state.selectedModel?.schemaMetadata?.categorized?.text?.any { it.name == "negative_prompt" } == true) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Text(
-                        text = "Negative Prompt (Optional)",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = state.negativePrompt,
-                        onValueChange = viewModel::updateNegativePrompt,
-                        placeholder = { Text("What to avoid (e.g., blurry, low quality)") },
-                        singleLine = false,
-                        maxLines = 3,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                            focusedContainerColor = MaterialTheme.colorScheme.surface,
-                            unfocusedContainerColor = MaterialTheme.colorScheme.surface
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                }
-        }
-
-        state.uploadMessage?.let {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(20.dp),
-                            color = MaterialTheme.colorScheme.primary,
-                            strokeWidth = 2.dp
-                        )
-            Text(
-                text = it,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-                }
-            }
-
-            // Add spacer to ensure content doesn't get hidden behind sticky button
-            Spacer(modifier = Modifier.height(120.dp))
-            }
-        }
-
-        // Sticky bottom section with cost and generate button
-        Surface(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(),
-            color = MaterialTheme.colorScheme.surface,
-            shadowElevation = 8.dp,
-            tonalElevation = 4.dp
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                // Cost - Simplified
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = "Estimated Cost",
-                style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = "${state.estimatedCost} credits",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
-                    if (state.enableAudio) {
-                        Surface(
-                            shape = RoundedCornerShape(8.dp),
-                            color = MaterialTheme.colorScheme.tertiaryContainer
-                        ) {
-                            Text(
-                                text = "2x Audio",
-                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                                style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onTertiaryContainer
-                            )
-                        }
-                    }
-                }
-
-                // Generate Button - Simplified
-                Button(
-                    onClick = {
-                        // Dismiss any existing messages before starting
-                        viewModel.dismissMessage()
-                        viewModel.generate()
-                        if (state.canGenerate) {
-                            onGenerateStarted()
-                        }
-                    },
-                    enabled = state.canGenerate && !state.isGenerating,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (state.canGenerate && !state.isGenerating) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.surfaceVariant
-                        },
-                        contentColor = if (state.canGenerate && !state.isGenerating) {
-                            MaterialTheme.colorScheme.onPrimary
-                        } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                        }
-                    ),
-                    elevation = ButtonDefaults.buttonElevation(
-                        defaultElevation = if (state.canGenerate && !state.isGenerating) 4.dp else 0.dp
-                    )
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                        .padding(horizontal = 20.dp)
+                        .padding(bottom = 130.dp)
                 ) {
-                    if (state.isGenerating) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(20.dp),
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                strokeWidth = 2.dp
-                            )
-                            Text(
-                                text = "Generating...",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    } else {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.PlayArrow,
-                                contentDescription = null,
-                                modifier = Modifier.size(22.dp)
-                            )
-                            Text(
-                                text = "Generate Video",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    GenerateHero(
+                        generationMode = generationMode,
+                        onModeSelected = { generationMode = it }
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    SectionCard(
+                        title = "AI Model",
+                        description = "Choose the AI model for video generation",
+                        required = true,
+                        infoText = "Different models excel at different subjects.",
+                        onInfoClick = { showPricingDialog = true }
+                    ) {
+                        ModelSelector(
+                            models = state.models,
+                            selected = state.selectedModel,
+                            onSelected = viewModel::selectModel
+                        )
+                    }
+
+                    state.selectedModel?.let { model ->
+                        if (model.supportsFirstFrame || model.supportsLastFrame) {
+                            Spacer(modifier = Modifier.height(20.dp))
+                            SectionCard(
+                                title = "Reference Images",
+                                description = "Select reference frames to guide motion",
+                                required = model.requiresFirstFrame || model.requiresLastFrame,
+                                infoText = "Add keyframes to lock composition"
+                            ) {
+                                ReferenceFrameSection(
+                                    model = model,
+                                    firstFrame = state.firstFrameUri,
+                                    lastFrame = state.lastFrameUri,
+                                    onPickFirst = { pickFirstFrame.launch("image/*") },
+                                    onPickLast = { pickLastFrame.launch("image/*") },
+                                    onClearFirst = { viewModel.setFirstFrameUri(null) },
+                                    onClearLast = { viewModel.setLastFrameUri(null) }
+                                )
+                            }
                         }
                     }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                    SectionCard(
+                        title = "Main Text Prompt",
+                        description = "Describe what you want to see in detail",
+                        required = true,
+                        infoText = "Detailed prompts lead to richer scenes"
+                    ) {
+                        PromptField(
+                            value = state.prompt,
+                            onValueChange = viewModel::updatePrompt
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                    SectionCard(
+                        title = "Advanced Settings",
+                        description = "Adjust aspect ratio and duration",
+                        required = false,
+                        optionalLabel = "Optional",
+                        infoText = "Fine tune generation controls",
+                        onHeaderClick = { showAdvanced = !showAdvanced },
+                        expandable = true,
+                        expanded = showAdvanced
+                    ) {
+                        AnimatedVisibility(visible = showAdvanced) {
+                            Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                                DurationAspectRow(
+                                    selectedModel = state.selectedModel,
+                                    selectedDuration = state.selectedDuration,
+                                    selectedAspectRatio = state.selectedAspectRatio,
+                                    onDurationSelected = viewModel::updateDuration,
+                                    onAspectRatioSelected = viewModel::updateAspectRatio
+                                )
+
+                                if (state.selectedModel?.supportsAudio == true) {
+                                    AudioToggle(
+                                        enabled = state.enableAudio,
+                                        onToggle = viewModel::toggleAudio
+                                    )
+                                }
+
+                                if (state.selectedModel?.schemaMetadata?.categorized?.text?.any { it.name == "negative_prompt" } == true) {
+                                    NegativePromptField(
+                                        value = state.negativePrompt,
+                                        onValueChange = viewModel::updateNegativePrompt
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    state.uploadMessage?.let { message ->
+                        Spacer(modifier = Modifier.height(16.dp))
+                        StatusBanner(message = message)
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                    VideoExamplesSection(models = state.models)
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                    ContentGuidelinesCard()
+
+                    Spacer(modifier = Modifier.height(40.dp))
                 }
             }
         }
-        }
 
-    // Don't show any alert dialogs - GeneratingScreen will handle all status/errors
-    // Only show error dialog if generation failed and we're not generating
-    // (This handles edge cases where error occurs before GeneratingScreen is shown)
+        GenerateBottomBar(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            state = state,
+            onGenerate = {
+                viewModel.dismissMessage()
+                viewModel.generate()
+                if (state.canGenerate) {
+                    onGenerateStarted()
+                }
+            }
+        )
+    }
+
     if (!state.isGenerating && state.errorMessage != null) {
         AlertDialog(
             onDismissRequest = viewModel::dismissMessage,
@@ -472,6 +282,443 @@ fun GenerateScreen(
             text = { Text(state.errorMessage ?: "Unknown error") }
         )
     }
+
+    if (showPricingDialog) {
+        PricingDialog(
+            models = state.models,
+            onDismiss = { showPricingDialog = false }
+        )
+    }
+}
+
+@Composable
+private fun GenerateLoadingState() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            Text(
+                text = "Loading AI Studio",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = "Fetching the latest models...",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun EmptyGenerateState() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Icon(
+                imageVector = Icons.Default.WarningAmber,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error,
+                modifier = Modifier.size(32.dp)
+            )
+            Text(
+                text = "No AI models available",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = "Please try again in a moment.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun GenerateHero(
+    generationMode: GenerationMode,
+    onModeSelected: (GenerationMode) -> Unit
+) {
+    val gradient = Brush.horizontalGradient(
+        colors = listOf(
+            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f),
+            MaterialTheme.colorScheme.tertiary.copy(alpha = 0.4f)
+        )
+    )
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(28.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        tonalElevation = 8.dp
+    ) {
+        Box(
+            modifier = Modifier
+                .background(gradient)
+                .padding(20.dp)
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Row(horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(
+                            text = "AI Studio",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                        Text(
+                            text = "Try Veo 3, Sora 2 and more",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                        )
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        IconButton(onClick = {}, modifier = Modifier.size(44.dp)) {
+                            Icon(
+                                imageVector = Icons.Default.Star,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                        IconButton(onClick = {}, modifier = Modifier.size(44.dp)) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                    }
+                }
+
+                ModeToggle(
+                    selected = generationMode,
+                    onModeSelected = onModeSelected
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ModeToggle(
+    selected: GenerationMode,
+    onModeSelected: (GenerationMode) -> Unit
+) {
+    val modes = GenerationMode.values()
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(50),
+        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f)
+    ) {
+        Row(modifier = Modifier.padding(6.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            modes.forEach { mode ->
+                val isSelected = mode == selected
+                Surface(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(40))
+                        .clickable { onModeSelected(mode) },
+                    color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(vertical = 10.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = mode.label,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SectionCard(
+    title: String,
+    description: String,
+    required: Boolean,
+    infoText: String? = null,
+    onInfoClick: (() -> Unit)? = null,
+    optionalLabel: String? = null,
+    onHeaderClick: (() -> Unit)? = null,
+    expandable: Boolean = false,
+    expanded: Boolean = true,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    val shape = RoundedCornerShape(28.dp)
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = shape,
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 4.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            val headerModifier = if (onHeaderClick != null) {
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(24.dp))
+                    .clickable { onHeaderClick.invoke() }
+            } else {
+                Modifier.fillMaxWidth()
+            }
+            Row(
+                modifier = headerModifier,
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        if (required) {
+                            RequirementBadge(text = "Required")
+                        } else if (optionalLabel != null) {
+                            RequirementBadge(text = optionalLabel)
+                        }
+                    }
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                infoText?.let {
+                    InfoIcon(
+                        onClick = onInfoClick,
+                        contentDescription = it
+                    )
+                }
+                if (expandable) {
+                    val rotation by animateFloatAsState(
+                        targetValue = if (expanded) 0f else 180f,
+                        animationSpec = tween(300), label = "arrowRotation"
+                    )
+                    Icon(
+                        imageVector = Icons.Default.ExpandMore,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.rotate(rotation)
+                    )
+                }
+            }
+
+            if (!expandable || expanded) {
+                content()
+            }
+        }
+    }
+}
+
+@Composable
+private fun RequirementBadge(text: String) {
+    Surface(
+        color = MaterialTheme.colorScheme.error.copy(alpha = 0.2f),
+        contentColor = MaterialTheme.colorScheme.error,
+        shape = RoundedCornerShape(6.dp)
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+private fun InfoIcon(
+    onClick: (() -> Unit)? = null,
+    contentDescription: String? = null
+) {
+    val clickableModifier = if (onClick != null) {
+        Modifier
+            .size(28.dp)
+            .clip(CircleShape)
+            .clickable { onClick() }
+    } else {
+        Modifier.size(28.dp)
+    }
+    Surface(
+        modifier = clickableModifier,
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.surfaceVariant
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(
+                imageVector = Icons.Default.Info,
+                contentDescription = contentDescription,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(18.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ModelSelector(
+    models: List<AIModel>,
+    selected: AIModel?,
+    onSelected: (AIModel) -> Unit
+) {
+    val listState = rememberLazyListState()
+    LaunchedEffect(selected?.id) {
+        if (selected != null) {
+            val index = models.indexOfFirst { it.id == selected.id }
+            if (index >= 0) {
+                delay(50)
+                listState.animateScrollToItem(index)
+            }
+        }
+    }
+
+    LazyRow(
+        state = listState,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(horizontal = 4.dp)
+    ) {
+        items(models, key = { it.id }) { model ->
+            val isSelected = selected?.id == model.id
+            ModelCard(
+                model = model,
+                selected = isSelected,
+                onClick = { onSelected(model) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun ModelCard(
+    model: AIModel,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    val border = if (selected) {
+        BorderStroke(1.5.dp, Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)))
+    } else {
+        BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+    }
+    val cardShape = RoundedCornerShape(28.dp)
+    Surface(
+        modifier = Modifier
+            .width(220.dp)
+            .heightIn(min = 150.dp)
+            .clip(cardShape)
+            .clickable { onClick() },
+        shape = cardShape,
+        border = border,
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = if (selected) 6.dp else 2.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = model.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = formatCredits(model.pricePerSecond),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                if (selected) {
+                    Icon(
+                        imageVector = Icons.Default.CheckCircle,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun InfoChip(text: String) {
+    Surface(
+        shape = RoundedCornerShape(50),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        tonalElevation = 2.dp
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun ReferenceFrameSection(
+    model: AIModel,
+    firstFrame: Uri?,
+    lastFrame: Uri?,
+    onPickFirst: () -> Unit,
+    onPickLast: () -> Unit,
+    onClearFirst: () -> Unit,
+    onClearLast: () -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        if (model.supportsFirstFrame) {
+            ReferenceFramePicker(
+                label = "First Frame",
+                required = model.requiresFirstFrame,
+                uri = firstFrame,
+                onPick = onPickFirst,
+                onClear = onClearFirst
+            )
+        }
+        if (model.supportsLastFrame) {
+            ReferenceFramePicker(
+                label = "Last Frame",
+                required = model.requiresLastFrame,
+                uri = lastFrame,
+                onPick = onPickLast,
+                onClear = onClearLast
+            )
+        }
+        if (!model.supportsFirstFrame && !model.supportsLastFrame) {
+            Text(
+                text = "Reference frames are not required for ${model.name}.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
 }
 
 @Composable
@@ -483,236 +730,650 @@ private fun ReferenceFramePicker(
     onClear: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(
                 text = label,
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold
             )
             if (required) {
-                Surface(
-                    shape = RoundedCornerShape(4.dp),
-                    color = MaterialTheme.colorScheme.errorContainer
-                ) {
-        Text(
-                        text = "Required",
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onErrorContainer
-                    )
-            }
+                RequirementBadge(text = "Required")
             }
         }
-
-            if (uri != null) {
-            // Image Preview Card
-            Card(
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(24.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
+                .dashedBorder(2.dp, MaterialTheme.colorScheme.primary, 24.dp)
+                .clickable { onPick() }
+                .padding(20.dp)
+        ) {
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Box {
-                    // Image preview would go here - for now showing placeholder
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(16f / 9f),
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.CheckCircle,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(48.dp),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Text(
-                                    text = "Image Selected",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
-                    }
-                    // Remove button overlay
-                    Surface(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(8.dp)
-                            .clickable(onClick = onClear),
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.errorContainer
-                    ) {
-                        Box(
-                            modifier = Modifier.size(36.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "×",
-                                style = MaterialTheme.typography.titleLarge,
-                                color = MaterialTheme.colorScheme.onErrorContainer
-                            )
-                        }
-                    }
-                }
-            }
-        } else {
-            // Select Image Button
-            OutlinedButton(
-                onClick = onPick,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
-                    imageVector = Icons.Default.Add,
+                    imageVector = if (uri == null) Icons.Default.Image else Icons.Default.CheckCircle,
                     contentDescription = null,
-                    modifier = Modifier.size(20.dp)
+                    tint = if (uri == null) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(32.dp)
                 )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Select Image")
+                Text(
+                    text = if (uri == null) "Add Reference Image" else "Image Selected",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = if (uri == null) "Tap to begin" else "Tap to replace",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                if (uri != null) {
+                    OutlinedButton(onClick = onClear) {
+                        Text("Remove")
+                    }
                 }
-            }
-
-        if (required && uri == null) {
-            Surface(
-                shape = RoundedCornerShape(8.dp),
-                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
-            ) {
-            Text(
-                    text = "⚠ This image is required for this model",
-                    modifier = Modifier.padding(12.dp),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall
-            )
             }
         }
     }
 }
 
 @Composable
-private fun ModelSelector(
-    models: List<AIModel>,
-    selected: AIModel?,
-    onSelected: (AIModel) -> Unit
+private fun PromptField(
+    value: String,
+    onValueChange: (String) -> Unit
 ) {
-    val listState = androidx.compose.foundation.lazy.rememberLazyListState()
-    
-    // Scroll to selected model when it changes
-    LaunchedEffect(selected?.id) {
-        if (selected != null) {
-            val index = models.indexOfFirst { it.id == selected.id }
-            if (index >= 0) {
-                kotlinx.coroutines.delay(50)
-                listState.animateScrollToItem(index)
-            }
-        }
-    }
-    
-    LazyRow(
-        state = listState,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 4.dp)
-    ) {
-        items(models, key = { it.id }) { model ->
-            val isSelected = model.id == selected?.id
-            FilterChip(
-                selected = isSelected,
-                onClick = { onSelected(model) },
-                label = { 
-                    Text(
-                        text = model.name,
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
-                    )
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    labelColor = MaterialTheme.colorScheme.onSurfaceVariant
-                ),
-                shape = RoundedCornerShape(12.dp),
-                border = if (isSelected) {
-                    androidx.compose.foundation.BorderStroke(
-                        2.dp,
-                        MaterialTheme.colorScheme.primary
-                    )
-                } else null
-            )
-        }
+    OutlinedTextField(
+        modifier = Modifier.fillMaxWidth(),
+        value = value,
+        onValueChange = onValueChange,
+        placeholder = { Text("Tap here to type your prompt") },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+            cursorColor = MaterialTheme.colorScheme.primary
+        ),
+        textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
+        shape = RoundedCornerShape(24.dp),
+        maxLines = 5
+    )
+}
+
+@Composable
+private fun NegativePromptField(
+    value: String,
+    onValueChange: (String) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            text = "Negative Prompt",
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = { Text("What should we avoid? e.g. blurry, low quality") },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+            ),
+            shape = RoundedCornerShape(20.dp),
+            maxLines = 3
+        )
     }
 }
 
+@Composable
+private fun DurationAspectRow(
+    selectedModel: AIModel?,
+    selectedDuration: Int?,
+    selectedAspectRatio: String?,
+    onDurationSelected: (Int) -> Unit,
+    onAspectRatioSelected: (String) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        Text(
+            text = "Duration",
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        DurationSelector(
+            model = selectedModel,
+            selected = selectedDuration,
+            onSelected = onDurationSelected
+        )
+        Text(
+            text = "Aspect Ratio",
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        AspectRatioSelector(
+            options = selectedModel?.aspectRatios.orEmpty(),
+            selected = selectedAspectRatio,
+            onSelected = onAspectRatioSelected
+        )
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun DurationSelector(
     model: AIModel?,
     selected: Int?,
     onSelected: (Int) -> Unit
 ) {
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 4.dp)
-    ) {
-            items(model?.durationOptions.orEmpty()) { duration ->
-            val isSelected = duration == selected
-                FilterChip(
-                selected = isSelected,
-                    onClick = { onSelected(duration) },
-                label = { 
-                    Text(
-                        text = "${duration}s",
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+    val options = model?.durationOptions.orEmpty()
+    if (options.isEmpty()) {
+        Text(
+            text = "No duration options available",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    } else {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            options.forEach { duration ->
+                SelectionPill(
+                    text = "${duration}s",
+                    selected = duration == selected,
+                    onClick = { onSelected(duration) }
                 )
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    labelColor = MaterialTheme.colorScheme.onSurfaceVariant
-                ),
-                shape = RoundedCornerShape(10.dp)
-            )
+            }
         }
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun AspectRatioSelector(
     options: List<String>,
     selected: String?,
     onSelected: (String) -> Unit
 ) {
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 4.dp)
-    ) {
-            items(options) { ratio ->
-            val isSelected = ratio == selected
-                FilterChip(
-                selected = isSelected,
-                    onClick = { onSelected(ratio) },
-                label = { 
-                    Text(
-                        text = ratio,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+    if (options.isEmpty()) {
+        Text(
+            text = "Aspect ratios are unavailable",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    } else {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            options.forEach { ratio ->
+                SelectionPill(
+                    text = ratio,
+                    selected = ratio == selected,
+                    onClick = { onSelected(ratio) }
                 )
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    labelColor = MaterialTheme.colorScheme.onSurfaceVariant
-                ),
-                shape = RoundedCornerShape(10.dp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun SelectionPill(
+    text: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    val pillShape = RoundedCornerShape(50)
+    Surface(
+        modifier = Modifier
+            .clip(pillShape)
+            .clickable { onClick() },
+        shape = pillShape,
+        color = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surfaceVariant,
+        border = if (selected) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+            color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun AudioToggle(
+    enabled: Boolean,
+    onToggle: (Boolean) -> Unit
+) {
+    Surface(
+        shape = RoundedCornerShape(20.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(
+                    text = "Enable Audio",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = if (enabled) "Audio enabled • cost x2" else "Add AI-composed audio",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (enabled) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Switch(checked = enabled, onCheckedChange = onToggle)
+        }
+    }
+}
+
+@Composable
+private fun StatusBanner(message: String) {
+    Surface(
+        shape = RoundedCornerShape(20.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        tonalElevation = 4.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(22.dp),
+                color = MaterialTheme.colorScheme.primary,
+                strokeWidth = 2.dp
+            )
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
 }
+
+@Composable
+private fun PricingDialog(
+    models: List<AIModel>,
+    onDismiss: () -> Unit
+) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 12.dp, vertical = 24.dp),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(36.dp),
+                color = MaterialTheme.colorScheme.surface,
+                tonalElevation = 8.dp
+            ) {
+                Column(
+                    modifier = Modifier.padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Pricing",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "Credits per second",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        IconButton(onClick = onDismiss) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
+
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        models
+                            .sortedByDescending { it.pricePerSecond }
+                            .forEach { model ->
+                                PricingRow(model = model)
+                            }
+                    }
+
+                    Text(
+                        text = "Final cost = credits/sec × video duration",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PricingRow(model: AIModel) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(28.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        tonalElevation = 2.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                ModelAvatar(model)
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = model.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    model.description.takeIf { it.isNotBlank() }?.let { desc ->
+                        Text(
+                            text = desc,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+            }
+            Text(
+                text = formatCredits(model.pricePerSecond),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+
+@Composable
+private fun ModelAvatar(model: AIModel) {
+    val initial = model.name.firstOrNull()?.uppercaseChar()?.toString() ?: "AI"
+    Surface(
+        modifier = Modifier.size(44.dp),
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Text(
+                text = initial,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+
+@Composable
+private fun VideoExamplesSection(models: List<AIModel>) {
+    if (models.isEmpty()) return
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Text(
+            text = "Video Examples",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(horizontal = 4.dp)
+        ) {
+            items(models.take(4), key = { it.id }) { model ->
+                ExampleCard(model)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ExampleCard(model: AIModel) {
+    Surface(
+        modifier = Modifier
+            .width(220.dp)
+            .aspectRatio(3f / 2f),
+        shape = RoundedCornerShape(28.dp),
+        tonalElevation = 4.dp,
+        color = MaterialTheme.colorScheme.surfaceVariant
+    ) {
+        Box(
+            modifier = Modifier
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.secondary.copy(alpha = 0.4f),
+                            MaterialTheme.colorScheme.surface
+                        )
+                    )
+                )
+                .padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = model.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = null,
+                            modifier = Modifier.padding(10.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ContentGuidelinesCard() {
+    val guidelines = listOf(
+        "No nudity, violence, or harmful content across all models.",
+        "Veo: No minors or celebrity likenesses.",
+        "Sora: Avoid minors, celebrities, or real person footage.",
+        "Generation starts immediately and cannot be canceled."
+    )
+    Surface(
+        shape = RoundedCornerShape(28.dp),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 4.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Icon(
+                    imageVector = Icons.Default.WarningAmber,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.secondary
+                )
+                Text(
+                    text = "Content Guidelines",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+            guidelines.forEach { text ->
+                Text(
+                    text = text,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun GenerateBottomBar(
+    modifier: Modifier = Modifier,
+    state: GenerateScreenState,
+    onGenerate: () -> Unit
+) {
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 16.dp,
+        shadowElevation = 20.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = "Estimated Cost",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = "${state.estimatedCost} credits",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                if (state.enableAudio) {
+                    InfoChip("2x Audio")
+                }
+            }
+            Button(
+                onClick = onGenerate,
+                enabled = state.canGenerate && !state.isGenerating,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(24.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            ) {
+                if (state.isGenerating) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            strokeWidth = 2.dp
+                        )
+                        Text(
+                            text = "Generating...",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                } else {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = null
+                        )
+                        Text(
+                            text = "Generate AI Video",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+            Text(
+                text = "Select reference images and enter a prompt to start.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+private enum class GenerationMode(val label: String) {
+    TextToVideo("Text to Video"),
+    ImageToVideo("Image to Video")
+}
+
+private fun formatCredits(rate: Int): String = "$rate credits/sec"
+
+private fun Modifier.dashedBorder(width: Dp, color: Color, cornerRadius: Dp): Modifier =
+    this.then(
+        Modifier.drawBehind {
+            val strokeWidth = width.toPx()
+            val halfStroke = strokeWidth / 2
+            val pathEffect = PathEffect.dashPathEffect(floatArrayOf(16f, 12f))
+            drawRoundRect(
+                color = color,
+                topLeft = androidx.compose.ui.geometry.Offset(halfStroke, halfStroke),
+                size = androidx.compose.ui.geometry.Size(size.width - strokeWidth, size.height - strokeWidth),
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius.toPx()),
+                style = Stroke(
+                    width = strokeWidth,
+                    pathEffect = pathEffect,
+                    cap = StrokeCap.Round,
+                    join = StrokeJoin.Round
+                )
+            )
+        }
+    )
