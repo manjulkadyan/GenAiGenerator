@@ -4,65 +4,58 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-
-private val DeepSpace = Color(0xFF05060A)
-private val Obsidian = Color(0xFF0C0D15)
-private val Panel = Color(0xFF141524)
-private val ElevatedPanel = Color(0xFF1D1E2F)
-private val SoftOutline = Color(0xFF2C2D3F)
-private val AccentPurple = Color(0xFFC6A5FF)
-private val AccentPurpleDark = Color(0xFF502D7F)
-private val AccentPurpleLight = Color(0xFFF3E8FF)
-private val AmberGlow = Color(0xFFF6C177)
-private val AmberContainer = Color(0xFF583516)
-private val AmberOnContainer = Color(0xFFFFEDD5)
-private val TealSpark = Color(0xFF7CF4E7)
-private val TealContainer = Color(0xFF0B3E3A)
-private val TealOnContainer = Color(0xFFB7FFF6)
-private val CrimsonAlert = Color(0xFFFF8E8E)
-private val CrimsonDark = Color(0xFF4F1010)
-private val CrimsonLight = Color(0xFFFFE4E4)
+import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
+import com.manjul.genai.videogenerator.ui.designsystem.typography.AppTypography
 
 private val DarkColors = darkColorScheme(
-    primary = AccentPurple,
-    onPrimary = Color(0xFF1F102F),
-    primaryContainer = AccentPurpleDark,
-    onPrimaryContainer = AccentPurpleLight,
+    // Primary - Purple accent matching reference images
+    primary = AppColors.PrimaryPurple,
+    onPrimary = AppColors.OnPrimaryPurple,
+    primaryContainer = AppColors.PrimaryPurpleDark,
+    onPrimaryContainer = AppColors.OnPrimaryPurple,
 
-    secondary = AmberGlow,
+    // Secondary - Amber for variety
+    secondary = Color(0xFFF6C177),
     onSecondary = Color(0xFF1B1206),
-    secondaryContainer = AmberContainer,
-    onSecondaryContainer = AmberOnContainer,
+    secondaryContainer = Color(0xFF583516),
+    onSecondaryContainer = Color(0xFFFFEDD5),
 
-    tertiary = TealSpark,
+    // Tertiary - Teal for accents
+    tertiary = Color(0xFF7CF4E7),
     onTertiary = Color(0xFF00201E),
-    tertiaryContainer = TealContainer,
-    onTertiaryContainer = TealOnContainer,
+    tertiaryContainer = Color(0xFF0B3E3A),
+    onTertiaryContainer = Color(0xFFB7FFF6),
 
-    background = DeepSpace,
-    onBackground = Color(0xFFE9E7F5),
-    surface = Obsidian,
-    onSurface = Color(0xFFF7F4FF),
-    surfaceVariant = Panel,
-    onSurfaceVariant = Color(0xFFBCB7D0),
-    inverseSurface = ElevatedPanel,
-    inverseOnSurface = Color(0xFFE5E1F0),
+    // Background and Surface - Dark theme
+    background = AppColors.BackgroundDark,
+    onBackground = AppColors.TextPrimary,
+    surface = AppColors.SurfaceDark,
+    onSurface = AppColors.TextPrimary,
+    surfaceVariant = AppColors.SurfaceElevated,
+    onSurfaceVariant = AppColors.TextSecondary,
+    inverseSurface = AppColors.SurfaceElevated,
+    inverseOnSurface = AppColors.TextPrimary,
 
-    error = CrimsonAlert,
-    onError = Color(0xFF45070D),
-    errorContainer = CrimsonDark,
-    onErrorContainer = CrimsonLight,
+    // Error colors
+    error = AppColors.StatusError,
+    onError = Color.White,
+    errorContainer = AppColors.StatusErrorBackground,
+    onErrorContainer = AppColors.StatusError,
 
-    outline = SoftOutline,
-    outlineVariant = ElevatedPanel,
+    // Outlines
+    outline = AppColors.BorderDefault,
+    outlineVariant = AppColors.BorderLight,
     scrim = Color.Black
 )
 
 @Composable
-fun GenAiVideoTheme(content: @Composable () -> Unit) {
+fun GenAiVideoTheme(
+    darkTheme: Boolean = true, // Force dark mode only
+    content: @Composable () -> Unit
+) {
     MaterialTheme(
-        colorScheme = DarkColors,
-        typography = Typography,
+        colorScheme = DarkColors, // Always use dark colors
+        typography = AppTypography,
         content = content
     )
 }
