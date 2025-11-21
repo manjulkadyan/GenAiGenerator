@@ -84,6 +84,9 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.3.1")
     implementation("androidx.media3:media3-datasource:1.3.1")
     
+    // Coil for image loading
+    implementation("io.coil-kt:coil-compose:2.5.0")
+    
     // Room Database for caching
     val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")
