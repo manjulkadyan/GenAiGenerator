@@ -105,6 +105,8 @@ import com.manjul.genai.videogenerator.ui.designsystem.components.sections.Secti
 import com.manjul.genai.videogenerator.ui.designsystem.components.selection.SelectionPill
 import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
 import com.manjul.genai.videogenerator.ui.designsystem.components.badges.StatusBadge
+import com.manjul.genai.videogenerator.ui.designsystem.components.badges.InfoChip
+import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppElevatedCard
 import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 import kotlinx.coroutines.delay
 import androidx.compose.ui.window.Dialog
@@ -270,11 +272,11 @@ fun GenerateScreen(
                                             color = AppColors.TextPrimary
                                         )
                                         AppTextField(
-                                            value = state.negativePrompt,
+                                        value = state.negativePrompt,
                                             onValueChange = viewModel::updateNegativePrompt,
                                             placeholder = "What should we avoid? e.g. blurry, low quality",
                                             maxLines = 3
-                                        )
+                                    )
                                     }
                                 }
                             }
@@ -630,41 +632,16 @@ private fun ModelCard(
         label = "cardScale"
     )
     
-    val border = if (selected) {
-        BorderStroke(
-            2.dp,
-            Brush.linearGradient(
-                listOf(
-                    MaterialTheme.colorScheme.primary,
-                    MaterialTheme.colorScheme.tertiary
-                )
-            )
-        )
-    } else {
-        BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f))
-    }
-    
-    val cardShape = RoundedCornerShape(24.dp)
-    Surface(
+    AppSelectionCard(
+        isSelected = selected,
+        onClick = onClick,
         modifier = Modifier
             .width(220.dp)
             .heightIn(min = 100.dp)
-            .clip(cardShape)
-            .clickable { onClick() }
-            .scale(scale),
-        shape = cardShape,
-        border = border,
-        color = if (selected) {
-            MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
-        } else {
-            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-        },
-        tonalElevation = if (selected) 8.dp else 2.dp
+            .scale(scale)
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(18.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Row(
@@ -677,13 +654,13 @@ private fun ModelCard(
                         text = model.name,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AppColors.TextPrimary
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = formatCredits(model.pricePerSecond),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                        color = AppColors.TextSecondary
                     )
                 }
                 if (selected) {
@@ -706,22 +683,7 @@ private fun ModelCard(
     }
 }
 
-@Composable
-private fun InfoChip(text: String) {
-    Surface(
-        shape = RoundedCornerShape(50),
-        color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f),
-        tonalElevation = 2.dp
-    ) {
-        Text(
-            text = text,
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onTertiaryContainer
-        )
-    }
-}
+// InfoChip now uses design system component
 
 @Composable
 private fun ReferenceFrameSection(
@@ -756,7 +718,7 @@ private fun ReferenceFrameSection(
             Text(
                 text = "Reference frames are not required for ${model.name}.",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = AppColors.TextSecondary
             )
         }
     }
@@ -779,23 +741,15 @@ private fun ReferenceFramePicker(
                 text = label,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface
+            color = AppColors.TextPrimary
             )
             if (required) {
                 StatusBadge(text = "Required")
             }
         }
-        Box(
+        AppCard(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(20.dp))
-                .background(
-                    if (uri == null) {
-                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                    } else {
-                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
-                    }
-                )
                 .dashedBorder(
                     2.dp,
                     if (uri == null) {
@@ -805,11 +759,13 @@ private fun ReferenceFramePicker(
                     },
                     20.dp
                 )
-                .clickable { onPick() }
-                .padding(24.dp)
+                .clickable { onPick() },
+            onClick = onPick
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -839,12 +795,12 @@ private fun ReferenceFramePicker(
                     text = if (uri == null) "Add Reference Image" else "Image Selected",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = AppColors.TextPrimary
                 )
                 Text(
                     text = if (uri == null) "Tap to begin" else "Tap to replace",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = AppColors.TextSecondary
                 )
                 if (uri != null) {
                     AppSecondaryButton(
@@ -873,7 +829,7 @@ private fun DurationAspectRow(
             text = "Duration",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface
+                color = AppColors.TextPrimary
         )
         DurationSelector(
             model = selectedModel,
@@ -884,7 +840,7 @@ private fun DurationAspectRow(
             text = "Aspect Ratio",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface
+                color = AppColors.TextPrimary
         )
         AspectRatioSelector(
             options = selectedModel?.aspectRatios.orEmpty(),
@@ -906,7 +862,7 @@ private fun DurationSelector(
         Text(
             text = "No duration options available",
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = AppColors.TextSecondary
         )
     } else {
         FlowRow(
@@ -935,7 +891,7 @@ private fun AspectRatioSelector(
         Text(
             text = "Aspect ratios are unavailable",
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = AppColors.TextSecondary
         )
     } else {
         FlowRow(
@@ -960,12 +916,7 @@ private fun AudioToggle(
     enabled: Boolean,
     onToggle: (Boolean) -> Unit
 ) {
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)),
-        tonalElevation = 2.dp
-    ) {
+    AppCard {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -978,16 +929,16 @@ private fun AudioToggle(
                     text = "Enable Audio",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = AppColors.TextPrimary
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = if (enabled) "Audio enabled • cost x2" else "Add AI-composed audio",
                     style = MaterialTheme.typography.bodySmall,
                     color = if (enabled) {
-                        MaterialTheme.colorScheme.error
+                        AppColors.StatusError
                     } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
+                        AppColors.TextSecondary
                     }
                 )
             }
@@ -998,12 +949,7 @@ private fun AudioToggle(
 
 @Composable
 private fun StatusBanner(message: String) {
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)),
-        tonalElevation = 4.dp
-    ) {
+    AppCard {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1013,14 +959,14 @@ private fun StatusBanner(message: String) {
         ) {
             CircularProgressIndicator(
                 modifier = Modifier.size(24.dp),
-                color = MaterialTheme.colorScheme.primary,
+                color = AppColors.PrimaryPurple,
                 strokeWidth = 2.5.dp
             )
             Text(
                 text = message,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = AppColors.TextPrimary
             )
         }
     }
@@ -1034,13 +980,13 @@ private fun PricingDialog(
     AppBottomSheetDialog(
         onDismissRequest = onDismiss,
         title = "Pricing"
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            Text(
-                text = "Credits per second",
-                style = MaterialTheme.typography.bodyMedium,
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                            Text(
+                                text = "Credits per second",
+                                style = MaterialTheme.typography.bodyMedium,
                 color = AppColors.TextSecondary
             )
 
@@ -1052,12 +998,12 @@ private fun PricingDialog(
                             }
                     }
 
-            Text(
-                text = "Final cost = credits/sec × video duration",
-                style = MaterialTheme.typography.bodySmall,
+                    Text(
+                        text = "Final cost = credits/sec × video duration",
+                        style = MaterialTheme.typography.bodySmall,
                 color = AppColors.TextSecondary,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
         }
     }
 }
@@ -1083,13 +1029,13 @@ private fun PricingRow(model: AIModel) {
                         text = model.name,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AppColors.TextPrimary
                     )
                     model.description.takeIf { it.isNotBlank() }?.let { desc ->
                         Text(
                             text = desc,
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = AppColors.TextSecondary,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -1100,7 +1046,7 @@ private fun PricingRow(model: AIModel) {
                 text = formatCredits(model.pricePerSecond),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = AppColors.PrimaryPurple
             )
         }
     }
@@ -1134,7 +1080,7 @@ private fun VideoExamplesSection(models: List<AIModel>) {
             text = "Video Examples",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
+                color = AppColors.TextPrimary
         )
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -1149,17 +1095,14 @@ private fun VideoExamplesSection(models: List<AIModel>) {
 
 @Composable
 private fun ExampleCard(model: AIModel) {
-    Surface(
+    AppElevatedCard(
         modifier = Modifier
             .width(220.dp)
-            .aspectRatio(3f / 2f),
-        shape = RoundedCornerShape(24.dp),
-        tonalElevation = 4.dp,
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
+            .aspectRatio(3f / 2f)
     ) {
         Box(
             modifier = Modifier
+                .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
@@ -1178,7 +1121,7 @@ private fun ExampleCard(model: AIModel) {
                     text = model.name,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = AppColors.TextPrimary
                 )
                 Box(
                     modifier = Modifier.fillMaxWidth(),
@@ -1193,7 +1136,7 @@ private fun ExampleCard(model: AIModel) {
                             imageVector = Icons.Default.PlayArrow,
                             contentDescription = null,
                             modifier = Modifier.padding(12.dp),
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = AppColors.PrimaryPurple
                         )
                     }
                 }
@@ -1210,12 +1153,7 @@ private fun ContentGuidelinesCard() {
         "Sora: Avoid minors, celebrities, or real person footage.",
         "Generation starts immediately and cannot be canceled."
     )
-    Surface(
-        shape = RoundedCornerShape(24.dp),
-        color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.2f),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.3f)),
-        tonalElevation = 4.dp
-    ) {
+    AppCard {
         Column(
             modifier = Modifier.padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
@@ -1226,12 +1164,12 @@ private fun ContentGuidelinesCard() {
             ) {
                 Surface(
                     shape = CircleShape,
-                    color = MaterialTheme.colorScheme.errorContainer
+                    color = AppColors.StatusErrorBackground
                 ) {
                     Icon(
                         imageVector = Icons.Default.WarningAmber,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onErrorContainer,
+                        tint = AppColors.StatusError,
                         modifier = Modifier
                             .padding(8.dp)
                             .size(20.dp)
@@ -1241,7 +1179,7 @@ private fun ContentGuidelinesCard() {
                     text = "Content Guidelines",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = AppColors.TextPrimary
                 )
             }
             guidelines.forEach { text ->
@@ -1252,13 +1190,13 @@ private fun ContentGuidelinesCard() {
                     Text(
                         text = "•",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.error,
+                        color = AppColors.StatusError,
                         modifier = Modifier.padding(top = 2.dp)
                     )
                     Text(
                         text = text,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = AppColors.TextSecondary,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -1273,14 +1211,8 @@ private fun GenerateBottomBar(
     state: GenerateScreenState,
     onGenerate: () -> Unit
 ) {
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
-        tonalElevation = 16.dp,
-        border = BorderStroke(
-            1.dp,
-            MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
-        )
+    AppElevatedCard(
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 18.dp),
@@ -1295,18 +1227,18 @@ private fun GenerateBottomBar(
                     Text(
                         text = "Estimated Cost",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = AppColors.TextSecondary
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = "${state.estimatedCost} credits",
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = AppColors.PrimaryPurple
                     )
                 }
                 if (state.enableAudio) {
-                    com.manjul.genai.videogenerator.ui.designsystem.components.badges.InfoChip("2x Audio")
+                    InfoChip("2x Audio")
                 }
             }
             AppPrimaryButton(
@@ -1319,7 +1251,7 @@ private fun GenerateBottomBar(
             Text(
                 text = "Select reference images and enter a prompt to start.",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                color = AppColors.TextSecondary
             )
         }
     }
@@ -1364,10 +1296,210 @@ private fun Modifier.dashedBorder(width: Dp, color: Color, cornerRadius: Dp): Mo
 @Composable
 private fun GenerateScreenPreview() {
     GenAiVideoTheme {
-        GenerateScreen(
-            onModelSelected = {},
-            onBackToModels = {},
-            onGenerateStarted = {}
+        // Mock data for preview (no ViewModel)
+        val mockModels = listOf(
+            AIModel(
+                id = "veo-3.1",
+                name = "Veo 3.1",
+                description = "High-quality video generation model",
+                pricePerSecond = 4,
+                defaultDuration = 4,
+                durationOptions = listOf(4, 6, 8),
+                aspectRatios = listOf("16:9", "9:16", "1:1"),
+                supportsFirstFrame = true,
+                requiresFirstFrame = false,
+                supportsLastFrame = true,
+                requiresLastFrame = false,
+                previewUrl = "",
+                replicateName = "veo-3.1",
+                exampleVideoUrl = null,
+                supportsAudio = true
+            ),
+            AIModel(
+                id = "sora-2",
+                name = "Sora 2",
+                description = "Advanced video generation",
+                pricePerSecond = 6,
+                defaultDuration = 5,
+                durationOptions = listOf(5, 10),
+                aspectRatios = listOf("16:9", "9:16"),
+                supportsFirstFrame = false,
+                requiresFirstFrame = false,
+                supportsLastFrame = false,
+                requiresLastFrame = false,
+                previewUrl = "",
+                replicateName = "sora-2",
+                exampleVideoUrl = null,
+                supportsAudio = false
+            )
         )
+        
+        val selectedModel = mockModels.first()
+        var generationMode by remember { mutableStateOf(GenerationMode.TextToVideo) }
+        var showAdvanced by remember { mutableStateOf(true) }
+        var promptText by remember { mutableStateOf("A cinematic video of a sunset over mountains") }
+        var negativePromptText by remember { mutableStateOf("") }
+        var selectedDuration by remember { mutableStateOf<Int?>(4) }
+        var selectedAspectRatio by remember { mutableStateOf<String?>("16:9") }
+        var enableAudio by remember { mutableStateOf(false) }
+        
+        val scrollState = rememberScrollState()
+        
+        // Premium dark background with subtle gradient
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.background,
+                            MaterialTheme.colorScheme.background.copy(alpha = 0.95f),
+                            MaterialTheme.colorScheme.surface.copy(alpha = 0.3f)
+                        )
+                    )
+                )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 140.dp)
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                GenerateHero(
+                    generationMode = generationMode,
+                    onModeSelected = { generationMode = it }
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                SectionCard(
+                    title = "AI Model",
+                    description = "Choose the AI model for video generation",
+                    required = true,
+                    infoText = "Different models excel at different subjects.",
+                    onInfoClick = {}
+                ) {
+                    ModelSelector(
+                        models = mockModels,
+                        selected = selectedModel,
+                        onSelected = {}
+                    )
+                }
+
+                if (selectedModel.supportsFirstFrame || selectedModel.supportsLastFrame) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    SectionCard(
+                        title = "Reference Images",
+                        description = "Select reference frames to guide motion",
+                        required = selectedModel.requiresFirstFrame || selectedModel.requiresLastFrame,
+                        infoText = "Add keyframes to lock composition"
+                    ) {
+                        ReferenceFrameSection(
+                            model = selectedModel,
+                            firstFrame = null,
+                            lastFrame = null,
+                            onPickFirst = {},
+                            onPickLast = {},
+                            onClearFirst = {},
+                            onClearLast = {}
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                SectionCard(
+                    title = "Main Text Prompt",
+                    description = "Describe what you want to see in detail",
+                    required = true,
+                    infoText = "Detailed prompts lead to richer scenes"
+                ) {
+                    AppTextField(
+                        value = promptText,
+                        onValueChange = { promptText = it },
+                        placeholder = "Tap here to type your prompt",
+                        maxLines = 5
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                SectionCard(
+                    title = "Advanced Settings",
+                    description = "Adjust aspect ratio and duration",
+                    required = false,
+                    optionalLabel = "Optional",
+                    infoText = "Fine tune generation controls",
+                    onHeaderClick = { showAdvanced = !showAdvanced },
+                    expandable = true,
+                    expanded = showAdvanced
+                ) {
+                    AnimatedVisibility(visible = showAdvanced) {
+                        Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                            DurationAspectRow(
+                                selectedModel = selectedModel,
+                                selectedDuration = selectedDuration,
+                                selectedAspectRatio = selectedAspectRatio,
+                                onDurationSelected = { selectedDuration = it },
+                                onAspectRatioSelected = { selectedAspectRatio = it }
+                            )
+
+                            if (selectedModel.supportsAudio) {
+                                AudioToggle(
+                                    enabled = enableAudio,
+                                    onToggle = { enableAudio = it }
+                                )
+                            }
+
+                            if (selectedModel.schemaMetadata?.categorized?.text?.any { it.name == "negative_prompt" } == true) {
+                                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                    Text(
+                                        text = "Negative Prompt",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = AppColors.TextPrimary
+                                    )
+                                    AppTextField(
+                                        value = negativePromptText,
+                                        onValueChange = { negativePromptText = it },
+                                        placeholder = "What should we avoid? e.g. blurry, low quality",
+                                        maxLines = 3
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+                VideoExamplesSection(models = mockModels)
+
+                Spacer(modifier = Modifier.height(20.dp))
+                ContentGuidelinesCard()
+
+                Spacer(modifier = Modifier.height(40.dp))
+            }
+
+            // Mock bottom bar
+            val estimatedCost = (selectedModel.pricePerSecond * (selectedDuration ?: 0)) * if (enableAudio) 2 else 1
+            val canGenerate = promptText.isNotBlank() && selectedModel != null && selectedDuration != null && selectedAspectRatio != null
+            
+            GenerateBottomBar(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                state = GenerateScreenState(
+                    isLoading = false,
+                    models = mockModels,
+                    selectedModel = selectedModel,
+                    prompt = promptText,
+                    negativePrompt = negativePromptText,
+                    selectedDuration = selectedDuration,
+                    selectedAspectRatio = selectedAspectRatio,
+                    enableAudio = enableAudio,
+                    firstFrameUri = null,
+                    lastFrameUri = null
+                ),
+                onGenerate = {}
+            )
+        }
     }
 }
