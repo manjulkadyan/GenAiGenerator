@@ -20,13 +20,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -46,6 +45,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -57,11 +57,12 @@ import com.manjul.genai.videogenerator.data.model.VideoJob
 import com.manjul.genai.videogenerator.data.model.VideoJobStatus
 import com.manjul.genai.videogenerator.ui.components.AppToolbar
 import com.manjul.genai.videogenerator.ui.components.VideoThumbnail
-import com.manjul.genai.videogenerator.ui.viewmodel.HistoryViewModel
-import com.manjul.genai.videogenerator.ui.designsystem.components.badges.FilterChip
-import com.manjul.genai.videogenerator.ui.designsystem.components.badges.CustomStatusBadge
-import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
 import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
+import com.manjul.genai.videogenerator.ui.designsystem.components.badges.CustomStatusBadge
+import com.manjul.genai.videogenerator.ui.designsystem.components.badges.FilterChip
+import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
+import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
+import com.manjul.genai.videogenerator.ui.viewmodel.HistoryViewModel
 import java.time.Duration
 import java.time.Instant
 
@@ -280,15 +281,10 @@ private fun HistoryJobCard(
         else -> null
     }
 
-    Card(
+    AppCard(
         modifier = Modifier
-            .fillMaxWidth()
-            .clickable(enabled = job.status == VideoJobStatus.COMPLETE, onClick = onCardClick),
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+            .fillMaxWidth(),
+        onClick = if (job.status == VideoJobStatus.COMPLETE) onCardClick else null
     ) {
         Row(
             modifier = Modifier
@@ -486,6 +482,84 @@ private fun FullscreenVideoDialog(
                 playbackEnabled = true,
                 onVideoClick = null
             )
+        }
+    }
+}
+
+// ==================== Preview ====================
+
+@Preview(
+    name = "History Screen",
+    showBackground = true,
+    backgroundColor = 0xFF000000,
+    showSystemUi = true
+)
+@Composable
+private fun HistoryScreenPreview() {
+    GenAiVideoTheme {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            AppToolbar(
+                title = "Video History",
+                subtitle = "Your Creations",
+                showBorder = true
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // Filter Chips
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(listOf("All", "Completed", "Running", "Failed")) { filter ->
+                        FilterChip(
+                            text = filter,
+                            isSelected = filter == "All",
+                            onClick = {}
+                        )
+                    }
+                }
+            }
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                itemsIndexed((0..2).toList()) { index, _ ->
+                    AppCard {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "Video Generation ${index + 1}",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = AppColors.TextPrimary
+                                )
+                                CustomStatusBadge(
+                                    text = "completed",
+                                    backgroundColor = AppColors.StatusSuccessBackground,
+                                    textColor = AppColors.StatusSuccess
+                                )
+                            }
+                            Text(
+                                text = "A cinematic video of a sunset over mountains",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = AppColors.TextSecondary
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

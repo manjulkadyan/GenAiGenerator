@@ -33,13 +33,18 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
+import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppTextButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
+import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -364,13 +369,8 @@ private fun VideoPlayerCard(
     jobId: String,
     onFullscreenClick: () -> Unit
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    AppCard(
+        modifier = Modifier.fillMaxWidth()
     ) {
         Box(
             modifier = Modifier
@@ -477,13 +477,8 @@ private fun PromptCard(
     prompt: String,
     context: Context
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    AppCard(
+        modifier = Modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier
@@ -556,25 +551,19 @@ private fun DetailsCard(job: VideoJob) {
     val dateFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy, h:mm a", Locale.US)
     val formattedDate = job.createdAt.atZone(ZoneId.systemDefault()).format(dateFormatter)
 
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    AppCard(
+        modifier = Modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(36.dp)
         ) {
             Text(
                 text = "Details",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = AppColors.TextPrimary
             )
 
             Column(
@@ -666,6 +655,146 @@ private fun ActionButtonsSection(
                 fullWidth = false,
                 modifier = Modifier.weight(1f)
             )
+        }
+    }
+}
+
+// ==================== Preview ====================
+
+@Preview(
+    name = "Results Screen",
+    showBackground = true,
+    backgroundColor = 0xFF000000,
+    showSystemUi = true
+)
+@Composable
+private fun ResultsScreenPreview() {
+    GenAiVideoTheme {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // Header
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Video Details",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Normal,
+                    color = AppColors.TextPrimary
+                )
+                CustomStatusBadge(
+                    text = "completed",
+                    backgroundColor = AppColors.StatusSuccessBackground,
+                    textColor = AppColors.StatusSuccess
+                )
+            }
+            
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 24.dp, vertical = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                // Video Player Card
+                AppCard(modifier = Modifier.fillMaxWidth()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .background(Color.Black),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = null,
+                            modifier = Modifier.size(48.dp),
+                            tint = AppColors.TextSecondary
+                        )
+                    }
+                }
+                
+                // Prompt Card
+                AppCard(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Text(
+                            text = "Prompt",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Medium,
+                            color = AppColors.TextPrimary
+                        )
+                        Text(
+                            text = "A cinematic video of a sunset over mountains with dramatic clouds",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = AppColors.TextSecondary
+                        )
+                    }
+                }
+                
+                // Details Card
+                AppCard(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Text(
+                            text = "Details",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Medium,
+                            color = AppColors.TextPrimary
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Model",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = AppColors.TextSecondary
+                            )
+                            Text(
+                                text = "Veo 3.1",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = AppColors.TextPrimary
+                            )
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Duration",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = AppColors.TextSecondary
+                            )
+                            Text(
+                                text = "4s",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = AppColors.TextPrimary
+                            )
+                        }
+                    }
+                }
+                
+                // Action Buttons
+                AppPrimaryButton(
+                    text = "Download Video",
+                    onClick = {},
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }

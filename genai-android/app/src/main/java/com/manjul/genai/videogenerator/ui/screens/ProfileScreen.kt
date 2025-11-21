@@ -31,13 +31,16 @@ import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.WorkspacePremium
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
+import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
+import com.manjul.genai.videogenerator.ui.designsystem.components.badges.CustomStatusBadge
+import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -99,15 +102,10 @@ fun ProfileScreen(
         ) {
 
             // Profile Card
-            Card(
+            AppCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
-                shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    .padding(horizontal = 24.dp)
             ) {
                 Box(
                     modifier = Modifier
@@ -159,13 +157,13 @@ fun ProfileScreen(
                                     text = userName,
                                     style = MaterialTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Medium,
-                                    color = MaterialTheme.colorScheme.onSurface
+                                    color = AppColors.TextPrimary
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = userEmail,
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    color = AppColors.TextSecondary
                                 )
                             }
                         }
@@ -201,23 +199,19 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Go Premium Card
-            Card(
+            AppCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
-                shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.Transparent
-                )
+                    .padding(horizontal = 24.dp)
+                    .border(
+                        width = 2.dp,
+                        color = Color(0xFFF59E0B), // Amber-500
+                        shape = RoundedCornerShape(24.dp)
+                    )
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(
-                            width = 2.dp,
-                            color = Color(0xFFF59E0B), // Amber-500
-                            shape = RoundedCornerShape(24.dp)
-                        )
                         .padding(22.dp)
                 ) {
                     Row(
@@ -258,21 +252,11 @@ fun ProfileScreen(
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     // New Badge
-                                    Box(
-                                        modifier = Modifier
-                                            .background(
-                                                Color(0xFFF59E0B),
-                                                RoundedCornerShape(8.dp)
-                                            )
-                                            .padding(horizontal = 8.dp, vertical = 2.dp)
-                                    ) {
-                                        Text(
-                                            text = "New",
-                                            style = MaterialTheme.typography.labelSmall,
-                                            fontWeight = FontWeight.Medium,
-                                            color = Color.White
-                                        )
-                                    }
+                                    CustomStatusBadge(
+                                        text = "New",
+                                        backgroundColor = Color(0xFFF59E0B),
+                                        textColor = Color.White
+                                    )
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
@@ -305,7 +289,7 @@ fun ProfileScreen(
                     text = "Quick Actions",
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = AppColors.TextPrimary,
                     modifier = Modifier.padding(start = 8.dp, bottom = 12.dp)
                 )
 
@@ -341,7 +325,7 @@ fun ProfileScreen(
                     text = "Settings",
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = AppColors.TextPrimary,
                     modifier = Modifier.padding(start = 8.dp, bottom = 12.dp)
                 )
 
@@ -396,15 +380,11 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Admin Panel (if applicable)
-                Card(
+                AppCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { /* TODO: Navigate to admin panel */ },
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFF5F3FF) // Violet-50
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                    onClick = { /* TODO: Navigate to admin panel */ }
                 ) {
                     Row(
                         modifier = Modifier
@@ -442,21 +422,11 @@ fun ProfileScreen(
                                     color = Color(0xFF6C5CE7) // Violet-600
                                 )
                                 // Admin Badge
-                                Box(
-                                    modifier = Modifier
-                                        .background(
-                                            Color(0xFF6C5CE7),
-                                            RoundedCornerShape(8.dp)
-                                        )
-                                        .padding(horizontal = 8.dp, vertical = 2.dp)
-                                ) {
-                                    Text(
-                                        text = "Admin",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        fontWeight = FontWeight.Medium,
-                                        color = Color.White
-                                    )
-                                }
+                                CustomStatusBadge(
+                                    text = "Admin",
+                                    backgroundColor = Color(0xFF6C5CE7),
+                                    textColor = Color.White
+                                )
                             }
                         }
 
@@ -472,18 +442,12 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Logout
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            // TODO: Implement logout
-                            FirebaseAuth.getInstance().signOut()
-                        },
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                AppCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        // TODO: Implement logout
+                        FirebaseAuth.getInstance().signOut()
+                    }
                 ) {
                     Row(
                         modifier = Modifier
@@ -530,15 +494,9 @@ fun ActionCard(
     iconBackgroundColor: Color,
     badge: String? = null
 ) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    AppCard(
+        modifier = modifier.fillMaxWidth(),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier
@@ -577,21 +535,11 @@ fun ActionCard(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     badge?.let {
-                        Box(
-                            modifier = Modifier
-                                .background(
-                                    MaterialTheme.colorScheme.surfaceVariant,
-                                    RoundedCornerShape(8.dp)
-                                )
-                                .padding(horizontal = 8.dp, vertical = 2.dp)
-                        ) {
-                            Text(
-                                text = it,
-                                style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
+                        CustomStatusBadge(
+                            text = it,
+                            backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+                            textColor = MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 }
             }
@@ -615,13 +563,8 @@ fun StatCard(
     modifier: Modifier = Modifier,
     isHighlighted: Boolean = false
 ) {
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    AppCard(
+        modifier = modifier
     ) {
         Column(
             modifier = Modifier
@@ -665,15 +608,9 @@ fun SettingsCard(
     iconBackgroundColor: Color,
     trailingContent: @Composable () -> Unit
 ) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    AppCard(
+        modifier = modifier.fillMaxWidth(),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier
@@ -709,6 +646,152 @@ fun SettingsCard(
             }
 
             trailingContent()
+        }
+    }
+}
+
+// ==================== Preview ====================
+
+@Preview(
+    name = "Profile Screen",
+    showBackground = true,
+    backgroundColor = 0xFF000000,
+    showSystemUi = true
+)
+@Composable
+private fun ProfileScreenPreview() {
+    GenAiVideoTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            AppToolbar(
+                title = "Profile",
+                subtitle = "Account",
+                showBorder = false
+            )
+            
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Profile Card
+                AppCard(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        verticalArrangement = Arrangement.spacedBy(24.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .clip(CircleShape)
+                                    .background(AppColors.PrimaryPurple),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "JD",
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    color = AppColors.TextPrimary
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Column {
+                                Text(
+                                    text = "John Doe",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Medium,
+                                    color = AppColors.TextPrimary
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "john.doe@example.com",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = AppColors.TextSecondary
+                                )
+                            }
+                        }
+                        
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            AppCard(modifier = Modifier.weight(1f)) {
+                                Column(
+                                    modifier = Modifier.padding(16.dp),
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Text(
+                                        text = "Videos",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = AppColors.TextSecondary
+                                    )
+                                    Text(
+                                        text = "12",
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight.Medium,
+                                        color = AppColors.TextPrimary
+                                    )
+                                }
+                            }
+                            AppCard(modifier = Modifier.weight(1f)) {
+                                Column(
+                                    modifier = Modifier.padding(16.dp),
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Text(
+                                        text = "Credits",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = AppColors.PrimaryPurple
+                                    )
+                                    Text(
+                                        text = "1,250",
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight.Medium,
+                                        color = AppColors.PrimaryPurple
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // Quick Actions
+                Text(
+                    text = "Quick Actions",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Medium,
+                    color = AppColors.TextPrimary,
+                    modifier = Modifier.padding(start = 8.dp, bottom = 12.dp)
+                )
+                
+                AppCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {}
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Buy Credits",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = AppColors.TextPrimary
+                        )
+                    }
+                }
+            }
         }
     }
 }

@@ -8,7 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,8 +24,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -83,6 +80,11 @@ import com.manjul.genai.videogenerator.ui.viewmodel.AIModelsViewModel
 import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
 import com.manjul.genai.videogenerator.ui.designsystem.components.badges.CustomStatusBadge
 import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
+import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.layout.PaddingValues
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -407,23 +409,12 @@ private fun ModelCard(
         animationSpec = tween(300), label = "card_scale"
     )
 
-    Card(
+    AppCard(
         modifier = Modifier
             .fillMaxWidth()
             .scale(scale)
-            .padding(vertical = 8.dp, horizontal = 16.dp)
-            .clickable(onClick = onModelClick),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = if (isHighlighted) 8.dp else 4.dp
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isHighlighted) {
-                MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-            } else {
-                MaterialTheme.colorScheme.surface
-            }
-        ),
-        shape = RoundedCornerShape(20.dp)
+            .padding(vertical = 8.dp, horizontal = 16.dp),
+        onClick = onModelClick
     ) {
         Column(modifier = Modifier.padding(0.dp)) {
             // Video Preview Section
@@ -1208,6 +1199,107 @@ private fun rememberPreviewMediaSourceFactory(): ProgressiveMediaSource.Factory 
             // Remove FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS to allow better caching
             .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
         ProgressiveMediaSource.Factory(cacheFactory)
+    }
+}
+
+// ==================== Preview ====================
+
+@Preview(
+    name = "Models Screen",
+    showBackground = true,
+    backgroundColor = 0xFF000000,
+    showSystemUi = true
+)
+@Composable
+private fun ModelsScreenPreview() {
+    GenAiVideoTheme {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            AppToolbar(
+                title = "AI Video Models",
+                subtitle = "3 models available",
+                showBorder = false
+            )
+            
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                itemsIndexed(listOf("Veo 3.1", "Sora 2", "Wan")) { index, modelName ->
+                    AppCard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp, horizontal = 16.dp),
+                        onClick = {}
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(20.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = modelName,
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.weight(1f),
+                                    color = AppColors.TextPrimary
+                                )
+                                if (index == 0) {
+                                    CustomStatusBadge(
+                                        text = "Selected",
+                                        backgroundColor = AppColors.SelectedBackground,
+                                        textColor = AppColors.SelectedText
+                                    )
+                                }
+                            }
+                            Text(
+                                text = "Fast video generation model with high quality output",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = AppColors.TextSecondary,
+                                maxLines = 2
+                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                Column {
+                                    Text(
+                                        text = "Price",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = AppColors.TextSecondary
+                                    )
+                                    Text(
+                                        text = "4",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = AppColors.PrimaryPurple
+                                    )
+                                }
+                                Column {
+                                    Text(
+                                        text = "Duration",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = AppColors.TextSecondary
+                                    )
+                                    Text(
+                                        text = "4s, 8s",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = AppColors.PrimaryPurple
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

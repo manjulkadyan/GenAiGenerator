@@ -26,8 +26,11 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.TrendingDown
 import com.manjul.genai.videogenerator.ui.components.AppToolbar
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
+import com.manjul.genai.videogenerator.ui.designsystem.components.badges.CustomStatusBadge
+import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
+import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -103,13 +106,8 @@ fun BuyCreditsScreen(
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             // Current Balance Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+            AppCard(
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
                     modifier = Modifier
@@ -138,13 +136,8 @@ fun BuyCreditsScreen(
             }
             
             // Usage This Week Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+            AppCard(
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
                     modifier = Modifier
@@ -244,13 +237,8 @@ fun BuyCreditsScreen(
             }
             
             // Tip Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFEFF6FF) // Blue-50
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+            AppCard(
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
                     modifier = Modifier
@@ -281,210 +269,279 @@ private fun PackageCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Card(
-        modifier = modifier
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (packageInfo.isPopular) {
-                Color(0xFFF5F3FF) // Purple-50
-            } else {
-                MaterialTheme.colorScheme.surface
-            }
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = if (packageInfo.isPopular) 2.dp else 1.dp
-        )
+    AppCard(
+        modifier = modifier,
+        onClick = onClick
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .then(
-                    if (packageInfo.isPopular) {
-                        Modifier.border(
-                            width = 2.dp,
-                            color = Color(0xFF4B3FFF), // Purple-600
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                    } else {
-                        Modifier.border(
-                            width = 2.dp,
-                            color = MaterialTheme.colorScheme.outline,
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                    }
-                )
-                .padding(18.dp)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                // Popular Badge
-                if (packageInfo.isPopular) {
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.End)
-                            .background(
-                                Color(0xFF4B3FFF),
-                                RoundedCornerShape(8.dp)
-                            )
-                            .padding(horizontal = 8.dp, vertical = 2.dp)
-                    ) {
-                        Text(
-                            text = "Popular",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Medium,
-                            color = Color.White
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(4.dp))
-                }
-                
-                Text(
-                    text = packageInfo.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                
-                Text(
-                    text = "${packageInfo.credits}",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF4B3FFF) // Purple-600
-                )
-                
-                packageInfo.bonus?.let { bonus ->
-                    Text(
-                        text = "+$bonus bonus",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color(0xFF00A63E) // Green-600
+            // Popular Badge
+            if (packageInfo.isPopular) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.End)
+                ) {
+                    CustomStatusBadge(
+                        text = "Popular",
+                        backgroundColor = Color(0xFF4B3FFF),
+                        textColor = Color.White
                     )
                 }
-                
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+            
+            Text(
+                text = packageInfo.name,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            
+            Text(
+                text = "${packageInfo.credits}",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF4B3FFF) // Purple-600
+            )
+            
+            packageInfo.bonus?.let { bonus ->
                 Text(
-                    text = packageInfo.price,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurface
+                    text = "+$bonus bonus",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFF10B981) // Green-500
                 )
             }
+            
+            Text(
+                text = packageInfo.price,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
 
 @Composable
-private fun UsageGraph(
-    modifier: Modifier = Modifier
-) {
-    // Sample data for the graph (7 days)
-    val dataPoints = listOf(160, 140, 120, 100, 80, 60, 40)
-    val dates = listOf("Nov 12", "Nov 14", "Nov 16", "Nov 18")
-    val yAxisLabels = listOf(0, 40, 80, 120, 160)
-    
-    Box(
-        modifier = modifier
-            .background(Color.Transparent)
-    ) {
-        // Y-axis labels
-        Column(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(end = 8.dp),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.End
-        ) {
-            yAxisLabels.reversed().forEach { value ->
-                Text(
-                    text = "$value",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color(0xFF6B7280) // Gray-500
-                )
+private fun UsageGraph(modifier: Modifier = Modifier) {
+    Canvas(modifier = modifier) {
+        val width = size.width
+        val height = size.height
+        val padding = 16.dp.toPx()
+        
+        // Draw grid lines
+        val gridColor = Color(0xFFE5E7EB).copy(alpha = 0.5f)
+        val gridStroke = 1.dp.toPx()
+        
+        // Horizontal grid lines
+        for (i in 0..4) {
+            val y = padding + (height - 2 * padding) * (i / 4f)
+            drawLine(
+                color = gridColor,
+                start = Offset(padding, y),
+                end = Offset(width - padding, y),
+                strokeWidth = gridStroke
+            )
+        }
+        
+        // Vertical grid lines
+        val days = 7
+        for (i in 0..days) {
+            val x = padding + (width - 2 * padding) * (i / days.toFloat())
+            drawLine(
+                color = gridColor,
+                start = Offset(x, padding),
+                end = Offset(x, height - padding),
+                strokeWidth = gridStroke
+            )
+        }
+        
+        // Draw sample data line
+        val dataPoints = listOf(0.3f, 0.5f, 0.4f, 0.7f, 0.6f, 0.8f, 0.9f)
+        val path = Path()
+        val graphWidth = width - 2 * padding
+        val graphHeight = height - 2 * padding
+        
+        dataPoints.forEachIndexed { index, value ->
+            val x = padding + (graphWidth / (dataPoints.size - 1)) * index
+            val y = padding + graphHeight * (1 - value)
+            
+            if (index == 0) {
+                path.moveTo(x, y)
+            } else {
+                path.lineTo(x, y)
             }
         }
         
-        // Graph area
-        Box(
+        // Draw line
+        drawPath(
+            path = path,
+            color = Color(0xFF4B3FFF), // Purple-600
+            style = Stroke(
+                width = 3.dp.toPx(),
+                cap = StrokeCap.Round,
+                join = StrokeJoin.Round
+            )
+        )
+        
+        // Draw points
+        dataPoints.forEachIndexed { index, value ->
+            val x = padding + (graphWidth / (dataPoints.size - 1)) * index
+            val y = padding + graphHeight * (1 - value)
+            
+            drawCircle(
+                color = Color(0xFF4B3FFF),
+                radius = 4.dp.toPx(),
+                center = Offset(x, y)
+            )
+        }
+        
+        // Draw labels
+        val dates = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+        dates.forEachIndexed { index, date ->
+            val x = padding + (graphWidth / (dates.size - 1)) * index
+            val y = height - padding + 8.dp.toPx()
+            
+            // Note: Text drawing in Canvas requires custom implementation
+            // For preview purposes, we'll skip text labels
+        }
+    }
+}
+
+// ==================== Preview ====================
+
+@Preview(
+    name = "Buy Credits Screen",
+    showBackground = true,
+    backgroundColor = 0xFF000000,
+    showSystemUi = true
+)
+@Composable
+private fun BuyCreditsScreenPreview() {
+    GenAiVideoTheme {
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 40.dp, end = 8.dp, bottom = 24.dp)
+                .verticalScroll(rememberScrollState())
         ) {
-            // Simple line representation
-            // In a real implementation, you'd use a charting library
-            // For now, we'll create a simple visual representation
-            Canvas(
-                modifier = Modifier.fillMaxSize()
+            AppToolbar(
+                title = "Credits",
+                showBackButton = true,
+                onBackClick = {},
+                showBorder = true
+            )
+            
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                val width = size.width
-                val height = size.height
-                val maxValue = 160f
-                
-                // Draw grid lines
-                yAxisLabels.forEachIndexed { index, value ->
-                    val y = height - (value / maxValue * height)
-                    drawLine(
-                        color = Color(0xFFE5E7EB), // Gray-200
-                        start = Offset(0f, y),
-                        end = Offset(width, y),
-                        strokeWidth = 1.dp.toPx()
-                    )
-                }
-                
-                // Draw line chart
-                val pointWidth = width / (dataPoints.size - 1)
-                val path = Path().apply {
-                    dataPoints.forEachIndexed { index, value ->
-                        val x = index * pointWidth
-                        val y = height - (value / maxValue * height)
-                        if (index == 0) {
-                            moveTo(x, y)
-                        } else {
-                            lineTo(x, y)
-                        }
+                // Current Balance Card
+                AppCard(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Current Balance",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = AppColors.TextSecondary
+                        )
+                        Text(
+                            text = "1,250",
+                            style = MaterialTheme.typography.headlineLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = AppColors.PrimaryPurple
+                        )
+                        Text(
+                            text = "credits available",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = AppColors.TextSecondary
+                        )
                     }
                 }
                 
-                drawPath(
-                    path = path,
-                    color = Color(0xFF4B3FFF), // Purple-600
-                    style = Stroke(
-                        width = 3.dp.toPx(),
-                        cap = StrokeCap.Round,
-                        join = StrokeJoin.Round
-                    )
+                // Packages
+                Text(
+                    text = "Buy Credits",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Medium,
+                    color = AppColors.TextPrimary
                 )
                 
-                // Draw points
-                dataPoints.forEachIndexed { index, value ->
-                    val x = index * pointWidth
-                    val y = height - (value / maxValue * height)
-                    drawCircle(
-                        color = Color(0xFF4B3FFF),
-                        radius = 4.dp.toPx(),
-                        center = Offset(x, y)
-                    )
-                }
-            }
-            
-            // X-axis labels (dates)
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                dates.forEach { date ->
-                    Text(
-                        text = date,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color(0xFF6B7280) // Gray-500
-                    )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    AppCard(
+                        modifier = Modifier.weight(1f),
+                        onClick = {}
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = "Starter",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = AppColors.TextPrimary
+                            )
+                            Text(
+                                text = "100",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = AppColors.PrimaryPurple
+                            )
+                            Text(
+                                text = "$9.99",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = AppColors.TextSecondary
+                            )
+                        }
+                    }
+                    AppCard(
+                        modifier = Modifier.weight(1f),
+                        onClick = {}
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            CustomStatusBadge(
+                                text = "Popular",
+                                backgroundColor = AppColors.PrimaryPurple.copy(alpha = 0.2f),
+                                textColor = AppColors.PrimaryPurple
+                            )
+                            Text(
+                                text = "Creator",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = AppColors.TextPrimary
+                            )
+                            Text(
+                                text = "500",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = AppColors.PrimaryPurple
+                            )
+                            Text(
+                                text = "$39.99",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = AppColors.TextSecondary
+                            )
+                        }
+                    }
                 }
             }
         }
     }
 }
-
