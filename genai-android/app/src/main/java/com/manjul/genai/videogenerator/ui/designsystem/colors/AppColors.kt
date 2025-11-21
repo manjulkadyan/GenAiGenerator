@@ -3,8 +3,29 @@ package com.manjul.genai.videogenerator.ui.designsystem.colors
 import androidx.compose.ui.graphics.Color
 
 /**
- * Semantic color tokens for the design system
- * Matches the reference design with purple accents and dark theme
+ * Semantic color tokens for the design system.
+ *
+ * Provides a comprehensive set of color tokens that match the reference design
+ * with purple accents and dark theme. All colors are semantic, meaning they
+ * describe their purpose rather than their literal value (e.g., `PrimaryPurple`
+ * instead of `#6C5CE7`).
+ *
+ * ## Color Categories
+ * - **Primary Colors**: Purple accent colors for selected states and primary actions
+ * - **Background Colors**: Dark theme backgrounds and surfaces
+ * - **Text Colors**: Primary, secondary, and tertiary text colors
+ * - **Selection States**: Colors for selected/unselected UI elements
+ * - **Status Colors**: Success, error, warning, and info states
+ * - **Border Colors**: Default, light, and selected border colors
+ * - **Button Colors**: Primary, secondary, and disabled button states
+ * - **Card Colors**: Background and border colors for cards
+ * - **Badge Colors**: Required and optional badge colors
+ *
+ * ## Usage
+ * Always use semantic color tokens instead of hardcoded color values to ensure
+ * consistency and enable easy theme customization.
+ *
+ * @see com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
  */
 object AppColors {
     // Primary Colors - Purple accent (matching reference images)
