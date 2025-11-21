@@ -670,6 +670,7 @@ private fun ActionButtonsSection(
 @Composable
 private fun ResultsScreenPreview() {
     GenAiVideoTheme {
+        // Preview shows the structure without requiring context
         Column(
             modifier = Modifier.fillMaxSize()
         ) {

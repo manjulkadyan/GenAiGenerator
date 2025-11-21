@@ -497,69 +497,8 @@ private fun FullscreenVideoDialog(
 @Composable
 private fun HistoryScreenPreview() {
     GenAiVideoTheme {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            AppToolbar(
-                title = "Video History",
-                subtitle = "Your Creations",
-                showBorder = true
-            )
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                // Filter Chips
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(listOf("All", "Completed", "Running", "Failed")) { filter ->
-                        FilterChip(
-                            text = filter,
-                            isSelected = filter == "All",
-                            onClick = {}
-                        )
-                    }
-                }
-            }
-
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                itemsIndexed((0..2).toList()) { index, _ ->
-                    AppCard {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text(
-                                    text = "Video Generation ${index + 1}",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = AppColors.TextPrimary
-                                )
-                                CustomStatusBadge(
-                                    text = "completed",
-                                    backgroundColor = AppColors.StatusSuccessBackground,
-                                    textColor = AppColors.StatusSuccess
-                                )
-                            }
-                            Text(
-                                text = "A cinematic video of a sunset over mountains",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = AppColors.TextSecondary
-                            )
-                        }
-                    }
-                }
-            }
-        }
+        HistoryScreen(
+            onVideoClick = {}
+        )
     }
 }
