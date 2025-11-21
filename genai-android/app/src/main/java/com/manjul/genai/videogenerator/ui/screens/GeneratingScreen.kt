@@ -21,7 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppTextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,8 +32,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
 
 @Composable
 fun GeneratingScreen(
@@ -88,9 +90,10 @@ fun GeneratingScreen(
                 
                 // Retry button if available
                 if (onRetry != null) {
-                    TextButton(onClick = onRetry) {
-                        Text("Retry")
-                    }
+                    AppTextButton(
+                        text = "Retry",
+                        onClick = onRetry
+                    )
                 }
             } else {
                 // Normal generating state
@@ -244,6 +247,37 @@ private fun SparkleAnimation() {
                 .rotate(sparkle3Rotation)
                 .align(Alignment.BottomEnd),
             tint = MaterialTheme.colorScheme.tertiary
+        )
+    }
+}
+
+// ==================== Previews ====================
+
+@Preview(
+    name = "Generating Screen",
+    showBackground = true,
+    backgroundColor = 0xFF000000
+)
+@Composable
+private fun GeneratingScreenPreview() {
+    GenAiVideoTheme {
+        GeneratingScreen(
+            statusMessage = "Uploading first frame..."
+        )
+    }
+}
+
+@Preview(
+    name = "Generating Screen - Error",
+    showBackground = true,
+    backgroundColor = 0xFF000000
+)
+@Composable
+private fun GeneratingScreenErrorPreview() {
+    GenAiVideoTheme {
+        GeneratingScreen(
+            errorMessage = "Failed to generate video. Please try again.",
+            onRetry = {}
         )
     }
 }

@@ -44,25 +44,35 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.WarningAmber
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.dialogs.AppBottomSheetDialog
+import com.manjul.genai.videogenerator.ui.designsystem.components.dialogs.AppDialog
+import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppSecondaryButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppTextButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
+import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppSelectionCard
+import com.manjul.genai.videogenerator.ui.designsystem.components.inputs.AppTextField
+import com.manjul.genai.videogenerator.ui.designsystem.components.sections.SectionCard
+import com.manjul.genai.videogenerator.ui.designsystem.components.selection.SelectionPill
+import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -88,6 +98,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.manjul.genai.videogenerator.data.model.AIModel
 import com.manjul.genai.videogenerator.ui.viewmodel.GenerateScreenState
 import com.manjul.genai.videogenerator.ui.viewmodel.VideoGenerateViewModel
+import com.manjul.genai.videogenerator.ui.components.AppToolbar
 import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
 import com.manjul.genai.videogenerator.ui.designsystem.components.inputs.AppTextField
 import com.manjul.genai.videogenerator.ui.designsystem.components.sections.SectionCard
@@ -300,19 +311,28 @@ fun GenerateScreen(
     }
 
     if (!state.isGenerating && state.errorMessage != null) {
-        AlertDialog(
+        AppDialog(
             onDismissRequest = viewModel::dismissMessage,
-            confirmButton = {
-                TextButton(onClick = viewModel::dismissMessage) {
-                    Text("OK")
-                }
-            },
-            title = { Text("Error") },
-            text = { Text(state.errorMessage ?: "Unknown error") },
-            containerColor = MaterialTheme.colorScheme.surface,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
-            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+            title = "Error"
+        ) {
+            Text(
+                text = state.errorMessage ?: "Unknown error",
+                style = MaterialTheme.typography.bodyMedium,
+                color = AppColors.TextSecondary,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                AppTextButton(
+                    text = "OK",
+                    onClick = viewModel::dismissMessage
+                )
+            }
+        }
     }
 
     if (showPricingDialog) {
@@ -827,15 +847,11 @@ private fun ReferenceFramePicker(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 if (uri != null) {
-                    OutlinedButton(
+                    AppSecondaryButton(
+                        text = "Remove",
                         onClick = onClear,
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = MaterialTheme.colorScheme.error
-                        ),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.5f))
-                    ) {
-                        Text("Remove")
-                    }
+                        fullWidth = false
+                    )
                 }
             }
         }
@@ -1015,55 +1031,18 @@ private fun PricingDialog(
     models: List<AIModel>,
     onDismiss: () -> Unit
 ) {
-    Dialog(
+    AppBottomSheetDialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+        title = "Pricing"
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.7f))
-                .padding(horizontal = 16.dp, vertical = 32.dp),
-            contentAlignment = Alignment.BottomCenter
+        Column(
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(32.dp, 32.dp, 16.dp, 16.dp),
-                color = MaterialTheme.colorScheme.surface,
-                tonalElevation = 12.dp,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
-            ) {
-                Column(
-                    modifier = Modifier.padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = "Pricing",
-                                style = MaterialTheme.typography.headlineMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = "Credits per second",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        IconButton(onClick = onDismiss) {
-                            Icon(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = "Close",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
+            Text(
+                text = "Credits per second",
+                style = MaterialTheme.typography.bodyMedium,
+                color = AppColors.TextSecondary
+            )
 
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         models
@@ -1073,31 +1052,23 @@ private fun PricingDialog(
                             }
                     }
 
-                    Text(
-                        text = "Final cost = credits/sec × video duration",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                }
-            }
+            Text(
+                text = "Final cost = credits/sec × video duration",
+                style = MaterialTheme.typography.bodySmall,
+                color = AppColors.TextSecondary,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
     }
 }
 
 @Composable
 private fun PricingRow(model: AIModel) {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-        tonalElevation = 2.dp,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
+    AppCard(
+        modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -1359,7 +1330,7 @@ private enum class GenerationMode(val label: String) {
     ImageToVideo("Image to Video")
 }
 
-private fun formatCredits(rate: Int): String = "$rate credits/sec"
+private fun formatCredits(rate: Int): String = "~$rate c/s"
 
 private fun Modifier.dashedBorder(width: Dp, color: Color, cornerRadius: Dp): Modifier =
     this.then(
@@ -1381,3 +1352,135 @@ private fun Modifier.dashedBorder(width: Dp, color: Color, cornerRadius: Dp): Mo
             )
         }
     )
+
+// ==================== Preview ====================
+
+@Preview(
+    name = "Generate Screen",
+    showBackground = true,
+    backgroundColor = 0xFF000000,
+    showSystemUi = true
+)
+@Composable
+private fun GenerateScreenPreview() {
+    GenAiVideoTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            AppToolbar(
+                title = "AI Studio",
+                subtitle = "Try Veo 3, Sora 2 and more"
+            )
+            
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Mode Selection
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    SelectionPill(
+                        text = "Text to Video",
+                        selected = false,
+                        onClick = {}
+                    )
+                    SelectionPill(
+                        text = "Image to Video",
+                        selected = true,
+                        onClick = {}
+                    )
+                }
+                
+                // AI Model Section
+                SectionCard(
+                    title = "AI Model",
+                    description = "Choose the AI model for video generation",
+                    required = true,
+                    infoText = "Learn more about AI models",
+                    onInfoClick = {}
+                ) {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        itemsIndexed(listOf("Veo 3.1", "Sora 2", "Wan")) { index, modelName ->
+                            AppSelectionCard(
+                                isSelected = index == 0,
+                                onClick = {}
+                            ) {
+                                Text(
+                                    text = modelName,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = AppColors.TextPrimary
+                                )
+                                Text(
+                                    text = "Fast, ~4c/s",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = AppColors.TextSecondary
+                                )
+                            }
+                        }
+                    }
+                }
+                
+                // Reference Images Section
+                SectionCard(
+                    title = "Reference Images",
+                    description = "Select 1-3 reference images",
+                    required = true
+                ) {
+                    AppCard {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.padding(32.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Image,
+                                contentDescription = null,
+                                modifier = Modifier.size(48.dp),
+                                tint = AppColors.TextSecondary
+                            )
+                            Text(
+                                text = "Add Reference Images",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = AppColors.TextPrimary
+                            )
+                            Text(
+                                text = "Select 1-3 images • Tap to begin",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = AppColors.TextSecondary
+                            )
+                        }
+                    }
+                }
+                
+                // Main Text Prompt Section
+                var promptText by remember { mutableStateOf("") }
+                SectionCard(
+                    title = "Main Text Prompt",
+                    description = "Describe what you want to see in detail",
+                    required = true
+                ) {
+                    AppTextField(
+                        value = promptText,
+                        onValueChange = { promptText = it },
+                        placeholder = "Tap here to type your prompt",
+                        maxLines = 5
+                    )
+                }
+                
+                // Generate Button
+                AppPrimaryButton(
+                    text = "Generate AI Video",
+                    onClick = {},
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+        }
+    }
+}
