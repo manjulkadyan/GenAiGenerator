@@ -1213,93 +1213,10 @@ private fun rememberPreviewMediaSourceFactory(): ProgressiveMediaSource.Factory 
 @Composable
 private fun ModelsScreenPreview() {
     GenAiVideoTheme {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            AppToolbar(
-                title = "AI Video Models",
-                subtitle = "3 models available",
-                showBorder = false
-            )
-            
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                itemsIndexed(listOf("Veo 3.1", "Sora 2", "Wan")) { index, modelName ->
-                    AppCard(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp, horizontal = 16.dp),
-                        onClick = {}
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(20.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = modelName,
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.weight(1f),
-                                    color = AppColors.TextPrimary
-                                )
-                                if (index == 0) {
-                                    CustomStatusBadge(
-                                        text = "Selected",
-                                        backgroundColor = AppColors.SelectedBackground,
-                                        textColor = AppColors.SelectedText
-                                    )
-                                }
-                            }
-                            Text(
-                                text = "Fast video generation model with high quality output",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = AppColors.TextSecondary,
-                                maxLines = 2
-                            )
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                Column {
-                                    Text(
-                                        text = "Price",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = AppColors.TextSecondary
-                                    )
-                                    Text(
-                                        text = "4",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.Bold,
-                                        color = AppColors.PrimaryPurple
-                                    )
-                                }
-                                Column {
-                                    Text(
-                                        text = "Duration",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = AppColors.TextSecondary
-                                    )
-                                    Text(
-                                        text = "4s, 8s",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.Bold,
-                                        color = AppColors.PrimaryPurple
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        ModelsScreen(
+            onModelClick = {},
+            //onVideoClick = {}
+        )
     }
 }
 
