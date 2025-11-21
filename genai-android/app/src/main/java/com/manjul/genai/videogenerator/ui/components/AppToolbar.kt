@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 
 @Composable
 fun AppToolbar(
@@ -75,7 +76,7 @@ fun AppToolbar(
                         modifier = Modifier
                             .size(40.dp)
                             .clickable(onClick = onBackClick),
-                        tint = MaterialTheme.colorScheme.onSurface
+                        tint = AppColors.TextPrimary
                     )
                 } else if (showBackButton) {
                     // Placeholder to maintain alignment when back button is needed but no action
@@ -91,7 +92,7 @@ fun AppToolbar(
                         Text(
                             text = it,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = AppColors.TextSecondary
                         )
                     }
                     Text(
@@ -102,7 +103,7 @@ fun AppToolbar(
                             MaterialTheme.typography.titleLarge
                         },
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AppColors.TextPrimary
                     )
                 }
             }

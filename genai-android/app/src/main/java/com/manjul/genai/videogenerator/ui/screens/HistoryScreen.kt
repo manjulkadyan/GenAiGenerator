@@ -58,6 +58,10 @@ import com.manjul.genai.videogenerator.data.model.VideoJobStatus
 import com.manjul.genai.videogenerator.ui.components.AppToolbar
 import com.manjul.genai.videogenerator.ui.components.VideoThumbnail
 import com.manjul.genai.videogenerator.ui.viewmodel.HistoryViewModel
+import com.manjul.genai.videogenerator.ui.designsystem.components.badges.FilterChip
+import com.manjul.genai.videogenerator.ui.designsystem.components.badges.CustomStatusBadge
+import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
+import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 import java.time.Duration
 import java.time.Instant
 
@@ -213,37 +217,7 @@ fun HistoryScreen(
     // Removed fullscreen dialog - clicking videos now opens ResultsScreen instead
 }
 
-@Composable
-private fun FilterChip(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(1000.dp), // Fully rounded
-        color = if (isSelected) {
-            Color(0xFF6C5CE7) // Purple
-        } else {
-            MaterialTheme.colorScheme.surface
-        },
-        border = if (!isSelected) {
-            androidx.compose.foundation.BorderStroke(0.5.dp, MaterialTheme.colorScheme.outline)
-        } else null,
-        shadowElevation = if (isSelected) 2.dp else 0.dp
-    ) {
-        Text(
-            text = text,
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
-            style = MaterialTheme.typography.bodyMedium,
-            color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
-}
+// FilterChip now uses design system component
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -422,22 +396,11 @@ private fun HistoryJobCard(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     // Status badge
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = statusBgColor,
-                        border = androidx.compose.foundation.BorderStroke(
-                            0.5.dp,
-                            statusColor.copy(alpha = 0.2f)
-                        )
-                    ) {
-                        Text(
-                            text = statusText,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Medium,
-                            color = statusColor
-                        )
-                    }
+                    CustomStatusBadge(
+                        text = statusText,
+                        backgroundColor = statusBgColor,
+                        textColor = statusColor
+                    )
 
                     // Duration
                     if (job.status == VideoJobStatus.COMPLETE || job.status == VideoJobStatus.PROCESSING) {

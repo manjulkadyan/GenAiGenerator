@@ -70,6 +70,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
@@ -87,6 +88,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.manjul.genai.videogenerator.data.model.AIModel
 import com.manjul.genai.videogenerator.ui.viewmodel.GenerateScreenState
 import com.manjul.genai.videogenerator.ui.viewmodel.VideoGenerateViewModel
+import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.inputs.AppTextField
+import com.manjul.genai.videogenerator.ui.designsystem.components.sections.SectionCard
+import com.manjul.genai.videogenerator.ui.designsystem.components.selection.SelectionPill
+import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
+import com.manjul.genai.videogenerator.ui.designsystem.components.badges.StatusBadge
+import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 import kotlinx.coroutines.delay
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -130,10 +138,19 @@ fun GenerateScreen(
     var showAdvanced by rememberSaveable { mutableStateOf(true) }
     var showPricingDialog by rememberSaveable { mutableStateOf(false) }
 
+    // Premium dark background with subtle gradient
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.background,
+                        MaterialTheme.colorScheme.background.copy(alpha = 0.95f),
+                        MaterialTheme.colorScheme.surface.copy(alpha = 0.3f)
+                    )
+                )
+            )
     ) {
         when {
             state.isLoading -> GenerateLoadingState()
@@ -143,16 +160,16 @@ fun GenerateScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(scrollState)
-                        .padding(horizontal = 20.dp)
-                        .padding(bottom = 130.dp)
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 140.dp)
                 ) {
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                     GenerateHero(
                         generationMode = generationMode,
                         onModeSelected = { generationMode = it }
                     )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
                     SectionCard(
                         title = "AI Model",
@@ -170,7 +187,7 @@ fun GenerateScreen(
 
                     state.selectedModel?.let { model ->
                         if (model.supportsFirstFrame || model.supportsLastFrame) {
-                            Spacer(modifier = Modifier.height(20.dp))
+                            Spacer(modifier = Modifier.height(16.dp))
                             SectionCard(
                                 title = "Reference Images",
                                 description = "Select reference frames to guide motion",
@@ -190,20 +207,22 @@ fun GenerateScreen(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                     SectionCard(
                         title = "Main Text Prompt",
                         description = "Describe what you want to see in detail",
                         required = true,
                         infoText = "Detailed prompts lead to richer scenes"
                     ) {
-                        PromptField(
+                        AppTextField(
                             value = state.prompt,
-                            onValueChange = viewModel::updatePrompt
+                            onValueChange = viewModel::updatePrompt,
+                            placeholder = "Tap here to type your prompt",
+                            maxLines = 5
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                     SectionCard(
                         title = "Advanced Settings",
                         description = "Adjust aspect ratio and duration",
@@ -232,10 +251,20 @@ fun GenerateScreen(
                                 }
 
                                 if (state.selectedModel?.schemaMetadata?.categorized?.text?.any { it.name == "negative_prompt" } == true) {
-                                    NegativePromptField(
-                                        value = state.negativePrompt,
-                                        onValueChange = viewModel::updateNegativePrompt
-                                    )
+                                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                        Text(
+                                            text = "Negative Prompt",
+                                            style = MaterialTheme.typography.titleMedium,
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = AppColors.TextPrimary
+                                        )
+                                        AppTextField(
+                                            value = state.negativePrompt,
+                                            onValueChange = viewModel::updateNegativePrompt,
+                                            placeholder = "What should we avoid? e.g. blurry, low quality",
+                                            maxLines = 3
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -279,7 +308,10 @@ fun GenerateScreen(
                 }
             },
             title = { Text("Error") },
-            text = { Text(state.errorMessage ?: "Unknown error") }
+            text = { Text(state.errorMessage ?: "Unknown error") },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 
@@ -296,21 +328,38 @@ private fun GenerateLoadingState() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.background,
+                        MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)
+                    )
+                )
+            ),
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-            Text(
-                text = "Loading AI Studio",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.primary,
+                strokeWidth = 3.dp,
+                modifier = Modifier.size(48.dp)
             )
-            Text(
-                text = "Fetching the latest models...",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "Loading AI Studio",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = "Fetching the latest models...",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }
@@ -320,26 +369,47 @@ private fun EmptyGenerateState() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.background,
+                        MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)
+                    )
+                )
+            ),
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Icon(
-                imageVector = Icons.Default.WarningAmber,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error,
-                modifier = Modifier.size(32.dp)
-            )
-            Text(
-                text = "No AI models available",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Text(
-                text = "Please try again in a moment.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Surface(
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.errorContainer,
+                modifier = Modifier.size(64.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.Default.WarningAmber,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onErrorContainer,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
+            }
+            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "No AI models available",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = "Please try again in a moment.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }
@@ -349,51 +419,79 @@ private fun GenerateHero(
     generationMode: GenerationMode,
     onModeSelected: (GenerationMode) -> Unit
 ) {
-    val gradient = Brush.horizontalGradient(
+    // Premium gradient background
+    val heroGradient = Brush.linearGradient(
         colors = listOf(
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f),
-            MaterialTheme.colorScheme.tertiary.copy(alpha = 0.4f)
-        )
+            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f),
+            MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f),
+            MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)
+        ),
+        start = Offset(0f, 0f),
+        end = Offset(1000f, 1000f)
     )
+    
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(28.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        tonalElevation = 8.dp
+        shape = RoundedCornerShape(32.dp),
+        color = Color.Transparent,
+        tonalElevation = 0.dp
     ) {
         Box(
             modifier = Modifier
-                .background(gradient)
-                .padding(20.dp)
+                .background(heroGradient)
+                .clip(RoundedCornerShape(32.dp))
+                .padding(24.dp)
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Row(horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Text(
                             text = "AI Studio",
-                            style = MaterialTheme.typography.headlineSmall,
+                            style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                         Text(
                             text = "Try Veo 3, Sora 2 and more",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.85f)
                         )
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        IconButton(onClick = {}, modifier = Modifier.size(44.dp)) {
+                        IconButton(
+                            onClick = {},
+                            modifier = Modifier
+                                .size(48.dp)
+                                .background(
+                                    MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
+                                    CircleShape
+                                )
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Star,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.size(24.dp)
                             )
                         }
-                        IconButton(onClick = {}, modifier = Modifier.size(44.dp)) {
+                        IconButton(
+                            onClick = {},
+                            modifier = Modifier
+                                .size(48.dp)
+                                .background(
+                                    MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
+                                    CircleShape
+                                )
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.size(24.dp)
                             )
                         }
                     }
@@ -417,28 +515,46 @@ private fun ModeToggle(
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(50),
-        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f)
+        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.25f),
+        tonalElevation = 2.dp
     ) {
-        Row(modifier = Modifier.padding(6.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        Row(
+            modifier = Modifier.padding(6.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
             modes.forEach { mode ->
                 val isSelected = mode == selected
+                val scale by animateFloatAsState(
+                    targetValue = if (isSelected) 1f else 0.95f,
+                    animationSpec = tween(200),
+                    label = "scale"
+                )
                 Surface(
                     modifier = Modifier
                         .weight(1f)
                         .clip(RoundedCornerShape(40))
-                        .clickable { onModeSelected(mode) },
-                    color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
+                        .clickable { onModeSelected(mode) }
+                        .scale(scale),
+                    color = if (isSelected) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        Color.Transparent
+                    },
+                    tonalElevation = if (isSelected) 4.dp else 0.dp
                 ) {
                     Box(
-                        modifier = Modifier
-                            .padding(vertical = 10.dp),
+                        modifier = Modifier.padding(vertical = 12.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = mode.label,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                            color = if (isSelected) {
+                                MaterialTheme.colorScheme.onPrimary
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            }
                         )
                     }
                 }
@@ -447,134 +563,7 @@ private fun ModeToggle(
     }
 }
 
-@Composable
-private fun SectionCard(
-    title: String,
-    description: String,
-    required: Boolean,
-    infoText: String? = null,
-    onInfoClick: (() -> Unit)? = null,
-    optionalLabel: String? = null,
-    onHeaderClick: (() -> Unit)? = null,
-    expandable: Boolean = false,
-    expanded: Boolean = true,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    val shape = RoundedCornerShape(28.dp)
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = shape,
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 4.dp
-    ) {
-        Column(
-            modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            val headerModifier = if (onHeaderClick != null) {
-                Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(24.dp))
-                    .clickable { onHeaderClick.invoke() }
-            } else {
-                Modifier.fillMaxWidth()
-            }
-            Row(
-                modifier = headerModifier,
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(
-                            text = title,
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        if (required) {
-                            RequirementBadge(text = "Required")
-                        } else if (optionalLabel != null) {
-                            RequirementBadge(text = optionalLabel)
-                        }
-                    }
-                    Text(
-                        text = description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                infoText?.let {
-                    InfoIcon(
-                        onClick = onInfoClick,
-                        contentDescription = it
-                    )
-                }
-                if (expandable) {
-                    val rotation by animateFloatAsState(
-                        targetValue = if (expanded) 0f else 180f,
-                        animationSpec = tween(300), label = "arrowRotation"
-                    )
-                    Icon(
-                        imageVector = Icons.Default.ExpandMore,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.rotate(rotation)
-                    )
-                }
-            }
-
-            if (!expandable || expanded) {
-                content()
-            }
-        }
-    }
-}
-
-@Composable
-private fun RequirementBadge(text: String) {
-    Surface(
-        color = MaterialTheme.colorScheme.error.copy(alpha = 0.2f),
-        contentColor = MaterialTheme.colorScheme.error,
-        shape = RoundedCornerShape(6.dp)
-    ) {
-        Text(
-            text = text,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-@Composable
-private fun InfoIcon(
-    onClick: (() -> Unit)? = null,
-    contentDescription: String? = null
-) {
-    val clickableModifier = if (onClick != null) {
-        Modifier
-            .size(28.dp)
-            .clip(CircleShape)
-            .clickable { onClick() }
-    } else {
-        Modifier.size(28.dp)
-    }
-    Surface(
-        modifier = clickableModifier,
-        shape = CircleShape,
-        color = MaterialTheme.colorScheme.surfaceVariant
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Icon(
-                imageVector = Icons.Default.Info,
-                contentDescription = contentDescription,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(18.dp)
-            )
-        }
-    }
-}
+// SectionCard, RequirementBadge, and InfoIcon now use design system components
 
 @Composable
 private fun ModelSelector(
@@ -615,26 +604,48 @@ private fun ModelCard(
     selected: Boolean,
     onClick: () -> Unit
 ) {
+    val scale by animateFloatAsState(
+        targetValue = if (selected) 1.02f else 1f,
+        animationSpec = tween(200),
+        label = "cardScale"
+    )
+    
     val border = if (selected) {
-        BorderStroke(1.5.dp, Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)))
+        BorderStroke(
+            2.dp,
+            Brush.linearGradient(
+                listOf(
+                    MaterialTheme.colorScheme.primary,
+                    MaterialTheme.colorScheme.tertiary
+                )
+            )
+        )
     } else {
-        BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+        BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f))
     }
-    val cardShape = RoundedCornerShape(28.dp)
+    
+    val cardShape = RoundedCornerShape(24.dp)
     Surface(
         modifier = Modifier
             .width(220.dp)
-            .heightIn(min = 150.dp)
+            .heightIn(min = 160.dp)
             .clip(cardShape)
-            .clickable { onClick() },
+            .clickable { onClick() }
+            .scale(scale),
         shape = cardShape,
         border = border,
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = if (selected) 6.dp else 2.dp
+        color = if (selected) {
+            MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
+        } else {
+            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+        },
+        tonalElevation = if (selected) 8.dp else 2.dp
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -644,22 +655,31 @@ private fun ModelCard(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = model.name,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = formatCredits(model.pricePerSecond),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                     )
                 }
                 if (selected) {
-                    Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.primaryContainer
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier
+                                .padding(6.dp)
+                                .size(20.dp)
+                        )
+                    }
                 }
             }
         }
@@ -670,14 +690,15 @@ private fun ModelCard(
 private fun InfoChip(text: String) {
     Surface(
         shape = RoundedCornerShape(50),
-        color = MaterialTheme.colorScheme.surfaceVariant,
+        color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f),
         tonalElevation = 2.dp
     ) {
         Text(
             text = text,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onTertiaryContainer
         )
     }
 }
@@ -730,36 +751,70 @@ private fun ReferenceFramePicker(
     onClear: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             Text(
                 text = label,
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.SemiBold
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface
             )
             if (required) {
-                RequirementBadge(text = "Required")
+                StatusBadge(text = "Required")
             }
         }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(24.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
-                .dashedBorder(2.dp, MaterialTheme.colorScheme.primary, 24.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .background(
+                    if (uri == null) {
+                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                    } else {
+                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
+                    }
+                )
+                .dashedBorder(
+                    2.dp,
+                    if (uri == null) {
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                    } else {
+                        MaterialTheme.colorScheme.primary
+                    },
+                    20.dp
+                )
                 .clickable { onPick() }
-                .padding(20.dp)
+                .padding(24.dp)
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    imageVector = if (uri == null) Icons.Default.Image else Icons.Default.CheckCircle,
-                    contentDescription = null,
-                    tint = if (uri == null) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(32.dp)
-                )
+                Surface(
+                    shape = CircleShape,
+                    color = if (uri == null) {
+                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    } else {
+                        MaterialTheme.colorScheme.primaryContainer
+                    },
+                    modifier = Modifier.size(48.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = if (uri == null) Icons.Default.Image else Icons.Default.CheckCircle,
+                            contentDescription = null,
+                            tint = if (uri == null) {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            } else {
+                                MaterialTheme.colorScheme.onPrimaryContainer
+                            },
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
                 Text(
                     text = if (uri == null) "Add Reference Image" else "Image Selected",
                     style = MaterialTheme.typography.titleMedium,
@@ -772,7 +827,13 @@ private fun ReferenceFramePicker(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 if (uri != null) {
-                    OutlinedButton(onClick = onClear) {
+                    OutlinedButton(
+                        onClick = onClear,
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.error
+                        ),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.5f))
+                    ) {
                         Text("Remove")
                     }
                 }
@@ -781,57 +842,7 @@ private fun ReferenceFramePicker(
     }
 }
 
-@Composable
-private fun PromptField(
-    value: String,
-    onValueChange: (String) -> Unit
-) {
-    OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = value,
-        onValueChange = onValueChange,
-        placeholder = { Text("Tap here to type your prompt") },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
-            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-            cursorColor = MaterialTheme.colorScheme.primary
-        ),
-        textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
-        shape = RoundedCornerShape(24.dp),
-        maxLines = 5
-    )
-}
-
-@Composable
-private fun NegativePromptField(
-    value: String,
-    onValueChange: (String) -> Unit
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(
-            text = "Negative Prompt",
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = value,
-            onValueChange = onValueChange,
-            placeholder = { Text("What should we avoid? e.g. blurry, low quality") },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.tertiary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-            ),
-            shape = RoundedCornerShape(20.dp),
-            maxLines = 3
-        )
-    }
-}
+// PromptField and NegativePromptField now use AppTextField from design system
 
 @Composable
 private fun DurationAspectRow(
@@ -844,7 +855,7 @@ private fun DurationAspectRow(
     Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
         Text(
             text = "Duration",
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurface
         )
@@ -855,7 +866,7 @@ private fun DurationAspectRow(
         )
         Text(
             text = "Aspect Ratio",
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurface
         )
@@ -882,7 +893,10 @@ private fun DurationSelector(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     } else {
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
             options.forEach { duration ->
                 SelectionPill(
                     text = "${duration}s",
@@ -908,7 +922,10 @@ private fun AspectRatioSelector(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     } else {
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
             options.forEach { ratio ->
                 SelectionPill(
                     text = ratio,
@@ -920,30 +937,7 @@ private fun AspectRatioSelector(
     }
 }
 
-@Composable
-private fun SelectionPill(
-    text: String,
-    selected: Boolean,
-    onClick: () -> Unit
-) {
-    val pillShape = RoundedCornerShape(50)
-    Surface(
-        modifier = Modifier
-            .clip(pillShape)
-            .clickable { onClick() },
-        shape = pillShape,
-        color = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surfaceVariant,
-        border = if (selected) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null
-    ) {
-        Text(
-            text = text,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-            color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
+// SelectionPill now uses design system component
 
 @Composable
 private fun AudioToggle(
@@ -952,12 +946,14 @@ private fun AudioToggle(
 ) {
     Surface(
         shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)),
+        tonalElevation = 2.dp
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(18.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -968,10 +964,15 @@ private fun AudioToggle(
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = if (enabled) "Audio enabled • cost x2" else "Add AI-composed audio",
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (enabled) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = if (enabled) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    }
                 )
             }
             Switch(checked = enabled, onCheckedChange = onToggle)
@@ -983,25 +984,27 @@ private fun AudioToggle(
 private fun StatusBanner(message: String) {
     Surface(
         shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant,
+        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)),
         tonalElevation = 4.dp
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                .padding(18.dp),
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             CircularProgressIndicator(
-                modifier = Modifier.size(22.dp),
+                modifier = Modifier.size(24.dp),
                 color = MaterialTheme.colorScheme.primary,
-                strokeWidth = 2.dp
+                strokeWidth = 2.5.dp
             )
             Text(
                 text = message,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
     }
@@ -1019,14 +1022,16 @@ private fun PricingDialog(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 12.dp, vertical = 24.dp),
+                .background(Color.Black.copy(alpha = 0.7f))
+                .padding(horizontal = 16.dp, vertical = 32.dp),
             contentAlignment = Alignment.BottomCenter
         ) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(36.dp),
+                shape = RoundedCornerShape(32.dp, 32.dp, 16.dp, 16.dp),
                 color = MaterialTheme.colorScheme.surface,
-                tonalElevation = 8.dp
+                tonalElevation = 12.dp,
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
             ) {
                 Column(
                     modifier = Modifier.padding(24.dp),
@@ -1040,10 +1045,11 @@ private fun PricingDialog(
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = "Pricing",
-                                style = MaterialTheme.typography.headlineSmall,
+                                style = MaterialTheme.typography.headlineMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
+                            Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = "Credits per second",
                                 style = MaterialTheme.typography.bodyMedium,
@@ -1054,7 +1060,7 @@ private fun PricingDialog(
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = "Close",
-                                tint = MaterialTheme.colorScheme.onSurface
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -1083,14 +1089,15 @@ private fun PricingDialog(
 private fun PricingRow(model: AIModel) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(28.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        tonalElevation = 2.dp
+        shape = RoundedCornerShape(20.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        tonalElevation = 2.dp,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 14.dp),
+                .padding(horizontal = 16.dp, vertical = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -1104,7 +1111,7 @@ private fun PricingRow(model: AIModel) {
                     Text(
                         text = model.name,
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     model.description.takeIf { it.isNotBlank() }?.let { desc ->
@@ -1120,9 +1127,9 @@ private fun PricingRow(model: AIModel) {
             }
             Text(
                 text = formatCredits(model.pricePerSecond),
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }
@@ -1132,16 +1139,17 @@ private fun PricingRow(model: AIModel) {
 private fun ModelAvatar(model: AIModel) {
     val initial = model.name.firstOrNull()?.uppercaseChar()?.toString() ?: "AI"
     Surface(
-        modifier = Modifier.size(44.dp),
+        modifier = Modifier.size(48.dp),
         shape = CircleShape,
-        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
+        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
+        tonalElevation = 2.dp
     ) {
         Box(contentAlignment = Alignment.Center) {
             Text(
                 text = initial,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
     }
@@ -1174,21 +1182,22 @@ private fun ExampleCard(model: AIModel) {
         modifier = Modifier
             .width(220.dp)
             .aspectRatio(3f / 2f),
-        shape = RoundedCornerShape(28.dp),
+        shape = RoundedCornerShape(24.dp),
         tonalElevation = 4.dp,
-        color = MaterialTheme.colorScheme.surfaceVariant
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
     ) {
         Box(
             modifier = Modifier
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
-                            MaterialTheme.colorScheme.secondary.copy(alpha = 0.4f),
-                            MaterialTheme.colorScheme.surface
+                            MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f),
+                            MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
                         )
                     )
                 )
-                .padding(16.dp)
+                .padding(18.dp)
         ) {
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -1206,13 +1215,14 @@ private fun ExampleCard(model: AIModel) {
                 ) {
                     Surface(
                         shape = CircleShape,
-                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                        tonalElevation = 4.dp
                     ) {
                         Icon(
                             imageVector = Icons.Default.PlayArrow,
                             contentDescription = null,
-                            modifier = Modifier.padding(10.dp),
-                            tint = MaterialTheme.colorScheme.onSurface
+                            modifier = Modifier.padding(12.dp),
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -1230,20 +1240,32 @@ private fun ContentGuidelinesCard() {
         "Generation starts immediately and cannot be canceled."
     )
     Surface(
-        shape = RoundedCornerShape(28.dp),
-        color = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(24.dp),
+        color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.2f),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.3f)),
         tonalElevation = 4.dp
     ) {
         Column(
             modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Icon(
-                    imageVector = Icons.Default.WarningAmber,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.secondary
-                )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.errorContainer
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.WarningAmber,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onErrorContainer,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .size(20.dp)
+                    )
+                }
                 Text(
                     text = "Content Guidelines",
                     style = MaterialTheme.typography.titleLarge,
@@ -1252,11 +1274,23 @@ private fun ContentGuidelinesCard() {
                 )
             }
             guidelines.forEach { text ->
-                Text(
-                    text = text,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Text(
+                        text = "•",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(top = 2.dp)
+                    )
+                    Text(
+                        text = text,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
             }
         }
     }
@@ -1270,13 +1304,16 @@ private fun GenerateBottomBar(
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
         tonalElevation = 16.dp,
-        shadowElevation = 20.dp
+        border = BorderStroke(
+            1.dp,
+            MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+        )
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 18.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -1289,62 +1326,29 @@ private fun GenerateBottomBar(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+                    Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = "${state.estimatedCost} credits",
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
                 if (state.enableAudio) {
-                    InfoChip("2x Audio")
+                    com.manjul.genai.videogenerator.ui.designsystem.components.badges.InfoChip("2x Audio")
                 }
             }
-            Button(
+            AppPrimaryButton(
+                text = if (state.isGenerating) "Generating..." else "Generate AI Video",
                 onClick = onGenerate,
-                enabled = state.canGenerate && !state.isGenerating,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(24.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            ) {
-                if (state.isGenerating) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(20.dp),
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            strokeWidth = 2.dp
-                        )
-                        Text(
-                            text = "Generating...",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                } else {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.PlayArrow,
-                            contentDescription = null
-                        )
-                        Text(
-                            text = "Generate AI Video",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-            }
+                enabled = state.canGenerate,
+                isLoading = state.isGenerating,
+                icon = if (!state.isGenerating) Icons.Default.PlayArrow else null
+            )
             Text(
                 text = "Select reference images and enter a prompt to start.",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
             )
         }
     }

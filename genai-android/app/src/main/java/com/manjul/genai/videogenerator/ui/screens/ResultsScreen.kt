@@ -71,6 +71,11 @@ import com.manjul.genai.videogenerator.player.VideoPlayerManager
 import com.manjul.genai.videogenerator.ui.components.VideoThumbnail
 import com.manjul.genai.videogenerator.utils.VideoDownloader
 import com.manjul.genai.videogenerator.utils.VideoSharer
+import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppSecondaryButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
+import com.manjul.genai.videogenerator.ui.designsystem.components.badges.CustomStatusBadge
+import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -329,35 +334,24 @@ private fun HeaderSection(
             )
 
             // Status badge
-            Surface(
-                shape = RoundedCornerShape(8.dp),
-                color = when (status) {
-                    VideoJobStatus.COMPLETE -> Color(0xFFD1FAE5) // green-100
-                    VideoJobStatus.FAILED -> Color(0xFFFEE2E2) // red-100
-                    VideoJobStatus.PROCESSING, VideoJobStatus.QUEUED -> Color(0xFFDBEAFE) // blue-100
+            CustomStatusBadge(
+                text = when (status) {
+                    VideoJobStatus.COMPLETE -> "completed"
+                    VideoJobStatus.FAILED -> "failed"
+                    VideoJobStatus.PROCESSING -> "running"
+                    VideoJobStatus.QUEUED -> "queued"
                 },
-                border = androidx.compose.foundation.BorderStroke(
-                    width = 0.5.dp,
-                    color = Color.Transparent
-                )
-            ) {
-                Text(
-                    text = when (status) {
-                        VideoJobStatus.COMPLETE -> "completed"
-                        VideoJobStatus.FAILED -> "failed"
-                        VideoJobStatus.PROCESSING -> "running"
-                        VideoJobStatus.QUEUED -> "queued"
-                    },
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Medium,
-                    color = when (status) {
-                        VideoJobStatus.COMPLETE -> Color(0xFF008236) // green-700
-                        VideoJobStatus.FAILED -> Color(0xFFDC2626) // red-600
-                        VideoJobStatus.PROCESSING, VideoJobStatus.QUEUED -> Color(0xFF2563EB) // blue-600
-                    }
-                )
-            }
+                backgroundColor = when (status) {
+                    VideoJobStatus.COMPLETE -> AppColors.StatusSuccessBackground
+                    VideoJobStatus.FAILED -> AppColors.StatusErrorBackground
+                    VideoJobStatus.PROCESSING, VideoJobStatus.QUEUED -> AppColors.StatusInfoBackground
+                },
+                textColor = when (status) {
+                    VideoJobStatus.COMPLETE -> AppColors.StatusSuccess
+                    VideoJobStatus.FAILED -> AppColors.StatusError
+                    VideoJobStatus.PROCESSING, VideoJobStatus.QUEUED -> AppColors.StatusInfo
+                }
+            )
         }
     }
 }
@@ -640,38 +634,13 @@ private fun ActionButtonsSection(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         // Primary Download button
-        TextButton(
+        AppPrimaryButton(
+            text = if (isDownloading) "Downloading..." else "Download Video",
             onClick = onDownload,
             enabled = !isDownloading && !isSharing,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = androidx.compose.material3.ButtonDefaults.textButtonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = Color.White
-            )
-        ) {
-            if (isDownloading) {
-                androidx.compose.material3.CircularProgressIndicator(
-                    modifier = Modifier.size(16.dp),
-                    strokeWidth = 2.dp,
-                    color = Color.White
-                )
-            } else {
-                Icon(
-                    imageVector = Icons.Default.Download,
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp)
-                )
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = if (isDownloading) "Downloading..." else "Download Video",
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Medium
-            )
-        }
+            isLoading = isDownloading,
+            icon = if (!isDownloading) Icons.Default.Download else null
+        )
 
         // Secondary buttons row
         Row(
@@ -679,70 +648,24 @@ private fun ActionButtonsSection(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // Share button
-            TextButton(
+            AppSecondaryButton(
+                text = if (isSharing) "Sharing..." else "Share",
                 onClick = onShare,
                 enabled = !isDownloading && !isSharing,
-                modifier = Modifier
-                    .weight(1f)
-                    .height(56.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = androidx.compose.material3.ButtonDefaults.textButtonColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                ),
-                border = androidx.compose.foundation.BorderStroke(
-                    width = 2.dp,
-                    color = MaterialTheme.colorScheme.outline
-                )
-            ) {
-                if (isSharing) {
-                    androidx.compose.material3.CircularProgressIndicator(
-                        modifier = Modifier.size(16.dp),
-                        strokeWidth = 2.dp
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.Share,
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = if (isSharing) "Sharing..." else "Share",
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Medium
-                )
-            }
+                isLoading = isSharing,
+                icon = if (!isSharing) Icons.Default.Share else null,
+                fullWidth = false,
+                modifier = Modifier.weight(1f)
+            )
 
             // Regenerate button
-            TextButton(
+            AppSecondaryButton(
+                text = "Regenerate",
                 onClick = onRegenerate,
-                modifier = Modifier
-                    .weight(1f)
-                    .height(56.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = androidx.compose.material3.ButtonDefaults.textButtonColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                ),
-                border = androidx.compose.foundation.BorderStroke(
-                    width = 2.dp,
-                    color = MaterialTheme.colorScheme.outline
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Refresh,
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Regenerate",
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Medium
-                )
-            }
+                icon = Icons.Default.Refresh,
+                fullWidth = false,
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
