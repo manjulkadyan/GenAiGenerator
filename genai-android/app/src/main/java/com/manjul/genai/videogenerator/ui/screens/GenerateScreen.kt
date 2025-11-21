@@ -349,7 +349,7 @@ private fun GenerateLoadingState() {
             )
             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text = "Loading AI Studio",
+                    text = "Loading Gen-AI Studio",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -450,7 +450,7 @@ private fun GenerateHero(
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Text(
-                            text = "AI Studio",
+                            text = "Gen-AI Studio",
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -628,7 +628,7 @@ private fun ModelCard(
     Surface(
         modifier = Modifier
             .width(220.dp)
-            .heightIn(min = 160.dp)
+            .heightIn(min = 100.dp)
             .clip(cardShape)
             .clickable { onClick() }
             .scale(scale),

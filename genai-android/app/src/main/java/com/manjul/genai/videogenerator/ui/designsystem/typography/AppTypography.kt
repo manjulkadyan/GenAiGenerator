@@ -7,10 +7,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 /**
- * Comprehensive typography scale for the app
- * Matches the reference design with clear hierarchy
+ * Comprehensive typography scale for the application.
+ *
+ * Defines a complete Material 3 typography system with clear hierarchy matching
+ * the reference design. The typography scale includes display, headline, title,
+ * body, and label styles, each with appropriate font sizes, weights, line heights,
+ * and letter spacing.
+ *
+ * ## Typography Hierarchy
+ * - **Display**: Large hero text (57sp, 45sp, 36sp) - Bold weight
+ * - **Headline**: Section titles (32sp, 28sp, 24sp) - Bold weight
+ * - **Title**: Card titles and important labels (22sp, 16sp, 14sp) - Bold/SemiBold/Medium weight
+ * - **Body**: Main content text (16sp, 14sp, 12sp) - Normal weight
+ * - **Label**: Buttons, chips, and small text (14sp, 12sp, 11sp) - Medium weight
+ *
+ * ## Usage
+ * Access typography styles through `MaterialTheme.typography` after applying
+ * the theme, or use `AppTypography.typography` directly.
+ *
+ * @see com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
  */
-val AppTypography = Typography(
+object AppTypography {
+    /**
+     * Material 3 Typography configuration with custom text styles.
+     */
+    val typography = Typography(
     // Display styles - for large hero text
     displayLarge = TextStyle(
         fontFamily = FontFamily.Default,
@@ -125,5 +146,6 @@ val AppTypography = Typography(
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     )
-)
+    )
+}
 

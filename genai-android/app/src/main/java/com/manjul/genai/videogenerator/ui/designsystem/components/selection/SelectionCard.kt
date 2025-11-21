@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -24,12 +26,46 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
+import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
 
 /**
- * Card-based selection (like "What are you here to create?" options in reference)
- * Radio button style selection with icon, title, and description
+ * Design system selection card component constants.
+ */
+private object SelectionCardConstants {
+    const val CARD_CORNER_RADIUS = 20
+    const val SELECTED_SCALE = 1.01f
+    const val PADDING = 20
+    const val ICON_SIZE = 48
+    const val RADIO_SIZE = 24
+    const val RADIO_INNER_SIZE = 12
+    const val ICON_SPACING = 16
+    const val CONTENT_SPACING = 6
+    const val SELECTED_BORDER_WIDTH = 2
+    const val UNSELECTED_BORDER_WIDTH = 1
+    const val SELECTED_ELEVATION = 4
+    const val UNSELECTED_ELEVATION = 2
+    const val SELECTED_ALPHA = 0.15f
+    const val RADIO_BORDER_WIDTH = 2
+    const val ANIMATION_DURATION = 200
+}
+
+/**
+ * Card-based selection component with radio button indicator.
+ *
+ * Used for selecting options like "What are you here to create?" from the reference design.
+ * Features an icon, title, description, and animated radio button indicator.
+ *
+ * @param title The main title text
+ * @param description The description text below the title
+ * @param isSelected Whether the card is in selected state
+ * @param onClick Callback invoked when the card is clicked
+ * @param modifier Modifier to be applied to the card
+ * @param icon Optional composable icon displayed on the left side
+ *
+ * @sample com.manjul.genai.videogenerator.ui.designsystem.components.selection.SelectionCardPreview
  */
 @Composable
 fun SelectionCard(
@@ -41,8 +77,8 @@ fun SelectionCard(
     icon: @Composable (() -> Unit)? = null
 ) {
     val scale by animateFloatAsState(
-        targetValue = if (isSelected) 1.01f else 1f,
-        animationSpec = tween(200),
+        targetValue = if (isSelected) SelectionCardConstants.SELECTED_SCALE else 1f,
+        animationSpec = tween(SelectionCardConstants.ANIMATION_DURATION),
         label = "selectionCardScale"
     )
 
@@ -51,40 +87,42 @@ fun SelectionCard(
             .fillMaxWidth()
             .scale(scale)
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(SelectionCardConstants.CARD_CORNER_RADIUS.dp),
         color = if (isSelected) {
-            AppColors.SelectedBackground.copy(alpha = 0.15f)
+            AppColors.SelectedBackground.copy(alpha = SelectionCardConstants.SELECTED_ALPHA)
         } else {
             AppColors.CardBackground
         },
         border = if (isSelected) {
-            BorderStroke(2.dp, AppColors.BorderSelected)
+            BorderStroke(SelectionCardConstants.SELECTED_BORDER_WIDTH.dp, AppColors.BorderSelected)
         } else {
-            BorderStroke(1.dp, AppColors.CardBorder)
+            BorderStroke(SelectionCardConstants.UNSELECTED_BORDER_WIDTH.dp, AppColors.CardBorder)
         },
-        tonalElevation = if (isSelected) 4.dp else 2.dp
+        tonalElevation = if (isSelected) {
+            SelectionCardConstants.SELECTED_ELEVATION.dp
+        } else {
+            SelectionCardConstants.UNSELECTED_ELEVATION.dp
+        }
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                .padding(SelectionCardConstants.PADDING.dp),
+            horizontalArrangement = Arrangement.spacedBy(SelectionCardConstants.ICON_SPACING.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Icon or emoji
             icon?.let {
                 Box(
-                    modifier = Modifier.size(48.dp),
+                    modifier = Modifier.size(SelectionCardConstants.ICON_SIZE.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     it()
                 }
             }
 
-            // Content
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                verticalArrangement = Arrangement.spacedBy(SelectionCardConstants.CONTENT_SPACING.dp)
             ) {
                 Text(
                     text = title,
@@ -99,9 +137,8 @@ fun SelectionCard(
                 )
             }
 
-            // Radio button indicator
             Surface(
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(SelectionCardConstants.RADIO_SIZE.dp),
                 shape = CircleShape,
                 color = if (isSelected) {
                     AppColors.SelectedBackground
@@ -111,7 +148,7 @@ fun SelectionCard(
                 border = if (isSelected) {
                     null
                 } else {
-                    BorderStroke(2.dp, AppColors.UnselectedBorder)
+                    BorderStroke(SelectionCardConstants.RADIO_BORDER_WIDTH.dp, AppColors.UnselectedBorder)
                 }
             ) {
                 if (isSelected) {
@@ -120,13 +157,59 @@ fun SelectionCard(
                         contentAlignment = Alignment.Center
                     ) {
                         Surface(
-                            modifier = Modifier.size(12.dp),
+                            modifier = Modifier.size(SelectionCardConstants.RADIO_INNER_SIZE.dp),
                             shape = CircleShape,
                             color = AppColors.SelectedText
                         ) {}
                     }
                 }
             }
+        }
+    }
+}
+
+// ==================== Previews ====================
+
+@Preview(
+    name = "Selection Card - States",
+    showBackground = true,
+    backgroundColor = 0xFF000000
+)
+@Composable
+private fun SelectionCardPreview() {
+    GenAiVideoTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            SelectionCard(
+                title = "Ultra-Realistic AI Videos",
+                description = "Veo 3 and Sora 2, smooth consistency",
+                isSelected = false,
+                onClick = {},
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = null,
+                        tint = AppColors.TextPrimary
+                    )
+                }
+            )
+            SelectionCard(
+                title = "Text & Image Video",
+                description = "Prompts or photos to cinematic results instantly",
+                isSelected = true,
+                onClick = {},
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = null,
+                        tint = AppColors.PrimaryPurple
+                    )
+                }
+            )
         }
     }
 }

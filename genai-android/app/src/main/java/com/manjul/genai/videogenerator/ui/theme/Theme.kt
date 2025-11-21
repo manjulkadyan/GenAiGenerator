@@ -55,7 +55,7 @@ fun GenAiVideoTheme(
 ) {
     MaterialTheme(
         colorScheme = DarkColors, // Always use dark colors
-        typography = AppTypography,
+        typography = AppTypography.typography,
         content = content
     )
 }
