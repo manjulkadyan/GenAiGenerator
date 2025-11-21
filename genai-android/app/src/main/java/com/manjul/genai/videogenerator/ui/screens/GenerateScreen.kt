@@ -110,6 +110,8 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 
 @Composable
 fun GenerateScreen(
@@ -625,44 +627,51 @@ private fun ModelCard(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    // Get subtitle from model data - prioritize tags, then short description, then credits
-    val subtitle = getModelSubtitle(model)
+    // Get subtitle from model data - extract just the type (e.g., "Fast") without price
+    val fullSubtitle = getModelSubtitle(model)
+    val subtitle = fullSubtitle.split(",").firstOrNull()?.trim() ?: fullSubtitle
     // Remove the type from model name if it appears in subtitle
-    val displayName = getDisplayName(model, subtitle)
+    val displayName = getDisplayName(model, fullSubtitle)
     val logoUrl = getModelLogoUrl(model)
     
     AppSelectionCard(
         isSelected = selected,
         onClick = onClick
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-            // Model Logo
-            ModelLogo(
-                logoUrl = logoUrl,
-                modelName = displayName,
-                modifier = Modifier.size(40.dp)
-            )
+            // Model Logo - white icon that blends with theme
+            logoUrl?.let {
+                ModelLogo(
+                    logoUrl = logoUrl,
+                    modelName = displayName,
+                    modifier = Modifier.size(48.dp)
+                )
+            }
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                    Text(
-                    text = displayName,
+                Text(
+                    text = displayName.ifBlank { model.name },
                     style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
                     color = AppColors.TextPrimary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                if (subtitle.isNotBlank()) {
                     Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = AppColors.TextSecondary,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                        text = subtitle,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = AppColors.TextSecondary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
         }
     }
@@ -744,7 +753,8 @@ private fun getModelLogoUrl(model: AIModel): String? {
 }
 
 /**
- * Composable that displays a model logo with fallback to initial letter
+ * Composable that displays a model logo with fallback to initial letter.
+ * Icons are displayed in white to blend with the theme.
  */
 @Composable
 private fun ModelLogo(
@@ -754,50 +764,63 @@ private fun ModelLogo(
 ) {
     val initial = modelName.firstOrNull()?.uppercaseChar()?.toString() ?: "AI"
     
-    Surface(
+    // Color filter to convert logo to white - blends with theme
+    // Uses a color matrix that desaturates and brightens the image
+    val whiteColorFilter = ColorFilter.colorMatrix(
+        ColorMatrix().apply {
+            setToSaturation(0f) // Remove color (grayscale)
+            // Brighten to white
+            val brightness = 1.5f
+            setToScale(brightness, brightness, brightness, 1f)
+        }
+    )
+    
+    Box(
         modifier = modifier,
-        shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-        tonalElevation = 2.dp
+        contentAlignment = Alignment.Center
     ) {
-        Box(contentAlignment = Alignment.Center) {
-            if (logoUrl != null) {
-                SubcomposeAsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(logoUrl)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = "$modelName logo",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp),
-                    contentScale = ContentScale.Fit,
-                    loading = {
+        if (logoUrl != null) {
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(logoUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "$modelName logo",
+            modifier = Modifier
+                    .fillMaxSize()
+                    .padding(4.dp),
+                contentScale = ContentScale.Fit,
+                colorFilter = whiteColorFilter, // Convert to white to blend with theme
+                loading = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(20.dp),
                             strokeWidth = 2.dp,
-                            color = AppColors.PrimaryPurple
-                        )
-                    },
-                    error = {
-                        // Fallback to initial if image fails to load
-                        Text(
-                            text = initial,
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = AppColors.TextPrimary
+                            color = AppColors.TextPrimary.copy(alpha = 0.5f)
                         )
                     }
-                )
-            } else {
-                // Fallback to initial letter
-                Text(
-                    text = initial,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = AppColors.TextPrimary
-                )
-            }
+                },
+                error = {
+                    // Fallback to initial if image fails to load
+        Text(
+                        text = initial,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = AppColors.TextPrimary
+                    )
+                }
+            )
+        } else {
+            // Fallback to initial letter
+                    Text(
+                text = initial,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = AppColors.TextPrimary
+            )
         }
     }
 }
