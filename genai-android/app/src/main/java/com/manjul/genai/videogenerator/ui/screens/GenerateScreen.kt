@@ -62,11 +62,6 @@ import com.manjul.genai.videogenerator.ui.designsystem.components.sections.Secti
 import com.manjul.genai.videogenerator.ui.designsystem.components.selection.SelectionPill
 import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -111,6 +106,10 @@ import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 import kotlinx.coroutines.delay
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun GenerateScreen(
@@ -630,25 +629,176 @@ private fun ModelCard(
     val subtitle = getModelSubtitle(model)
     // Remove the type from model name if it appears in subtitle
     val displayName = getDisplayName(model, subtitle)
+    val logoUrl = getModelLogoUrl(model)
     
     AppSelectionCard(
         isSelected = selected,
         onClick = onClick
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+            // Model Logo
+            ModelLogo(
+                logoUrl = logoUrl,
+                modelName = displayName,
+                modifier = Modifier.size(40.dp)
+            )
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                    Text(
+                    text = displayName,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = AppColors.TextPrimary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                    Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = AppColors.TextSecondary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Gets the logo URL for a model based on its name or company/provider.
+ * Uses company logos from reliable sources. Returns null if no logo is available.
+ */
+private fun getModelLogoUrl(model: AIModel): String? {
+    val modelId = model.id.lowercase()
+    val modelName = model.name.lowercase()
+    val replicateName = model.replicateName.lowercase()
+    
+    // Check by replicate name provider first (most reliable)
+    if (replicateName.contains("/")) {
+        val provider = replicateName.split("/").first().lowercase()
+        // Map provider to company domain for logo API
+        val companyDomain = when {
+            provider.contains("google") -> "google.com"
+            provider.contains("openai") -> "openai.com"
+            provider.contains("runwayml") || provider.contains("runway") -> "runwayml.com"
+            provider.contains("minimax") -> "minimax.chat"
+            provider.contains("kwaivgi") || provider.contains("kuaishou") -> "kuaishou.com"
+            provider.contains("lightricks") -> "lightricks.com"
+            provider.contains("leonardoai") || provider.contains("leonardo") -> "leonardo.ai"
+            provider.contains("character-ai") || provider.contains("characterai") -> "character.ai"
+            provider.contains("pixverse") -> "pixverse.ai"
+            provider.contains("luma") -> "lumalabs.ai"
+            provider.contains("bytedance") -> "bytedance.com"
+            else -> null
+        }
+        
+        // Use Clearbit Logo API (free, no API key required for basic usage)
+        return companyDomain?.let { "https://logo.clearbit.com/$it" }
+    }
+    
+    // Map model IDs/names to company domains for logo API (fallback)
+    val modelToDomainMap = mapOf(
+        // Google/Veo models
+        "veo" to "google.com",
+        // OpenAI/Sora models
+        "sora" to "openai.com",
+        // Kling models (Kuaishou)
+        "kling" to "kuaishou.com",
+        // Hailuo models (Minimax)
+        "hailuo" to "minimax.chat",
+        // Gen4 models (Runway)
+        "gen4" to "runwayml.com",
+        // LTX models (Lightricks)
+        "ltx" to "lightricks.com",
+        // Motion models (Leonardo)
+        "motion" to "leonardo.ai",
+        // Ovi models (Character AI)
+        "ovi" to "character.ai",
+        // Pixverse models
+        "pixverse" to "pixverse.ai",
+        // Ray models (Luma)
+        "ray" to "lumalabs.ai",
+        // Seedance models (ByteDance)
+        "seedance" to "bytedance.com"
+    )
+    
+    // Check by model ID
+    for ((key, domain) in modelToDomainMap) {
+        if (modelId.contains(key)) {
+            return "https://logo.clearbit.com/$domain"
+        }
+    }
+    
+    // Check by model name
+    for ((key, domain) in modelToDomainMap) {
+        if (modelName.contains(key)) {
+            return "https://logo.clearbit.com/$domain"
+        }
+    }
+    
+    return null
+}
+
+/**
+ * Composable that displays a model logo with fallback to initial letter
+ */
+@Composable
+private fun ModelLogo(
+    logoUrl: String?,
+    modelName: String,
+    modifier: Modifier = Modifier
+) {
+    val initial = modelName.firstOrNull()?.uppercaseChar()?.toString() ?: "AI"
+    
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+        tonalElevation = 2.dp
     ) {
-        Text(
-            text = displayName,
-            style = MaterialTheme.typography.titleMedium,
-            color = AppColors.TextPrimary,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(
-            text = subtitle,
-            style = MaterialTheme.typography.bodySmall,
-            color = AppColors.TextSecondary,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
+        Box(contentAlignment = Alignment.Center) {
+            if (logoUrl != null) {
+                SubcomposeAsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(logoUrl)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "$modelName logo",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
+                    contentScale = ContentScale.Fit,
+                    loading = {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            strokeWidth = 2.dp,
+                            color = AppColors.PrimaryPurple
+                        )
+                    },
+                    error = {
+                        // Fallback to initial if image fails to load
+                        Text(
+                            text = initial,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = AppColors.TextPrimary
+                        )
+                    }
+                )
+            } else {
+                // Fallback to initial letter
+                Text(
+                    text = initial,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = AppColors.TextPrimary
+                )
+            }
+        }
     }
 }
 
@@ -1021,8 +1171,13 @@ private fun PricingDialog(
     AppBottomSheetDialog(
         onDismissRequest = onDismiss,
         title = "Pricing"
-            ) {
+    ) {
+        val scrollState = rememberScrollState()
+        
                 Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(scrollState),
                     verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
                             Text(
@@ -1051,6 +1206,8 @@ private fun PricingDialog(
 
 @Composable
 private fun PricingRow(model: AIModel) {
+    val logoUrl = getModelLogoUrl(model)
+    
     AppCard(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -1064,7 +1221,11 @@ private fun PricingRow(model: AIModel) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                ModelAvatar(model)
+                ModelLogo(
+                    logoUrl = logoUrl,
+                    modelName = model.name,
+                    modifier = Modifier.size(48.dp)
+                )
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = model.name,
@@ -1076,9 +1237,7 @@ private fun PricingRow(model: AIModel) {
                         Text(
                             text = desc,
                             style = MaterialTheme.typography.bodySmall,
-                            color = AppColors.TextSecondary,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                            color = AppColors.TextSecondary
                         )
                     }
                 }
