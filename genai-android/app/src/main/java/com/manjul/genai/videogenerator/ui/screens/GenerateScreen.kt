@@ -626,61 +626,102 @@ private fun ModelCard(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    val scale by animateFloatAsState(
-        targetValue = if (selected) 1.02f else 1f,
-        animationSpec = tween(200),
-        label = "cardScale"
-    )
+    // Get subtitle from model data - prioritize tags, then short description, then credits
+    val subtitle = getModelSubtitle(model)
+    // Remove the type from model name if it appears in subtitle
+    val displayName = getDisplayName(model, subtitle)
     
     AppSelectionCard(
         isSelected = selected,
-        onClick = onClick,
-        modifier = Modifier
-            .width(220.dp)
-            .heightIn(min = 100.dp)
-            .scale(scale)
+        onClick = onClick
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = model.name,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = AppColors.TextPrimary
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = formatCredits(model.pricePerSecond),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = AppColors.TextSecondary
-                    )
-                }
-                if (selected) {
-                    Surface(
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primaryContainer
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.CheckCircle,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier
-                                .padding(6.dp)
-                                .size(20.dp)
-                        )
-                    }
+        Text(
+            text = displayName,
+            style = MaterialTheme.typography.titleMedium,
+            color = AppColors.TextPrimary,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            text = subtitle,
+            style = MaterialTheme.typography.bodySmall,
+            color = AppColors.TextSecondary,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+/**
+ * Gets the display name for the model card by removing the type from the model name
+ * if it appears in the subtitle (e.g., "Veo 3.1 Fast" -> "Veo 3.1" if subtitle contains "Fast")
+ */
+private fun getDisplayName(model: AIModel, subtitle: String): String {
+    // Extract type text from subtitle (everything before the comma and price)
+    val typeText = subtitle.split(",").firstOrNull()?.trim() ?: return model.name
+    
+    // If subtitle is just price (no type), return original name
+    if (typeText.startsWith("~") && typeText.endsWith("c/s")) {
+        return model.name
+    }
+    
+    // Remove the type from model name (case-insensitive)
+    var displayName = model.name
+    val typeWords = typeText.split(" ").filter { it.isNotBlank() }
+    
+    for (word in typeWords) {
+        // Remove the word from display name (case-insensitive)
+        val regex = Regex("\\b${Regex.escape(word)}\\b", RegexOption.IGNORE_CASE)
+        displayName = regex.replace(displayName, "").trim()
+    }
+    
+    // Clean up extra spaces
+    displayName = displayName.replace(Regex("\\s+"), " ").trim()
+    
+    return displayName.ifBlank { model.name }
+}
+
+/**
+ * Gets a subtitle for the model card based on available model data from Firestore.
+ * Dynamically extracts type from model ID and combines with price (e.g., "Fast, ~4c/s" or "~4c/s")
+ */
+private fun getModelSubtitle(model: AIModel): String {
+    val priceText = formatCredits(model.pricePerSecond)
+    
+    // Dynamically extract type from model ID by analyzing its structure
+    val modelId = model.id.lowercase()
+    val segments = modelId.split("-")
+    
+    // Filter out version-like segments (numbers, "v2", "v3", etc.) and base model names
+    // Keep meaningful type segments (fast, pro, lite, master, turbo, i2v, t2v, resolutions, etc.)
+    val versionPattern = Regex("^v?\\d+(\\.\\d+)?$") // Matches: "3", "v2", "2.5", "v2.1", etc.
+    val baseModelNames = setOf("veo", "sora", "kling", "hailuo", "gen4", "gen", "ltx", "motion", 
+                               "ovi", "pixverse", "ray", "seedance", "wan", "hailuo")
+    
+    val typeSegments = segments.filter { segment ->
+        !versionPattern.matches(segment) && 
+        !baseModelNames.contains(segment) &&
+        segment.isNotBlank()
+    }
+    
+    // If we have type segments, format and combine with price
+    if (typeSegments.isNotEmpty()) {
+        val typeText = typeSegments.joinToString(" ") { segment ->
+            // Keep resolution formats like "720p", "1080p" as-is
+            if (segment.endsWith("p") && segment.dropLast(1).all { it.isDigit() }) {
+                segment
+            } else {
+                // Capitalize other segments (e.g., "fast" -> "Fast", "turbo-pro" -> "Turbo Pro")
+                segment.split("-").joinToString(" ") { word ->
+                    word.replaceFirstChar { if (it.isLowerCase()) it.uppercaseChar() else it }
                 }
             }
         }
+        return "$typeText, $priceText"
     }
+    
+    // If no type found, just show price
+    return priceText
 }
 
 // InfoChip now uses design system component
