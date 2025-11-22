@@ -82,12 +82,8 @@ fun HistoryScreen(
 ) {
     val jobs by viewModel.jobs.collectAsState()
     var selectedFilter by rememberSaveable { mutableStateOf(HistoryFilter.ALL) }
-    val context = LocalContext.current
     
-    // Clear unread notification count when History screen is viewed
-    androidx.compose.runtime.LaunchedEffect(Unit) {
-        com.manjul.genai.videogenerator.data.notification.NotificationManager.clearUnreadCount(context)
-    }
+    // Note: Badge clearing is handled in GenAiRoot when route changes to History
 
     // Filter jobs based on selected filter
     val filteredJobs = when (selectedFilter) {

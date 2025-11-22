@@ -172,26 +172,39 @@ fun GenAiRoot() {
     val historyLabel = stringResource(R.string.destination_history)
     val profileLabel = stringResource(R.string.destination_profile)
     
-    // Get unread notification count for History badge
-    val unreadCount = remember {
+    // Get unread notification count for History badge - make it reactive
+    var unreadCount by remember {
         androidx.compose.runtime.mutableStateOf(
             com.manjul.genai.videogenerator.data.notification.NotificationManager.getUnreadNotificationCount(context)
         )
     }
     
-    // Update count when route changes to History (clear badge)
-    LaunchedEffect(currentRoute) {
-        if (currentRoute == AppDestination.History) {
-            com.manjul.genai.videogenerator.data.notification.NotificationManager.clearUnreadCount(context)
-            unreadCount.value = 0
+    // Periodically check for unread count changes (updates when FCM notification received)
+    LaunchedEffect(Unit) {
+        while (true) {
+            kotlinx.coroutines.delay(500) // Check every 500ms for responsive updates
+            val currentCount = com.manjul.genai.videogenerator.data.notification.NotificationManager.getUnreadNotificationCount(context)
+            if (currentCount != unreadCount) {
+                android.util.Log.d("GenAiRoot", "Unread count changed: $unreadCount -> $currentCount")
+                unreadCount = currentCount
+            }
         }
     }
     
-    val navigationItems = remember(generateLabel, modelsLabel, historyLabel, profileLabel, unreadCount.value) {
+    // Clear badge only when user actually views History screen
+    LaunchedEffect(currentRoute) {
+        if (currentRoute == AppDestination.History) {
+            android.util.Log.d("GenAiRoot", "User viewed History screen - clearing badge")
+            com.manjul.genai.videogenerator.data.notification.NotificationManager.clearUnreadCount(context)
+            unreadCount = 0
+        }
+    }
+    
+    val navigationItems = remember(generateLabel, modelsLabel, historyLabel, profileLabel, unreadCount) {
         listOf(
             NavigationItem(icon = Icons.Outlined.AutoAwesome, label = generateLabel),
             NavigationItem(icon = Icons.Outlined.ViewInAr, label = modelsLabel),
-            NavigationItem(icon = Icons.Outlined.History, label = historyLabel, badgeCount = unreadCount.value),
+            NavigationItem(icon = Icons.Outlined.History, label = historyLabel, badgeCount = unreadCount),
             NavigationItem(icon = Icons.Outlined.Face, label = profileLabel)
         )
     }
