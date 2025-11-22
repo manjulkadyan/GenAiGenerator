@@ -318,7 +318,7 @@ fun GenerateScreen(
                                 expanded = showAdvanced
                             ) {
                                 AnimatedVisibility(visible = showAdvanced) {
-                                    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                                    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                                         DurationAspectRow(
                                             selectedModel = state.selectedModel,
                                             selectedDuration = state.selectedDuration,
@@ -359,11 +359,13 @@ fun GenerateScreen(
                             }
                             Column(
                                 modifier = Modifier.fillMaxWidth(),
-                                verticalArrangement = Arrangement.Center,
+                                verticalArrangement = Arrangement.spacedBy(4.dp),
                                 horizontalAlignment = Alignment.Start
                             ) {
                                 // Cost and audio indicator on the left
-                                Row {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
                                     Text(
                                         text = "Estimated Cost: ${state.estimatedCost} credits",
                                         style = MaterialTheme.typography.labelMedium,
@@ -1263,7 +1265,7 @@ private fun DurationAspectRow(
     onDurationSelected: (Int) -> Unit,
     onAspectRatioSelected: (String) -> Unit
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
             text = "Duration",
             style = MaterialTheme.typography.titleMedium,
@@ -1334,8 +1336,8 @@ private fun AspectRatioSelector(
         )
     } else {
         FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             options.forEach { ratio ->
                 SelectionPill(
@@ -1358,8 +1360,7 @@ private fun AudioToggle(
     AppCard {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(18.dp),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -1912,7 +1913,7 @@ private fun GenerateScreenPreview() {
                             expanded = showAdvanced
                         ) {
                             AnimatedVisibility(visible = showAdvanced) {
-                                Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                     DurationAspectRow(
                                         selectedModel = selectedModel,
                                         selectedDuration = selectedDuration,

@@ -44,9 +44,9 @@ import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
 private object SectionCardConstants {
     const val CARD_CORNER_RADIUS = 24
     const val PADDING = 20
-    const val CONTENT_SPACING = 16
-    const val HEADER_SPACING = 12
-    const val TITLE_BADGE_SPACING = 10
+    const val CONTENT_SPACING = 8
+    const val HEADER_SPACING = 4
+    const val TITLE_BADGE_SPACING = 8
     const val TITLE_DESCRIPTION_SPACING = 4
     const val BORDER_WIDTH = 1
     const val ELEVATION = 2
