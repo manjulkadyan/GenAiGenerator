@@ -137,12 +137,12 @@ fun GenerateScreen(
 
     val pickFirstFrame =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            viewModel.setFirstFrameUri(uri)
-        }
+        viewModel.setFirstFrameUri(uri)
+    }
     val pickLastFrame =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            viewModel.setLastFrameUri(uri)
-        }
+        viewModel.setLastFrameUri(uri)
+    }
 
     val scrollState = rememberScrollState()
     var generationMode by rememberSaveable { mutableStateOf(GenerationMode.TextToVideo) }
@@ -177,7 +177,33 @@ fun GenerateScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                     GenerateHero(
                         generationMode = generationMode,
-                        onModeSelected = { generationMode = it }
+                        onModeSelected = { newMode ->
+                            generationMode = newMode
+                            // Auto-select first compatible model if current model doesn't support the new mode
+                            state.selectedModel?.let { currentModel ->
+                                val isCompatible = when (newMode) {
+                                    GenerationMode.TextToVideo -> isTextToVideoModel(currentModel)
+                                    GenerationMode.ImageToVideo -> isImageToVideoModel(currentModel)
+                                }
+                                if (!isCompatible) {
+                                    // Find first compatible model for the new mode
+                                    val compatibleModel = when (newMode) {
+                                        GenerationMode.TextToVideo -> state.models.firstOrNull { isTextToVideoModel(it) }
+                                        GenerationMode.ImageToVideo -> state.models.firstOrNull { isImageToVideoModel(it) }
+                                    }
+                                    if (compatibleModel != null) {
+                                        viewModel.selectModel(compatibleModel)
+                                    }
+                                }
+                            } ?: run {
+                                // If no model is selected, auto-select first compatible model
+                                val compatibleModel = when (newMode) {
+                                    GenerationMode.TextToVideo -> state.models.firstOrNull { isTextToVideoModel(it) }
+                                    GenerationMode.ImageToVideo -> state.models.firstOrNull { isImageToVideoModel(it) }
+                                }
+                                compatibleModel?.let { viewModel.selectModel(it) }
+                            }
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(20.dp))
@@ -192,12 +218,15 @@ fun GenerateScreen(
                         ModelSelector(
                             models = state.models,
                             selected = state.selectedModel,
+                            generationMode = generationMode,
                             onSelected = viewModel::selectModel
                         )
                     }
 
+                    // Only show Reference Images section in Image-to-Video mode and for models that support it
                     state.selectedModel?.let { model ->
-                        if (model.supportsFirstFrame || model.supportsLastFrame) {
+                        if (generationMode == GenerationMode.ImageToVideo && 
+                            (model.supportsFirstFrame || model.supportsLastFrame)) {
                             Spacer(modifier = Modifier.height(16.dp))
                             SectionCard(
                                 title = "Reference Images",
@@ -270,11 +299,11 @@ fun GenerateScreen(
                                             color = AppColors.TextPrimary
                                         )
                                         AppTextField(
-                                            value = state.negativePrompt,
+                                        value = state.negativePrompt,
                                             onValueChange = viewModel::updateNegativePrompt,
                                             placeholder = "What should we avoid? e.g. blurry, low quality",
                                             maxLines = 3
-                                        )
+                                    )
                                     }
                                 }
                             }
@@ -455,7 +484,7 @@ private fun GenerateHero(
         start = Offset(0f, 0f),
         end = Offset(1000f, 1000f)
     )
-
+    
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(32.dp),
@@ -591,16 +620,49 @@ private fun ModeToggle(
 
 // SectionCard, RequirementBadge, and InfoIcon now use design system components
 
+/**
+ * Determines if a model supports text-to-video generation.
+ * A model supports T2V if:
+ * - It doesn't support first frame (text-only), OR
+ * - It supports first frame but doesn't require it (can work with or without image)
+ */
+private fun isTextToVideoModel(model: AIModel): Boolean {
+    return !model.supportsFirstFrame || !model.requiresFirstFrame
+}
+
+/**
+ * Determines if a model supports image-to-video generation.
+ * A model supports I2V if it supports first frame input.
+ */
+private fun isImageToVideoModel(model: AIModel): Boolean {
+    return model.supportsFirstFrame
+}
+
 @Composable
 private fun ModelSelector(
     models: List<AIModel>,
     selected: AIModel?,
+    generationMode: GenerationMode,
     onSelected: (AIModel) -> Unit
 ) {
+    // Filter models based on generation mode using supports_first_frame and requires_first_frame
+    val filteredModels = remember(models, generationMode) {
+        when (generationMode) {
+            GenerationMode.TextToVideo -> {
+                // Show models that support text-to-video (don't require first frame)
+                models.filter { isTextToVideoModel(it) }
+            }
+            GenerationMode.ImageToVideo -> {
+                // Show only models that support image-to-video (support first frame)
+                models.filter { isImageToVideoModel(it) }
+            }
+        }
+    }
+    
     val listState = rememberLazyListState()
     LaunchedEffect(selected?.id) {
         if (selected != null) {
-            val index = models.indexOfFirst { it.id == selected.id }
+            val index = filteredModels.indexOfFirst { it.id == selected.id }
             if (index >= 0) {
                 delay(50)
                 listState.animateScrollToItem(index)
@@ -608,18 +670,27 @@ private fun ModelSelector(
         }
     }
 
+    if (filteredModels.isEmpty()) {
+        Text(
+            text = "No models available for ${generationMode.label}",
+            style = MaterialTheme.typography.bodyMedium,
+            color = AppColors.TextSecondary,
+            modifier = Modifier.padding(16.dp)
+        )
+    } else {
     LazyRow(
         state = listState,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(horizontal = 4.dp)
     ) {
-        items(models, key = { it.id }) { model ->
+            items(filteredModels, key = { it.id }) { model ->
             val isSelected = selected?.id == model.id
             ModelCard(
                 model = model,
                 selected = isSelected,
                 onClick = { onSelected(model) }
             )
+            }
         }
     }
 }
@@ -790,7 +861,7 @@ private fun ModelLogo(
                     .diskCachePolicy(CachePolicy.ENABLED)
                     .build(),
                 contentDescription = "$modelName logo",
-                modifier = Modifier
+            modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp),
                 contentScale = ContentScale.Fit,
@@ -819,7 +890,7 @@ private fun ModelLogo(
             )
         } else {
             // Fallback to initial letter
-            Text(
+                    Text(
                 text = initial,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
@@ -1201,32 +1272,32 @@ private fun PricingDialog(
     ) {
         val scrollState = rememberScrollState()
 
-        Column(
+                Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            Text(
-                text = "Credits per second",
-                style = MaterialTheme.typography.bodyMedium,
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                            Text(
+                                text = "Credits per second",
+                                style = MaterialTheme.typography.bodyMedium,
                 color = AppColors.TextSecondary
             )
 
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                models
-                    .sortedByDescending { it.pricePerSecond }
-                    .forEach { model ->
-                        PricingRow(model = model)
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        models
+                            .sortedByDescending { it.pricePerSecond }
+                            .forEach { model ->
+                                PricingRow(model = model)
+                            }
                     }
-            }
 
-            Text(
-                text = "Final cost = credits/sec × video duration",
-                style = MaterialTheme.typography.bodySmall,
+                    Text(
+                        text = "Final cost = credits/sec × video duration",
+                        style = MaterialTheme.typography.bodySmall,
                 color = AppColors.TextSecondary,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
         }
     }
 }
@@ -1316,10 +1387,10 @@ private fun VideoExamplesSection(model: AIModel) {
         // Use key() to force complete recreation of LazyRow when model changes
         // This ensures all items are properly disposed and recreated
         key(model.id) {
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(horizontal = 4.dp)
-            ) {
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(horizontal = 4.dp)
+        ) {
                 items(
                     items = model.exampleVideoUrls,
                     key = { it }
@@ -1371,17 +1442,17 @@ private fun ExampleCard(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.2f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Surface(
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
-                    tonalElevation = 4.dp
+                    contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.PlayArrow,
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                        tonalElevation = 4.dp
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
                         contentDescription = "Play video",
-                        modifier = Modifier.padding(12.dp),
+                            modifier = Modifier.padding(12.dp),
                         tint = AppColors.PrimaryPurple
                     )
                 }
@@ -1676,11 +1747,12 @@ private fun GenerateScreenPreview() {
                     ModelSelector(
                         models = mockModels,
                         selected = selectedModel,
-                        onSelected = {}
+                        onSelected = {},
+                        generationMode = GenerationMode.ImageToVideo
                     )
                 }
 
-                if (selectedModel.supportsFirstFrame || selectedModel.supportsLastFrame) {
+                if (generationMode== GenerationMode.ImageToVideo && ( selectedModel.supportsFirstFrame || selectedModel.supportsLastFrame)) {
                     Spacer(modifier = Modifier.height(16.dp))
                     SectionCard(
                         title = "Reference Images",
