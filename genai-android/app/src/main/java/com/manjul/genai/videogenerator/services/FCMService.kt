@@ -41,6 +41,8 @@ class FCMService : FirebaseMessagingService() {
             
             if (type == "video_complete" && jobId != null) {
                 Log.d(TAG, "Video complete notification for job: $jobId")
+                // Increment unread notification count
+                NotificationManager.incrementUnreadCount(this)
                 // The app will automatically update when Firestore listener detects the change
             }
         }

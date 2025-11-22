@@ -82,6 +82,12 @@ fun HistoryScreen(
 ) {
     val jobs by viewModel.jobs.collectAsState()
     var selectedFilter by rememberSaveable { mutableStateOf(HistoryFilter.ALL) }
+    val context = LocalContext.current
+    
+    // Clear unread notification count when History screen is viewed
+    androidx.compose.runtime.LaunchedEffect(Unit) {
+        com.manjul.genai.videogenerator.data.notification.NotificationManager.clearUnreadCount(context)
+    }
 
     // Filter jobs based on selected filter
     val filteredJobs = when (selectedFilter) {
@@ -284,7 +290,8 @@ private fun HistoryJobCard(
     AppCard(
         modifier = Modifier
             .fillMaxWidth(),
-        onClick = if (job.status == VideoJobStatus.COMPLETE) onCardClick else null
+        onClick = if (job.status == VideoJobStatus.COMPLETE) onCardClick else null,
+        padding = PaddingValues(0.dp)
     ) {
         Row(
             modifier = Modifier
@@ -488,6 +495,7 @@ private fun FullscreenVideoDialog(
 
 // ==================== Preview ====================
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(
     name = "History Screen",
     showBackground = true,

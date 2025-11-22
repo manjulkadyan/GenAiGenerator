@@ -35,6 +35,20 @@
             android:screenOrientation="unspecified"
             tools:targetApi="26" />
 
+        <activity
+            android:name=".ui.screens.GeneratingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GenAiVideo"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.screens.ResultsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GenAiVideo"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:screenOrientation="portrait" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.manjul.genai.videogenerator.fileprovider"
