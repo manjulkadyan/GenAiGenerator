@@ -784,6 +784,10 @@ private fun ModelLogo(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(logoUrl)
                     .crossfade(true)
+                    // Enable caching for logos - cache in both memory and disk
+                    // Coil automatically generates cache keys from the data URL, so no need to set it explicitly
+                    .memoryCachePolicy(CachePolicy.ENABLED)
+                    .diskCachePolicy(CachePolicy.ENABLED)
                     .build(),
                 contentDescription = "$modelName logo",
                 modifier = Modifier
