@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -23,7 +22,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -82,9 +80,6 @@ import com.manjul.genai.videogenerator.ui.designsystem.components.badges.CustomS
 import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.layout.PaddingValues
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -418,7 +413,7 @@ private fun ModelCard(
     ) {
         Column(modifier = Modifier.padding(0.dp)) {
             // Video Preview Section
-            val exampleVideoUrl = model.exampleVideoUrl
+            val exampleVideoUrl = model.exampleVideoUrls?.getOrNull(0)
             if (!exampleVideoUrl.isNullOrBlank()) {
                 Box(modifier = Modifier.fillMaxWidth()) {
                     // Always create player for visible items and prefetch nearby items

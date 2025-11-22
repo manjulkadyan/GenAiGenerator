@@ -7,13 +7,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,13 +19,19 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.ui.AspectRatioFrameLayout
+import com.manjul.genai.videogenerator.ui.components.VideoThumbnail
+import com.manjul.genai.videogenerator.player.VideoPlayerManager
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -36,10 +40,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Image
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
@@ -74,7 +75,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -82,9 +82,7 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -93,19 +91,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.manjul.genai.videogenerator.data.model.AIModel
 import com.manjul.genai.videogenerator.ui.viewmodel.GenerateScreenState
 import com.manjul.genai.videogenerator.ui.viewmodel.VideoGenerateViewModel
-import com.manjul.genai.videogenerator.ui.components.AppToolbar
 import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
-import com.manjul.genai.videogenerator.ui.designsystem.components.inputs.AppTextField
-import com.manjul.genai.videogenerator.ui.designsystem.components.sections.SectionCard
-import com.manjul.genai.videogenerator.ui.designsystem.components.selection.SelectionPill
-import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
 import com.manjul.genai.videogenerator.ui.designsystem.components.badges.StatusBadge
 import com.manjul.genai.videogenerator.ui.designsystem.components.badges.InfoChip
 import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppElevatedCard
 import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 import kotlinx.coroutines.delay
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import androidx.compose.ui.layout.ContentScale
@@ -292,7 +283,7 @@ fun GenerateScreen(
                     }
 
                     Spacer(modifier = Modifier.height(20.dp))
-                    VideoExamplesSection(models = state.models)
+                    state.selectedModel?.let { model -> VideoExamplesSection(model = model) }
 
                     Spacer(modifier = Modifier.height(20.dp))
                     ContentGuidelinesCard()
@@ -972,13 +963,11 @@ private fun ReferenceFramePicker(
             modifier = Modifier
                 .fillMaxWidth()
                 .dashedBorder(
-                    2.dp,
-                    if (uri == null) {
+                    2.dp, if (uri == null) {
                         MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
                     } else {
                         MaterialTheme.colorScheme.primary
-                    },
-                    20.dp
+                    }, 20.dp
                 )
                 .clickable { onPick() },
             onClick = onPick
@@ -1303,8 +1292,11 @@ private fun ModelAvatar(model: AIModel) {
 }
 
 @Composable
-private fun VideoExamplesSection(models: List<AIModel>) {
-    if (models.isEmpty()) return
+private fun VideoExamplesSection(model: AIModel) {
+    if (model.exampleVideoUrls.isEmpty()) return
+    
+    var selectedVideoUrl by remember { mutableStateOf<String?>(null) }
+    
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(
             text = "Video Examples",
@@ -1316,61 +1308,110 @@ private fun VideoExamplesSection(models: List<AIModel>) {
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(horizontal = 4.dp)
         ) {
-            items(models.take(4), key = { it.id }) { model ->
-                ExampleCard(model)
+            items(model.exampleVideoUrls, key = { it }) { videoUrl ->
+                ExampleCard(
+                    videoUrl = videoUrl,
+                    onClick = { selectedVideoUrl = videoUrl }
+                )
+            }
+        }
+    }
+    
+    // Show fullscreen video dialog when a video is selected
+    selectedVideoUrl?.let { url ->
+        FullscreenVideoDialog(
+            videoUrl = url,
+            onDismiss = { selectedVideoUrl = null }
+        )
+    }
+}
+
+@Composable
+private fun ExampleCard(
+    videoUrl: String,
+    onClick: () -> Unit
+) {
+    AppElevatedCard(
+        modifier = Modifier
+            .width(220.dp)
+            .aspectRatio(3f / 2f)
+            .clickable(onClick = onClick)
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // Video thumbnail
+            VideoThumbnail(
+                videoUrl = videoUrl,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+                jobId = null // No job ID for example videos
+            )
+            
+            // Play button overlay
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.2f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                    tonalElevation = 4.dp
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = "Play video",
+                        modifier = Modifier.padding(12.dp),
+                        tint = AppColors.PrimaryPurple
+                    )
+                }
             }
         }
     }
 }
 
+@androidx.annotation.OptIn(UnstableApi::class)
 @Composable
-private fun ExampleCard(model: AIModel) {
-    AppElevatedCard(
-        modifier = Modifier
-            .width(220.dp)
-            .aspectRatio(3f / 2f)
+private fun FullscreenVideoDialog(
+    videoUrl: String,
+    onDismiss: () -> Unit
+) {
+    // Stop video player when dialog is dismissed
+    DisposableEffect(videoUrl) {
+        onDispose {
+            // Release video player when fullscreen dialog is dismissed
+            VideoPlayerManager.unregisterPlayer(videoUrl)
+        }
+    }
+
+    Dialog(
+        onDismissRequest = {
+            // Stop video player before closing
+            VideoPlayerManager.unregisterPlayer(videoUrl)
+            onDismiss()
+        },
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false
+        )
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f),
-                            MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
-                        )
-                    )
-                )
-                .padding(18.dp)
+                .background(Color.Black)
         ) {
-            Column(
+            ModelVideoPlayer(
+                videoUrl = videoUrl,
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = model.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = AppColors.TextPrimary
-                )
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Surface(
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
-                        tonalElevation = 4.dp
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.PlayArrow,
-                            contentDescription = null,
-                            modifier = Modifier.padding(12.dp),
-                            tint = AppColors.PrimaryPurple
-                        )
-                    }
-                }
-            }
+                shape = RoundedCornerShape(0.dp),
+                showControls = false, // No controls anywhere in the app
+                initialVolume = 1f,
+                resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT,
+                playbackEnabled = true,
+                onVideoClick = null
+            )
         }
     }
 }
@@ -1545,7 +1586,7 @@ private fun GenerateScreenPreview() {
                 requiresLastFrame = false,
                 previewUrl = "",
                 replicateName = "veo-3.1",
-                exampleVideoUrl = null,
+                exampleVideoUrls = emptyList(),
                 supportsAudio = true
             ),
             AIModel(
@@ -1562,7 +1603,7 @@ private fun GenerateScreenPreview() {
                 requiresLastFrame = false,
                 previewUrl = "",
                 replicateName = "sora-2",
-                exampleVideoUrl = null,
+                exampleVideoUrls = emptyList(),
                 supportsAudio = false
             )
         )
@@ -1705,7 +1746,7 @@ private fun GenerateScreenPreview() {
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
-                VideoExamplesSection(models = mockModels)
+                VideoExamplesSection(model = mockModels[0])
 
                 Spacer(modifier = Modifier.height(20.dp))
                 ContentGuidelinesCard()

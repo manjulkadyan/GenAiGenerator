@@ -50,8 +50,7 @@ class FirebaseModelDataSource(
             requiresLastFrame = getBoolean("requires_last_frame") ?: false,
             previewUrl = getString("preview_url") ?: "",
             replicateName = replicateName,
-            exampleVideoUrl = getStringList("example_video_urls")
-                .firstOrNull { it.isNotBlank() },
+            exampleVideoUrls = getStringList("example_video_urls"),
             // Additional fields
             supportsReferenceImages = getBoolean("supports_reference_images") ?: false,
             maxReferenceImages = getLong("max_reference_images")?.toInt(),

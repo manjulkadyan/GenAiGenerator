@@ -14,7 +14,7 @@ data class AIModel(
     val requiresLastFrame: Boolean = false,    // Last frame is required (only meaningful if supportsLastFrame is true)
     val previewUrl: String,
     val replicateName: String,
-    val exampleVideoUrl: String? = null,
+    val exampleVideoUrls: List<String> = emptyList<String>(),
     // Additional fields from scraped data
     val supportsReferenceImages: Boolean = false,
     val maxReferenceImages: Int? = null,
