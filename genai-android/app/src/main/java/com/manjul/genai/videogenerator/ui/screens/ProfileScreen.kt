@@ -113,7 +113,7 @@ fun ProfileScreen(
         userId = userId,
         onBuyCreditsClick = onBuyCreditsClick,
         onLogout = {
-                        FirebaseAuth.getInstance().signOut()
+            FirebaseAuth.getInstance().signOut()
         },
         isAnonymous = isAnonymous,
         onGoogleSignIn = {
@@ -373,11 +373,13 @@ private fun ProfileScreenContent(
                         onFailure = { error ->
                             isSigningIn = false
                             val errorMessage = when {
-                                error.message?.contains("credential") == true -> 
+                                error.message?.contains("credential") == true ->
                                     "Account linking failed. Please try again."
-                                error.message?.contains("network") == true -> 
+
+                                error.message?.contains("network") == true ->
                                     "Network error. Please check your connection."
-                                else -> 
+
+                                else ->
                                     error.message ?: "Sign in failed. Please try again."
                             }
                             signInError = errorMessage
@@ -394,6 +396,7 @@ private fun ProfileScreenContent(
                         // DEVELOPER_ERROR - SHA-1 not configured or wrong client ID
                         "Configuration error. Please ensure SHA-1 fingerprint is added in Firebase Console."
                     }
+
                     12500 -> "Sign-in was cancelled"
                     7 -> "Network error. Please check your connection."
                     8 -> "Internal error. Please try again."
@@ -416,13 +419,14 @@ private fun ProfileScreenContent(
             // 2. Get the Web client ID from Firebase Console → Project Settings → General → Your apps
             // 3. Add SHA-1 fingerprint in Firebase Console → Project Settings → Your apps
             //    Get SHA-1: keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
-            val webClientId = "407437371864-9dkicne9lg7l8l816jbut5dup9qs7sus.apps.googleusercontent.com"
-            
+            val webClientId =
+                "407437371864-9dkicne9lg7l8l816jbut5dup9qs7sus.apps.googleusercontent.com"
+
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(webClientId)
                 .requestEmail()
                 .build()
-            
+
             val googleSignInClient = GoogleSignIn.getClient(context, gso)
             val signInIntent = googleSignInClient.signInIntent
             googleSignInLauncher.launch(signInIntent)
@@ -509,15 +513,15 @@ private fun ProfileScreenContent(
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = userName,
-                                style = MaterialTheme.typography.headlineSmall,
+                                style = MaterialTheme.typography.bodySmall,
                                 fontWeight = FontWeight.Bold,
-                                color = AppColors.TextPrimary
+                                color = AppColors.OnPrimaryPurple
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = userEmail,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = AppColors.TextSecondary
+                                style = MaterialTheme.typography.bodySmall,
+                                color = AppColors.OnPrimaryPurple
                             )
                             if (userId.isNotEmpty()) {
                                 Spacer(modifier = Modifier.height(8.dp))
@@ -584,91 +588,92 @@ private fun ProfileScreenContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Go Premium Card
-            AppCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { /* TODO: Navigate to premium */ },
-                onClick = { /* TODO: Navigate to premium */ },
-                padding = PaddingValues(0.dp)
-            ) {
-                Box(
+            if (false)
+                AppCard(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(
-                            Brush.horizontalGradient(
-                                colors = listOf(
-                                    Color(0xFFF59E0B).copy(alpha = 0.1f),
-                                    Color(0xFFF59E0B).copy(alpha = 0.05f)
+                        .clickable { /* TODO: Navigate to premium */ },
+                    onClick = { /* TODO: Navigate to premium */ },
+                    padding = PaddingValues(0.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                Brush.horizontalGradient(
+                                    colors = listOf(
+                                        Color(0xFFF59E0B).copy(alpha = 0.1f),
+                                        Color(0xFFF59E0B).copy(alpha = 0.05f)
+                                    )
                                 )
                             )
-                        )
-                        .border(
-                            width = 2.dp,
-                            color = Color(0xFFF59E0B).copy(alpha = 0.4f),
-                            shape = RoundedCornerShape(24.dp)
-                        )
-                        .padding(16.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                            .border(
+                                width = 2.dp,
+                                color = Color(0xFFF59E0B).copy(alpha = 0.4f),
+                                shape = RoundedCornerShape(24.dp)
+                            )
+                            .padding(16.dp)
                     ) {
                         Row(
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(56.dp)
-                                    .clip(RoundedCornerShape(16.dp))
-                                    .background(Color(0xFFF59E0B).copy(alpha = 0.15f)),
-                                contentAlignment = Alignment.Center
+                            Row(
+                                modifier = Modifier.weight(1f),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.WorkspacePremium,
-                                    contentDescription = "Premium",
-                                    modifier = Modifier.size(28.dp),
-                                    tint = Color(0xFFF59E0B)
-                                )
-                            }
-
-                            Column {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                Box(
+                                    modifier = Modifier
+                                        .size(56.dp)
+                                        .clip(RoundedCornerShape(16.dp))
+                                        .background(Color(0xFFF59E0B).copy(alpha = 0.15f)),
+                                    contentAlignment = Alignment.Center
                                 ) {
-                                    Text(
-                                        text = "Go Premium",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.Bold,
-                                        color = AppColors.TextPrimary
-                                    )
-                                    CustomStatusBadge(
-                                        text = "New",
-                                        backgroundColor = Color(0xFFF59E0B),
-                                        textColor = Color.White
+                                    Icon(
+                                        imageVector = Icons.Default.WorkspacePremium,
+                                        contentDescription = "Premium",
+                                        modifier = Modifier.size(28.dp),
+                                        tint = Color(0xFFF59E0B)
                                     )
                                 }
-                                Spacer(modifier = Modifier.height(6.dp))
-                                Text(
-                                    text = "Unlimited generations & priority access",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = AppColors.TextSecondary
-                                )
-                            }
-                        }
 
-                        Icon(
-                            imageVector = Icons.Default.ArrowForward,
-                            contentDescription = "Go Premium",
-                            modifier = Modifier.size(20.dp),
-                            tint = AppColors.TextSecondary
-                        )
+                                Column {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Text(
+                                            text = "Go Premium",
+                                            style = MaterialTheme.typography.titleMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            color = AppColors.TextPrimary
+                                        )
+                                        CustomStatusBadge(
+                                            text = "New",
+                                            backgroundColor = Color(0xFFF59E0B),
+                                            textColor = Color.White
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(6.dp))
+                                    Text(
+                                        text = "Unlimited generations & priority access",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = AppColors.TextSecondary
+                                    )
+                                }
+                            }
+
+                            Icon(
+                                imageVector = Icons.Default.ArrowForward,
+                                contentDescription = "Go Premium",
+                                modifier = Modifier.size(20.dp),
+                                tint = AppColors.TextSecondary
+                            )
+                        }
                     }
                 }
-            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -737,7 +742,7 @@ private fun ProfileScreenContent(
                     ActionCard(
                         icon = Icons.Default.DarkMode,
                         title = "Dark Mode",
-                        onClick = {  },
+                        onClick = { },
                         iconBackgroundColor = AppColors.SurfaceElevated.copy(alpha = 0.5f),
                         badge = "Always On"
                     )

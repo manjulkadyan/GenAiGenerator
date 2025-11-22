@@ -1,0 +1,60 @@
+{
+  "backgroundVideoUrl": "https://your-video-url.com/video.mp4",
+  "features": [
+    {
+      "title": "Powered by 22 Models",
+      "description": "Studio-quality results from text or images",
+      "icon": "gear"
+    },
+    {
+      "title": "Scale Content Creation",
+      "description": "Ship more videos; grow organic reach 2.1x",
+      "icon": "flame"
+    },
+    {
+      "title": "Native Audio & 1080p Exports",
+      "description": "Best-in-class, advanced AI video creation.",
+      "icon": "sound"
+    },
+    {
+      "title": "Ad Factory Templates",
+      "description": "Scale content production",
+      "icon": "house"
+    },
+    {
+      "title": "No-Watermark 9:16 & 16:9",
+      "description": "Clean exports in vertical or horizontal",
+      "icon": "screen"
+    },
+    {
+      "title": "Premium Prompt Assistance",
+      "description": "Expert help crafting high-performing prompts.",
+      "icon": "quote"
+    }
+  ],
+  "subscriptionPlans": [
+    {
+      "credits": 60,
+      "price": "$9.99",
+      "isPopular": false,
+      "productId": "weekly_60_credits",
+      "period": "Weekly"
+    },
+    {
+      "credits": 100,
+      "price": "$14.99",
+      "isPopular": true,
+      "productId": "weekly_100_credits",
+      "period": "Weekly"
+    },
+    {
+      "credits": 150,
+      "price": "$19.99",
+      "isPopular": false,
+      "productId": "weekly_150_credits",
+      "period": "Weekly"
+    }
+  ],
+  "testimonials": []
+}
+

@@ -234,38 +234,41 @@ fun GenAiRoot() {
     
     Scaffold(
         bottomBar = {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                GlassmorphicNavigationBar(
-                    items = navigationItems,
-                    selectedItem = selectedNavigationItem,
-                    onItemSelected = { item ->
-                        val destination = destinations[navigationItems.indexOf(item)]
-                        // When navigating back to Models from Generate, preserve the selected model for highlighting
-                        if (destination == AppDestination.Models && currentRoute == AppDestination.Generate && selectedModelId != null) {
-                            highlightModelId = selectedModelId
-                        } else if (destination != AppDestination.Generate) {
-                            selectedModelId = null
-                            highlightModelId = null
+            // Hide bottom navigation bar when BuyCreditsScreen is shown (full screen)
+            if (!showBuyCreditsScreen) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    GlassmorphicNavigationBar(
+                        items = navigationItems,
+                        selectedItem = selectedNavigationItem,
+                        onItemSelected = { item ->
+                            val destination = destinations[navigationItems.indexOf(item)]
+                            // When navigating back to Models from Generate, preserve the selected model for highlighting
+                            if (destination == AppDestination.Models && currentRoute == AppDestination.Generate && selectedModelId != null) {
+                                highlightModelId = selectedModelId
+                            } else if (destination != AppDestination.Generate) {
+                                selectedModelId = null
+                                highlightModelId = null
+                            }
+                            // Hide generating screen when navigating (user can check History for status)
+                            if (showGeneratingScreen && destination != AppDestination.Generate) {
+                                showGeneratingScreen = false
+                                pendingJobId = null
+                            }
+                            // Close results screen when navigating (user can reopen from History)
+                            if (resultJobId != null) {
+                                resultJobId = null
+                            }
+                            // Reset buy credits screen when navigating away from Profile
+                            if (destination != AppDestination.Profile) {
+                                showBuyCreditsScreen = false
+                            }
+                            currentRoute = destination
                         }
-                        // Hide generating screen when navigating (user can check History for status)
-                        if (showGeneratingScreen && destination != AppDestination.Generate) {
-                            showGeneratingScreen = false
-                            pendingJobId = null
-                        }
-                        // Close results screen when navigating (user can reopen from History)
-                        if (resultJobId != null) {
-                            resultJobId = null
-                        }
-                        // Reset buy credits screen when navigating away from Profile
-                        if (destination != AppDestination.Profile) {
-                            showBuyCreditsScreen = false
-                        }
-                        currentRoute = destination
-                    }
-                )
+                    )
+                }
             }
         }
     ) { innerPadding ->
@@ -323,12 +326,10 @@ fun GenAiRoot() {
             )
             AppDestination.Profile -> {
                 if (showBuyCreditsScreen) {
+                    // Full screen - no padding, no bottom nav
                     BuyCreditsScreen(
-                        modifier = Modifier.padding(innerPadding),
-                        onBackClick = { showBuyCreditsScreen = false },
-                        onPackageSelected = { packageInfo ->
-                            // TODO: Handle package selection (payment integration)
-                        }
+                        modifier = Modifier.fillMaxSize(),
+                        onBackClick = { showBuyCreditsScreen = false }
                     )
                 } else {
                     ProfileScreen(

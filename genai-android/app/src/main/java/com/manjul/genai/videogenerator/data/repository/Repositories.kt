@@ -3,6 +3,7 @@ package com.manjul.genai.videogenerator.data.repository
 import android.net.Uri
 import com.manjul.genai.videogenerator.data.model.AIModel
 import com.manjul.genai.videogenerator.data.model.GenerateRequest
+import com.manjul.genai.videogenerator.data.model.LandingPageConfig
 import com.manjul.genai.videogenerator.data.model.UserCredits
 import com.manjul.genai.videogenerator.data.model.VideoJob
 import kotlinx.coroutines.flow.Flow
@@ -22,4 +23,9 @@ interface VideoHistoryRepository {
 interface VideoGenerateRepository {
     suspend fun uploadReferenceFrame(uri: Uri): Result<String>
     suspend fun requestVideoGeneration(request: GenerateRequest): Result<Unit>
+}
+
+interface LandingPageRepository {
+    fun observeConfig(): Flow<LandingPageConfig>
+    suspend fun fetchConfig(): Result<LandingPageConfig>
 }
