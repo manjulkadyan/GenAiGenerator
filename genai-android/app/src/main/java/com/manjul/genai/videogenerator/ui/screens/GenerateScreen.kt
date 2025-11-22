@@ -1206,62 +1206,69 @@ private fun ReferenceFramePicker(
         }
         
         if (uri == null) {
-            // Empty state - show picker card
-            AppCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .dashedBorder(
+            // Empty state - show picker card with dashed border
+            // Use Surface instead of AppCard to avoid border conflicts
+            Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .dashedBorder(
                         2.dp,
                         MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
                         26.dp
-                    )
-                    .clickable { onPick() },
-                onClick = onPick
+                )
+                .clickable { onPick() },
+                shape = RoundedCornerShape(26.dp),
+                color = AppColors.CardBackground,
+                tonalElevation = 2.dp
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Surface(
-                        shape = CircleShape,
+                Surface(
+                    shape = CircleShape,
                         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                        modifier = Modifier.size(48.dp)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
+                    modifier = Modifier.size(48.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
                                 imageVector = Icons.Default.Image,
-                                contentDescription = null,
+                            contentDescription = null,
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
+                            modifier = Modifier.size(24.dp)
+                        )
                     }
-                    Text(
+                }
+                Text(
                         text = "Add Reference Image",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = AppColors.TextPrimary
-                    )
-                    Text(
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = AppColors.TextPrimary
+                )
+                Text(
                         text = "Tap to begin",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = AppColors.TextSecondary
-                    )
+                    style = MaterialTheme.typography.bodySmall,
+                    color = AppColors.TextSecondary
+                )
                 }
             }
         } else {
             // Image selected - show preview with buttons
-            AppCard(
+            // Use Surface instead of AppCard to avoid border conflicts and match corner radius
+            Surface(
                 modifier = Modifier
                     .fillMaxWidth()
                     .dashedBorder(
                         2.dp,
                         MaterialTheme.colorScheme.primary,
                         20.dp
-                    )
+                    ),
+                shape = RoundedCornerShape(20.dp),
+                color = AppColors.CardBackground,
+                tonalElevation = 2.dp
             ) {
                 Column(
                     modifier = Modifier
@@ -1270,21 +1277,26 @@ private fun ReferenceFramePicker(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     // Image preview - clickable to view fullscreen
+                    // Match corner radius with card to prevent flicker
+                    val imageCornerRadius = remember { RoundedCornerShape(12.dp) }
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp)
-                            .clip(RoundedCornerShape(16.dp))
+                            .clip(imageCornerRadius)
                             .clickable { onViewFullscreen() }
                     ) {
-                        SubcomposeAsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(uri)
-                                .crossfade(true)
-                                .build(),
-                            contentDescription = "Reference image preview",
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop,
+                        key(uri.toString()) {
+                            SubcomposeAsyncImage(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(uri)
+                                    .crossfade(false) // Disable crossfade to prevent flicker
+                                    .memoryCachePolicy(CachePolicy.ENABLED)
+                                    .diskCachePolicy(CachePolicy.ENABLED)
+                                    .build(),
+                                contentDescription = "Reference image preview",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop,
                             loading = {
                                 Box(
                                     modifier = Modifier.fillMaxSize(),
@@ -1321,8 +1333,8 @@ private fun ReferenceFramePicker(
                                         )
                                     }
                                 }
-                            }
-                        )
+                            })
+                        }
                         
                         // Overlay hint to tap to view fullscreen (subtle, appears on top)
                         Box(
@@ -1357,12 +1369,12 @@ private fun ReferenceFramePicker(
                             fullWidth = false,
                             modifier = Modifier.weight(1f)
                         )
-                        AppSecondaryButton(
-                            text = "Remove",
-                            onClick = onClear,
+                    AppSecondaryButton(
+                        text = "Remove",
+                        onClick = onClear,
                             fullWidth = false,
                             modifier = Modifier.weight(1f)
-                        )
+                    )
                     }
                 }
             }
@@ -1929,6 +1941,7 @@ private fun Modifier.dashedBorder(width: Dp, color: Color, cornerRadius: Dp): Mo
             val strokeWidth = width.toPx()
             val halfStroke = strokeWidth / 2
             val pathEffect = PathEffect.dashPathEffect(floatArrayOf(16f, 12f))
+            // Draw border inset by half stroke width to ensure it's fully visible
             drawRoundRect(
                 color = color,
                 topLeft = Offset(halfStroke, halfStroke),
@@ -1936,7 +1949,7 @@ private fun Modifier.dashedBorder(width: Dp, color: Color, cornerRadius: Dp): Mo
                     size.width - strokeWidth,
                     size.height - strokeWidth
                 ),
-                cornerRadius = CornerRadius(cornerRadius.toPx()),
+                cornerRadius = CornerRadius(cornerRadius.toPx() - halfStroke),
                 style = Stroke(
                     width = strokeWidth,
                     pathEffect = pathEffect,
