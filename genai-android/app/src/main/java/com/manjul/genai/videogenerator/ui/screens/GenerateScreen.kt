@@ -34,6 +34,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
@@ -1138,6 +1139,8 @@ private fun ReferenceFrameSection(
     onClearFirst: () -> Unit,
     onClearLast: () -> Unit
 ) {
+    var fullscreenImageUri by remember { mutableStateOf<Uri?>(null) }
+    
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         if (model.supportsFirstFrame) {
             ReferenceFramePicker(
@@ -1145,7 +1148,8 @@ private fun ReferenceFrameSection(
                 required = model.requiresFirstFrame,
                 uri = firstFrame,
                 onPick = onPickFirst,
-                onClear = onClearFirst
+                onClear = onClearFirst,
+                onViewFullscreen = { fullscreenImageUri = firstFrame }
             )
         }
         if (model.supportsLastFrame) {
@@ -1154,7 +1158,8 @@ private fun ReferenceFrameSection(
                 required = model.requiresLastFrame,
                 uri = lastFrame,
                 onPick = onPickLast,
-                onClear = onClearLast
+                onClear = onClearLast,
+                onViewFullscreen = { fullscreenImageUri = lastFrame }
             )
         }
         if (!model.supportsFirstFrame && !model.supportsLastFrame) {
@@ -1165,6 +1170,14 @@ private fun ReferenceFrameSection(
             )
         }
     }
+    
+    // Show fullscreen image dialog
+    fullscreenImageUri?.let { uri ->
+        FullscreenImageDialog(
+            imageUri = uri,
+            onDismiss = { fullscreenImageUri = null }
+        )
+    }
 }
 
 @Composable
@@ -1173,7 +1186,8 @@ private fun ReferenceFramePicker(
     required: Boolean,
     uri: Uri?,
     onPick: () -> Unit,
-    onClear: () -> Unit
+    onClear: () -> Unit,
+    onViewFullscreen: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(
@@ -1190,65 +1204,166 @@ private fun ReferenceFramePicker(
                 StatusBadge(text = "Required")
             }
         }
-        AppCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .dashedBorder(
-                    2.dp, if (uri == null) {
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-                    } else {
-                        MaterialTheme.colorScheme.primary
-                    }, 20.dp
-                )
-                .clickable { onPick() },
-            onClick = onPick
-        ) {
-            Column(
+        
+        if (uri == null) {
+            // Empty state - show picker card
+            AppCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .dashedBorder(
+                        2.dp,
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                        26.dp
+                    )
+                    .clickable { onPick() },
+                onClick = onPick
             ) {
-                Surface(
-                    shape = CircleShape,
-                    color = if (uri == null) {
-                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                    } else {
-                        MaterialTheme.colorScheme.primaryContainer
-                    },
-                    modifier = Modifier.size(48.dp)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            imageVector = if (uri == null) Icons.Default.Image else Icons.Default.CheckCircle,
-                            contentDescription = null,
-                            tint = if (uri == null) {
-                                MaterialTheme.colorScheme.onSurfaceVariant
-                            } else {
-                                MaterialTheme.colorScheme.onPrimaryContainer
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Default.Image,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    }
+                    Text(
+                        text = "Add Reference Image",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = AppColors.TextPrimary
+                    )
+                    Text(
+                        text = "Tap to begin",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = AppColors.TextSecondary
+                    )
+                }
+            }
+        } else {
+            // Image selected - show preview with buttons
+            AppCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .dashedBorder(
+                        2.dp,
+                        MaterialTheme.colorScheme.primary,
+                        20.dp
+                    )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    // Image preview - clickable to view fullscreen
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .clickable { onViewFullscreen() }
+                    ) {
+                        SubcomposeAsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(uri)
+                                .crossfade(true)
+                                .build(),
+                            contentDescription = "Reference image preview",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop,
+                            loading = {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(32.dp),
+                                        strokeWidth = 3.dp,
+                                        color = AppColors.PrimaryPurple
+                                    )
+                                }
                             },
-                            modifier = Modifier.size(24.dp)
+                            error = {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(AppColors.CardBackground),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Image,
+                                            contentDescription = null,
+                                            tint = AppColors.TextSecondary,
+                                            modifier = Modifier.size(48.dp)
+                                        )
+                                        Text(
+                                            text = "Failed to load image",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = AppColors.TextSecondary
+                                        )
+                                    }
+                                }
+                            }
+                        )
+                        
+                        // Overlay hint to tap to view fullscreen (subtle, appears on top)
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color.Black.copy(alpha = 0.2f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Surface(
+                                shape = CircleShape,
+                                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
+                                tonalElevation = 2.dp
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Image,
+                                    contentDescription = "Tap to view fullscreen",
+                                    modifier = Modifier.padding(10.dp),
+                                    tint = AppColors.PrimaryPurple.copy(alpha = 0.8f)
+                                )
+                            }
+                        }
+                    }
+                    
+                    // Action buttons row
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        AppSecondaryButton(
+                            text = "Change",
+                            onClick = onPick,
+                            fullWidth = false,
+                            modifier = Modifier.weight(1f)
+                        )
+                        AppSecondaryButton(
+                            text = "Remove",
+                            onClick = onClear,
+                            fullWidth = false,
+                            modifier = Modifier.weight(1f)
                         )
                     }
-                }
-                Text(
-                    text = if (uri == null) "Add Reference Image" else "Image Selected",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = AppColors.TextPrimary
-                )
-                Text(
-                    text = if (uri == null) "Tap to begin" else "Tap to replace",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = AppColors.TextSecondary
-                )
-                if (uri != null) {
-                    AppSecondaryButton(
-                        text = "Remove",
-                        onClick = onClear,
-                        fullWidth = false
-                    )
                 }
             }
         }
@@ -1657,6 +1772,91 @@ private fun FullscreenVideoDialog(
 }
 
 @Composable
+private fun FullscreenImageDialog(
+    imageUri: Uri,
+    onDismiss: () -> Unit
+) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black)
+        ) {
+            // Close button
+            IconButton(
+                onClick = onDismiss,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+                    .background(
+                        MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                        CircleShape
+                    )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Close",
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+            
+            // Fullscreen image
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(imageUri)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "Fullscreen reference image",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit,
+                loading = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(48.dp),
+                            strokeWidth = 4.dp,
+                            color = Color.White
+                        )
+                    }
+                },
+                error = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Image,
+                                contentDescription = null,
+                                tint = Color.White.copy(alpha = 0.5f),
+                                modifier = Modifier.size(64.dp)
+                            )
+                            Text(
+                                text = "Failed to load image",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White.copy(alpha = 0.7f)
+                            )
+                        }
+                    }
+                }
+            )
+        }
+    }
+}
+
+@Composable
 private fun ContentGuidelinesCard() {
     val guidelines = listOf(
         "No nudity, violence, or harmful content across all models.",
@@ -1878,14 +2078,17 @@ private fun GenerateScreenPreview() {
                                 required = selectedModel.requiresFirstFrame || selectedModel.requiresLastFrame,
                                 infoText = "Add keyframes to lock composition"
                             ) {
+                                var previewFirstFrame by remember { mutableStateOf<Uri?>(null) }
+                                var previewLastFrame by remember { mutableStateOf<Uri?>(null) }
+                                
                                 ReferenceFrameSection(
                                     model = selectedModel,
-                                    firstFrame = null,
-                                    lastFrame = null,
-                                    onPickFirst = {},
-                                    onPickLast = {},
-                                    onClearFirst = {},
-                                    onClearLast = {}
+                                    firstFrame = previewFirstFrame,
+                                    lastFrame = previewLastFrame,
+                                    onPickFirst = { previewFirstFrame = android.net.Uri.parse("content://preview") },
+                                    onPickLast = { previewLastFrame = android.net.Uri.parse("content://preview") },
+                                    onClearFirst = { previewFirstFrame = null },
+                                    onClearLast = { previewLastFrame = null }
                                 )
                             }
                         }
