@@ -1206,21 +1206,21 @@ private fun ReferenceFramePicker(
         }
         
         if (uri == null) {
-            // Empty state - show picker card with dashed border
+            // Empty state - show picker card with dashed/dotted border
             // Use Surface instead of AppCard to avoid border conflicts
             Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .dashedBorder(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .dashedBorder(
                         2.dp,
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.6f),
                         26.dp
-                )
-                .clickable { onPick() },
+                    )
+                    .clickable { onPick() },
                 shape = RoundedCornerShape(26.dp),
                 color = AppColors.CardBackground,
                 tonalElevation = 2.dp
-        ) {
+            ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -1257,18 +1257,16 @@ private fun ReferenceFramePicker(
             }
         } else {
             // Image selected - show preview with buttons
-            // Use Surface instead of AppCard to avoid border conflicts and match corner radius
+            // Use Surface with solid border (not dashed) for selected state
             Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .dashedBorder(
-                        2.dp,
-                        MaterialTheme.colorScheme.primary,
-                        20.dp
-                    ),
+                modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
                 color = AppColors.CardBackground,
-                tonalElevation = 2.dp
+                tonalElevation = 2.dp,
+                border = BorderStroke(
+                    width = 2.dp,
+                    color = MaterialTheme.colorScheme.primary
+                )
             ) {
                 Column(
                     modifier = Modifier
