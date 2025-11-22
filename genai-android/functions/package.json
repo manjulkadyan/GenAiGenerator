@@ -28,7 +28,8 @@
     "verify:firestore": "npm run build && node lib/verifyFirestoreData.js",
     "seed:and:verify": "npm run build && node lib/seedAndVerify.js",
     "check:robots": "npm run build && node lib/checkRobotsAndRateLimits.js",
-    "update:missing:urls": "npm run build && node lib/updateMissingExampleUrls.js"
+    "update:missing:urls": "npm run build && node lib/updateMissingExampleUrls.js",
+    "seed:landing-page": "npm run build && node lib/seedLandingPage.js"
   },
   "engines": {
     "node": "22"

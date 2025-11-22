@@ -25,6 +25,10 @@ import com.manjul.genai.videogenerator.data.model.GenerateRequest
 import com.manjul.genai.videogenerator.data.model.ModelSchemaMetadata
 import com.manjul.genai.videogenerator.data.model.ParameterType
 import com.manjul.genai.videogenerator.data.model.SchemaParameter
+import com.manjul.genai.videogenerator.data.model.LandingPageConfig
+import com.manjul.genai.videogenerator.data.model.LandingPageFeature
+import com.manjul.genai.videogenerator.data.model.SubscriptionPlan
+import com.manjul.genai.videogenerator.data.model.Testimonial
 import com.manjul.genai.videogenerator.data.model.UserCredits
 import com.manjul.genai.videogenerator.data.model.VideoJob
 import com.manjul.genai.videogenerator.data.model.VideoJobStatus
@@ -257,6 +261,98 @@ class FirebaseVideoGenerateRepository(
     }
 }
 
+class FirebaseLandingPageRepository(
+    private val firestore: FirebaseFirestore
+) : LandingPageRepository {
+    override fun observeConfig(): Flow<LandingPageConfig> = callbackFlow {
+        val registration = firestore.collection("app")
+            .document("landingPage")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    // Send default config on error
+                    trySend(getDefaultConfig())
+                    return@addSnapshotListener
+                }
+                
+                val config = snapshot?.toLandingPageConfig() ?: getDefaultConfig()
+                trySend(config)
+            }
+        awaitClose { registration.remove() }
+    }
+    
+    override suspend fun fetchConfig(): Result<LandingPageConfig> {
+        return runCatching {
+            val snapshot = firestore.collection("app")
+                .document("landingPage")
+                .get()
+                .await()
+            
+            if (snapshot.exists()) {
+                Result.success(snapshot.toLandingPageConfig())
+            } else {
+                Result.success(getDefaultConfig())
+            }
+        }.getOrElse { exception ->
+            Result.failure(exception)
+        }
+    }
+    
+    private fun DocumentSnapshot.toLandingPageConfig(): LandingPageConfig {
+        val backgroundVideoUrl = getString("backgroundVideoUrl") ?: ""
+        
+        // Parse features
+        val featuresList = get("features") as? List<Map<String, Any>> ?: emptyList()
+        val features = featuresList.mapNotNull { featureMap ->
+            val title = featureMap["title"] as? String ?: return@mapNotNull null
+            val description = featureMap["description"] as? String ?: return@mapNotNull null
+            val icon = featureMap["icon"] as? String ?: return@mapNotNull null
+            LandingPageFeature(title, description, icon)
+        }
+        
+        // Parse subscription plans
+        val plansList = get("subscriptionPlans") as? List<Map<String, Any>> ?: emptyList()
+        val plans = plansList.mapNotNull { planMap ->
+            val credits = (planMap["credits"] as? Number)?.toInt() ?: return@mapNotNull null
+            val price = planMap["price"] as? String ?: return@mapNotNull null
+            val isPopular = planMap["isPopular"] as? Boolean ?: false
+            val productId = planMap["productId"] as? String ?: return@mapNotNull null
+            val period = planMap["period"] as? String ?: "Weekly"
+            SubscriptionPlan(credits, price, isPopular, productId, period)
+        }
+        
+        // Parse testimonials (optional)
+        val testimonialsList = get("testimonials") as? List<Map<String, Any>> ?: emptyList()
+        val testimonials = testimonialsList.mapNotNull { testimonialMap ->
+            val username = testimonialMap["username"] as? String ?: return@mapNotNull null
+            val rating = (testimonialMap["rating"] as? Number)?.toInt() ?: return@mapNotNull null
+            val text = testimonialMap["text"] as? String ?: return@mapNotNull null
+            Testimonial(username, rating, text)
+        }
+        
+        return LandingPageConfig(backgroundVideoUrl, features, plans, testimonials)
+    }
+    
+    private fun getDefaultConfig(): LandingPageConfig {
+        return LandingPageConfig(
+            backgroundVideoUrl = "",
+            features = listOf(
+                LandingPageFeature("Powered by 22 Models", "Studio-quality results from text or images", "gear"),
+                LandingPageFeature("Scale Content Creation", "Ship more videos; grow organic reach 2.1x", "flame"),
+                LandingPageFeature("Native Audio & 1080p Exports", "Best-in-class, advanced AI video creation.", "sound"),
+                LandingPageFeature("Ad Factory Templates", "Scale content production", "house"),
+                LandingPageFeature("No-Watermark 9:16 & 16:9", "Clean exports in vertical or horizontal", "screen"),
+                LandingPageFeature("Premium Prompt Assistance", "Expert help crafting high-performing prompts.", "quote")
+            ),
+            subscriptionPlans = listOf(
+                SubscriptionPlan(60, "$9.99", false, "weekly_60_credits", "Weekly"),
+                SubscriptionPlan(100, "$14.99", true, "weekly_100_credits", "Weekly"),
+                SubscriptionPlan(150, "$19.99", false, "weekly_150_credits", "Weekly")
+            ),
+            testimonials = emptyList()
+        )
+    }
+}
+
 object RepositoryProvider {
     private val auth by lazy { FirebaseAuth.getInstance() }
     private val firestore by lazy { FirebaseFirestore.getInstance() }
@@ -296,6 +392,9 @@ object RepositoryProvider {
     }
     val videoGenerateRepository: VideoGenerateRepository by lazy {
         FirebaseVideoGenerateRepository(auth, firestore, functions, storage)
+    }
+    val landingPageRepository: LandingPageRepository by lazy {
+        FirebaseLandingPageRepository(firestore)
     }
 }
 
