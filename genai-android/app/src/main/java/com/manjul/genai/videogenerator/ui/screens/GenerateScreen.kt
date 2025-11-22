@@ -13,6 +13,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,16 +28,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import androidx.media3.common.util.UnstableApi
-import androidx.media3.ui.AspectRatioFrameLayout
-import com.manjul.genai.videogenerator.ui.components.VideoThumbnail
-import com.manjul.genai.videogenerator.player.VideoPlayerManager
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -53,18 +46,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import com.manjul.genai.videogenerator.ui.designsystem.components.dialogs.AppBottomSheetDialog
-import com.manjul.genai.videogenerator.ui.designsystem.components.dialogs.AppDialog
-import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppSecondaryButton
-import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppTextButton
-import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
-import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppSelectionCard
-import com.manjul.genai.videogenerator.ui.designsystem.components.inputs.AppTextField
-import com.manjul.genai.videogenerator.ui.designsystem.components.sections.SectionCard
-import com.manjul.genai.videogenerator.ui.designsystem.components.selection.SelectionPill
-import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -79,36 +62,52 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.manjul.genai.videogenerator.data.model.AIModel
-import com.manjul.genai.videogenerator.ui.viewmodel.GenerateScreenState
-import com.manjul.genai.videogenerator.ui.viewmodel.VideoGenerateViewModel
-import com.manjul.genai.videogenerator.ui.viewmodel.CreditsViewModel
-import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
-import com.manjul.genai.videogenerator.ui.designsystem.components.badges.StatusBadge
-import com.manjul.genai.videogenerator.ui.designsystem.components.badges.InfoChip
-import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppElevatedCard
-import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
-import kotlinx.coroutines.delay
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.ui.AspectRatioFrameLayout
 import coil.compose.SubcomposeAsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ColorMatrix
+import com.manjul.genai.videogenerator.data.model.AIModel
+import com.manjul.genai.videogenerator.player.VideoPlayerManager
+import com.manjul.genai.videogenerator.ui.components.VideoThumbnail
+import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
+import com.manjul.genai.videogenerator.ui.designsystem.components.badges.InfoChip
+import com.manjul.genai.videogenerator.ui.designsystem.components.badges.StatusBadge
+import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppSecondaryButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppTextButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
+import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppElevatedCard
+import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppSelectionCard
+import com.manjul.genai.videogenerator.ui.designsystem.components.dialogs.AppBottomSheetDialog
+import com.manjul.genai.videogenerator.ui.designsystem.components.dialogs.AppDialog
+import com.manjul.genai.videogenerator.ui.designsystem.components.inputs.AppTextField
+import com.manjul.genai.videogenerator.ui.designsystem.components.sections.SectionCard
+import com.manjul.genai.videogenerator.ui.designsystem.components.selection.SelectionPill
+import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
+import com.manjul.genai.videogenerator.ui.viewmodel.CreditsViewModel
+import com.manjul.genai.videogenerator.ui.viewmodel.VideoGenerateViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun GenerateScreen(
@@ -141,12 +140,12 @@ fun GenerateScreen(
 
     val pickFirstFrame =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        viewModel.setFirstFrameUri(uri)
-    }
+            viewModel.setFirstFrameUri(uri)
+        }
     val pickLastFrame =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        viewModel.setLastFrameUri(uri)
-    }
+            viewModel.setLastFrameUri(uri)
+        }
 
     val scrollState = rememberScrollState()
     var generationMode by rememberSaveable { mutableStateOf(GenerationMode.TextToVideo) }
@@ -179,7 +178,7 @@ fun GenerateScreen(
                         .padding(bottom = 140.dp)
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     // Header with title, credits, settings, and description
                     GenerateHeader(creditsCount = creditsState.credits)
 
@@ -208,14 +207,28 @@ fun GenerateScreen(
                                     // Auto-select first compatible model if current model doesn't support the new mode
                                     state.selectedModel?.let { currentModel ->
                                         val isCompatible = when (newMode) {
-                                            GenerationMode.TextToVideo -> isTextToVideoModel(currentModel)
-                                            GenerationMode.ImageToVideo -> isImageToVideoModel(currentModel)
+                                            GenerationMode.TextToVideo -> isTextToVideoModel(
+                                                currentModel
+                                            )
+
+                                            GenerationMode.ImageToVideo -> isImageToVideoModel(
+                                                currentModel
+                                            )
                                         }
                                         if (!isCompatible) {
                                             // Find first compatible model for the new mode
                                             val compatibleModel = when (newMode) {
-                                                GenerationMode.TextToVideo -> state.models.firstOrNull { isTextToVideoModel(it) }
-                                                GenerationMode.ImageToVideo -> state.models.firstOrNull { isImageToVideoModel(it) }
+                                                GenerationMode.TextToVideo -> state.models.firstOrNull {
+                                                    isTextToVideoModel(
+                                                        it
+                                                    )
+                                                }
+
+                                                GenerationMode.ImageToVideo -> state.models.firstOrNull {
+                                                    isImageToVideoModel(
+                                                        it
+                                                    )
+                                                }
                                             }
                                             if (compatibleModel != null) {
                                                 viewModel.selectModel(compatibleModel)
@@ -224,94 +237,104 @@ fun GenerateScreen(
                                     } ?: run {
                                         // If no model is selected, auto-select first compatible model
                                         val compatibleModel = when (newMode) {
-                                            GenerationMode.TextToVideo -> state.models.firstOrNull { isTextToVideoModel(it) }
-                                            GenerationMode.ImageToVideo -> state.models.firstOrNull { isImageToVideoModel(it) }
+                                            GenerationMode.TextToVideo -> state.models.firstOrNull {
+                                                isTextToVideoModel(
+                                                    it
+                                                )
+                                            }
+
+                                            GenerationMode.ImageToVideo -> state.models.firstOrNull {
+                                                isImageToVideoModel(
+                                                    it
+                                                )
+                                            }
                                         }
                                         compatibleModel?.let { viewModel.selectModel(it) }
                                     }
                                 }
                             )
 
-                    SectionCard(
-                        title = "AI Model",
-                        description = "Choose the AI model for video generation",
-                        required = true,
-                        infoText = "Different models excel at different subjects.",
-                        onInfoClick = { showPricingDialog = true }
-                    ) {
-                        ModelSelector(
-                            models = state.models,
-                            selected = state.selectedModel,
-                                    generationMode = generationMode,
-                            onSelected = viewModel::selectModel
-                        )
-                    }
-
-                            // Only show Reference Images section in Image-to-Video mode and for models that support it
-                    state.selectedModel?.let { model ->
-                                if (generationMode == GenerationMode.ImageToVideo && 
-                                    (model.supportsFirstFrame || model.supportsLastFrame)) {
                             SectionCard(
-                                title = "Reference Images",
-                                description = "Select reference frames to guide motion",
-                                required = model.requiresFirstFrame || model.requiresLastFrame,
-                                        //infoText = "Add keyframes to lock composition"
+                                title = "AI Model",
+                                description = "Choose the AI model for video generation",
+                                required = true,
+                                infoText = "Different models excel at different subjects.",
+                                onInfoClick = { showPricingDialog = true }
                             ) {
-                                ReferenceFrameSection(
-                                    model = model,
-                                    firstFrame = state.firstFrameUri,
-                                    lastFrame = state.lastFrameUri,
-                                    onPickFirst = { pickFirstFrame.launch("image/*") },
-                                    onPickLast = { pickLastFrame.launch("image/*") },
-                                    onClearFirst = { viewModel.setFirstFrameUri(null) },
-                                    onClearLast = { viewModel.setLastFrameUri(null) }
+                                ModelSelector(
+                                    models = state.models,
+                                    selected = state.selectedModel,
+                                    generationMode = generationMode,
+                                    onSelected = viewModel::selectModel
                                 )
                             }
-                        }
-                    }
 
-                    SectionCard(
-                        title = "Main Text Prompt",
-                        description = "Describe what you want to see in detail",
-                        required = true,
+                            // Only show Reference Images section in Image-to-Video mode and for models that support it
+                            state.selectedModel?.let { model ->
+                                if (generationMode == GenerationMode.ImageToVideo &&
+                                    (model.supportsFirstFrame || model.supportsLastFrame)
+                                ) {
+                                    SectionCard(
+                                        title = "Reference Images",
+                                        description = "Select reference frames to guide motion",
+                                        required = model.requiresFirstFrame || model.requiresLastFrame,
+                                        //infoText = "Add keyframes to lock composition"
+                                    ) {
+                                        ReferenceFrameSection(
+                                            model = model,
+                                            firstFrame = state.firstFrameUri,
+                                            lastFrame = state.lastFrameUri,
+                                            onPickFirst = { pickFirstFrame.launch("image/*") },
+                                            onPickLast = { pickLastFrame.launch("image/*") },
+                                            onClearFirst = { viewModel.setFirstFrameUri(null) },
+                                            onClearLast = { viewModel.setLastFrameUri(null) }
+                                        )
+                                    }
+                                }
+                            }
+
+                            SectionCard(
+                                title = "Main Text Prompt",
+                                description = "Describe what you want to see in detail",
+                                required = true,
                                 //infoText = "Detailed prompts lead to richer scenes"
-                    ) {
+                            ) {
                                 AppTextField(
-                            value = state.prompt,
+                                    value = state.prompt,
                                     onValueChange = viewModel::updatePrompt,
                                     placeholder = "Tap here to type your prompt",
                                     maxLines = 5
-                        )
-                    }
-
-                    SectionCard(
-                        title = "Advanced Settings",
-                        description = "Adjust aspect ratio and duration",
-                        required = false,
-                        optionalLabel = "Optional",
-                                //infoText = "Fine tune generation controls",
-                        onHeaderClick = { showAdvanced = !showAdvanced },
-                        expandable = true,
-                        expanded = showAdvanced
-                    ) {
-                        AnimatedVisibility(visible = showAdvanced) {
-                            Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                                DurationAspectRow(
-                                    selectedModel = state.selectedModel,
-                                    selectedDuration = state.selectedDuration,
-                                    selectedAspectRatio = state.selectedAspectRatio,
-                                    onDurationSelected = viewModel::updateDuration,
-                                    onAspectRatioSelected = viewModel::updateAspectRatio
                                 )
+                            }
 
-                                if (state.selectedModel?.supportsAudio == true) {
-                                    AudioToggle(
-                                        enabled = state.enableAudio,
-                                        onToggle = viewModel::toggleAudio
-                                    )
-                                }
+                            SectionCard(
+                                title = "Advanced Settings",
+                                description = "Adjust aspect ratio and duration",
+                                required = false,
+                                optionalLabel = "Optional",
+                                //infoText = "Fine tune generation controls",
+                                onHeaderClick = { showAdvanced = !showAdvanced },
+                                expandable = true,
+                                expanded = showAdvanced
+                            ) {
+                                AnimatedVisibility(visible = showAdvanced) {
+                                    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                                        DurationAspectRow(
+                                            selectedModel = state.selectedModel,
+                                            selectedDuration = state.selectedDuration,
+                                            selectedAspectRatio = state.selectedAspectRatio,
+                                            onDurationSelected = viewModel::updateDuration,
+                                            onAspectRatioSelected = viewModel::updateAspectRatio
+                                        )
 
-                                if (state.selectedModel?.schemaMetadata?.categorized?.text?.any { it.name == "negative_prompt" } == true) {
+                                        if (state.selectedModel?.supportsAudio == true) {
+                                            AudioToggle(
+                                                enabled = state.enableAudio,
+                                                onToggle = viewModel::toggleAudio
+                                            )
+                                        }
+
+                                        if (state.selectedModel?.schemaMetadata?.categorized?.text?.any { it.name == "negative_prompt" } == true) {
                                             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                                                 Text(
                                                     text = "Negative Prompt",
@@ -320,29 +343,27 @@ fun GenerateScreen(
                                                     color = AppColors.TextPrimary
                                                 )
                                                 AppTextField(
-                                        value = state.negativePrompt,
+                                                    value = state.negativePrompt,
                                                     onValueChange = viewModel::updateNegativePrompt,
                                                     placeholder = "What should we avoid? e.g. blurry, low quality",
                                                     maxLines = 3
-                                    )
+                                                )
                                             }
+                                        }
+                                    }
                                 }
                             }
-                        }
-                    }
 
-                    state.uploadMessage?.let { message ->
-                        StatusBanner(message = message)
+                            state.uploadMessage?.let { message ->
+                                StatusBanner(message = message)
                             }
-
-                            // Generate Button inside container - single line with cost and button
                             Column(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.Start
                             ) {
                                 // Cost and audio indicator on the left
-                                Row{
+                                Row {
                                     Text(
                                         text = "Estimated Cost: ${state.estimatedCost} credits",
                                         style = MaterialTheme.typography.labelMedium,
@@ -353,7 +374,7 @@ fun GenerateScreen(
                                         InfoChip("2x Audio")
                                     }
                                 }
-                                
+
                                 // Gradient Generate Button
                                 GradientGenerateButton(
                                     text = if (state.isGenerating) "Generating..." else "Generate AI Video",
@@ -527,7 +548,7 @@ private fun GradientGenerateButton(
         animationSpec = tween(200),
         label = "buttonScale"
     )
-    
+
     // Gradient from purple to orange - catchy and blends with design system
     val gradientBrush = Brush.horizontalGradient(
         colors = listOf(
@@ -535,7 +556,7 @@ private fun GradientGenerateButton(
             Color(0xFFFF6B35) // Orange color that blends with purple
         )
     )
-    
+
     // Active/enabled state with gradient, disabled state with gray
     val buttonBrush = if (enabled && !isLoading) {
         gradientBrush
@@ -547,7 +568,7 @@ private fun GradientGenerateButton(
             )
         )
     }
-    
+
     Surface(
         modifier = Modifier
             .scale(scale)
@@ -616,21 +637,21 @@ private fun GradientGenerateButton(
 private fun GenerateHeader(
     creditsCount: Int
 ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Text(
-                            text = "AI Studio",
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold,
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Text(
+                text = "AI Studio",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
                 color = AppColors.TextPrimary
-                        )
-                        Text(
-                            text = "Try Veo 3, Sora 2 and more",
-                            style = MaterialTheme.typography.bodyLarge,
+            )
+            Text(
+                text = "Try Veo 3, Sora 2 and more",
+                style = MaterialTheme.typography.bodyLarge,
                 color = AppColors.TextSecondary
             )
         }
@@ -653,9 +674,9 @@ private fun GenerateHeader(
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Star,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Star,
                         contentDescription = "Credits",
                         tint = Color(0xFFFFD700), // Yellow star color
                         modifier = Modifier.size(18.dp)
@@ -669,20 +690,20 @@ private fun GenerateHeader(
                 }
             }
             // Settings icon
-                        IconButton(
-                            onClick = {},
-                            modifier = Modifier
-                                .size(48.dp)
-                                .background(
-                                    MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
-                                    CircleShape
-                                )
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Settings,
+            IconButton(
+                onClick = {},
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(
+                        MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
+                        CircleShape
+                    )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
                     contentDescription = "Settings",
                     tint = AppColors.TextSecondary,
-                                modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }
@@ -780,13 +801,14 @@ private fun ModelSelector(
                 // Show models that support text-to-video (don't require first frame)
                 models.filter { isTextToVideoModel(it) }
             }
+
             GenerationMode.ImageToVideo -> {
                 // Show only models that support image-to-video (support first frame)
                 models.filter { isImageToVideoModel(it) }
             }
         }
     }
-    
+
     val listState = rememberLazyListState()
     LaunchedEffect(selected?.id) {
         if (selected != null) {
@@ -806,18 +828,18 @@ private fun ModelSelector(
             modifier = Modifier.padding(16.dp)
         )
     } else {
-    LazyRow(
-        state = listState,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(horizontal = 4.dp)
-    ) {
+        LazyRow(
+            state = listState,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(horizontal = 4.dp)
+        ) {
             items(filteredModels, key = { it.id }) { model ->
-            val isSelected = selected?.id == model.id
-            ModelCard(
-                model = model,
-                selected = isSelected,
-                onClick = { onSelected(model) }
-            )
+                val isSelected = selected?.id == model.id
+                ModelCard(
+                    model = model,
+                    selected = isSelected,
+                    onClick = { onSelected(model) }
+                )
             }
         }
     }
@@ -855,7 +877,7 @@ private fun ModelCard(
             ) {
                 val nameText = displayName.ifBlank { model.name }
                 val subtitleText = fullSubtitle.ifBlank { formatCredits(model.pricePerSecond) }
-                
+
                 Text(
                     text = nameText,
                     style = MaterialTheme.typography.titleMedium,
@@ -989,7 +1011,7 @@ private fun ModelLogo(
                     .diskCachePolicy(CachePolicy.ENABLED)
                     .build(),
                 contentDescription = "$modelName logo",
-            modifier = Modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp),
                 contentScale = ContentScale.Fit,
@@ -1018,7 +1040,7 @@ private fun ModelLogo(
             )
         } else {
             // Fallback to initial letter
-                    Text(
+            Text(
                 text = initial,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
@@ -1400,32 +1422,32 @@ private fun PricingDialog(
     ) {
         val scrollState = rememberScrollState()
 
-                Column(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(scrollState),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                            Text(
-                                text = "Credits per second",
-                                style = MaterialTheme.typography.bodyMedium,
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            Text(
+                text = "Credits per second",
+                style = MaterialTheme.typography.bodyMedium,
                 color = AppColors.TextSecondary
             )
 
-                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        models
-                            .sortedByDescending { it.pricePerSecond }
-                            .forEach { model ->
-                                PricingRow(model = model)
-                            }
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                models
+                    .sortedByDescending { it.pricePerSecond }
+                    .forEach { model ->
+                        PricingRow(model = model)
                     }
+            }
 
-                    Text(
-                        text = "Final cost = credits/sec × video duration",
-                        style = MaterialTheme.typography.bodySmall,
+            Text(
+                text = "Final cost = credits/sec × video duration",
+                style = MaterialTheme.typography.bodySmall,
                 color = AppColors.TextSecondary,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
     }
 }
@@ -1501,10 +1523,10 @@ private fun ModelAvatar(model: AIModel) {
 @Composable
 private fun VideoExamplesSection(model: AIModel) {
     if (model.exampleVideoUrls.isEmpty()) return
-    
+
     // Reset selected video when model changes
     var selectedVideoUrl by remember(model.id) { mutableStateOf<String?>(null) }
-    
+
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(
             text = "Video Examples",
@@ -1515,10 +1537,10 @@ private fun VideoExamplesSection(model: AIModel) {
         // Use key() to force complete recreation of LazyRow when model changes
         // This ensures all items are properly disposed and recreated
         key(model.id) {
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(horizontal = 4.dp)
-        ) {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(horizontal = 4.dp)
+            ) {
                 items(
                     items = model.exampleVideoUrls,
                     key = { it }
@@ -1531,7 +1553,7 @@ private fun VideoExamplesSection(model: AIModel) {
             }
         }
     }
-    
+
     // Show fullscreen video dialog when a video is selected
     selectedVideoUrl?.let { url ->
         FullscreenVideoDialog(
@@ -1564,23 +1586,23 @@ private fun ExampleCard(
                 contentScale = ContentScale.Crop,
                 jobId = null // No job ID for example videos
             )
-            
+
             // Play button overlay
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.2f)),
-                    contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center
+            ) {
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                    tonalElevation = 4.dp
                 ) {
-                    Surface(
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
-                        tonalElevation = 4.dp
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.PlayArrow,
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
                         contentDescription = "Play video",
-                            modifier = Modifier.padding(12.dp),
+                        modifier = Modifier.padding(12.dp),
                         tint = AppColors.PrimaryPurple
                     )
                 }
@@ -1806,7 +1828,7 @@ private fun GenerateScreenPreview() {
                     .padding(bottom = 140.dp)
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Header with title, credits, settings, and description
                 GenerateHeader(creditsCount = 0)
 
@@ -1928,7 +1950,8 @@ private fun GenerateScreenPreview() {
 
                         // Generate Button inside container
                         val estimatedCost =
-                            (selectedModel.pricePerSecond * (selectedDuration ?: 0)) * if (enableAudio) 2 else 1
+                            (selectedModel.pricePerSecond * (selectedDuration
+                                ?: 0)) * if (enableAudio) 2 else 1
                         val canGenerate =
                             promptText.isNotBlank() && selectedModel != null && selectedDuration != null && selectedAspectRatio != null
 
