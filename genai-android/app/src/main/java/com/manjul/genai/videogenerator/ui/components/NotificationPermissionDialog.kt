@@ -45,6 +45,7 @@ fun NotificationPermissionDialog(
     onDismiss: () -> Unit,
     onPermissionGranted: () -> Unit
 ) {
+    android.util.Log.d("NotificationPermissionDialog", "=== NotificationPermissionDialog Composed ===")
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var isSavingToken by remember { mutableStateOf(false) }
@@ -52,29 +53,82 @@ fun NotificationPermissionDialog(
     // Track if permission was requested by user (to distinguish from initial state)
     var permissionRequested by remember { mutableStateOf(false) }
     
+    android.util.Log.d("NotificationPermissionDialog", "Android version: ${Build.VERSION.SDK_INT}, TIRAMISU: ${Build.VERSION_CODES.TIRAMISU}")
+    
     // Request notification permission (Android 13+)
     val notificationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
     } else {
+        android.util.Log.d("NotificationPermissionDialog", "Android < 13, permission state is null")
         null
     }
     
+    // Check if permission is already granted when dialog appears - auto-enable notifications
+    LaunchedEffect(Unit) {
+        if (notificationPermissionState != null) {
+            val status = notificationPermissionState.status
+            android.util.Log.d("NotificationPermissionDialog", "Initial permission status: $status")
+            android.util.Log.d("NotificationPermissionDialog", "  - isGranted: ${status.isGranted}")
+            android.util.Log.d("NotificationPermissionDialog", "  - shouldShowRationale: ${status.shouldShowRationale}")
+            
+            // If permission is already granted, automatically enable notifications and dismiss
+            if (status.isGranted) {
+                android.util.Log.d("NotificationPermissionDialog", "Permission already granted! Auto-enabling notifications...")
+                isSavingToken = true
+                val result = NotificationManager.enableNotifications()
+                isSavingToken = false
+                
+                if (result.isSuccess) {
+                    android.util.Log.d("NotificationPermissionDialog", "FCM token saved successfully (auto-enabled)")
+                    NotificationManager.setNotificationEnabled(context, true)
+                    onPermissionGranted()
+                } else {
+                    android.util.Log.e("NotificationPermissionDialog", "Failed to save FCM token (auto-enable): ${result.exceptionOrNull()}")
+                }
+                onDismiss()
+            }
+        } else {
+            // Android < 13 - permission is granted by default
+            android.util.Log.d("NotificationPermissionDialog", "Android < 13, auto-enabling notifications...")
+            isSavingToken = true
+            val result = NotificationManager.enableNotifications()
+            isSavingToken = false
+            
+            if (result.isSuccess) {
+                android.util.Log.d("NotificationPermissionDialog", "FCM token saved successfully (Android < 13)")
+                NotificationManager.setNotificationEnabled(context, true)
+                onPermissionGranted()
+            } else {
+                android.util.Log.e("NotificationPermissionDialog", "Failed to save FCM token (Android < 13): ${result.exceptionOrNull()}")
+            }
+            onDismiss()
+        }
+    }
+    
     val handleEnableNotifications: () -> Unit = {
+        android.util.Log.d("NotificationPermissionDialog", "handleEnableNotifications called")
         scope.launch {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                android.util.Log.d("NotificationPermissionDialog", "Android 13+, requesting permission...")
                 // Mark that user requested permission
                 permissionRequested = true
+                android.util.Log.d("NotificationPermissionDialog", "permissionRequested set to true")
                 // Request permission first
                 notificationPermissionState?.launchPermissionRequest()
+                android.util.Log.d("NotificationPermissionDialog", "Permission request launched")
             } else {
+                android.util.Log.d("NotificationPermissionDialog", "Android < 13, permission granted by default")
                 // For Android 12 and below, permission is granted by default
                 isSavingToken = true
                 val result = NotificationManager.enableNotifications()
                 isSavingToken = false
                 
                 if (result.isSuccess) {
+                    android.util.Log.d("NotificationPermissionDialog", "FCM token saved for Android < 13")
                     NotificationManager.setNotificationEnabled(context, true)
                     onPermissionGranted()
+                } else {
+                    android.util.Log.e("NotificationPermissionDialog", "Failed to save FCM token for Android < 13")
                 }
                 onDismiss()
             }
@@ -83,34 +137,54 @@ fun NotificationPermissionDialog(
     
     // Handle permission result - only react when user actually requests permission
     LaunchedEffect(notificationPermissionState?.status) {
+        android.util.Log.d("NotificationPermissionDialog", "=== Permission Status LaunchedEffect Triggered ===")
+        android.util.Log.d("NotificationPermissionDialog", "permissionRequested: $permissionRequested")
+        
+        val status = notificationPermissionState?.status
+        android.util.Log.d("NotificationPermissionDialog", "Permission status: $status")
+        
+        if (status != null) {
+            android.util.Log.d("NotificationPermissionDialog", "  - isGranted: ${status.isGranted}")
+            android.util.Log.d("NotificationPermissionDialog", "  - shouldShowRationale: ${status.shouldShowRationale}")
+        }
+        
         // Only process if user actually requested permission (clicked "Enable Notifications")
         if (!permissionRequested) {
+            android.util.Log.d("NotificationPermissionDialog", "Permission not requested by user yet, skipping")
             return@LaunchedEffect
         }
         
-        val status = notificationPermissionState?.status
+        android.util.Log.d("NotificationPermissionDialog", "Processing permission result...")
+        
         if (status != null) {
             if (status.isGranted) {
+                android.util.Log.d("NotificationPermissionDialog", "Permission granted! Saving FCM token...")
                 // Permission granted by user, save FCM token
                 isSavingToken = true
                 val result = NotificationManager.enableNotifications()
                 isSavingToken = false
                 
                 if (result.isSuccess) {
+                    android.util.Log.d("NotificationPermissionDialog", "FCM token saved successfully")
                     NotificationManager.setNotificationEnabled(context, true)
                     onPermissionGranted()
+                } else {
+                    android.util.Log.e("NotificationPermissionDialog", "Failed to save FCM token: ${result.exceptionOrNull()}")
                 }
                 onDismiss()
             } else if (status.shouldShowRationale) {
+                android.util.Log.d("NotificationPermissionDialog", "Permission denied, but can show rationale. Keeping dialog open.")
                 // User denied, but we can show rationale
                 // Keep dialog open - user can try again
                 permissionRequested = false // Reset so they can try again
             } else {
+                android.util.Log.d("NotificationPermissionDialog", "Permission permanently denied")
                 // User permanently denied
                 NotificationManager.setNotificationEnabled(context, false)
                 // Don't auto-dismiss - let user dismiss manually with "Not Now"
             }
         }
+        android.util.Log.d("NotificationPermissionDialog", "=== Permission Status LaunchedEffect Completed ===")
     }
     
     AppDialog(

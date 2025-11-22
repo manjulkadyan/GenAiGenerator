@@ -56,21 +56,51 @@ fun GeneratingScreen(
 ) {
     val context = LocalContext.current
     var showNotificationDialog by remember { mutableStateOf(false) }
-    var hasCheckedPermission by remember { mutableStateOf(false) }
     
-    // Show notification dialog on first appearance (if not already asked)
-    // Use a key to ensure this only runs once per screen appearance
-    LaunchedEffect(hasCheckedPermission) {
-        if (!hasCheckedPermission) {
-            hasCheckedPermission = true
-            // Check if we should show the dialog
-            if (!NotificationManager.hasAskedForPermission(context) && 
-                !NotificationManager.isNotificationEnabled(context)) {
-                // Small delay to let the generating screen appear first
-                kotlinx.coroutines.delay(500)
-                showNotificationDialog = true
+    android.util.Log.d("GeneratingScreen", "=== GeneratingScreen Composed ===")
+    android.util.Log.d("GeneratingScreen", "statusMessage: $statusMessage")
+    android.util.Log.d("GeneratingScreen", "errorMessage: $errorMessage")
+    android.util.Log.d("GeneratingScreen", "showNotificationDialog initial: $showNotificationDialog")
+    
+    // Show notification dialog on first appearance if notifications are not enabled
+    // Use Unit as key to ensure this only runs once per screen composition
+    LaunchedEffect(Unit) {
+        android.util.Log.d("GeneratingScreen", "=== LaunchedEffect Started ===")
+        
+        // Check if we should show the dialog
+        // Only show if we haven't asked before AND notifications are not enabled
+        // This prevents showing the dialog repeatedly if user dismissed it
+        val isEnabled = NotificationManager.isNotificationEnabled(context)
+        val hasAsked = NotificationManager.hasAskedForPermission(context)
+        
+        android.util.Log.d("GeneratingScreen", "Permission check results:")
+        android.util.Log.d("GeneratingScreen", "  - hasAskedForPermission: $hasAsked")
+        android.util.Log.d("GeneratingScreen", "  - isNotificationEnabled: $isEnabled")
+        android.util.Log.d("GeneratingScreen", "  - Should show dialog: ${!hasAsked && !isEnabled}")
+        
+        // Show dialog only if we haven't asked before AND notifications are not enabled
+        // This ensures the dialog shows once per user, not on every generation
+        if (!hasAsked && !isEnabled) {
+            android.util.Log.d("GeneratingScreen", "First time - notifications not enabled. Will show dialog after delay...")
+            // Small delay to let the generating screen appear first
+            kotlinx.coroutines.delay(500)
+            android.util.Log.d("GeneratingScreen", "Delay complete. Setting showNotificationDialog = true")
+            showNotificationDialog = true
+            android.util.Log.d("GeneratingScreen", "showNotificationDialog set to: $showNotificationDialog")
+        } else {
+            if (hasAsked) {
+                android.util.Log.d("GeneratingScreen", "Skipping notification dialog: Already asked before")
+            }
+            if (isEnabled) {
+                android.util.Log.d("GeneratingScreen", "Skipping notification dialog: Notifications already enabled")
             }
         }
+        android.util.Log.d("GeneratingScreen", "=== LaunchedEffect Completed ===")
+    }
+    
+    // Log when showNotificationDialog changes
+    LaunchedEffect(showNotificationDialog) {
+        android.util.Log.d("GeneratingScreen", "showNotificationDialog changed to: $showNotificationDialog")
     }
     
     Box(
@@ -171,16 +201,23 @@ fun GeneratingScreen(
         
         // Notification Permission Dialog - Show on top
         if (showNotificationDialog) {
+            android.util.Log.d("GeneratingScreen", "Rendering NotificationPermissionDialog")
             NotificationPermissionDialog(
                 onDismiss = {
+                    android.util.Log.d("GeneratingScreen", "NotificationPermissionDialog onDismiss called")
                     showNotificationDialog = false
                     NotificationManager.setPermissionAsked(context)
+                    android.util.Log.d("GeneratingScreen", "Permission asked flag set")
                 },
                 onPermissionGranted = {
+                    android.util.Log.d("GeneratingScreen", "NotificationPermissionDialog onPermissionGranted called")
                     showNotificationDialog = false
                     NotificationManager.setPermissionAsked(context)
+                    android.util.Log.d("GeneratingScreen", "Permission granted and flag set")
                 }
             )
+        } else {
+            android.util.Log.d("GeneratingScreen", "NotificationPermissionDialog NOT rendered (showNotificationDialog = false)")
         }
     }
 }
