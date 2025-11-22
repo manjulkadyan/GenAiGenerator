@@ -232,86 +232,86 @@ fun GenerateScreen(
                                 }
                             )
 
-                            SectionCard(
-                                title = "AI Model",
-                                description = "Choose the AI model for video generation",
-                                required = true,
-                                infoText = "Different models excel at different subjects.",
-                                onInfoClick = { showPricingDialog = true }
-                            ) {
-                                ModelSelector(
-                                    models = state.models,
-                                    selected = state.selectedModel,
+                    SectionCard(
+                        title = "AI Model",
+                        description = "Choose the AI model for video generation",
+                        required = true,
+                        infoText = "Different models excel at different subjects.",
+                        onInfoClick = { showPricingDialog = true }
+                    ) {
+                        ModelSelector(
+                            models = state.models,
+                            selected = state.selectedModel,
                                     generationMode = generationMode,
-                                    onSelected = viewModel::selectModel
-                                )
-                            }
+                            onSelected = viewModel::selectModel
+                        )
+                    }
 
                             // Only show Reference Images section in Image-to-Video mode and for models that support it
-                            state.selectedModel?.let { model ->
+                    state.selectedModel?.let { model ->
                                 if (generationMode == GenerationMode.ImageToVideo && 
                                     (model.supportsFirstFrame || model.supportsLastFrame)) {
-                                    SectionCard(
-                                        title = "Reference Images",
-                                        description = "Select reference frames to guide motion",
-                                        required = model.requiresFirstFrame || model.requiresLastFrame,
-                                        //infoText = "Add keyframes to lock composition"
-                                    ) {
-                                        ReferenceFrameSection(
-                                            model = model,
-                                            firstFrame = state.firstFrameUri,
-                                            lastFrame = state.lastFrameUri,
-                                            onPickFirst = { pickFirstFrame.launch("image/*") },
-                                            onPickLast = { pickLastFrame.launch("image/*") },
-                                            onClearFirst = { viewModel.setFirstFrameUri(null) },
-                                            onClearLast = { viewModel.setLastFrameUri(null) }
-                                        )
-                                    }
-                                }
-                            }
-
                             SectionCard(
-                                title = "Main Text Prompt",
-                                description = "Describe what you want to see in detail",
-                                required = true,
-                                //infoText = "Detailed prompts lead to richer scenes"
+                                title = "Reference Images",
+                                description = "Select reference frames to guide motion",
+                                required = model.requiresFirstFrame || model.requiresLastFrame,
+                                        //infoText = "Add keyframes to lock composition"
                             ) {
+                                ReferenceFrameSection(
+                                    model = model,
+                                    firstFrame = state.firstFrameUri,
+                                    lastFrame = state.lastFrameUri,
+                                    onPickFirst = { pickFirstFrame.launch("image/*") },
+                                    onPickLast = { pickLastFrame.launch("image/*") },
+                                    onClearFirst = { viewModel.setFirstFrameUri(null) },
+                                    onClearLast = { viewModel.setLastFrameUri(null) }
+                                )
+                            }
+                        }
+                    }
+
+                    SectionCard(
+                        title = "Main Text Prompt",
+                        description = "Describe what you want to see in detail",
+                        required = true,
+                                //infoText = "Detailed prompts lead to richer scenes"
+                    ) {
                                 AppTextField(
-                                    value = state.prompt,
+                            value = state.prompt,
                                     onValueChange = viewModel::updatePrompt,
                                     placeholder = "Tap here to type your prompt",
                                     maxLines = 5
-                                )
-                            }
+                        )
+                    }
 
-                            SectionCard(
-                                title = "Advanced Settings",
-                                description = "Adjust aspect ratio and duration",
-                                required = false,
-                                optionalLabel = "Optional",
+                    SectionCard(
+                        title = "Advanced Settings",
+                        description = "Adjust aspect ratio and duration",
+                        required = false,
+                        optionalLabel = "Optional",
                                 //infoText = "Fine tune generation controls",
-                                onHeaderClick = { showAdvanced = !showAdvanced },
-                                expandable = true,
-                                expanded = showAdvanced
-                            ) {
-                                AnimatedVisibility(visible = showAdvanced) {
-                                    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                                        DurationAspectRow(
-                                            selectedModel = state.selectedModel,
-                                            selectedDuration = state.selectedDuration,
-                                            selectedAspectRatio = state.selectedAspectRatio,
-                                            onDurationSelected = viewModel::updateDuration,
-                                            onAspectRatioSelected = viewModel::updateAspectRatio
-                                        )
+                        onHeaderClick = { showAdvanced = !showAdvanced },
+                        expandable = true,
+                        expanded = showAdvanced
+                    ) {
+                        AnimatedVisibility(visible = showAdvanced) {
+                            Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                                DurationAspectRow(
+                                    selectedModel = state.selectedModel,
+                                    selectedDuration = state.selectedDuration,
+                                    selectedAspectRatio = state.selectedAspectRatio,
+                                    onDurationSelected = viewModel::updateDuration,
+                                    onAspectRatioSelected = viewModel::updateAspectRatio
+                                )
 
-                                        if (state.selectedModel?.supportsAudio == true) {
-                                            AudioToggle(
-                                                enabled = state.enableAudio,
-                                                onToggle = viewModel::toggleAudio
-                                            )
-                                        }
+                                if (state.selectedModel?.supportsAudio == true) {
+                                    AudioToggle(
+                                        enabled = state.enableAudio,
+                                        onToggle = viewModel::toggleAudio
+                                    )
+                                }
 
-                                        if (state.selectedModel?.schemaMetadata?.categorized?.text?.any { it.name == "negative_prompt" } == true) {
+                                if (state.selectedModel?.schemaMetadata?.categorized?.text?.any { it.name == "negative_prompt" } == true) {
                                             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                                                 Text(
                                                     text = "Negative Prompt",
@@ -320,49 +320,42 @@ fun GenerateScreen(
                                                     color = AppColors.TextPrimary
                                                 )
                                                 AppTextField(
-                                                    value = state.negativePrompt,
+                                        value = state.negativePrompt,
                                                     onValueChange = viewModel::updateNegativePrompt,
                                                     placeholder = "What should we avoid? e.g. blurry, low quality",
                                                     maxLines = 3
-                                                )
+                                    )
                                             }
-                                        }
-                                    }
                                 }
                             }
+                        }
+                    }
 
-                            state.uploadMessage?.let { message ->
-                                StatusBanner(message = message)
+                    state.uploadMessage?.let { message ->
+                        StatusBanner(message = message)
                             }
 
-                            // Generate Button inside container
+                            // Generate Button inside container - single line with cost and button
                             Column(
-                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.Start
                             ) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Column {
-                                        Text(
-                                            text = "Estimated Cost",
-                                            style = MaterialTheme.typography.bodySmall,
-                                            color = AppColors.TextSecondary
-                                        )
-                                        Spacer(modifier = Modifier.height(2.dp))
-                                        Text(
-                                            text = "${state.estimatedCost} credits",
-                                            style = MaterialTheme.typography.headlineSmall,
-                                            fontWeight = FontWeight.Bold,
-                                            color = AppColors.PrimaryPurple
-                                        )
-                                    }
+                                // Cost and audio indicator on the left
+                                Row{
+                                    Text(
+                                        text = "Estimated Cost: ${state.estimatedCost} credits",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = AppColors.PrimaryPurple
+                                    )
                                     if (state.enableAudio) {
                                         InfoChip("2x Audio")
                                     }
                                 }
-                                AppPrimaryButton(
+                                
+                                // Gradient Generate Button
+                                GradientGenerateButton(
                                     text = if (state.isGenerating) "Generating..." else "Generate AI Video",
                                     onClick = {
                                         viewModel.dismissMessage()
@@ -372,13 +365,7 @@ fun GenerateScreen(
                                         }
                                     },
                                     enabled = state.canGenerate,
-                                    isLoading = state.isGenerating,
-                                    icon = if (!state.isGenerating) Icons.Default.Star else null
-                                )
-                                Text(
-                                    text = "Select 1-3 images and enter a prompt to start generating",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = AppColors.TextSecondary
+                                    isLoading = state.isGenerating
                                 )
                             }
                         }
@@ -528,24 +515,122 @@ private fun EmptyGenerateState() {
 }
 
 @Composable
+private fun GradientGenerateButton(
+    text: String,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    isLoading: Boolean = false
+) {
+    // Animated scale for active state
+    val scale by animateFloatAsState(
+        targetValue = if (enabled && !isLoading) 1f else 0.95f,
+        animationSpec = tween(200),
+        label = "buttonScale"
+    )
+    
+    // Gradient from purple to orange - catchy and blends with design system
+    val gradientBrush = Brush.horizontalGradient(
+        colors = listOf(
+            AppColors.PrimaryPurple,
+            Color(0xFFFF6B35) // Orange color that blends with purple
+        )
+    )
+    
+    // Active/enabled state with gradient, disabled state with gray
+    val buttonBrush = if (enabled && !isLoading) {
+        gradientBrush
+    } else {
+        Brush.horizontalGradient(
+            colors = listOf(
+                AppColors.TextSecondary.copy(alpha = 0.3f),
+                AppColors.TextSecondary.copy(alpha = 0.3f)
+            )
+        )
+    }
+    
+    Surface(
+        modifier = Modifier
+            .scale(scale)
+            .height(56.dp)
+            .then(
+                if (enabled && !isLoading) {
+                    Modifier.clickable(onClick = onClick)
+                } else {
+                    Modifier
+                }
+            ),
+        shape = RoundedCornerShape(28.dp),
+        color = Color.Transparent,
+        tonalElevation = if (enabled && !isLoading) 4.dp else 0.dp
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(buttonBrush),
+            contentAlignment = Alignment.Center
+        ) {
+            if (isLoading) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(22.dp),
+                        color = Color.White,
+                        strokeWidth = 2.5.dp
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = "Loading...",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+            } else {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = Color.White
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = text,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = if (enabled) Color.White else AppColors.TextSecondary
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun GenerateHeader(
     creditsCount: Int
 ) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            Text(
-                text = "AI Studio",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text(
+                            text = "AI Studio",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
                 color = AppColors.TextPrimary
-            )
-            Text(
-                text = "Try Veo 3, Sora 2 and more",
-                style = MaterialTheme.typography.bodyLarge,
+                        )
+                        Text(
+                            text = "Try Veo 3, Sora 2 and more",
+                            style = MaterialTheme.typography.bodyLarge,
                 color = AppColors.TextSecondary
             )
         }
@@ -555,8 +640,7 @@ private fun GenerateHeader(
         ) {
             // Star badge with credits count
             Surface(
-                onClick = {},
-                modifier = Modifier,
+                modifier = Modifier.clickable(onClick = {}),
                 shape = RoundedCornerShape(12.dp),
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
                 tonalElevation = 2.dp,
@@ -569,9 +653,9 @@ private fun GenerateHeader(
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Star,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Star,
                         contentDescription = "Credits",
                         tint = Color(0xFFFFD700), // Yellow star color
                         modifier = Modifier.size(18.dp)
@@ -585,20 +669,20 @@ private fun GenerateHeader(
                 }
             }
             // Settings icon
-            IconButton(
-                onClick = {},
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(
-                        MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
-                        CircleShape
-                    )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
+                        IconButton(
+                            onClick = {},
+                            modifier = Modifier
+                                .size(48.dp)
+                                .background(
+                                    MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
+                                    CircleShape
+                                )
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
                     contentDescription = "Settings",
                     tint = AppColors.TextSecondary,
-                    modifier = Modifier.size(24.dp)
+                                modifier = Modifier.size(24.dp)
                 )
             }
         }
@@ -1605,58 +1689,6 @@ private fun ContentGuidelinesCard() {
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun GenerateBottomBar(
-    modifier: Modifier = Modifier,
-    state: GenerateScreenState,
-    onGenerate: () -> Unit
-) {
-    AppElevatedCard(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 18.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = "Estimated Cost",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = AppColors.TextSecondary
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = "${state.estimatedCost} credits",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = AppColors.PrimaryPurple
-                    )
-                }
-                if (state.enableAudio) {
-                    InfoChip("2x Audio")
-                }
-            }
-            AppPrimaryButton(
-                text = if (state.isGenerating) "Generating..." else "Generate AI Video",
-                onClick = onGenerate,
-                enabled = state.canGenerate,
-                isLoading = state.isGenerating,
-                icon = if (!state.isGenerating) Icons.Default.PlayArrow else null
-            )
-            Text(
-                text = "Select reference images and enter a prompt to start.",
-                style = MaterialTheme.typography.bodySmall,
-                color = AppColors.TextSecondary
-            )
         }
     }
 }
