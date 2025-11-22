@@ -143,15 +143,20 @@ class VideoGenerateViewModel(
             return
         }
         viewModelScope.launch {
-            _state.update { it.copy(isGenerating = true, uploadMessage = null, errorMessage = null, successMessage = null) }
+            // Clear previous errors first
+            _state.update { it.copy(errorMessage = null, successMessage = null) }
+            
+            // Upload frames first (before setting isGenerating)
             val firstUrl = snapshot.firstFrameUri?.let { uri ->
+                _state.update { it.copy(uploadMessage = "Uploading first frame...") }
                 uploadReferenceFrame(uri, "first frame") ?: return@launch
             }
             val lastUrl = snapshot.lastFrameUri?.let { uri ->
+                _state.update { it.copy(uploadMessage = "Uploading last frame...") }
                 uploadReferenceFrame(uri, "last frame") ?: return@launch
             }
 
-            _state.update { it.copy(uploadMessage = "Submitting generation request...") }
+            // Now prepare the request and check credits BEFORE setting isGenerating
             val request = GenerateRequest(
                 model = model,
                 prompt = snapshot.prompt.trim(),
@@ -165,20 +170,23 @@ class VideoGenerateViewModel(
                 lastFrameUrl = lastUrl
             )
 
+            // Update message before credit check
+            _state.update { it.copy(uploadMessage = "Submitting generation request...") }
+            // Call the repository - it will check credits
             generateRepository.requestVideoGeneration(request)
                 .onSuccess {
-                    // Don't set success message - GeneratingScreen will handle the flow
-                    // Keep isGenerating = true so GeneratingScreen stays visible
-                    // It will auto-close when job completes
+                    // Only set isGenerating = true AFTER successful start (credits checked and deducted)
                     _state.update {
                         it.copy(
+                            isGenerating = true,
                             uploadMessage = "Generation started! Processing...",
                             errorMessage = null,
-                            successMessage = null // Don't show success popup
+                            successMessage = null
                         )
                     }
                 }
                 .onFailure { throwable ->
+                    // Don't show generating screen if credits are insufficient or other error
                     _state.update {
                         it.copy(
                             isGenerating = false,

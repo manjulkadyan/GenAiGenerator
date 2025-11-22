@@ -97,6 +97,21 @@ fun GenAiRoot() {
     val generateViewModel: VideoGenerateViewModel = viewModel(factory = VideoGenerateViewModel.Factory)
     val generateState by generateViewModel.state.collectAsState()
     
+    // Show generating screen only when generation actually starts successfully
+    // (isGenerating = true AND uploadMessage exists, meaning upload/request started)
+    LaunchedEffect(generateState.isGenerating, generateState.uploadMessage, generateState.errorMessage) {
+        if (generateState.isGenerating && generateState.uploadMessage != null && generateState.errorMessage == null) {
+            // Generation actually started (uploads began or request submitted)
+            // Only show if not already showing
+            if (!showGeneratingScreen) {
+                showGeneratingScreen = true
+            }
+        } else if (generateState.errorMessage != null && !generateState.isGenerating) {
+            // Error occurred and generation stopped - hide generating screen
+            showGeneratingScreen = false
+        }
+    }
+    
     // Auto-navigate to ResultsScreen when job completes
     LaunchedEffect(showGeneratingScreen, jobs) {
         if (showGeneratingScreen) {
@@ -210,9 +225,8 @@ fun GenAiRoot() {
                             currentRoute = AppDestination.Models
                         },
                         onGenerateStarted = { 
-                            showGeneratingScreen = true
-                            // The latest job will appear in the jobs list shortly after generation starts
-                            // We'll detect it in LaunchedEffect below
+                            // This is now handled by observing generateState in LaunchedEffect above
+                            // Only show generating screen when generation actually starts successfully
                         },
                         onSettingsClick = {
                             // Navigate to Profile screen

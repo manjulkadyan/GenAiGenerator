@@ -1,0 +1,94 @@
+package com.manjul.genai.videogenerator.data.notification
+
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.core.content.ContextCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.tasks.await
+
+object NotificationManager {
+    private const val PREFS_NAME = "notification_prefs"
+    private const val KEY_NOTIFICATION_PERMISSION_ASKED = "notification_permission_asked"
+    private const val KEY_NOTIFICATION_ENABLED = "notification_enabled"
+    
+    private fun getSharedPreferences(context: Context): SharedPreferences {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    }
+    
+    /**
+     * Check if we've already asked for notification permission
+     */
+    fun hasAskedForPermission(context: Context): Boolean {
+        return getSharedPreferences(context).getBoolean(KEY_NOTIFICATION_PERMISSION_ASKED, false)
+    }
+    
+    /**
+     * Mark that we've asked for notification permission
+     */
+    fun setPermissionAsked(context: Context) {
+        getSharedPreferences(context).edit()
+            .putBoolean(KEY_NOTIFICATION_PERMISSION_ASKED, true)
+            .apply()
+    }
+    
+    /**
+     * Check if notifications are enabled
+     */
+    fun isNotificationEnabled(context: Context): Boolean {
+        return getSharedPreferences(context).getBoolean(KEY_NOTIFICATION_ENABLED, false)
+    }
+    
+    /**
+     * Set notification enabled status
+     */
+    fun setNotificationEnabled(context: Context, enabled: Boolean) {
+        getSharedPreferences(context).edit()
+            .putBoolean(KEY_NOTIFICATION_ENABLED, enabled)
+            .apply()
+    }
+    
+    /**
+     * Get FCM token and save it to Firestore
+     */
+    suspend fun saveFCMTokenToFirestore(): Result<String> {
+        return try {
+            val token = FirebaseMessaging.getInstance().token.await()
+            val userId = FirebaseAuth.getInstance().currentUser?.uid
+                ?: return Result.failure(IllegalStateException("User not authenticated"))
+            
+            val userRef = FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(userId)
+            
+            // Use set with merge to create document if it doesn't exist
+            userRef.set(mapOf("fcm_token" to token), SetOptions.merge())
+                .await()
+            
+            android.util.Log.d("NotificationManager", "FCM token saved for user $userId")
+            Result.success(token)
+        } catch (e: Exception) {
+            android.util.Log.e("NotificationManager", "Failed to save FCM token", e)
+            Result.failure(e)
+        }
+    }
+    
+    /**
+     * Request FCM token and save it (call this after user grants permission)
+     */
+    suspend fun enableNotifications(): Result<String> {
+        return try {
+            val token = saveFCMTokenToFirestore()
+            token.onSuccess {
+                android.util.Log.d("NotificationManager", "Notifications enabled")
+            }
+            token
+        } catch (e: Exception) {
+            android.util.Log.e("NotificationManager", "Failed to enable notifications", e)
+            Result.failure(e)
+        }
+    }
+}
+

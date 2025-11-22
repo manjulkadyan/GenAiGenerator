@@ -35,7 +35,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
+import com.manjul.genai.videogenerator.ui.components.NotificationPermissionDialog
+import com.manjul.genai.videogenerator.data.notification.NotificationManager
 
 @Composable
 fun GeneratingScreen(
@@ -45,6 +54,25 @@ fun GeneratingScreen(
     onCancel: () -> Unit = {},
     onRetry: (() -> Unit)? = null
 ) {
+    val context = LocalContext.current
+    var showNotificationDialog by remember { mutableStateOf(false) }
+    var hasCheckedPermission by remember { mutableStateOf(false) }
+    
+    // Show notification dialog on first appearance (if not already asked)
+    // Use a key to ensure this only runs once per screen appearance
+    LaunchedEffect(hasCheckedPermission) {
+        if (!hasCheckedPermission) {
+            hasCheckedPermission = true
+            // Check if we should show the dialog
+            if (!NotificationManager.hasAskedForPermission(context) && 
+                !NotificationManager.isNotificationEnabled(context)) {
+                // Small delay to let the generating screen appear first
+                kotlinx.coroutines.delay(500)
+                showNotificationDialog = true
+            }
+        }
+    }
+    
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -139,6 +167,20 @@ fun GeneratingScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+        }
+        
+        // Notification Permission Dialog - Show on top
+        if (showNotificationDialog) {
+            NotificationPermissionDialog(
+                onDismiss = {
+                    showNotificationDialog = false
+                    NotificationManager.setPermissionAsked(context)
+                },
+                onPermissionGranted = {
+                    showNotificationDialog = false
+                    NotificationManager.setPermissionAsked(context)
+                }
+            )
         }
     }
 }
