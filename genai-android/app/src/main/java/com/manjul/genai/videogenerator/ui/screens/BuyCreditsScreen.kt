@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.TrendingDown
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -62,6 +63,9 @@ fun BuyCreditsScreen(
 ) {
     val credits by creditsViewModel.state.collectAsState()
     val jobs by historyViewModel.jobs.collectAsState()
+
+    // Handle system back button
+    BackHandler(onBack = onBackClick)
 
     // Calculate usage this week (simplified - using last 7 days)
     val usageThisWeek = try {
