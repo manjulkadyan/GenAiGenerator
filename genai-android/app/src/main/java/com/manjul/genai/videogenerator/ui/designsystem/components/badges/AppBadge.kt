@@ -91,7 +91,9 @@ fun StatusBadge(
                 vertical = BadgeConstants.STATUS_VERTICAL_PADDING.dp
             ),
             style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            softWrap = false
         )
     }
 }
