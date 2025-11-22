@@ -142,6 +142,7 @@ fun AppSelectionCard(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     onClick: () -> Unit,
+    padding: PaddingValues? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val scale by animateFloatAsState(
@@ -177,7 +178,7 @@ fun AppSelectionCard(
         }
     ) {
         Column(
-            modifier = Modifier.padding(CardConstants.DEFAULT_PADDING.dp),
+            modifier = if (padding!=null) Modifier.padding(paddingValues = padding) else Modifier.padding(CardConstants.DEFAULT_PADDING.dp),
             content = content
         )
     }

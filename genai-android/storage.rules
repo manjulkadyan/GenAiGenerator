@@ -1,12 +1,23 @@
 rules_version = '2';
 
-// Craft rules based on data in your Firestore database
-// allow write: if firestore.get(
-//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if false;
+    // Allow public read access to input files (for Replicate API)
+    // This allows Replicate to access uploaded images without authentication
+    match /users/{userId}/inputs/{fileName} {
+      allow read: if true;  // Public read for Replicate
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Keep other user files private
+    match /users/{userId}/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Optional: Allow read access to public files (if needed)
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
     }
   }
 }

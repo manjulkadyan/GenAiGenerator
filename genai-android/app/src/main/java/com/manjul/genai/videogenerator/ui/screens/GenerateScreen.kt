@@ -863,7 +863,8 @@ private fun ModelCard(
 
     AppSelectionCard(
         isSelected = selected,
-        onClick = onClick
+        onClick = onClick,
+        padding = PaddingValues(12.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
