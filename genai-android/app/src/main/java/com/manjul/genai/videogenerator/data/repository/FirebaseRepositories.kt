@@ -243,8 +243,9 @@ class FirebaseVideoGenerateRepository(
         return runCatching {
             // Call Firebase Function - it will create the job document
             // TODO: Switch to "testCallReplicateVeoAPIV2" for testing (see TESTING_CREDITS.md)
+            // IMPORTANT: Function name must match exactly (case-sensitive)
             val callableResult = functions
-                .getHttpsCallable("testCallReplicateVeoAPIV2") // Change to "testCallReplicateVeoAPIV2" for testing
+                .getHttpsCallable("testCallReplicateVeoAPIV2") // Fixed: lowercase 'c' to match deployed function
                 .call(data)
                 .await()
             
