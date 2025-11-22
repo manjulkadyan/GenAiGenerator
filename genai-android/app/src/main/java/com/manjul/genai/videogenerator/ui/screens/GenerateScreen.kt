@@ -119,7 +119,9 @@ fun GenerateScreen(
     preselectedModelId: String? = null,
     onModelSelected: () -> Unit = {},
     onBackToModels: () -> Unit = {},
-    onGenerateStarted: () -> Unit = {}
+    onGenerateStarted: () -> Unit = {},
+    onSettingsClick: () -> Unit = {},
+    onCreditsClick: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
     val creditsState by creditsViewModel.state.collectAsState()
@@ -182,7 +184,11 @@ fun GenerateScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Header with title, credits, settings, and description
-                    GenerateHeader(creditsCount = creditsState.credits)
+                    GenerateHeader(
+                        creditsCount = creditsState.credits,
+                        onSettingsClick = onSettingsClick,
+                        onCreditsClick = onCreditsClick
+                    )
 
                     Spacer(modifier = Modifier.height(20.dp))
 
@@ -639,7 +645,9 @@ private fun GradientGenerateButton(
 
 @Composable
 private fun GenerateHeader(
-    creditsCount: Int
+    creditsCount: Int,
+    onSettingsClick: () -> Unit = {},
+    onCreditsClick: () -> Unit = {}
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -665,7 +673,7 @@ private fun GenerateHeader(
         ) {
             // Star badge with credits count
             Surface(
-                modifier = Modifier.clickable(onClick = {}),
+                modifier = Modifier.clickable(onClick = onCreditsClick),
                 shape = RoundedCornerShape(12.dp),
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
                 tonalElevation = 2.dp,
@@ -695,7 +703,7 @@ private fun GenerateHeader(
             }
             // Settings icon
             IconButton(
-                onClick = {},
+                onClick = onSettingsClick,
                 modifier = Modifier
                     .size(48.dp)
                     .background(
@@ -1211,18 +1219,18 @@ private fun ReferenceFramePicker(
             // Empty state - show picker card with dashed/dotted border
             // Use Surface instead of AppCard to avoid border conflicts
             Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .dashedBorder(
+            modifier = Modifier
+                .fillMaxWidth()
+                .dashedBorder(
                         2.dp,
                         MaterialTheme.colorScheme.primary.copy(alpha = 0.6f),
                         26.dp
-                    )
-                    .clickable { onPick() },
+                )
+                .clickable { onPick() },
                 shape = RoundedCornerShape(26.dp),
                 color = AppColors.CardBackground,
                 tonalElevation = 2.dp
-            ) {
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
