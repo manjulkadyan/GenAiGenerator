@@ -53,6 +53,7 @@ private object CardConstants {
 fun AppCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
+    padding: PaddingValues? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val cardModifier = if (onClick != null) {
@@ -75,7 +76,7 @@ fun AppCard(
         border = BorderStroke(CardConstants.BORDER_WIDTH.dp, AppColors.CardBorder)
     ) {
         Column(
-            modifier = Modifier.padding(CardConstants.DEFAULT_PADDING.dp),
+            modifier = if (padding!=null) Modifier.padding(paddingValues = padding) else Modifier.padding(CardConstants.DEFAULT_PADDING.dp),
             content = content
         )
     }
