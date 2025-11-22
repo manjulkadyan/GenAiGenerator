@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -94,6 +95,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.manjul.genai.videogenerator.data.model.AIModel
 import com.manjul.genai.videogenerator.ui.viewmodel.GenerateScreenState
 import com.manjul.genai.videogenerator.ui.viewmodel.VideoGenerateViewModel
+import com.manjul.genai.videogenerator.ui.viewmodel.CreditsViewModel
 import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
 import com.manjul.genai.videogenerator.ui.designsystem.components.badges.StatusBadge
 import com.manjul.genai.videogenerator.ui.designsystem.components.badges.InfoChip
@@ -112,12 +114,14 @@ import androidx.compose.ui.graphics.ColorMatrix
 fun GenerateScreen(
     modifier: Modifier = Modifier,
     viewModel: VideoGenerateViewModel = viewModel(factory = VideoGenerateViewModel.Factory),
+    creditsViewModel: CreditsViewModel = viewModel(factory = CreditsViewModel.Factory),
     preselectedModelId: String? = null,
     onModelSelected: () -> Unit = {},
     onBackToModels: () -> Unit = {},
     onGenerateStarted: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
+    val creditsState by creditsViewModel.state.collectAsState()
 
     BackHandler(enabled = true) {
         if (state.selectedModel != null) {
@@ -176,6 +180,7 @@ fun GenerateScreen(
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
                     GenerateHero(
+                        creditsCount = creditsState.credits,
                         generationMode = generationMode,
                         onModeSelected = { newMode ->
                             generationMode = newMode
@@ -471,6 +476,7 @@ private fun EmptyGenerateState() {
 
 @Composable
 private fun GenerateHero(
+    creditsCount: Int,
     generationMode: GenerationMode,
     onModeSelected: (GenerationMode) -> Unit
 ) {
@@ -505,34 +511,53 @@ private fun GenerateHero(
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Text(
-                            text = "Gen-AI Studio",
+                            text = "AI Studio",
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            color = AppColors.TextPrimary
                         )
                         Text(
                             text = "Try Veo 3, Sora 2 and more",
                             style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.85f)
+                            color = AppColors.TextSecondary
                         )
                     }
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        IconButton(
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Star badge with credits count
+                        Surface(
                             onClick = {},
-                            modifier = Modifier
-                                .size(48.dp)
-                                .background(
-                                    MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
-                                    CircleShape
-                                )
+                            modifier = Modifier,
+                            shape = RoundedCornerShape(12.dp),
+                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
+                            tonalElevation = 2.dp,
+                            border = BorderStroke(
+                                width = 1.dp,
+                                color = AppColors.TextSecondary.copy(alpha = 0.3f)
+                            )
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Star,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                                modifier = Modifier.size(24.dp)
-                            )
+                                    contentDescription = "Credits",
+                                    tint = Color(0xFFFFD700), // Yellow star color
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Text(
+                                    text = creditsCount.toString(),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = AppColors.TextPrimary
+                                )
+                            }
                         }
+                        // Settings icon
                         IconButton(
                             onClick = {},
                             modifier = Modifier
@@ -544,8 +569,8 @@ private fun GenerateHero(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                contentDescription = "Settings",
+                                tint = AppColors.TextSecondary,
                                 modifier = Modifier.size(24.dp)
                             )
                         }
@@ -1731,6 +1756,7 @@ private fun GenerateScreenPreview() {
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
                 GenerateHero(
+                    creditsCount = 0,
                     generationMode = generationMode,
                     onModeSelected = { generationMode = it }
                 )
