@@ -131,7 +131,6 @@ fun VideoThumbnail(
     ) {
         if (isLoading) {
             CircularProgressIndicator(
-                modifier = Modifier.fillMaxSize(),
                 strokeWidth = 2.dp
             )
         } else if (thumbnail != null) {
