@@ -132,7 +132,7 @@ fun SectionCard(
                     ) {
                         Text(
                             text = title,
-                            style = MaterialTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = AppColors.TextPrimary
                         )
