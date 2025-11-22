@@ -902,10 +902,19 @@ async function sendJobCompleteNotification(
   try {
     // Get user's FCM token from Firestore (if stored)
     const userDoc = await firestore.collection("users").doc(userId).get();
-    const fcmToken = userDoc.data()?.fcm_token as string | undefined;
+    const userData = userDoc.data();
+    const fcmToken = userData?.fcm_token as string | undefined;
+
+    console.log(
+      `Attempting to send notification to user ${userId} for job ${jobId}`,
+    );
+    console.log(`FCM token exists: ${!!fcmToken}`);
 
     if (!fcmToken) {
-      console.log(`No FCM token for user ${userId}`);
+      console.log(
+        `No FCM token for user ${userId}. ` +
+          "User must enable notifications in the app first.",
+      );
       return;
     }
 
@@ -925,10 +934,16 @@ async function sendJobCompleteNotification(
       },
     };
 
-    await admin.messaging().send(message);
-    console.log(`Notification sent to user ${userId} for job ${jobId}`);
+    const response = await admin.messaging().send(message);
+    console.log(
+      `✅ Notification sent successfully to user ${userId} for job ${jobId}. ` +
+        `Message ID: ${response}`,
+    );
   } catch (error) {
-    console.error("Failed to send notification:", error);
+    console.error(
+      `❌ Failed to send notification to user ${userId} for job ${jobId}:`,
+      error,
+    );
     // Don't throw - notification failure shouldn't break the workflow
   }
 }
