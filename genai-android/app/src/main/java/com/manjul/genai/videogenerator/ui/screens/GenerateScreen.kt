@@ -67,6 +67,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -76,6 +77,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
@@ -83,6 +85,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -1295,7 +1298,8 @@ private fun ModelAvatar(model: AIModel) {
 private fun VideoExamplesSection(model: AIModel) {
     if (model.exampleVideoUrls.isEmpty()) return
     
-    var selectedVideoUrl by remember { mutableStateOf<String?>(null) }
+    // Reset selected video when model changes
+    var selectedVideoUrl by remember(model.id) { mutableStateOf<String?>(null) }
     
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(
@@ -1304,15 +1308,22 @@ private fun VideoExamplesSection(model: AIModel) {
             fontWeight = FontWeight.Bold,
             color = AppColors.TextPrimary
         )
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(horizontal = 4.dp)
-        ) {
-            items(model.exampleVideoUrls, key = { it }) { videoUrl ->
-                ExampleCard(
-                    videoUrl = videoUrl,
-                    onClick = { selectedVideoUrl = videoUrl }
-                )
+        // Use key() to force complete recreation of LazyRow when model changes
+        // This ensures all items are properly disposed and recreated
+        key(model.id) {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(horizontal = 4.dp)
+            ) {
+                items(
+                    items = model.exampleVideoUrls,
+                    key = { it }
+                ) { videoUrl ->
+                    ExampleCard(
+                        videoUrl = videoUrl,
+                        onClick = { selectedVideoUrl = videoUrl }
+                    )
+                }
             }
         }
     }
@@ -1543,12 +1554,12 @@ private fun Modifier.dashedBorder(width: Dp, color: Color, cornerRadius: Dp): Mo
             val pathEffect = PathEffect.dashPathEffect(floatArrayOf(16f, 12f))
             drawRoundRect(
                 color = color,
-                topLeft = androidx.compose.ui.geometry.Offset(halfStroke, halfStroke),
-                size = androidx.compose.ui.geometry.Size(
+                topLeft = Offset(halfStroke, halfStroke),
+                size = Size(
                     size.width - strokeWidth,
                     size.height - strokeWidth
                 ),
-                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius.toPx()),
+                cornerRadius = CornerRadius(cornerRadius.toPx()),
                 style = Stroke(
                     width = strokeWidth,
                     pathEffect = pathEffect,
