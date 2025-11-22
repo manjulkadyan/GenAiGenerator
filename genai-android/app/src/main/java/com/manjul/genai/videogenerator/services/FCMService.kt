@@ -50,7 +50,13 @@ class FCMService : FirebaseMessagingService() {
             val newCount = NotificationManager.getUnreadNotificationCount(this)
             Log.d(TAG, "Badge count updated: $oldCount -> $newCount")
             
-            // Show local notification that opens HistoryScreen when clicked
+            // When app is in foreground, Firebase doesn't automatically show notifications
+            // So we need to show our own notification manually
+            // When app is in background, Firebase will show the notification automatically
+            // But we'll also show ours to ensure it has the correct pending intent to open History
+            
+            // Always show our local notification with the correct pending intent
+            // This ensures the notification opens HistoryScreen when clicked
             val notificationTitle = message.notification?.title ?: "Video Ready!"
             val notificationBody = message.notification?.body ?: "Your video generation is complete."
             NotificationManager.showVideoCompleteNotification(

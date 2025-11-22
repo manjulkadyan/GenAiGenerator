@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -147,17 +148,52 @@ object NotificationManager {
     private fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                description = "Notifications for completed video generations"
-                enableVibration(true)
-                enableLights(true)
+            // Check if channel already exists
+            val existingChannel = notificationManager.getNotificationChannel(CHANNEL_ID)
+            if (existingChannel == null) {
+                val channel = NotificationChannel(
+                    CHANNEL_ID,
+                    CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_HIGH // IMPORTANCE_HIGH shows heads-up notifications
+                ).apply {
+                    description = "Notifications for completed video generations"
+                    enableVibration(true)
+                    enableLights(true)
+                    setShowBadge(true)
+                    // Set sound to default
+                    setSound(android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_NOTIFICATION), null)
+                }
+                notificationManager.createNotificationChannel(channel)
+                android.util.Log.d("NotificationManager", "Notification channel created with IMPORTANCE_HIGH")
+            } else {
+                android.util.Log.d("NotificationManager", "Notification channel already exists with importance: ${existingChannel.importance}")
             }
-            notificationManager.createNotificationChannel(channel)
         }
+    }
+    
+    /**
+     * Check if notifications are enabled for the app
+     */
+    fun areNotificationsEnabled(context: Context): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.areNotificationsEnabled()
+        } else {
+            // For older versions, assume enabled
+            true
+        }
+    }
+    
+    /**
+     * Check if the notification channel is enabled
+     */
+    fun isNotificationChannelEnabled(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val channel = notificationManager.getNotificationChannel(CHANNEL_ID)
+            return channel?.importance != NotificationManager.IMPORTANCE_NONE
+        }
+        return true
     }
     
     /**
@@ -173,10 +209,29 @@ object NotificationManager {
         message: String,
         jobId: String? = null
     ) {
-        android.util.Log.d("NotificationManager", "Showing video complete notification: $title - $message")
+        android.util.Log.d("NotificationManager", "=== Attempting to show notification ===")
+        android.util.Log.d("NotificationManager", "Title: $title, Message: $message, JobId: $jobId")
+        
+        // Check if notifications are enabled
+        val notificationsEnabled = areNotificationsEnabled(context)
+        android.util.Log.d("NotificationManager", "Notifications enabled: $notificationsEnabled")
+        
+        if (!notificationsEnabled) {
+            android.util.Log.w("NotificationManager", "Notifications are disabled for this app")
+            return
+        }
         
         // Create notification channel if needed
         createNotificationChannel(context)
+        
+        // Check if channel is enabled
+        val channelEnabled = isNotificationChannelEnabled(context)
+        android.util.Log.d("NotificationManager", "Notification channel enabled: $channelEnabled")
+        
+        if (!channelEnabled) {
+            android.util.Log.w("NotificationManager", "Notification channel is disabled")
+            return
+        }
         
         // Create intent to open MainActivity and navigate to History
         val intent = Intent(context, MainActivity::class.java).apply {
@@ -200,12 +255,9 @@ object NotificationManager {
         )
         
         // Build notification
-        // Use system icon for now - you can replace with a custom drawable later
-        val smallIcon = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            android.R.drawable.ic_media_play
-        } else {
-            android.R.drawable.ic_dialog_info
-        }
+        // Use a reliable system icon - ic_dialog_info is more reliable than ic_media_play
+        // For production, you should create a custom notification icon (white icon on transparent background)
+        val smallIcon = android.R.drawable.ic_dialog_info
         
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(smallIcon)
@@ -216,14 +268,40 @@ object NotificationManager {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_SOUND or NotificationCompat.DEFAULT_VIBRATE)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .setShowWhen(true)
+            .setWhen(System.currentTimeMillis())
+            .setFullScreenIntent(pendingIntent, false) // This helps show notification even in foreground
             .build()
         
-        // Show notification
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notificationId = jobId?.hashCode() ?: (NOTIFICATION_ID_BASE + System.currentTimeMillis().toInt())
-        notificationManager.notify(notificationId, notification)
+        // Show notification using NotificationManagerCompat for better compatibility
+        try {
+            val notificationManagerCompat = NotificationManagerCompat.from(context)
+            val notificationId = jobId?.hashCode() ?: (NOTIFICATION_ID_BASE + System.currentTimeMillis().toInt())
+            
+            // Check if we can show notifications
+            if (notificationManagerCompat.areNotificationsEnabled()) {
+                // Use notify() which should show the notification even in foreground
+                notificationManagerCompat.notify(notificationId, notification)
+                android.util.Log.d("NotificationManager", "✅ Notification posted with ID: $notificationId")
+                
+                // Verify notification was actually posted
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    val activeNotifications = notificationManagerCompat.activeNotifications
+                    val wasPosted = activeNotifications.any { it.id == notificationId }
+                    android.util.Log.d("NotificationManager", "Notification verification: posted=$wasPosted, active count=${activeNotifications.size}")
+                }
+            } else {
+                android.util.Log.w("NotificationManager", "❌ Cannot show notification - notifications disabled")
+            }
+        } catch (e: SecurityException) {
+            android.util.Log.e("NotificationManager", "❌ SecurityException when showing notification", e)
+        } catch (e: Exception) {
+            android.util.Log.e("NotificationManager", "❌ Error showing notification", e)
+        }
         
-        android.util.Log.d("NotificationManager", "Notification shown with ID: $notificationId")
+        android.util.Log.d("NotificationManager", "=== Notification attempt complete ===")
     }
 }
 
