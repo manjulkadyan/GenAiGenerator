@@ -50,6 +50,17 @@ class FCMService : FirebaseMessagingService() {
             val newCount = NotificationManager.getUnreadNotificationCount(this)
             Log.d(TAG, "Badge count updated: $oldCount -> $newCount")
             
+            // Show local notification that opens HistoryScreen when clicked
+            val notificationTitle = message.notification?.title ?: "Video Ready!"
+            val notificationBody = message.notification?.body ?: "Your video generation is complete."
+            NotificationManager.showVideoCompleteNotification(
+                context = this,
+                title = notificationTitle,
+                message = notificationBody,
+                jobId = jobId
+            )
+            Log.d(TAG, "Local notification shown for job: $jobId")
+            
             // The badge in GenAiRoot will automatically update via polling
             // The app will also update when Firestore listener detects the job status change
         } else {

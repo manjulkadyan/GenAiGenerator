@@ -74,9 +74,28 @@ sealed class AppDestination(
 @Composable
 fun GenAiRoot() {
     val context = LocalContext.current
+    val activity = (context as? androidx.activity.ComponentActivity)
+    
+    // Check if we should navigate to History from notification
     var currentRoute by rememberSaveable(
         stateSaver = AppDestination.Saver
-    ) { mutableStateOf<AppDestination>(AppDestination.Generate) }
+    ) { 
+        val navigateTo = activity?.intent?.getStringExtra("navigate_to")
+        mutableStateOf<AppDestination>(
+            if (navigateTo == "history") AppDestination.History else AppDestination.Generate
+        )
+    }
+    
+    // Handle navigation from notification intent
+    LaunchedEffect(Unit) {
+        val navigateTo = activity?.intent?.getStringExtra("navigate_to")
+        if (navigateTo == "history" && currentRoute != AppDestination.History) {
+            currentRoute = AppDestination.History
+            // Clear the intent extra after handling it
+            activity?.intent?.removeExtra("navigate_to")
+            android.util.Log.d("GenAiRoot", "Navigated to History from notification")
+        }
+    }
     var selectedModelId by rememberSaveable { mutableStateOf<String?>(null) }
     var highlightModelId by rememberSaveable { mutableStateOf<String?>(null) }
     var showGeneratingScreen by rememberSaveable { mutableStateOf(false) }
