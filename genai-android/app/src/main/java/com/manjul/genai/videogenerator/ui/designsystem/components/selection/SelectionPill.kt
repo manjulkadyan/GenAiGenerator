@@ -36,8 +36,8 @@ import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
 private object SelectionPillConstants {
     const val PILL_CORNER_RADIUS = 50
     const val SELECTED_SCALE = 1.05f
-    const val HORIZONTAL_PADDING = 18
-    const val VERTICAL_PADDING = 12
+    const val HORIZONTAL_PADDING = 12
+    const val VERTICAL_PADDING = 8
     const val ICON_SIZE = 24
     const val ICON_SPACING = 12
     const val SUBTITLE_SPACING = 4
