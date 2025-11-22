@@ -100,16 +100,30 @@ fun GenAiRoot() {
     // Show generating screen only when generation actually starts successfully
     // (isGenerating = true AND uploadMessage exists, meaning upload/request started)
     LaunchedEffect(generateState.isGenerating, generateState.uploadMessage, generateState.errorMessage) {
+        android.util.Log.d("GenAiRoot", "=== GeneratingScreen LaunchedEffect Triggered ===")
+        android.util.Log.d("GenAiRoot", "isGenerating: ${generateState.isGenerating}")
+        android.util.Log.d("GenAiRoot", "uploadMessage: ${generateState.uploadMessage}")
+        android.util.Log.d("GenAiRoot", "errorMessage: ${generateState.errorMessage}")
+        android.util.Log.d("GenAiRoot", "showGeneratingScreen (current): $showGeneratingScreen")
+        
         if (generateState.isGenerating && generateState.uploadMessage != null && generateState.errorMessage == null) {
             // Generation actually started (uploads began or request submitted)
             // Only show if not already showing
             if (!showGeneratingScreen) {
+                android.util.Log.d("GenAiRoot", "Conditions met! Setting showGeneratingScreen = true")
                 showGeneratingScreen = true
+                android.util.Log.d("GenAiRoot", "showGeneratingScreen set to: $showGeneratingScreen")
+            } else {
+                android.util.Log.d("GenAiRoot", "GeneratingScreen already showing, skipping")
             }
         } else if (generateState.errorMessage != null && !generateState.isGenerating) {
             // Error occurred and generation stopped - hide generating screen
+            android.util.Log.d("GenAiRoot", "Error occurred, hiding generating screen")
             showGeneratingScreen = false
+        } else {
+            android.util.Log.d("GenAiRoot", "Conditions not met for showing generating screen")
         }
+        android.util.Log.d("GenAiRoot", "=== GeneratingScreen LaunchedEffect Completed ===")
     }
     
     // Auto-navigate to ResultsScreen when job completes
@@ -280,22 +294,29 @@ fun GenAiRoot() {
         }
         
         if (showGeneratingScreen) {
+            android.util.Log.d("GenAiRoot", "=== Rendering GeneratingScreen ===")
+            android.util.Log.d("GenAiRoot", "statusMessage: ${generateState.uploadMessage}")
+            android.util.Log.d("GenAiRoot", "errorMessage: ${generateState.errorMessage}")
             GeneratingScreen(
                 modifier = Modifier.fillMaxSize(),
                 statusMessage = generateState.uploadMessage,
                 errorMessage = generateState.errorMessage,
                 onCancel = { 
+                    android.util.Log.d("GenAiRoot", "GeneratingScreen onCancel called")
                     showGeneratingScreen = false
                     pendingJobId = null
                     generateViewModel.resetGenerationState() // Reset state when canceling
                 },
                 onRetry = if (generateState.errorMessage != null) {
                     {
+                        android.util.Log.d("GenAiRoot", "GeneratingScreen onRetry called")
                         generateViewModel.dismissMessage()
                         generateViewModel.generate()
                     }
                 } else null
             )
+        } else {
+            android.util.Log.d("GenAiRoot", "GeneratingScreen NOT rendered (showGeneratingScreen = false)")
         }
         
         // Results Screen - Show as Dialog to allow navigation and proper padding

@@ -13,19 +13,21 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ContentCopy
@@ -37,16 +39,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
-import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppTextButton
-import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
-import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,14 +54,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.ui.AspectRatioFrameLayout
 import com.manjul.genai.videogenerator.data.local.AppDatabase
 import com.manjul.genai.videogenerator.data.local.toEntity
 import com.manjul.genai.videogenerator.data.model.VideoJob
@@ -74,18 +66,17 @@ import com.manjul.genai.videogenerator.data.model.VideoJobStatus
 import com.manjul.genai.videogenerator.player.VideoFileCache
 import com.manjul.genai.videogenerator.player.VideoPlayerManager
 import com.manjul.genai.videogenerator.ui.components.VideoThumbnail
-import com.manjul.genai.videogenerator.utils.VideoDownloader
-import com.manjul.genai.videogenerator.utils.VideoSharer
+import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
+import com.manjul.genai.videogenerator.ui.designsystem.components.badges.CustomStatusBadge
 import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
 import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppSecondaryButton
 import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
-import com.manjul.genai.videogenerator.ui.designsystem.components.badges.CustomStatusBadge
-import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
+import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
+import com.manjul.genai.videogenerator.utils.VideoDownloader
+import com.manjul.genai.videogenerator.utils.VideoSharer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import androidx.compose.runtime.LaunchedEffect
-import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -185,10 +176,14 @@ fun ResultsScreenDialog(
                         jobId = job.id,
                         onFullscreenClick = {
                             // Launch FullscreenVideoActivity
-                            val intent = Intent(context, FullscreenVideoActivity::class.java).apply {
-                                putExtra(FullscreenVideoActivity.EXTRA_VIDEO_URL, videoUrl)
-                                putExtra(FullscreenVideoActivity.EXTRA_ASPECT_RATIO, job.aspectRatio)
-                            }
+                            val intent =
+                                Intent(context, FullscreenVideoActivity::class.java).apply {
+                                    putExtra(FullscreenVideoActivity.EXTRA_VIDEO_URL, videoUrl)
+                                    putExtra(
+                                        FullscreenVideoActivity.EXTRA_ASPECT_RATIO,
+                                        job.aspectRatio
+                                    )
+                                }
                             context.startActivity(intent)
                         }
                     )
@@ -219,7 +214,8 @@ fun ResultsScreenDialog(
                                     )
                                     if (uri != null) {
                                         // Update local file path in Room DB
-                                        val cachedFileUri = VideoFileCache.getCachedFileUri(context, videoUrl)
+                                        val cachedFileUri =
+                                            VideoFileCache.getCachedFileUri(context, videoUrl)
                                         if (cachedFileUri != null) {
                                             val filePath = cachedFileUri.removePrefix("file://")
                                             jobDao.updateLocalFilePath(job.id, filePath)
@@ -242,7 +238,11 @@ fun ResultsScreenDialog(
                                         }
                                     }
                                 } catch (e: Exception) {
-                                    android.util.Log.e("ResultsScreen", "Failed to download video", e)
+                                    android.util.Log.e(
+                                        "ResultsScreen",
+                                        "Failed to download video",
+                                        e
+                                    )
                                     CoroutineScope(Dispatchers.Main).launch {
                                         android.widget.Toast.makeText(
                                             context,
@@ -320,7 +320,7 @@ private fun HeaderSection(
                 color = MaterialTheme.colorScheme.surfaceVariant
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                Icon(
+                    Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Back",
                         modifier = Modifier.size(24.dp),
@@ -385,14 +385,14 @@ private fun VideoPlayerCard(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                       // Extract and show thumbnail from video (with DB cache optimization)
-                       VideoThumbnail(
-                           videoUrl = videoUrl,
-                           modifier = Modifier.fillMaxSize(),
-                           contentScale = androidx.compose.ui.layout.ContentScale.Crop,
-                           jobId = jobId
-                       )
-                
+                // Extract and show thumbnail from video (with DB cache optimization)
+                VideoThumbnail(
+                    videoUrl = videoUrl,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                    jobId = jobId
+                )
+
                 // Play button overlay (centered)
                 Surface(
                     shape = CircleShape,
@@ -504,7 +504,8 @@ private fun PromptCard(
                         .clip(CircleShape)
                         .clickable {
                             // Copy prompt to clipboard
-                            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                            val clipboard =
+                                context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                             val clip = ClipData.newPlainText("Prompt", prompt)
                             clipboard.setPrimaryClip(clip)
                             // Show toast
@@ -541,7 +542,8 @@ private fun PromptCard(
 private fun DetailsCard(job: VideoJob) {
     // Format model name
     val displayModelName = job.modelId?.replace("-", " ")?.replaceFirstChar { it.uppercaseChar() }
-        ?: job.modelName.split("/").lastOrNull()?.replace("-", " ")?.replaceFirstChar { it.uppercaseChar() }
+        ?: job.modelName.split("/").lastOrNull()?.replace("-", " ")
+            ?.replaceFirstChar { it.uppercaseChar() }
         ?: job.modelName
 
     // Format cost as dollars
@@ -694,7 +696,7 @@ private fun ResultsScreenPreview() {
                     textColor = AppColors.StatusSuccess
                 )
             }
-            
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -703,7 +705,15 @@ private fun ResultsScreenPreview() {
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
                 // Video Player Card
-                AppCard(modifier = Modifier.fillMaxWidth()) {
+                AppCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(
+                            width = 2.dp,
+                            color = MaterialTheme.colorScheme.outline,
+                            shape = RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 0.dp)
+                        ), padding = PaddingValues(2.dp)
+                ) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -719,9 +729,9 @@ private fun ResultsScreenPreview() {
                         )
                     }
                 }
-                
+
                 // Prompt Card
-                AppCard(modifier = Modifier.fillMaxWidth()) {
+                AppCard(modifier = Modifier.fillMaxWidth(), padding = PaddingValues(0.dp)) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -741,9 +751,9 @@ private fun ResultsScreenPreview() {
                         )
                     }
                 }
-                
+
                 // Details Card
-                AppCard(modifier = Modifier.fillMaxWidth()) {
+                AppCard(modifier = Modifier.fillMaxWidth(), padding = PaddingValues(0.dp)) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -788,7 +798,7 @@ private fun ResultsScreenPreview() {
                         }
                     }
                 }
-                
+
                 // Action Buttons
                 AppPrimaryButton(
                     text = "Download Video",

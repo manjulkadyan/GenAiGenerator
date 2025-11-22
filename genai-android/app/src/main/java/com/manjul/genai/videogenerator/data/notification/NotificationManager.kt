@@ -22,32 +22,40 @@ object NotificationManager {
      * Check if we've already asked for notification permission
      */
     fun hasAskedForPermission(context: Context): Boolean {
-        return getSharedPreferences(context).getBoolean(KEY_NOTIFICATION_PERMISSION_ASKED, false)
+        val result = getSharedPreferences(context).getBoolean(KEY_NOTIFICATION_PERMISSION_ASKED, false)
+        android.util.Log.d("NotificationManager", "hasAskedForPermission: $result")
+        return result
     }
     
     /**
      * Mark that we've asked for notification permission
      */
     fun setPermissionAsked(context: Context) {
+        android.util.Log.d("NotificationManager", "setPermissionAsked called")
         getSharedPreferences(context).edit()
             .putBoolean(KEY_NOTIFICATION_PERMISSION_ASKED, true)
             .apply()
+        android.util.Log.d("NotificationManager", "Permission asked flag saved")
     }
     
     /**
      * Check if notifications are enabled
      */
     fun isNotificationEnabled(context: Context): Boolean {
-        return getSharedPreferences(context).getBoolean(KEY_NOTIFICATION_ENABLED, false)
+        val result = getSharedPreferences(context).getBoolean(KEY_NOTIFICATION_ENABLED, false)
+        android.util.Log.d("NotificationManager", "isNotificationEnabled: $result")
+        return result
     }
     
     /**
      * Set notification enabled status
      */
     fun setNotificationEnabled(context: Context, enabled: Boolean) {
+        android.util.Log.d("NotificationManager", "setNotificationEnabled: $enabled")
         getSharedPreferences(context).edit()
             .putBoolean(KEY_NOTIFICATION_ENABLED, enabled)
             .apply()
+        android.util.Log.d("NotificationManager", "Notification enabled flag saved: $enabled")
     }
     
     /**
