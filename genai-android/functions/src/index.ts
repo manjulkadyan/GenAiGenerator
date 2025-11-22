@@ -554,6 +554,16 @@ export const testCallReplicateVeoAPIV2 = onCall<GenerateRequest>(
         `[TEST] Job ${fakePredictionId} marked as COMPLETE ` +
           `with video: ${randomVideoUrl}`,
       );
+
+      // Send FCM notification (same as production)
+      await sendJobCompleteNotification(
+        userId,
+        fakePredictionId,
+        randomVideoUrl,
+      );
+      console.log(
+        `[TEST] Notification sent for job ${fakePredictionId}`,
+      );
     }, 5000); // 5 second delay to simulate generation
 
     return {

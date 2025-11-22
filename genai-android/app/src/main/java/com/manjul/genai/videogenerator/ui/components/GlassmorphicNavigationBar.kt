@@ -155,7 +155,7 @@ private fun GlassmorphicNavigationItem(
                     contentDescription = item.label,
                     modifier = Modifier.size(24.dp),
                     tint = if (isSelected) {
-                        Color(0xFF6C5CE7)
+                        Color.White
                     } else {
                         MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     }
@@ -184,7 +184,7 @@ private fun GlassmorphicNavigationItem(
                 text = item.label,
                 style = MaterialTheme.typography.labelSmall,
                 color = if (isSelected) {
-                    Color(0xFF6C5CE7)
+                    Color.White
                 } else {
                     MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                 }

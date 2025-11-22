@@ -23,29 +23,39 @@ class FCMService : FirebaseMessagingService() {
     
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-        Log.d(TAG, "Message received: ${message.messageId}")
+        Log.d(TAG, "=== FCM Message Received ===")
+        Log.d(TAG, "Message ID: ${message.messageId}")
         
         // Handle notification
         message.notification?.let { notification ->
-            Log.d(TAG, "Notification title: ${notification.title}, body: ${notification.body}")
-            // You can show a custom notification here if needed
-            // For now, Firebase will show the notification automatically
+            Log.d(TAG, "Notification - Title: ${notification.title}, Body: ${notification.body}")
+            // Firebase will show the notification automatically
         }
         
         // Handle data payload
-        message.data.let { data ->
-            Log.d(TAG, "Data payload: $data")
-            val type = data["type"]
-            val jobId = data["job_id"]
-            val videoUrl = data["video_url"]
+        val data = message.data
+        Log.d(TAG, "Data payload: $data")
+        
+        val type = data["type"]
+        val jobId = data["job_id"]
+        val videoUrl = data["video_url"]
+        
+        if (type == "video_complete" && jobId != null) {
+            Log.d(TAG, "✅ Video complete notification received for job: $jobId")
+            Log.d(TAG, "Video URL: $videoUrl")
             
-            if (type == "video_complete" && jobId != null) {
-                Log.d(TAG, "Video complete notification for job: $jobId")
-                // Increment unread notification count
-                NotificationManager.incrementUnreadCount(this)
-                // The app will automatically update when Firestore listener detects the change
-            }
+            // Increment unread notification count (badge will update automatically)
+            val oldCount = NotificationManager.getUnreadNotificationCount(this)
+            NotificationManager.incrementUnreadCount(this)
+            val newCount = NotificationManager.getUnreadNotificationCount(this)
+            Log.d(TAG, "Badge count updated: $oldCount -> $newCount")
+            
+            // The badge in GenAiRoot will automatically update via polling
+            // The app will also update when Firestore listener detects the job status change
+        } else {
+            Log.d(TAG, "Unknown notification type: $type")
         }
+        Log.d(TAG, "=== FCM Message Processing Complete ===")
     }
 }
 
