@@ -140,12 +140,14 @@ fun GenerateScreen(
         }
     }
 
-    val pickFirstFrame = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        viewModel.setFirstFrameUri(uri)
-    }
-    val pickLastFrame = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        viewModel.setLastFrameUri(uri)
-    }
+    val pickFirstFrame =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            viewModel.setFirstFrameUri(uri)
+        }
+    val pickLastFrame =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            viewModel.setLastFrameUri(uri)
+        }
 
     val scrollState = rememberScrollState()
     var generationMode by rememberSaveable { mutableStateOf(GenerationMode.TextToVideo) }
@@ -273,11 +275,11 @@ fun GenerateScreen(
                                             color = AppColors.TextPrimary
                                         )
                                         AppTextField(
-                                        value = state.negativePrompt,
+                                            value = state.negativePrompt,
                                             onValueChange = viewModel::updateNegativePrompt,
                                             placeholder = "What should we avoid? e.g. blurry, low quality",
                                             maxLines = 3
-                                    )
+                                        )
                                     }
                                 }
                             }
@@ -370,7 +372,10 @@ private fun GenerateLoadingState() {
                 strokeWidth = 3.dp,
                 modifier = Modifier.size(48.dp)
             )
-            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 Text(
                     text = "Loading Gen-AI Studio",
                     style = MaterialTheme.typography.headlineSmall,
@@ -420,7 +425,10 @@ private fun EmptyGenerateState() {
                     )
                 }
             }
-            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 Text(
                     text = "No AI models available",
                     style = MaterialTheme.typography.titleLarge,
@@ -452,7 +460,7 @@ private fun GenerateHero(
         start = Offset(0f, 0f),
         end = Offset(1000f, 1000f)
     )
-    
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(32.dp),
@@ -627,51 +635,48 @@ private fun ModelCard(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    // Get subtitle from model data - extract just the type (e.g., "Fast") without price
+    // Get full subtitle with type and price (e.g., "Fast, ~4c/s" or "~4c/s")
     val fullSubtitle = getModelSubtitle(model)
-    val subtitle = fullSubtitle.split(",").firstOrNull()?.trim() ?: fullSubtitle
     // Remove the type from model name if it appears in subtitle
     val displayName = getDisplayName(model, fullSubtitle)
     val logoUrl = getModelLogoUrl(model)
-    
+
     AppSelectionCard(
         isSelected = selected,
         onClick = onClick
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Model Logo - white icon that blends with theme
-            logoUrl?.let {
-                ModelLogo(
-                    logoUrl = logoUrl,
-                    modelName = displayName,
-                    modifier = Modifier.size(48.dp)
-                )
-            }
+            // Model Logo - white icon that blends with theme (always show with fallback)
+            ModelLogo(
+                logoUrl = logoUrl,
+                modelName = displayName.ifBlank { model.name },
+                modifier = Modifier.size(48.dp)
+            )
             Column(
-                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
+                val nameText = displayName.ifBlank { model.name }
+                val subtitleText = fullSubtitle.ifBlank { formatCredits(model.pricePerSecond) }
+                
                 Text(
-                    text = displayName.ifBlank { model.name },
+                    text = nameText,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = AppColors.TextPrimary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                if (subtitle.isNotBlank()) {
-                    Text(
-                        text = subtitle,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = AppColors.TextSecondary,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
+                Text(
+                    text = subtitleText,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = AppColors.TextSecondary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }
@@ -685,7 +690,7 @@ private fun getModelLogoUrl(model: AIModel): String? {
     val modelId = model.id.lowercase()
     val modelName = model.name.lowercase()
     val replicateName = model.replicateName.lowercase()
-    
+
     // Check by replicate name provider first (most reliable)
     if (replicateName.contains("/")) {
         val provider = replicateName.split("/").first().lowercase()
@@ -704,11 +709,11 @@ private fun getModelLogoUrl(model: AIModel): String? {
             provider.contains("bytedance") -> "bytedance.com"
             else -> null
         }
-        
+
         // Use Clearbit Logo API (free, no API key required for basic usage)
         return companyDomain?.let { "https://logo.clearbit.com/$it" }
     }
-    
+
     // Map model IDs/names to company domains for logo API (fallback)
     val modelToDomainMap = mapOf(
         // Google/Veo models
@@ -734,21 +739,21 @@ private fun getModelLogoUrl(model: AIModel): String? {
         // Seedance models (ByteDance)
         "seedance" to "bytedance.com"
     )
-    
+
     // Check by model ID
     for ((key, domain) in modelToDomainMap) {
         if (modelId.contains(key)) {
             return "https://logo.clearbit.com/$domain"
         }
     }
-    
+
     // Check by model name
     for ((key, domain) in modelToDomainMap) {
         if (modelName.contains(key)) {
             return "https://logo.clearbit.com/$domain"
         }
     }
-    
+
     return null
 }
 
@@ -763,7 +768,7 @@ private fun ModelLogo(
     modifier: Modifier = Modifier
 ) {
     val initial = modelName.firstOrNull()?.uppercaseChar()?.toString() ?: "AI"
-    
+
     // Color filter to convert logo to white - blends with theme
     // Uses a color matrix that desaturates and brightens the image
     val whiteColorFilter = ColorFilter.colorMatrix(
@@ -774,7 +779,7 @@ private fun ModelLogo(
             setToScale(brightness, brightness, brightness, 1f)
         }
     )
-    
+
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -786,7 +791,7 @@ private fun ModelLogo(
                     .crossfade(true)
                     .build(),
                 contentDescription = "$modelName logo",
-            modifier = Modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp),
                 contentScale = ContentScale.Fit,
@@ -805,7 +810,7 @@ private fun ModelLogo(
                 },
                 error = {
                     // Fallback to initial if image fails to load
-        Text(
+                    Text(
                         text = initial,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
@@ -815,7 +820,7 @@ private fun ModelLogo(
             )
         } else {
             // Fallback to initial letter
-                    Text(
+            Text(
                 text = initial,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
@@ -832,25 +837,25 @@ private fun ModelLogo(
 private fun getDisplayName(model: AIModel, subtitle: String): String {
     // Extract type text from subtitle (everything before the comma and price)
     val typeText = subtitle.split(",").firstOrNull()?.trim() ?: return model.name
-    
+
     // If subtitle is just price (no type), return original name
     if (typeText.startsWith("~") && typeText.endsWith("c/s")) {
         return model.name
     }
-    
+
     // Remove the type from model name (case-insensitive)
     var displayName = model.name
     val typeWords = typeText.split(" ").filter { it.isNotBlank() }
-    
+
     for (word in typeWords) {
         // Remove the word from display name (case-insensitive)
         val regex = Regex("\\b${Regex.escape(word)}\\b", RegexOption.IGNORE_CASE)
         displayName = regex.replace(displayName, "").trim()
     }
-    
+
     // Clean up extra spaces
     displayName = displayName.replace(Regex("\\s+"), " ").trim()
-    
+
     return displayName.ifBlank { model.name }
 }
 
@@ -860,23 +865,25 @@ private fun getDisplayName(model: AIModel, subtitle: String): String {
  */
 private fun getModelSubtitle(model: AIModel): String {
     val priceText = formatCredits(model.pricePerSecond)
-    
+
     // Dynamically extract type from model ID by analyzing its structure
     val modelId = model.id.lowercase()
     val segments = modelId.split("-")
-    
+
     // Filter out version-like segments (numbers, "v2", "v3", etc.) and base model names
     // Keep meaningful type segments (fast, pro, lite, master, turbo, i2v, t2v, resolutions, etc.)
     val versionPattern = Regex("^v?\\d+(\\.\\d+)?$") // Matches: "3", "v2", "2.5", "v2.1", etc.
-    val baseModelNames = setOf("veo", "sora", "kling", "hailuo", "gen4", "gen", "ltx", "motion", 
-                               "ovi", "pixverse", "ray", "seedance", "wan", "hailuo")
-    
+    val baseModelNames = setOf(
+        "veo", "sora", "kling", "hailuo", "gen4", "gen", "ltx", "motion",
+        "ovi", "pixverse", "ray", "seedance", "wan", "hailuo"
+    )
+
     val typeSegments = segments.filter { segment ->
-        !versionPattern.matches(segment) && 
-        !baseModelNames.contains(segment) &&
-        segment.isNotBlank()
+        !versionPattern.matches(segment) &&
+                !baseModelNames.contains(segment) &&
+                segment.isNotBlank()
     }
-    
+
     // If we have type segments, format and combine with price
     if (typeSegments.isNotEmpty()) {
         val typeText = typeSegments.joinToString(" ") { segment ->
@@ -892,7 +899,7 @@ private fun getModelSubtitle(model: AIModel): String {
         }
         return "$typeText, $priceText"
     }
-    
+
     // If no type found, just show price
     return priceText
 }
@@ -955,7 +962,7 @@ private fun ReferenceFramePicker(
                 text = label,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
-            color = AppColors.TextPrimary
+                color = AppColors.TextPrimary
             )
             if (required) {
                 StatusBadge(text = "Required")
@@ -1043,7 +1050,7 @@ private fun DurationAspectRow(
             text = "Duration",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
-                color = AppColors.TextPrimary
+            color = AppColors.TextPrimary
         )
         DurationSelector(
             model = selectedModel,
@@ -1054,7 +1061,7 @@ private fun DurationAspectRow(
             text = "Aspect Ratio",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
-                color = AppColors.TextPrimary
+            color = AppColors.TextPrimary
         )
         AspectRatioSelector(
             options = selectedModel?.aspectRatios.orEmpty(),
@@ -1196,33 +1203,33 @@ private fun PricingDialog(
         title = "Pricing"
     ) {
         val scrollState = rememberScrollState()
-        
-                Column(
+
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(scrollState),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                            Text(
-                                text = "Credits per second",
-                                style = MaterialTheme.typography.bodyMedium,
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            Text(
+                text = "Credits per second",
+                style = MaterialTheme.typography.bodyMedium,
                 color = AppColors.TextSecondary
             )
 
-                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        models
-                            .sortedByDescending { it.pricePerSecond }
-                            .forEach { model ->
-                                PricingRow(model = model)
-                            }
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                models
+                    .sortedByDescending { it.pricePerSecond }
+                    .forEach { model ->
+                        PricingRow(model = model)
                     }
+            }
 
-                    Text(
-                        text = "Final cost = credits/sec × video duration",
-                        style = MaterialTheme.typography.bodySmall,
+            Text(
+                text = "Final cost = credits/sec × video duration",
+                style = MaterialTheme.typography.bodySmall,
                 color = AppColors.TextSecondary,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
     }
 }
@@ -1230,7 +1237,7 @@ private fun PricingDialog(
 @Composable
 private fun PricingRow(model: AIModel) {
     val logoUrl = getModelLogoUrl(model)
-    
+
     AppCard(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -1303,7 +1310,7 @@ private fun VideoExamplesSection(models: List<AIModel>) {
             text = "Video Examples",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
-                color = AppColors.TextPrimary
+            color = AppColors.TextPrimary
         )
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -1496,7 +1503,10 @@ private fun Modifier.dashedBorder(width: Dp, color: Color, cornerRadius: Dp): Mo
             drawRoundRect(
                 color = color,
                 topLeft = androidx.compose.ui.geometry.Offset(halfStroke, halfStroke),
-                size = androidx.compose.ui.geometry.Size(size.width - strokeWidth, size.height - strokeWidth),
+                size = androidx.compose.ui.geometry.Size(
+                    size.width - strokeWidth,
+                    size.height - strokeWidth
+                ),
                 cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius.toPx()),
                 style = Stroke(
                     width = strokeWidth,
@@ -1556,7 +1566,7 @@ private fun GenerateScreenPreview() {
                 supportsAudio = false
             )
         )
-        
+
         val selectedModel = mockModels.first()
         var generationMode by remember { mutableStateOf(GenerationMode.TextToVideo) }
         var showAdvanced by remember { mutableStateOf(true) }
@@ -1565,9 +1575,9 @@ private fun GenerateScreenPreview() {
         var selectedDuration by remember { mutableStateOf<Int?>(4) }
         var selectedAspectRatio by remember { mutableStateOf<String?>("16:9") }
         var enableAudio by remember { mutableStateOf(false) }
-        
+
         val scrollState = rememberScrollState()
-        
+
         // Premium dark background with subtle gradient
         Box(
             modifier = Modifier
@@ -1704,9 +1714,11 @@ private fun GenerateScreenPreview() {
             }
 
             // Mock bottom bar
-            val estimatedCost = (selectedModel.pricePerSecond * (selectedDuration ?: 0)) * if (enableAudio) 2 else 1
-            val canGenerate = promptText.isNotBlank() && selectedModel != null && selectedDuration != null && selectedAspectRatio != null
-            
+            val estimatedCost =
+                (selectedModel.pricePerSecond * (selectedDuration ?: 0)) * if (enableAudio) 2 else 1
+            val canGenerate =
+                promptText.isNotBlank() && selectedModel != null && selectedDuration != null && selectedAspectRatio != null
+
             GenerateBottomBar(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 state = GenerateScreenState(
