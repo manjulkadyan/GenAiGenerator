@@ -29,6 +29,7 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.manjul.genai.videogenerator.R
@@ -72,6 +73,7 @@ sealed class AppDestination(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun GenAiRoot() {
+    val context = LocalContext.current
     var currentRoute by rememberSaveable(
         stateSaver = AppDestination.Saver
     ) { mutableStateOf<AppDestination>(AppDestination.Generate) }
@@ -145,9 +147,13 @@ fun GenAiRoot() {
             
             if (jobToCheck != null && jobToCheck.status == VideoJobStatus.COMPLETE) {
                 showGeneratingScreen = false
-                resultJobId = jobToCheck.id
+                // Launch ResultsActivity instead of showing dialog
+                val intent = android.content.Intent(context, ResultsActivity::class.java).apply {
+                    putExtra(ResultsActivity.EXTRA_JOB_ID, jobToCheck.id)
+                }
+                context.startActivity(intent)
                 pendingJobId = null
-                // Reset generation state when job completes and ResultsScreen is shown
+                // Reset generation state when job completes
                 generateViewModel.resetGenerationState()
             }
             
@@ -166,11 +172,26 @@ fun GenAiRoot() {
     val historyLabel = stringResource(R.string.destination_history)
     val profileLabel = stringResource(R.string.destination_profile)
     
-    val navigationItems = remember(generateLabel, modelsLabel, historyLabel, profileLabel) {
+    // Get unread notification count for History badge
+    val unreadCount = remember {
+        androidx.compose.runtime.mutableStateOf(
+            com.manjul.genai.videogenerator.data.notification.NotificationManager.getUnreadNotificationCount(context)
+        )
+    }
+    
+    // Update count when route changes to History (clear badge)
+    LaunchedEffect(currentRoute) {
+        if (currentRoute == AppDestination.History) {
+            com.manjul.genai.videogenerator.data.notification.NotificationManager.clearUnreadCount(context)
+            unreadCount.value = 0
+        }
+    }
+    
+    val navigationItems = remember(generateLabel, modelsLabel, historyLabel, profileLabel, unreadCount.value) {
         listOf(
             NavigationItem(icon = Icons.Outlined.AutoAwesome, label = generateLabel),
             NavigationItem(icon = Icons.Outlined.ViewInAr, label = modelsLabel),
-            NavigationItem(icon = Icons.Outlined.History, label = historyLabel),
+            NavigationItem(icon = Icons.Outlined.History, label = historyLabel, badgeCount = unreadCount.value),
             NavigationItem(icon = Icons.Outlined.Face, label = profileLabel)
         )
     }
@@ -260,7 +281,11 @@ fun GenAiRoot() {
                 modifier = Modifier.padding(innerPadding),
                 onVideoClick = { job ->
                     if (job.status == com.manjul.genai.videogenerator.data.model.VideoJobStatus.COMPLETE) {
-                        resultJobId = job.id
+                        // Launch ResultsActivity instead of showing dialog
+                        val intent = android.content.Intent(context, ResultsActivity::class.java).apply {
+                            putExtra(ResultsActivity.EXTRA_JOB_ID, job.id)
+                        }
+                        context.startActivity(intent)
                     }
                 }
             )
@@ -282,65 +307,14 @@ fun GenAiRoot() {
             }
         }
         
-        // Generating Screen Overlay - Non-blocking, allows navigation
-        // Reset isGenerating when GeneratingScreen is shown so GenerateScreen doesn't show progress
-        // GeneratingScreen will handle all progress display
+        // Launch GeneratingActivity when showGeneratingScreen is true
         LaunchedEffect(showGeneratingScreen) {
             if (showGeneratingScreen) {
-                // Reset isGenerating so GenerateScreen doesn't show "Generating..." button state
-                // The GeneratingScreen overlay will handle all progress display
+                val intent = android.content.Intent(context, GeneratingActivity::class.java)
+                context.startActivity(intent)
+                showGeneratingScreen = false // Reset flag
                 generateViewModel.resetGenerationState()
             }
-        }
-        
-        if (showGeneratingScreen) {
-            android.util.Log.d("GenAiRoot", "=== Rendering GeneratingScreen ===")
-            android.util.Log.d("GenAiRoot", "statusMessage: ${generateState.uploadMessage}")
-            android.util.Log.d("GenAiRoot", "errorMessage: ${generateState.errorMessage}")
-            GeneratingScreen(
-                modifier = Modifier.fillMaxSize(),
-                statusMessage = generateState.uploadMessage,
-                errorMessage = generateState.errorMessage,
-                onCancel = { 
-                    android.util.Log.d("GenAiRoot", "GeneratingScreen onCancel called")
-                    showGeneratingScreen = false
-                    pendingJobId = null
-                    generateViewModel.resetGenerationState() // Reset state when canceling
-                },
-                onRetry = if (generateState.errorMessage != null) {
-                    {
-                        android.util.Log.d("GenAiRoot", "GeneratingScreen onRetry called")
-                        generateViewModel.dismissMessage()
-                        generateViewModel.generate()
-                    }
-                } else null
-            )
-        } else {
-            android.util.Log.d("GenAiRoot", "GeneratingScreen NOT rendered (showGeneratingScreen = false)")
-        }
-        
-        // Results Screen - Show as Dialog to allow navigation and proper padding
-        resultJob?.let { job ->
-            ResultsScreenDialog(
-                job = job,
-                onClose = { 
-                    // Reset generation state when closing result screen
-                    generateViewModel.resetGenerationState()
-                    resultJobId = null 
-                },
-                onRegenerate = {
-                    // Load parameters from the job for regeneration
-                    generateViewModel.loadParametersForRegeneration(job)
-                    generateViewModel.resetGenerationState()
-                    resultJobId = null
-                    currentRoute = AppDestination.Generate
-                },
-                onDelete = {
-                    generateViewModel.resetGenerationState()
-                    resultJobId = null
-                    // TODO: Implement delete functionality
-                }
-            )
         }
     }
 }

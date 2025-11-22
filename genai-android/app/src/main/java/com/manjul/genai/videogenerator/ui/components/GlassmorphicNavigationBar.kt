@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +24,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 
 @Composable
@@ -35,7 +37,7 @@ fun GlassmorphicNavigationBar(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
             .zIndex(10f)
     ) {
         // Glassmorphic background - iOS-style transparent glass effect
@@ -147,16 +149,37 @@ private fun GlassmorphicNavigationItem(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)
         ) {
-            Icon(
-                imageVector = item.icon,
-                contentDescription = item.label,
-                modifier = Modifier.size(24.dp),
-                tint = if (isSelected) {
-                    Color(0xFF6C5CE7)
-                } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+            Box {
+                Icon(
+                    imageVector = item.icon,
+                    contentDescription = item.label,
+                    modifier = Modifier.size(24.dp),
+                    tint = if (isSelected) {
+                        Color(0xFF6C5CE7)
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                    }
+                )
+                // Badge indicator
+                if (item.badgeCount > 0) {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .size(16.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFFEF4444)) // Red badge
+                            .padding(2.dp)
+                    ) {
+                        Text(
+                            text = if (item.badgeCount > 9) "9+" else item.badgeCount.toString(),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White,
+                            modifier = Modifier.align(Alignment.Center),
+                            fontSize = 8.sp
+                        )
+                    }
                 }
-            )
+            }
             Text(
                 text = item.label,
                 style = MaterialTheme.typography.labelSmall,
@@ -172,6 +195,7 @@ private fun GlassmorphicNavigationItem(
 
 data class NavigationItem(
     val icon: ImageVector,
-    val label: String
+    val label: String,
+    val badgeCount: Int = 0 // Badge count for notifications
 )
 

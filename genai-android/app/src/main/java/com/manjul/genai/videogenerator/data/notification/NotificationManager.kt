@@ -13,6 +13,7 @@ object NotificationManager {
     private const val PREFS_NAME = "notification_prefs"
     private const val KEY_NOTIFICATION_PERMISSION_ASKED = "notification_permission_asked"
     private const val KEY_NOTIFICATION_ENABLED = "notification_enabled"
+    private const val KEY_UNREAD_NOTIFICATION_COUNT = "unread_notification_count"
     
     private fun getSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -97,6 +98,34 @@ object NotificationManager {
             android.util.Log.e("NotificationManager", "Failed to enable notifications", e)
             Result.failure(e)
         }
+    }
+    
+    /**
+     * Get unread notification count
+     */
+    fun getUnreadNotificationCount(context: Context): Int {
+        return getSharedPreferences(context).getInt(KEY_UNREAD_NOTIFICATION_COUNT, 0)
+    }
+    
+    /**
+     * Increment unread notification count (call when notification is received)
+     */
+    fun incrementUnreadCount(context: Context) {
+        val current = getUnreadNotificationCount(context)
+        getSharedPreferences(context).edit()
+            .putInt(KEY_UNREAD_NOTIFICATION_COUNT, current + 1)
+            .apply()
+        android.util.Log.d("NotificationManager", "Unread count incremented to: ${current + 1}")
+    }
+    
+    /**
+     * Clear unread notification count (call when History screen is viewed)
+     */
+    fun clearUnreadCount(context: Context) {
+        getSharedPreferences(context).edit()
+            .putInt(KEY_UNREAD_NOTIFICATION_COUNT, 0)
+            .apply()
+        android.util.Log.d("NotificationManager", "Unread count cleared")
     }
 }
 
