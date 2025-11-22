@@ -12,7 +12,15 @@ RULES:
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    // Allow authenticated users to read/write their own files
+    // Allow public read access to input files (for Replicate API)
+    // This allows Replicate to access uploaded images without authentication
+    // Input files are temporary and used once for video generation
+    match /users/{userId}/inputs/{fileName} {
+      allow read: if true;  // Public read for Replicate
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Keep other user files private
     match /users/{userId}/{allPaths=**} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
@@ -29,19 +37,28 @@ service firebase.storage {
 EXPLANATION:
 ===========================================
 
-- `users/{userId}/{allPaths=**}` - Matches all paths under users/{userId}/
+- `users/{userId}/inputs/{fileName}` - Input files for video generation
+  - ✅ Public read access (allows Replicate API to access images)
+  - ✅ Only authenticated users can write to their own inputs folder
+  - ⚠️ These files are temporary and used once for generation
+
+- `users/{userId}/{allPaths=**}` - All other user files (private)
   This includes:
-  - users/{userId}/inputs/*.jpeg (for first/last frame uploads)
   - users/{userId}/effects/*.jpeg (if you add effects later)
+  - users/{userId}/videos/* (generated videos)
   - Any other files under the user's directory
+  - ✅ Requires authentication to read/write
+  - ✅ Users can only access their own files
 
-- `request.auth != null` - User must be authenticated
-- `request.auth.uid == userId` - User can only access their own files
+- `public/{allPaths=**}` - Public files (if needed)
+  - ✅ Anyone can read
+  - ✅ Only authenticated users can write
 
-This ensures:
-✅ Authenticated users can upload files to their own directory
-✅ Users cannot access other users' files
-✅ Unauthenticated users cannot upload or read files
+Security:
+✅ Input files are publicly readable (needed for Replicate API)
+✅ All other user files remain private
+✅ Users can only write to their own directories
+✅ Unauthenticated users cannot upload files
 
 ===========================================
 ALTERNATIVE (More Permissive - for testing):

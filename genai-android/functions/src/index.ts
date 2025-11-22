@@ -63,14 +63,20 @@ export const callReplicateVeoAPIV2 = onCall<GenerateRequest>(
 
     const userId = data.userId || auth.uid;
 
-    // 0. Validate duration against model's allowed durations
+    // 0. Fetch model document to get schema and validate duration
+    let modelData: admin.firestore.DocumentData | undefined;
+    let imageParamName: string | null = null;
+    let firstFrameParamName: string | null = null;
+    let lastFrameParamName: string | null = null;
+    let audioParamName: string | null = null;
+
     if (data.modelId) {
       const modelDoc = await firestore
         .collection("models")
         .doc(data.modelId)
         .get();
       if (modelDoc.exists) {
-        const modelData = modelDoc.data();
+        modelData = modelDoc.data();
         const allowedDurations =
           (modelData?.duration_options as number[]) || [];
         if (allowedDurations.length > 0 && data.durationSeconds) {
@@ -81,6 +87,73 @@ export const callReplicateVeoAPIV2 = onCall<GenerateRequest>(
             );
           }
         }
+
+        // Extract parameter names from schema_parameters
+        const schemaParams = (modelData?.schema_parameters as Array<{
+          name: string;
+          type: string;
+          format?: string;
+        }>) || [];
+
+        // Find image input parameter names
+        // Priority: image > first_frame > input_image > firstFrameUrl
+        const imageParam = schemaParams.find((p) => {
+          const nameLower = p.name.toLowerCase();
+          return (
+            nameLower === "image" ||
+            nameLower === "input_image" ||
+            nameLower === "inputimage" ||
+            (nameLower.includes("image") && p.type === "string" &&
+              (p.format === "uri" || p.format === "url"))
+          );
+        });
+
+        const firstFrameParam = schemaParams.find((p) => {
+          const nameLower = p.name.toLowerCase();
+          return (
+            nameLower === "first_frame" ||
+            nameLower === "firstframe" ||
+            nameLower === "first_frame_url" ||
+            nameLower === "firstframeurl" ||
+            nameLower === "first_frame_image"
+          );
+        });
+
+        const lastFrameParam = schemaParams.find((p) => {
+          const nameLower = p.name.toLowerCase();
+          return (
+            nameLower === "last_frame" ||
+            nameLower === "lastframe" ||
+            nameLower === "last_frame_url" ||
+            nameLower === "lastframeurl" ||
+            nameLower === "last_frame_image"
+          );
+        });
+
+        const audioParam = schemaParams.find((p) => {
+          const nameLower = p.name.toLowerCase();
+          return (
+            nameLower === "audio" ||
+            nameLower === "audio_file" ||
+            nameLower === "audiofile" ||
+            (nameLower.includes("audio") && p.type === "string" &&
+              (p.format === "uri" || p.format === "url"))
+          );
+        });
+
+        // Set parameter names (use actual schema name, not our internal name)
+        imageParamName = imageParam?.name || null;
+        firstFrameParamName = firstFrameParam?.name || null;
+        lastFrameParamName = lastFrameParam?.name || null;
+        audioParamName = audioParam?.name || null;
+
+        console.log(
+          `Model ${data.modelId} parameter mapping: ` +
+            `image=${imageParamName}, ` +
+            `first_frame=${firstFrameParamName}, ` +
+            `last_frame=${lastFrameParamName}, ` +
+            `audio=${audioParamName}`,
+        );
       }
     }
 
@@ -127,23 +200,68 @@ export const callReplicateVeoAPIV2 = onCall<GenerateRequest>(
         process.env.GCLOUD_PROJECT || "your-project-id"
       }.cloudfunctions.net/replicateWebhook`;
 
-    // Build input payload - include audio if enabled
+    // Build input payload - dynamically map parameters based on model schema
     const input: Record<string, unknown> = {
       prompt: data.prompt,
       duration: data.durationSeconds,
       aspect_ratio: data.aspectRatio,
     };
 
+    // Map first frame URL to correct parameter name
     if (data.firstFrameUrl) {
-      input.first_frame = data.firstFrameUrl;
+      // Priority: image > first_frame > firstFrame (for models like wan-video)
+      if (imageParamName) {
+        // If model uses "image" parameter, use that
+        // (e.g., wan-video/wan-2.5-i2v)
+        input[imageParamName] = data.firstFrameUrl;
+        console.log(
+          `Mapped firstFrameUrl to parameter: ${imageParamName}`,
+        );
+      } else if (firstFrameParamName) {
+        // Use the actual parameter name from schema
+        input[firstFrameParamName] = data.firstFrameUrl;
+        console.log(
+          `Mapped firstFrameUrl to parameter: ${firstFrameParamName}`,
+        );
+      } else {
+        // Fallback to default names
+        input.first_frame = data.firstFrameUrl;
+        input.firstFrame = data.firstFrameUrl;
+        console.log("Using fallback: first_frame and firstFrame");
+      }
     }
+
+    // Map last frame URL to correct parameter name
     if (data.lastFrameUrl) {
-      input.last_frame = data.lastFrameUrl;
+      if (lastFrameParamName) {
+        input[lastFrameParamName] = data.lastFrameUrl;
+        console.log(`Mapped lastFrameUrl to parameter: ${lastFrameParamName}`);
+      } else {
+        // Fallback to default names
+        input.last_frame = data.lastFrameUrl;
+        input.lastFrame = data.lastFrameUrl;
+        console.log("Using fallback: last_frame and lastFrame");
+      }
     }
+
+    // Map audio parameter
     if (data.enableAudio) {
-      // Support different audio parameter names
+      if (audioParamName) {
+        // For audio file URI (if model supports audio file input)
+        // Note: Currently we only support boolean enable_audio, not file upload
+        // This is for future support
+        input[audioParamName] = true;
+      }
+      // Support common audio parameter names
       input.generate_audio = true;
       input.enable_audio = true;
+      input.with_audio = true;
+    }
+
+    // Add negative prompt if provided
+    if (data.negativePrompt) {
+      input.negative_prompt = data.negativePrompt;
+      input.negativePrompt = data.negativePrompt;
     }
 
     const payload = {

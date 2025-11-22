@@ -74,7 +74,7 @@ sealed class AppDestination(
 fun GenAiRoot() {
     var currentRoute by rememberSaveable(
         stateSaver = AppDestination.Saver
-    ) { mutableStateOf<AppDestination>(AppDestination.Models) }
+    ) { mutableStateOf<AppDestination>(AppDestination.Generate) }
     var selectedModelId by rememberSaveable { mutableStateOf<String?>(null) }
     var highlightModelId by rememberSaveable { mutableStateOf<String?>(null) }
     var showGeneratingScreen by rememberSaveable { mutableStateOf(false) }
@@ -82,7 +82,7 @@ fun GenAiRoot() {
     var resultJobId by rememberSaveable { mutableStateOf<String?>(null) }
     var pendingJobId by rememberSaveable { mutableStateOf<String?>(null) }
     var showBuyCreditsScreen by rememberSaveable { mutableStateOf(false) }
-    val destinations = remember { listOf(AppDestination.Models, AppDestination.Generate, AppDestination.History, AppDestination.Profile) }
+    val destinations = remember { listOf(AppDestination.Generate, AppDestination.Models, AppDestination.History, AppDestination.Profile) }
     
     // Watch for job completion when generating
     val historyViewModel: HistoryViewModel = viewModel(factory = HistoryViewModel.Factory)
@@ -137,10 +137,10 @@ fun GenAiRoot() {
     val historyLabel = stringResource(R.string.destination_history)
     val profileLabel = stringResource(R.string.destination_profile)
     
-    val navigationItems = remember(modelsLabel, generateLabel, historyLabel, profileLabel) {
+    val navigationItems = remember(generateLabel, modelsLabel, historyLabel, profileLabel) {
         listOf(
-            NavigationItem(icon = Icons.Outlined.ViewInAr, label = modelsLabel),
             NavigationItem(icon = Icons.Outlined.AutoAwesome, label = generateLabel),
+            NavigationItem(icon = Icons.Outlined.ViewInAr, label = modelsLabel),
             NavigationItem(icon = Icons.Outlined.History, label = historyLabel),
             NavigationItem(icon = Icons.Outlined.Face, label = profileLabel)
         )
