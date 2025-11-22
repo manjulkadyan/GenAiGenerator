@@ -213,6 +213,17 @@ fun GenAiRoot() {
                             showGeneratingScreen = true
                             // The latest job will appear in the jobs list shortly after generation starts
                             // We'll detect it in LaunchedEffect below
+                        },
+                        onSettingsClick = {
+                            // Navigate to Profile screen
+                            currentRoute = AppDestination.Profile
+                            showBuyCreditsScreen = false
+                        },
+                        onCreditsClick = {
+                            // Navigate to Profile route and show BuyCreditsScreen
+                            // This keeps Profile in backstack, so back goes to ProfileScreen
+                            currentRoute = AppDestination.Profile
+                            showBuyCreditsScreen = true
                         }
                     )
                 }
