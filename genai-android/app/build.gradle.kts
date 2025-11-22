@@ -90,6 +90,9 @@ dependencies {
     // Coil for image loading
     implementation("io.coil-kt:coil-compose:2.5.0")
     
+    // Permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.34.0")
+    
     // Room Database for caching
     val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")

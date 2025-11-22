@@ -56,6 +56,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -152,6 +153,7 @@ fun GenerateScreen(
         }
 
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
     var generationMode by rememberSaveable { mutableStateOf(GenerationMode.TextToVideo) }
     var showAdvanced by rememberSaveable { mutableStateOf(true) }
     var showPricingDialog by rememberSaveable { mutableStateOf(false) }
@@ -391,9 +393,7 @@ fun GenerateScreen(
                                     onClick = {
                                         viewModel.dismissMessage()
                                         viewModel.generate()
-                                        if (state.canGenerate) {
-                                            onGenerateStarted()
-                                        }
+                                        // Don't call onGenerateStarted here - wait for successful start
                                     },
                                     enabled = state.canGenerate,
                                     isLoading = state.isGenerating
@@ -412,7 +412,6 @@ fun GenerateScreen(
                 }
             }
         }
-
     }
 
     if (!state.isGenerating && state.errorMessage != null) {
