@@ -101,6 +101,7 @@ import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppEleva
 import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 import kotlinx.coroutines.delay
 import coil.compose.SubcomposeAsyncImage
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -1349,9 +1350,11 @@ private fun ExampleCard(
             .clickable(onClick = onClick)
     ) {
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(24.dp)) // Clip to match card's corner radius
         ) {
-            // Video thumbnail
+            // Video thumbnail - clipped to stay inside container
             VideoThumbnail(
                 videoUrl = videoUrl,
                 modifier = Modifier.fillMaxSize(),
