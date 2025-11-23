@@ -3,7 +3,13 @@ package com.manjul.genai.videogenerator.ui.components
 import androidx.annotation.OptIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -11,12 +17,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -50,6 +60,7 @@ fun BackgroundVideoPlayer(
     var exoPlayer by remember { mutableStateOf<ExoPlayer?>(null) }
     var hasError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    var isLoading by remember { mutableStateOf(false) } // Track loading/buffering state
     
     LaunchedEffect(videoUrl) {
         android.util.Log.d("BackgroundVideoPlayer", "=== LaunchedEffect triggered ===")
@@ -60,6 +71,7 @@ fun BackgroundVideoPlayer(
             android.util.Log.d("BackgroundVideoPlayer", "=== Starting video setup ===")
             hasError = false
             errorMessage = null
+            isLoading = true // Show loading indicator while setting up video
             
             // Release previous player if exists
             exoPlayer?.release()
@@ -165,8 +177,12 @@ fun BackgroundVideoPlayer(
                             }
                             android.util.Log.d("BackgroundVideoPlayer", "📊 Playback state changed: $stateName")
                             
+                            // Update loading state based on playback state
+                            isLoading = playbackState == Player.STATE_BUFFERING
+                            
                             if (playbackState == Player.STATE_READY) {
                                 android.util.Log.d("BackgroundVideoPlayer", "✅ Player is READY - video should be visible")
+                                isLoading = false // Video is ready, stop showing loading
                                 // Ensure volume is set to 1.0 when ready
                                 if (player.volume != 1f) {
                                     android.util.Log.w("BackgroundVideoPlayer", "⚠️ Volume is ${player.volume}, setting to 1.0")
@@ -335,6 +351,41 @@ fun BackgroundVideoPlayer(
                     .fillMaxSize()
                     .background(Color.Black)
             )
+        }
+        
+        // Loading indicator overlay (shown while buffering/caching)
+        if (isLoading && !hasError && videoUrl.isNotEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.8f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(48.dp),
+                        color = Color.White,
+                        strokeWidth = 3.dp
+                    )
+                    androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Loading video...",
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 16.sp
+                    )
+                    androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "This may take a moment on first launch",
+                        color = Color.White.copy(alpha = 0.7f),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontSize = 12.sp
+                    )
+                }
+            }
         }
         
         // Dark overlay for content readability (always show, even on error)
