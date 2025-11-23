@@ -1,6 +1,8 @@
 package com.manjul.genai.videogenerator.ui.screens
 
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
@@ -322,7 +324,10 @@ fun BuyCreditsScreen(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    TextButton(onClick = { /* Terms */ }) {
+                    TextButton(onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://doc-hosting.flycricket.io/genai-videogenerator-terms-of-use/5812e7a9-a6e1-4e96-9255-e5c39fba5b5e/terms"))
+                        context.startActivity(intent)
+                    }) {
                         Text(
                             text = "Terms",
                             color = Color(0xFF9CA3AF),
@@ -334,7 +339,10 @@ fun BuyCreditsScreen(
                         color = Color(0xFF9CA3AF),
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
-                    TextButton(onClick = { /* Privacy */ }) {
+                    TextButton(onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://doc-hosting.flycricket.io/genai-videogenerator-privacy-policy/cd6d3993-1e48-4a61-831a-c9154da6d101/privacy"))
+                        context.startActivity(intent)
+                    }) {
                         Text(
                             text = "Privacy",
                             color = Color(0xFF9CA3AF),

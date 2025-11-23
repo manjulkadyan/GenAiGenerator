@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,6 +32,8 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.Article
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
@@ -760,11 +763,25 @@ private fun ProfileScreenContent(
                         iconBackgroundColor = AppColors.SurfaceElevated.copy(alpha = 0.5f)
                     )
 
-                    // Privacy & Security
+                    // Privacy Policy
                     ActionCard(
                         icon = Icons.Default.Security,
-                        title = "Privacy & Security",
-                        onClick = { /* TODO: Navigate to privacy */ },
+                        title = "Privacy Policy",
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://doc-hosting.flycricket.io/genai-videogenerator-privacy-policy/cd6d3993-1e48-4a61-831a-c9154da6d101/privacy"))
+                            context.startActivity(intent)
+                        },
+                        iconBackgroundColor = AppColors.SurfaceElevated.copy(alpha = 0.5f)
+                    )
+
+                    // Terms of Use
+                    ActionCard(
+                        icon = Icons.Default.Article,
+                        title = "Terms of Use",
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://doc-hosting.flycricket.io/genai-videogenerator-terms-of-use/5812e7a9-a6e1-4e96-9255-e5c39fba5b5e/terms"))
+                            context.startActivity(intent)
+                        },
                         iconBackgroundColor = AppColors.SurfaceElevated.copy(alpha = 0.5f)
                     )
 
