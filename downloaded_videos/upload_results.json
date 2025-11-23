@@ -1,0 +1,44 @@
+{
+  "master_playlist_url": "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/videos%2Flanding%2Flanding_video_master.m3u8?alt=media",
+  "uploaded_files": [
+    {
+      "file": "downloaded_videos/landing_video_1280x720.mp4",
+      "name": "landing_video_1280x720.mp4",
+      "url": "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/videos%2Flanding%2Flanding_video_1280x720.mp4?alt=media"
+    },
+    {
+      "file": "downloaded_videos/landing_video_640x360.mp4",
+      "name": "landing_video_640x360.mp4",
+      "url": "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/videos%2Flanding%2Flanding_video_640x360.mp4?alt=media"
+    },
+    {
+      "file": "downloaded_videos/landing_video_480x270.mp4",
+      "name": "landing_video_480x270.mp4",
+      "url": "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/videos%2Flanding%2Flanding_video_480x270.mp4?alt=media"
+    },
+    {
+      "file": "downloaded_videos/landing_video_1280x720.m3u8",
+      "name": "landing_video_1280x720.m3u8",
+      "url": "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/videos%2Flanding%2Flanding_video_1280x720.m3u8?alt=media"
+    },
+    {
+      "file": "downloaded_videos/landing_video_640x360.m3u8",
+      "name": "landing_video_640x360.m3u8",
+      "url": "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/videos%2Flanding%2Flanding_video_640x360.m3u8?alt=media"
+    },
+    {
+      "file": "downloaded_videos/landing_video_480x270.m3u8",
+      "name": "landing_video_480x270.m3u8",
+      "url": "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/videos%2Flanding%2Flanding_video_480x270.m3u8?alt=media"
+    },
+    {
+      "file": "downloaded_videos/landing_video_master.m3u8",
+      "name": "landing_video_master.m3u8",
+      "url": "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/videos%2Flanding%2Flanding_video_master.m3u8?alt=media"
+    }
+  ],
+  "failed_files": [],
+  "firebase_storage_path": "videos/landing",
+  "project_id": "genaivideogenerator",
+  "storage_bucket": "genaivideogenerator.firebasestorage.app"
+}

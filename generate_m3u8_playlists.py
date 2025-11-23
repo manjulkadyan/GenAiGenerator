@@ -51,8 +51,8 @@ def generate_individual_m3u8(video_url, output_path, duration):
     
     print(f"✅ Generated: {output_path.name}")
 
-def generate_master_playlist(resolutions_data, output_path, base_url):
-    """Generate master m3u8 playlist."""
+def generate_master_playlist(resolutions_data, output_path, base_url_prefix):
+    """Generate master m3u8 playlist pointing directly to MP4 files."""
     lines = [
         "#EXTM3U",
         "#EXT-X-VERSION:6",
@@ -63,10 +63,12 @@ def generate_master_playlist(resolutions_data, output_path, base_url):
     for res in sorted(resolutions_data, key=lambda x: x['bandwidth'], reverse=True):
         name = res['name']
         bandwidth = res['bandwidth']
-        m3u8_url = f"{base_url}/{quote(f'landing_video_{name}.m3u8', safe='')}?alt=media"
+        # Point directly to MP4 files (not individual m3u8 files)
+        # HLS can work with regular MP4 files when pointed to directly
+        mp4_url = res['mp4_url']
         
         lines.append(f'#EXT-X-STREAM-INF:BANDWIDTH={bandwidth},RESOLUTION={name},CODECS="mp4a.40.2,avc1.640020"')
-        lines.append(m3u8_url)
+        lines.append(mp4_url)
         lines.append("")
     
     with open(output_path, "w") as f:
@@ -79,7 +81,7 @@ def main():
     print("Generating M3U8 Playlists")
     print("=" * 70)
     
-    base_url = f"https://firebasestorage.googleapis.com/v0/b/{STORAGE_BUCKET}/o/{quote(FIREBASE_STORAGE_PATH, safe='')}"
+    base_url_prefix = f"https://firebasestorage.googleapis.com/v0/b/{STORAGE_BUCKET}/o/"
     
     resolutions_data = []
     
@@ -96,25 +98,31 @@ def main():
         # Get duration
         duration = get_video_duration(mp4_file)
         
-        # Generate MP4 URL
-        mp4_url = f"{base_url}/{quote(f'landing_video_{name}.mp4', safe='')}?alt=media"
+        # Generate MP4 URL - encode the full path including the slash
+        mp4_path = f"{FIREBASE_STORAGE_PATH}/landing_video_{name}.mp4"
+        mp4_url = f"{base_url_prefix}{quote(mp4_path, safe='')}?alt=media"
         
         # Generate individual m3u8
         generate_individual_m3u8(mp4_url, m3u8_file, duration)
+        
+        # Generate m3u8 URL - encode the full path including the slash
+        m3u8_path = f"{FIREBASE_STORAGE_PATH}/landing_video_{name}.m3u8"
+        m3u8_url = f"{base_url_prefix}{quote(m3u8_path, safe='')}?alt=media"
         
         resolutions_data.append({
             "name": name,
             "bandwidth": res["bandwidth"],
             "mp4_url": mp4_url,
-            "m3u8_url": f"{base_url}/{quote(f'landing_video_{name}.m3u8', safe='')}?alt=media"
+            "m3u8_url": m3u8_url
         })
     
     # Generate master playlist
     if resolutions_data:
         master_file = OUTPUT_DIR / "landing_video_master.m3u8"
-        generate_master_playlist(resolutions_data, master_file, base_url)
+        generate_master_playlist(resolutions_data, master_file, base_url_prefix)
         
-        master_url = f"{base_url}/{quote('landing_video_master.m3u8', safe='')}?alt=media"
+        master_path = f"{FIREBASE_STORAGE_PATH}/landing_video_master.m3u8"
+        master_url = f"{base_url_prefix}{quote(master_path, safe='')}?alt=media"
         
         print(f"\n{'='*70}")
         print("✅ All playlists generated!")

@@ -11,11 +11,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -59,7 +62,8 @@ fun BuyCreditsScreen(
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val screenHeightDp = configuration.screenHeightDp
-    val videoHeightDp = (screenHeightDp * 0.33f).toInt() // 33% of screen for video
+    // Video takes 50% of screen, leaving room for bottom sheet
+    val videoHeightDp = (screenHeightDp * 0.5f).toInt() // 50% of screen for video
     
     // Handle system back button - navigate back instead of closing app
     BackHandler(enabled = true) {
@@ -81,11 +85,14 @@ fun BuyCreditsScreen(
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        // Top section: Video (30-35% of screen, fixed, not scrollable)
+        // Top section: Video (50% of screen, fixed, not scrollable)
+        // Positioned at top with status bar padding
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(videoHeightDp.dp)
+                .align(Alignment.TopStart)
+                .windowInsetsPadding(WindowInsets.statusBars)
         ) {
             // Background video layer
             if (uiState.config.backgroundVideoUrl.isNotEmpty()) {
@@ -100,7 +107,7 @@ fun BuyCreditsScreen(
                 BackgroundVideoPlayer(
                     videoUrl = uiState.config.backgroundVideoUrl,
                     modifier = Modifier.fillMaxSize(),
-                    overlayAlpha = 0.7f
+                    overlayAlpha = 0f // Remove overlay - make video fully clear
                 )
             } else {
                 // Fallback: black background if no video URL
@@ -130,14 +137,15 @@ fun BuyCreditsScreen(
         }
         
         // Bottom section: Draggable bottom sheet for features + Sticky pricing/button
-        // Sheet can expand to full screen (covering video area)
+        // Sheet positioned from bottom, can expand to cover video
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
             // Persistent draggable bottom sheet for features - always visible, never dismissible
             // Can be dragged up to full screen (covering video) but always remains visible
+            // Starts at 50% of screen, positioned from bottom
             DraggableBottomSheet(
-                initialHeightPercent = 0.6f // Start at 60% of screen to show 3-4 features initially
+                initialHeightPercent = 0.5f // Start at 50% of screen (will overlap video slightly)
             ) {
                 // Features section - NOT scrollable, sheet itself is draggable
                 if (uiState.config.features.isNotEmpty()) {

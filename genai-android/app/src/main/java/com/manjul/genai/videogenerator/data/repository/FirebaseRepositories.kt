@@ -284,7 +284,7 @@ class FirebaseLandingPageRepository(
                     val config = snapshot.toLandingPageConfig()
                     android.util.Log.d("LandingPageRepository", "Config parsed. backgroundVideoUrl: ${config.backgroundVideoUrl}")
                     android.util.Log.d("LandingPageRepository", "Features count: ${config.features.size}, Plans count: ${config.subscriptionPlans.size}")
-                    trySend(config)
+                trySend(config)
                 } else {
                     android.util.Log.w("LandingPageRepository", "Snapshot is null or doesn't exist, using default config")
                     val defaultConfig = getDefaultConfig()
