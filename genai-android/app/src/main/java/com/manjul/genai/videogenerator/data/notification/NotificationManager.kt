@@ -257,7 +257,7 @@ object NotificationManager {
         // Build notification
         // Use a reliable system icon - ic_dialog_info is more reliable than ic_media_play
         // For production, you should create a custom notification icon (white icon on transparent background)
-        val smallIcon = android.R.drawable.ic_dialog_info
+        val smallIcon = R.mipmap.ic_launcher
         
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(smallIcon)
