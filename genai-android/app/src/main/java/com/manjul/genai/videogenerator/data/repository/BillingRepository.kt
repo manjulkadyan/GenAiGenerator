@@ -14,9 +14,21 @@ import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
+
+/**
+ * Sealed class representing purchase update events
+ */
+sealed class PurchaseUpdateEvent {
+    data class Success(val purchase: Purchase) : PurchaseUpdateEvent()
+    data class Error(val billingResult: BillingResult) : PurchaseUpdateEvent()
+    object UserCancelled : PurchaseUpdateEvent()
+}
 
 /**
  * Repository for handling Google Play Billing operations.
@@ -24,10 +36,23 @@ import kotlin.coroutines.resume
 class BillingRepository(private val context: Context) {
     private var billingClient: BillingClient? = null
     
+    // Flow to emit purchase update events
+    private val _purchaseUpdates = MutableSharedFlow<PurchaseUpdateEvent>(extraBufferCapacity = 1)
+    val purchaseUpdates: SharedFlow<PurchaseUpdateEvent> = _purchaseUpdates.asSharedFlow()
+    
     private val purchasesUpdatedListener = PurchasesUpdatedListener { billingResult, purchases ->
-        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
-            for (purchase in purchases) {
-                handlePurchase(purchase)
+        when (billingResult.responseCode) {
+            BillingClient.BillingResponseCode.OK -> {
+                purchases?.forEach { purchase ->
+                    handlePurchase(purchase)
+                    _purchaseUpdates.tryEmit(PurchaseUpdateEvent.Success(purchase))
+                }
+            }
+            BillingClient.BillingResponseCode.USER_CANCELED -> {
+                _purchaseUpdates.tryEmit(PurchaseUpdateEvent.UserCancelled)
+            }
+            else -> {
+                _purchaseUpdates.tryEmit(PurchaseUpdateEvent.Error(billingResult))
             }
         }
     }
@@ -97,23 +122,51 @@ class BillingRepository(private val context: Context) {
     
     /**
      * Launch the billing flow for a subscription purchase.
+     * Handles subscription offers (base plans and offers) for Google Play Billing Library 5.0+
      */
     fun launchBillingFlow(activity: Activity, productDetails: ProductDetails): BillingResult {
-        val productDetailsParamsList = listOf(
-            BillingFlowParams.ProductDetailsParams.newBuilder()
-                .setProductDetails(productDetails)
-                .build()
-        )
-        
-        val billingFlowParams = BillingFlowParams.newBuilder()
-            .setProductDetailsParamsList(productDetailsParamsList)
-            .build()
-        
-        return billingClient?.launchBillingFlow(activity, billingFlowParams) ?: 
-            BillingResult.newBuilder()
+        val billingClient = billingClient
+        if (billingClient == null) {
+            return BillingResult.newBuilder()
                 .setResponseCode(BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE)
                 .setDebugMessage("Billing client not initialized")
                 .build()
+        }
+        
+        // For subscriptions, we need to get the subscription offer details
+        val subscriptionOfferDetails = productDetails.subscriptionOfferDetails
+        if (subscriptionOfferDetails.isNullOrEmpty()) {
+            return BillingResult.newBuilder()
+                .setResponseCode(BillingClient.BillingResponseCode.ERROR)
+                .setDebugMessage("No subscription offers available for product: ${productDetails.productId}")
+                .build()
+        }
+        
+        // Get the first base plan and its first offer (you can customize this logic)
+        // For most cases, we'll use the first available offer
+        val offerDetails = subscriptionOfferDetails.firstOrNull()
+        if (offerDetails == null) {
+            return BillingResult.newBuilder()
+                .setResponseCode(BillingClient.BillingResponseCode.ERROR)
+                .setDebugMessage("No offer details available for product: ${productDetails.productId}")
+                .build()
+        }
+        
+        // Get the base plan ID and offer token
+        val basePlanId = offerDetails.basePlanId
+        val offerToken = offerDetails.offerToken
+        
+        // Build product details params with subscription offer
+        val productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
+            .setProductDetails(productDetails)
+            .setOfferToken(offerToken)
+            .build()
+        
+        val billingFlowParams = BillingFlowParams.newBuilder()
+            .setProductDetailsParamsList(listOf(productDetailsParams))
+            .build()
+        
+        return billingClient.launchBillingFlow(activity, billingFlowParams)
     }
     
     /**
@@ -147,6 +200,7 @@ class BillingRepository(private val context: Context) {
     
     /**
      * Acknowledge a purchase.
+     * This is required for subscriptions - Google Play requires acknowledgment within 3 days.
      */
     private fun handlePurchase(purchase: Purchase) {
         if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
@@ -157,9 +211,13 @@ class BillingRepository(private val context: Context) {
                 
                 billingClient?.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
                     if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                        // Purchase acknowledged successfully
+                        android.util.Log.d("BillingRepository", "Purchase acknowledged successfully: ${purchase.products.firstOrNull()}")
+                    } else {
+                        android.util.Log.e("BillingRepository", "Failed to acknowledge purchase: ${billingResult.debugMessage}")
                     }
                 }
+            } else {
+                android.util.Log.d("BillingRepository", "Purchase already acknowledged: ${purchase.products.firstOrNull()}")
             }
         }
     }

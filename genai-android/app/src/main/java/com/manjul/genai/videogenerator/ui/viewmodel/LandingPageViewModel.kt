@@ -13,10 +13,13 @@ import com.manjul.genai.videogenerator.data.model.LandingPageConfig
 import com.manjul.genai.videogenerator.data.model.SubscriptionPlan
 import com.manjul.genai.videogenerator.data.repository.BillingRepository
 import com.manjul.genai.videogenerator.data.repository.LandingPageRepository
+import com.manjul.genai.videogenerator.data.repository.PurchaseUpdateEvent
 import com.manjul.genai.videogenerator.data.repository.RepositoryProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 data class LandingPageUiState(
@@ -25,7 +28,9 @@ data class LandingPageUiState(
     val error: String? = null,
     val selectedPlan: SubscriptionPlan? = null,
     val productDetails: Map<String, ProductDetails> = emptyMap(),
-    val billingInitialized: Boolean = false
+    val billingInitialized: Boolean = false,
+    val purchaseMessage: String? = null, // Success or error message for purchase
+    val isPurchaseInProgress: Boolean = false
 )
 
 class LandingPageViewModel(
@@ -38,6 +43,7 @@ class LandingPageViewModel(
     init {
         loadConfig()
         initializeBilling()
+        observePurchaseUpdates()
     }
     
     private fun loadConfig() {
@@ -93,13 +99,79 @@ class LandingPageViewModel(
     fun purchasePlan(activity: Activity, plan: SubscriptionPlan): BillingResult {
         val productDetails = _uiState.value.productDetails[plan.productId]
         return if (productDetails != null) {
+            // Set purchase in progress
+            _uiState.value = _uiState.value.copy(
+                isPurchaseInProgress = true,
+                purchaseMessage = null
+            )
             billingRepository.launchBillingFlow(activity, productDetails)
         } else {
+            _uiState.value = _uiState.value.copy(
+                error = "Product details not available. Please try again.",
+                isPurchaseInProgress = false
+            )
             BillingResult.newBuilder()
                 .setResponseCode(com.android.billingclient.api.BillingClient.BillingResponseCode.ERROR)
                 .setDebugMessage("Product details not available")
                 .build()
         }
+    }
+    
+    /**
+     * Observe purchase updates from BillingRepository
+     */
+    private fun observePurchaseUpdates() {
+        billingRepository.purchaseUpdates
+            .onEach { event ->
+                when (event) {
+                    is PurchaseUpdateEvent.Success -> {
+                        _uiState.value = _uiState.value.copy(
+                            isPurchaseInProgress = false,
+                            purchaseMessage = "Subscription purchased successfully!",
+                            error = null
+                        )
+                        android.util.Log.d("LandingPageViewModel", "Purchase successful: ${event.purchase.products.firstOrNull()}")
+                    }
+                    is PurchaseUpdateEvent.Error -> {
+                        val errorMessage = when (event.billingResult.responseCode) {
+                            com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
+                                "You already have an active subscription"
+                            }
+                            com.android.billingclient.api.BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> {
+                                "Billing service is unavailable. Please try again later."
+                            }
+                            com.android.billingclient.api.BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
+                                "Billing is not available on this device"
+                            }
+                            else -> {
+                                "Purchase failed: ${event.billingResult.debugMessage}"
+                            }
+                        }
+                        _uiState.value = _uiState.value.copy(
+                            isPurchaseInProgress = false,
+                            purchaseMessage = null,
+                            error = errorMessage
+                        )
+                        android.util.Log.e("LandingPageViewModel", "Purchase error: ${event.billingResult.debugMessage}")
+                    }
+                    is PurchaseUpdateEvent.UserCancelled -> {
+                        _uiState.value = _uiState.value.copy(
+                            isPurchaseInProgress = false,
+                            purchaseMessage = null,
+                            error = null
+                        )
+                        android.util.Log.d("LandingPageViewModel", "User cancelled purchase")
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+    
+    /**
+     * Clear purchase message
+     */
+    fun clearPurchaseMessage() {
+        _uiState.value = _uiState.value.copy(purchaseMessage = null, error = null)
     }
     
     companion object {
