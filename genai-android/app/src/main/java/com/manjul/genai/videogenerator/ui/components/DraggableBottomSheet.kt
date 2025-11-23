@@ -30,11 +30,12 @@ import kotlin.math.abs
 
 /**
  * Persistent draggable bottom sheet that is always visible and cannot be dismissed.
- * Starts at partial height (default 30%) and can be dragged up to full screen.
+ * Starts at partial height (default 30%) and can be dragged up to a maximum height.
  * This is NOT a modal - it's a permanent part of the layout.
  * 
  * @param modifier Modifier to be applied to the sheet container
  * @param initialHeightPercent Initial height as percentage of screen (default 0.3 = 30%)
+ * @param maxHeightPercent Maximum height as percentage of screen (default 1.0 = 100% = full screen)
  * @param content The content to display inside the scrollable sheet
  */
 @Composable
