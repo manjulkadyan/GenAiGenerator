@@ -24,9 +24,11 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.PlayerView
 
 /**
@@ -62,9 +64,16 @@ fun BackgroundVideoPlayer(
             exoPlayer = null
             
             try {
-                // Create DataSource factory for proper network handling
-                val dataSourceFactory = DefaultDataSource.Factory(context)
-                android.util.Log.d("BackgroundVideoPlayer", "DataSource factory created")
+                // Create HttpDataSource with User-Agent to avoid 403 errors
+                val httpDataSourceFactory = DefaultHttpDataSource.Factory()
+                    .setUserAgent("GenAiVideoPlayer/1.0")
+                    .setConnectTimeoutMs(15_000)
+                    .setReadTimeoutMs(15_000)
+                    .setAllowCrossProtocolRedirects(true)
+                
+                // Create DataSource factory with custom HttpDataSource
+                val dataSourceFactory = DefaultDataSource.Factory(context, httpDataSourceFactory)
+                android.util.Log.d("BackgroundVideoPlayer", "DataSource factory created with User-Agent")
                 
                 // Since this is HLS-only, always use HLS MediaSource
                 android.util.Log.d("BackgroundVideoPlayer", "Creating HLS MediaSource for URL: $videoUrl")
@@ -81,11 +90,21 @@ fun BackgroundVideoPlayer(
                     .build()
                 android.util.Log.d("BackgroundVideoPlayer", "MediaItem created with URI: ${mediaItem.localConfiguration?.uri}")
                 
-                // Create HLS MediaSource
-                val mediaSource = HlsMediaSource.Factory(dataSourceFactory)
-                    .setAllowChunklessPreparation(true)
-                    .createMediaSource(mediaItem)
-                android.util.Log.d("BackgroundVideoPlayer", "HLS MediaSource created successfully")
+                // For HLS master playlists, ExoPlayer will auto-detect and use HLS
+                // However, if the master playlist points to regular MP4 files (not fragmented),
+                // HLS may fail. In that case, we should use the best quality MP4 directly.
+                // For now, let ExoPlayer auto-detect the format from the URL
+                val mediaSource: MediaSource = if (videoUrl.contains(".m3u8", ignoreCase = true)) {
+                    android.util.Log.d("BackgroundVideoPlayer", "Creating HLS MediaSource for m3u8 URL")
+                    HlsMediaSource.Factory(dataSourceFactory)
+                        .setAllowChunklessPreparation(true)
+                        .createMediaSource(mediaItem)
+                } else {
+                    android.util.Log.d("BackgroundVideoPlayer", "Creating Progressive MediaSource for direct video URL")
+                    ProgressiveMediaSource.Factory(dataSourceFactory)
+                        .createMediaSource(mediaItem)
+                }
+                android.util.Log.d("BackgroundVideoPlayer", "MediaSource created successfully")
                 
                 // Configure player
                 player.apply {
@@ -94,8 +113,8 @@ fun BackgroundVideoPlayer(
                     
                     repeatMode = Player.REPEAT_MODE_ONE
                     playWhenReady = true
-                    volume = 0f // Muted for background
-                    videoScalingMode = androidx.media3.common.C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
+                    volume = 1f // Enable audio
+                    videoScalingMode = androidx.media3.common.C.VIDEO_SCALING_MODE_SCALE_TO_FIT // Show full video without cropping
                     android.util.Log.d("BackgroundVideoPlayer", "Player configured: repeatMode=ONE, playWhenReady=true, volume=0")
                         
                     // Add comprehensive listener for debugging
@@ -107,6 +126,15 @@ fun BackgroundVideoPlayer(
                             // Log detailed error info
                             android.util.Log.e("BackgroundVideoPlayer", "Error code: ${error.errorCode}")
                             android.util.Log.e("BackgroundVideoPlayer", "Error cause: ${error.cause?.message}")
+                            
+                            // Log the underlying HTTP error if available
+                            if (error.cause is androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException) {
+                                val httpError = error.cause as androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException
+                                android.util.Log.e("BackgroundVideoPlayer", "HTTP Response Code: ${httpError.responseCode}")
+                                android.util.Log.e("BackgroundVideoPlayer", "HTTP Response Message: ${httpError.responseMessage}")
+                                android.util.Log.e("BackgroundVideoPlayer", "Request URL: ${httpError.dataSpec?.uri}")
+                            }
+                            
                             android.util.Log.e("BackgroundVideoPlayer", "Error stack trace:", error)
                             
                             hasError = true
@@ -209,7 +237,7 @@ fun BackgroundVideoPlayer(
                     PlayerView(ctx).apply {
                         player = exoPlayer
                         useController = false
-                        resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+                        resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT // Show full video without cropping
                         android.util.Log.d("BackgroundVideoPlayer", "PlayerView configured with player")
                     }
                 },
