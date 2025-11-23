@@ -19,13 +19,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.manjul.genai.videogenerator.data.model.SubscriptionPlan
-import com.manjul.genai.videogenerator.ui.designsystem.components.badges.CustomStatusBadge
 
 /**
  * Subscription plan card component for landing page.
@@ -39,56 +39,47 @@ fun SubscriptionPlanCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Exact colors from design
-    val backgroundColor = when {
-        isSelected || plan.isPopular -> Color(0xFFE8E8E8) // Light grey for popular/selected
-        else -> Color(0xFF1F1F1F) // Black/dark grey for unselected
+    // All cards have the same styling - only difference is the badge for popular
+    val backgroundColor = if (isSelected) {
+        Color(0xFFE8E8E8) // Light grey for selected
+    } else {
+        Color(0xFF1F1F1F) // Black/dark grey for unselected
     }
     
-    val borderColor = when {
-        isSelected || plan.isPopular -> Color(0xFFD1D1D1) // Slightly darker grey border for selected
-        else -> Color.White.copy(alpha = 1.0f) // White border for unselected
+    val borderColor = if (isSelected) {
+        Color(0xFFD1D1D1) // Grey border for selected
+    } else {
+        Color.White.copy(alpha = 1.0f) // White border for unselected
     }
     
-    val textColor = if (isSelected || plan.isPopular) Color.Black else Color.White
-    val secondaryTextColor = if (isSelected || plan.isPopular) Color(0xFF6B7280) else Color(0xFF9CA3AF)
+    val textColor = if (isSelected) Color.Black else Color.White
+    val secondaryTextColor = if (isSelected) Color(0xFF6B7280) else Color(0xFF9CA3AF)
 
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .background(
-                color = backgroundColor,
-                shape = RoundedCornerShape(16.dp)
-            )
-            .border(
-                width = 1.dp,
-                color = borderColor,
-                shape = RoundedCornerShape(16.dp)
-            )
+        modifier = modifier.fillMaxWidth()
     ) {
-        // Popular badge - positioned at top center, overlapping the card edge
-        if (plan.isPopular) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .offset(y = (-8).dp) // Overlap the top edge
-            ) {
-                CustomStatusBadge(
-                    text = "Popular",
-                    backgroundColor = Color(0xFF4B3FFF), // Exact purple from design
-                    textColor = Color.White
+        // Card content - all cards look the same
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .background(
+                    color = backgroundColor,
+                    shape = RoundedCornerShape(16.dp)
                 )
-            }
-        }
-        
-        Column(
+                .border(
+                    width = 1.dp,
+                    color = borderColor,
+                    shape = RoundedCornerShape(16.dp)
+                )
+        ) {
+            Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp, vertical = 12.dp)
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             // Period (Weekly) - top
             Text(
@@ -105,7 +96,7 @@ fun SubscriptionPlanCard(
                 style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Bold,
                 color = textColor,
-                fontSize = 36.sp, // Very large, bold number
+                fontSize = 32.sp, // Very large, bold number
                 lineHeight = 44.sp
             )
             
@@ -126,6 +117,39 @@ fun SubscriptionPlanCard(
                 fontWeight = FontWeight.Medium,
                 fontSize = 14.sp
             )
+            }
+        }
+        
+        // Popular badge - positioned ABOVE the card (rendered last, appears on top)
+        if (plan.isPopular) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .offset(y = (-14).dp) // Position above card, showing border behind it
+            ) {
+                // Gradient badge with purple gradient (same gradient colors as card background)
+                Box(
+                    modifier = Modifier
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color(0xFF6B5FFF), // Lighter purple at top (same as card gradient)
+                                    Color(0xFF4B3FFF)  // Darker purple at bottom (same as card gradient)
+                                )
+                            ),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                ) {
+                    Text(
+                        text = "Popular",
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.White,
+                        fontSize = 11.sp
+                    )
+                }
+            }
         }
     }
 }
