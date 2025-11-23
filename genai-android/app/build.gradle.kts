@@ -88,8 +88,9 @@ dependencies {
     implementation("com.android.billingclient:billing-ktx:7.1.1")
     implementation("androidx.media3:media3-exoplayer:1.3.1")
     implementation("androidx.media3:media3-ui:1.3.1")
-    implementation("androidx.media3:media3-datasource:1.3.1")
+    implementation("androidx.media3:media3-datasource:1.3.1") // Includes CacheDataSource
     implementation("androidx.media3:media3-exoplayer-hls:1.3.1")
+    implementation("androidx.media3:media3-database:1.3.1") // For cache database (SimpleCache)
     
     // Coil for image loading
     implementation("io.coil-kt:coil-compose:2.5.0")

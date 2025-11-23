@@ -10,6 +10,7 @@ import com.manjul.genai.videogenerator.data.repository.RepositoryProvider
 import com.manjul.genai.videogenerator.player.VideoPlayerManager
 import com.manjul.genai.videogenerator.player.VideoPreviewCache
 import com.manjul.genai.videogenerator.player.VideoFileCache
+import com.manjul.genai.videogenerator.player.LandingPageVideoCache
 import kotlinx.coroutines.launch
 
 class GenAiApp : Application() {
@@ -26,6 +27,11 @@ class GenAiApp : Application() {
         
         // Initialize Room database for video caching
         AppDatabase.getDatabase(this)
+        
+        // Pre-cache landing page video on app start (background, non-blocking)
+        // This downloads video to ExoPlayer cache (cacheDir) for instant playback
+        LandingPageVideoCache.startPrecaching(this)
+        android.util.Log.d("GenAiApp", "Started landing page video pre-caching")
         
         // Clean up old cache entries on app start (older than 7 days)
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
