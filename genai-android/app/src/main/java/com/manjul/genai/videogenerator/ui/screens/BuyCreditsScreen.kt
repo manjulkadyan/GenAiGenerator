@@ -29,10 +29,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -119,20 +126,35 @@ fun BuyCreditsScreen(
                 )
             }
             
-            // Close button (top-left, over video)
+            // Close button (top-right, over video) - appears after 3-5 seconds
+            var showCloseButton by remember { mutableStateOf(false) }
+            
+            LaunchedEffect(Unit) {
+                // Show close button after 3-5 seconds (randomized between 3-5)
+                kotlinx.coroutines.delay((3000..5000).random().toLong())
+                showCloseButton = true
+            }
+            
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Close",
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable(onClick = onBackClick),
-                    tint = Color.White
-                )
+                AnimatedVisibility(
+                    visible = showCloseButton,
+                    enter = fadeIn(animationSpec = tween(300)),
+                    exit = fadeOut(animationSpec = tween(300))
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close",
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .size(24.dp)
+                            .clickable(onClick = onBackClick),
+                        tint = Color.White
+                    )
+                }
             }
         }
         
