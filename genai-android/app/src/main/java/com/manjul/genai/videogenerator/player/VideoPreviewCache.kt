@@ -20,11 +20,19 @@ object VideoPreviewCache {
     fun get(context: Context): Cache {
         val appContext = context.applicationContext
         return cache ?: synchronized(this) {
-            cache ?: SimpleCache(
-                File(appContext.cacheDir, "preview_videos"),
-                LeastRecentlyUsedCacheEvictor(CACHE_SIZE_BYTES),
-                StandaloneDatabaseProvider(appContext)
-            ).also { cache = it }
+            cache ?: run {
+                // Cache is stored in cacheDir which persists across app launches
+                // Android may clear cacheDir when storage is low, but normally persists
+                val cacheDir = File(appContext.cacheDir, "preview_videos")
+                android.util.Log.d("VideoPreviewCache", "Cache directory: ${cacheDir.absolutePath}")
+                android.util.Log.d("VideoPreviewCache", "Cache directory exists: ${cacheDir.exists()}")
+                
+                SimpleCache(
+                    cacheDir,
+                    LeastRecentlyUsedCacheEvictor(CACHE_SIZE_BYTES),
+                    StandaloneDatabaseProvider(appContext)
+                ).also { cache = it }
+            }
         }
     }
     

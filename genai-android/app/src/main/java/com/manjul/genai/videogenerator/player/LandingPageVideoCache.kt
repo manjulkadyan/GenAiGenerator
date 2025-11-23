@@ -34,6 +34,7 @@ object LandingPageVideoCache {
     /**
      * Start pre-caching the landing page video.
      * Fetches video URL from Firestore and caches it in background.
+     * Only caches if video is not already cached (persistent across app launches).
      */
     fun startPrecaching(context: Context) {
         if (isPrecaching) {
@@ -56,7 +57,16 @@ object LandingPageVideoCache {
 
                 Log.d(TAG, "Video URL: $videoUrl")
                 
-                // Pre-cache the video
+                // Check if video is already cached (persistent across app launches)
+                if (isCached(context, videoUrl)) {
+                    Log.d(TAG, "✅ Video already cached, skipping pre-cache. Cache persists across app launches.")
+                    isPrecaching = false
+                    return@launch
+                }
+                
+                Log.d(TAG, "Video not cached, starting pre-cache...")
+                
+                // Pre-cache the video (only if not already cached)
                 precacheVideo(context, videoUrl)
                 
             } catch (e: Exception) {
@@ -170,15 +180,37 @@ object LandingPageVideoCache {
 
     /**
      * Check if video is already cached.
+     * Cache persists across app launches (stored in cacheDir).
      */
     @OptIn(UnstableApi::class)
     fun isCached(context: Context, videoUrl: String): Boolean {
         return try {
             val cache = VideoPreviewCache.get(context)
             val keys = cache.keys
-            keys.any { key ->
-                key == videoUrl || key.contains(videoUrl) || videoUrl.contains(key)
+            
+            // Check if the exact URL or any related keys are cached
+            // For HLS (m3u8), check both master playlist and individual segments
+            val isCached = keys.any { key ->
+                when {
+                    // Exact match
+                    key == videoUrl -> true
+                    // HLS master playlist - check if segments are cached
+                    videoUrl.contains(".m3u8", ignoreCase = true) -> {
+                        // For HLS, if we have cached data for the URL, it's cached
+                        key.contains(videoUrl) || videoUrl.contains(key)
+                    }
+                    // Progressive video - exact URL match
+                    else -> key == videoUrl
+                }
             }
+            
+            if (isCached) {
+                Log.d(TAG, "✅ Video is already cached (persistent across app launches)")
+            } else {
+                Log.d(TAG, "Video not cached, will download on first launch")
+            }
+            
+            isCached
         } catch (e: Exception) {
             Log.e(TAG, "Error checking cache", e)
             false
