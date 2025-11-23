@@ -957,3 +957,142 @@ async function sendJobCompleteNotification(
     // Don't throw - notification failure shouldn't break the workflow
   }
 }
+
+/**
+ * Request Account Deletion
+ * Handles account deletion requests from the web form
+ */
+export const requestAccountDeletion = onRequest(
+  {cors: true},
+  async (request, response) => {
+    // Only allow POST requests
+    if (request.method !== "POST") {
+      response.status(405).json({error: "Method not allowed"});
+      return;
+    }
+
+    try {
+      const {userId, email, reason} = request.body;
+
+      // Validate required fields
+      if (!userId || !email) {
+        response.status(400).json({
+          error: "User ID and email are required",
+        });
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        response.status(400).json({
+          error: "Invalid email format",
+        });
+        return;
+      }
+
+      // Save deletion request to Firestore
+      const deletionRequest = {
+        userId: userId.trim(),
+        email: email.trim().toLowerCase(),
+        reason: reason?.trim() || "No reason provided",
+        status: "pending",
+        requestedAt: admin.firestore.FieldValue.serverTimestamp(),
+        processedAt: null,
+        processedBy: null,
+      };
+
+      const docRef = await firestore
+        .collection("deletion_requests")
+        .add(deletionRequest);
+
+      console.log(
+        `✅ Account deletion request received: ${docRef.id} for user ${userId}`,
+      );
+
+      // Send confirmation email (optional - requires email service setup)
+      // You can add email sending logic here if needed
+
+      response.status(200).json({
+        success: true,
+        message: "Deletion request received successfully",
+        requestId: docRef.id,
+      });
+    } catch (error) {
+      console.error("❌ Error processing deletion request:", error);
+      response.status(500).json({
+        error: "Internal server error. Please try again later.",
+      });
+    }
+  },
+);
+
+/**
+ * Process Account Deletion
+ * Admin function to actually delete user account and data
+ * This should be called manually or via a scheduled function
+ */
+export const processAccountDeletion = onCall(async (request) => {
+  // This should be protected - only allow admin users
+  // For now, we'll require a secret key or admin check
+  const {requestId, adminKey} = request.data;
+
+  // Simple admin key check (you should use Firebase Admin SDK auth check in production)
+  if (adminKey !== process.env.ADMIN_SECRET_KEY) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    const requestDoc = await firestore
+      .collection("deletion_requests")
+      .doc(requestId)
+      .get();
+
+    if (!requestDoc.exists) {
+      throw new Error("Deletion request not found");
+    }
+
+    const requestData = requestDoc.data();
+    if (requestData?.status !== "pending") {
+      throw new Error("Request already processed");
+    }
+
+    const userId = requestData.userId;
+
+    // Delete user's jobs collection
+    const jobsRef = firestore.collection("users").doc(userId).collection("jobs");
+    const jobsSnapshot = await jobsRef.get();
+    const batch = firestore.batch();
+    jobsSnapshot.docs.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+    await batch.commit();
+
+    // Delete user document
+    await firestore.collection("users").doc(userId).delete();
+
+    // Delete Firebase Auth user
+    try {
+      await admin.auth().deleteUser(userId);
+    } catch (authError) {
+      console.warn(`Could not delete auth user ${userId}:`, authError);
+      // Continue even if auth deletion fails
+    }
+
+    // Update deletion request status
+    await requestDoc.ref.update({
+      status: "completed",
+      processedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    console.log(`✅ Account deleted successfully: ${userId}`);
+
+    return {
+      success: true,
+      message: "Account deleted successfully",
+    };
+  } catch (error) {
+    console.error("❌ Error deleting account:", error);
+    throw error;
+  }
+});

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Account - GenAI Video Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .button:active {
+            transform: translateY(0);
+        }
+        
+        .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .info-box {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+        }
+        
+        .info-box h3 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        
+        .info-box ul {
+            margin-left: 20px;
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        .info-box li {
+            margin-bottom: 8px;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            display: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            margin-top: 10px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .steps {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .steps h3 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        
+        .steps ol {
+            margin-left: 20px;
+            color: #666;
+            line-height: 2;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 24px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Request Account Deletion</h1>
+        <p class="subtitle">GenAI Video Generator</p>
+        
+        <div class="success-message" id="successMessage">
+            <strong>✓ Request Submitted Successfully!</strong><br>
+            Your account deletion request has been received. We will process it within 30 days. You will receive a confirmation email once your account has been deleted.
+        </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <div class="info-box">
+            <h3>What will be deleted:</h3>
+            <ul>
+                <li>Your user account and authentication data</li>
+                <li>All video generation history</li>
+                <li>Your credits balance</li>
+                <li>All personal data stored in our database</li>
+                <li>All generated videos and associated files</li>
+            </ul>
+        </div>
+        
+        <div class="info-box">
+            <h3>What may be retained:</h3>
+            <ul>
+                <li>Anonymized analytics data (for app improvement)</li>
+                <li>Purchase records (required for tax and legal compliance)</li>
+            </ul>
+        </div>
+        
+        <div class="steps">
+            <h3>How to find your User ID:</h3>
+            <ol>
+                <li>Open the GenAI Video Generator app</li>
+                <li>Go to the <strong>Profile</strong> tab</li>
+                <li>Your User ID is displayed in the profile section</li>
+                <li>Copy the User ID and paste it below</li>
+            </ol>
+        </div>
+        
+        <form id="deletionForm">
+            <div class="form-group">
+                <label for="userId">User ID *</label>
+                <input 
+                    type="text" 
+                    id="userId" 
+                    name="userId" 
+                    placeholder="Enter your User ID from the app"
+                    required
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="your.email@example.com"
+                    required
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="reason">Reason for Deletion (Optional)</label>
+                <textarea 
+                    id="reason" 
+                    name="reason" 
+                    placeholder="Tell us why you're deleting your account (optional)"
+                ></textarea>
+            </div>
+            
+            <button type="submit" class="button" id="submitButton">
+                Submit Deletion Request
+            </button>
+            
+            <div class="loading" id="loading">
+                Processing your request...
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        const form = document.getElementById('deletionForm');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const loading = document.getElementById('loading');
+        const submitButton = document.getElementById('submitButton');
+        
+        // Get project ID from the current hostname or use environment variable
+        // The function will be deployed to: https://asia-south1-{PROJECT_ID}.cloudfunctions.net/requestAccountDeletion
+        // We'll extract it from the current URL or use a placeholder
+        function getProjectId() {
+            // Try to get from window location or use default
+            const hostname = window.location.hostname;
+            if (hostname.includes('web.app') || hostname.includes('firebaseapp.com')) {
+                // Extract from Firebase Hosting URL
+                return hostname.split('.')[0];
+            }
+            // Default project ID (genaivideogenerator)
+            return 'genaivideogenerator';
+        }
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            loading.classList.add('show');
+            submitButton.disabled = true;
+            
+            const formData = {
+                userId: document.getElementById('userId').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                reason: document.getElementById('reason').value.trim() || 'No reason provided'
+            };
+            
+            try {
+                const projectId = getProjectId();
+                
+                // Use Firebase Functions HTTP endpoint
+                // Replace YOUR_PROJECT_ID with your actual Firebase project ID
+                const functionUrl = `https://asia-south1-${projectId}.cloudfunctions.net/requestAccountDeletion`;
+                
+                const response = await fetch(functionUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    successMessage.style.display = 'block';
+                    form.reset();
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    throw new Error(result.error || 'Failed to submit request');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessage.textContent = `Error: ${error.message || 'Failed to submit request. Please try again or contact support.'}`;
+                errorMessage.style.display = 'block';
+            } finally {
+                loading.classList.remove('show');
+                submitButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
+

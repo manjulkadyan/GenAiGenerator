@@ -8,6 +8,12 @@ service cloud.firestore {
       allow write: if request.auth != null;  // Only authenticated users can write
     }
     
+    // Deletion requests - allow public write (for web form), but only admins can read
+    match /deletion_requests/{requestId} {
+      allow create: if true;  // Anyone can create a deletion request
+      allow read, update, delete: if false;  // Only admins (via Functions) can read/update
+    }
+    
     match /{document=**} {
       // This rule allows anyone with your database reference to view, edit,
       // and delete all data in your database. It is useful for getting
