@@ -25,11 +25,13 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.PlayerView
+import com.manjul.genai.videogenerator.player.VideoPreviewCache
 
 /**
  * Background video player component with overlay for landing page.
@@ -64,6 +66,10 @@ fun BackgroundVideoPlayer(
             exoPlayer = null
             
             try {
+                // Get cache instance for video caching
+                val cache = VideoPreviewCache.get(context)
+                android.util.Log.d("BackgroundVideoPlayer", "Using video cache for playback")
+                
                 // Create HttpDataSource with User-Agent to avoid 403 errors
                 val httpDataSourceFactory = DefaultHttpDataSource.Factory()
                     .setUserAgent("GenAiVideoPlayer/1.0")
@@ -71,9 +77,15 @@ fun BackgroundVideoPlayer(
                     .setReadTimeoutMs(15_000)
                     .setAllowCrossProtocolRedirects(true)
                 
-                // Create DataSource factory with custom HttpDataSource
-                val dataSourceFactory = DefaultDataSource.Factory(context, httpDataSourceFactory)
-                android.util.Log.d("BackgroundVideoPlayer", "DataSource factory created with User-Agent")
+                // Create CacheDataSource factory - wraps HTTP data source with cache
+                val cacheDataSourceFactory = CacheDataSource.Factory()
+                    .setCache(cache)
+                    .setUpstreamDataSourceFactory(httpDataSourceFactory)
+                    .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
+                
+                // Create DataSource factory with cache support
+                val dataSourceFactory = DefaultDataSource.Factory(context, cacheDataSourceFactory)
+                android.util.Log.d("BackgroundVideoPlayer", "CacheDataSource factory created with User-Agent")
                 
                 // Since this is HLS-only, always use HLS MediaSource
                 android.util.Log.d("BackgroundVideoPlayer", "Creating HLS MediaSource for URL: $videoUrl")
