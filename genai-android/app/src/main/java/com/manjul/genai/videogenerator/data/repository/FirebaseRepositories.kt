@@ -265,17 +265,31 @@ class FirebaseLandingPageRepository(
     private val firestore: FirebaseFirestore
 ) : LandingPageRepository {
     override fun observeConfig(): Flow<LandingPageConfig> = callbackFlow {
+        android.util.Log.d("LandingPageRepository", "Setting up Firestore listener for app/landingPage")
         val registration = firestore.collection("app")
             .document("landingPage")
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
+                    android.util.Log.e("LandingPageRepository", "Error reading landing page config: ${error.message}", error)
+                    android.util.Log.e("LandingPageRepository", "Error code: ${error.code}")
                     // Send default config on error
-                    trySend(getDefaultConfig())
+                    val defaultConfig = getDefaultConfig()
+                    android.util.Log.w("LandingPageRepository", "Using default config. backgroundVideoUrl: ${defaultConfig.backgroundVideoUrl}")
+                    trySend(defaultConfig)
                     return@addSnapshotListener
                 }
                 
-                val config = snapshot?.toLandingPageConfig() ?: getDefaultConfig()
-                trySend(config)
+                if (snapshot != null && snapshot.exists()) {
+                    android.util.Log.d("LandingPageRepository", "Snapshot received and exists")
+                    val config = snapshot.toLandingPageConfig()
+                    android.util.Log.d("LandingPageRepository", "Config parsed. backgroundVideoUrl: ${config.backgroundVideoUrl}")
+                    android.util.Log.d("LandingPageRepository", "Features count: ${config.features.size}, Plans count: ${config.subscriptionPlans.size}")
+                    trySend(config)
+                } else {
+                    android.util.Log.w("LandingPageRepository", "Snapshot is null or doesn't exist, using default config")
+                    val defaultConfig = getDefaultConfig()
+                    trySend(defaultConfig)
+                }
             }
         awaitClose { registration.remove() }
     }

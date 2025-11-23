@@ -1,5 +1,6 @@
 package com.manjul.genai.videogenerator.ui.components
 
+import androidx.annotation.OptIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,13 +22,18 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.hls.HlsMediaSource
+import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.ui.PlayerView
 
 /**
  * Background video player component with overlay for landing page.
  * Plays video in background with dark overlay for content readability.
  */
+@OptIn(UnstableApi::class)
 @Composable
 fun BackgroundVideoPlayer(
     videoUrl: String,
@@ -38,18 +44,126 @@ fun BackgroundVideoPlayer(
     val lifecycleOwner = LocalLifecycleOwner.current
     
     var exoPlayer by remember { mutableStateOf<ExoPlayer?>(null) }
+    var hasError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
     
     LaunchedEffect(videoUrl) {
+        android.util.Log.d("BackgroundVideoPlayer", "=== LaunchedEffect triggered ===")
+        android.util.Log.d("BackgroundVideoPlayer", "Video URL received: $videoUrl")
+        android.util.Log.d("BackgroundVideoPlayer", "Video URL is empty: ${videoUrl.isEmpty()}")
+        
         if (videoUrl.isNotEmpty()) {
-            val player = ExoPlayer.Builder(context).build().apply {
-                val mediaItem = MediaItem.fromUri(videoUrl)
-                setMediaItem(mediaItem)
-                repeatMode = Player.REPEAT_MODE_ONE
-                playWhenReady = true
-                volume = 0f // Muted for background
-                prepare()
+            android.util.Log.d("BackgroundVideoPlayer", "=== Starting video setup ===")
+            hasError = false
+            errorMessage = null
+            
+            // Release previous player if exists
+            exoPlayer?.release()
+            exoPlayer = null
+            
+            try {
+                // Create DataSource factory for proper network handling
+                val dataSourceFactory = DefaultDataSource.Factory(context)
+                android.util.Log.d("BackgroundVideoPlayer", "DataSource factory created")
+                
+                // Since this is HLS-only, always use HLS MediaSource
+                android.util.Log.d("BackgroundVideoPlayer", "Creating HLS MediaSource for URL: $videoUrl")
+                
+                val player = ExoPlayer.Builder(context)
+                    .setHandleAudioBecomingNoisy(true)
+                    .build()
+                
+                android.util.Log.d("BackgroundVideoPlayer", "ExoPlayer instance created")
+                
+                // Create MediaItem
+                val mediaItem = MediaItem.Builder()
+                    .setUri(videoUrl)
+                    .build()
+                android.util.Log.d("BackgroundVideoPlayer", "MediaItem created with URI: ${mediaItem.localConfiguration?.uri}")
+                
+                // Create HLS MediaSource
+                val mediaSource = HlsMediaSource.Factory(dataSourceFactory)
+                    .setAllowChunklessPreparation(true)
+                    .createMediaSource(mediaItem)
+                android.util.Log.d("BackgroundVideoPlayer", "HLS MediaSource created successfully")
+                
+                // Configure player
+                player.apply {
+                    setMediaSource(mediaSource)
+                    android.util.Log.d("BackgroundVideoPlayer", "MediaSource set on player")
+                    
+                    repeatMode = Player.REPEAT_MODE_ONE
+                    playWhenReady = true
+                    volume = 0f // Muted for background
+                    videoScalingMode = androidx.media3.common.C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
+                    android.util.Log.d("BackgroundVideoPlayer", "Player configured: repeatMode=ONE, playWhenReady=true, volume=0")
+                        
+                    // Add comprehensive listener for debugging
+                    addListener(object : Player.Listener {
+                        override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
+                            val errorMsg = "❌ Playback error: ${error.message} (errorCode: ${error.errorCode})"
+                            android.util.Log.e("BackgroundVideoPlayer", errorMsg, error)
+                            
+                            // Log detailed error info
+                            android.util.Log.e("BackgroundVideoPlayer", "Error code: ${error.errorCode}")
+                            android.util.Log.e("BackgroundVideoPlayer", "Error cause: ${error.cause?.message}")
+                            android.util.Log.e("BackgroundVideoPlayer", "Error stack trace:", error)
+                            
+                            hasError = true
+                            errorMessage = error.message ?: "Unknown playback error"
+                        }
+                        
+                        override fun onPlaybackStateChanged(playbackState: Int) {
+                            val stateName = when (playbackState) {
+                                Player.STATE_IDLE -> "IDLE"
+                                Player.STATE_BUFFERING -> "BUFFERING"
+                                Player.STATE_READY -> "READY"
+                                Player.STATE_ENDED -> "ENDED"
+                                else -> "UNKNOWN($playbackState)"
+                            }
+                            android.util.Log.d("BackgroundVideoPlayer", "📊 Playback state changed: $stateName")
+                            
+                            if (playbackState == Player.STATE_READY) {
+                                android.util.Log.d("BackgroundVideoPlayer", "✅ Player is READY - video should be visible")
+                                hasError = false
+                                errorMessage = null
+                            }
+                        }
+                        
+                        override fun onIsPlayingChanged(isPlaying: Boolean) {
+                            android.util.Log.d("BackgroundVideoPlayer", "▶️ Is playing changed: $isPlaying")
+                        }
+                        
+                        override fun onTracksChanged(tracks: androidx.media3.common.Tracks) {
+                            android.util.Log.d("BackgroundVideoPlayer", "🎬 Tracks changed. Groups: ${tracks.groups.size}")
+                            tracks.groups.forEachIndexed { index, group ->
+                                android.util.Log.d("BackgroundVideoPlayer", "  Track group $index: ${group.mediaTrackGroup.length} tracks, selected: ${group.isSelected}")
+                            }
+                        }
+                        
+                        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                            android.util.Log.d("BackgroundVideoPlayer", "🔄 Media item transition: ${mediaItem?.localConfiguration?.uri}, reason: $reason")
+                        }
+                    })
+                    
+                    android.util.Log.d("BackgroundVideoPlayer", "Listener added, calling prepare()...")
+                    prepare()
+                    android.util.Log.d("BackgroundVideoPlayer", "prepare() called")
+                }
+                
+                exoPlayer = player
+                android.util.Log.d("BackgroundVideoPlayer", "✅ ExoPlayer assigned to state variable")
+                android.util.Log.d("BackgroundVideoPlayer", "Player state: ${player.playbackState}, isPlaying: ${player.isPlaying}, playWhenReady: ${player.playWhenReady}")
+            } catch (e: Exception) {
+                val errorMsg = "Failed to initialize player: ${e.message}"
+                android.util.Log.e("BackgroundVideoPlayer", errorMsg, e)
+                hasError = true
+                errorMessage = e.message ?: "Failed to initialize video player"
             }
-            exoPlayer = player
+        } else {
+            // Release player if URL is empty
+            exoPlayer?.release()
+            exoPlayer = null
         }
     }
     
@@ -75,24 +189,55 @@ fun BackgroundVideoPlayer(
     }
     
     Box(modifier = modifier.fillMaxSize()) {
+        // Debug: Log current state
+        LaunchedEffect(videoUrl, exoPlayer, hasError) {
+            android.util.Log.d("BackgroundVideoPlayer", "=== Render State ===")
+            android.util.Log.d("BackgroundVideoPlayer", "videoUrl.isEmpty: ${videoUrl.isEmpty()}")
+            android.util.Log.d("BackgroundVideoPlayer", "exoPlayer is null: ${exoPlayer == null}")
+            android.util.Log.d("BackgroundVideoPlayer", "hasError: $hasError")
+            if (exoPlayer != null) {
+                android.util.Log.d("BackgroundVideoPlayer", "Player state: ${exoPlayer?.playbackState}, isPlaying: ${exoPlayer?.isPlaying}")
+            }
+        }
+        
         // Video player
-        if (videoUrl.isNotEmpty() && exoPlayer != null) {
+        if (videoUrl.isNotEmpty() && exoPlayer != null && !hasError) {
+            android.util.Log.d("BackgroundVideoPlayer", "✅ Rendering PlayerView")
             AndroidView(
                 factory = { ctx ->
+                    android.util.Log.d("BackgroundVideoPlayer", "🏭 Creating PlayerView")
                     PlayerView(ctx).apply {
                         player = exoPlayer
                         useController = false
                         resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+                        android.util.Log.d("BackgroundVideoPlayer", "PlayerView configured with player")
                     }
                 },
                 modifier = Modifier.fillMaxSize(),
                 update = { view ->
+                    android.util.Log.d("BackgroundVideoPlayer", "🔄 Updating PlayerView with player")
                     view.player = exoPlayer
                 }
             )
+        } else if (hasError) {
+            // Show error state (black background with overlay)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+            ) {
+                android.util.Log.w("BackgroundVideoPlayer", "Showing error state: $errorMessage")
+            }
+        } else if (videoUrl.isEmpty()) {
+            // No video URL - show black background
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+            )
         }
         
-        // Dark overlay for content readability
+        // Dark overlay for content readability (always show, even on error)
         Box(
             modifier = Modifier
                 .fillMaxSize()
