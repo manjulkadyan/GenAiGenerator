@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "407437371864-sue36scmal3ovlupq87h8p7r59i1b6sf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.manjul.genai.videogenerator",
+            "certificate_hash": "e8859c0a5f85e978d5499f04c344e76480c63e12"
+          }
+        },
+        {
           "client_id": "407437371864-9dkicne9lg7l8l816jbut5dup9qs7sus.apps.googleusercontent.com",
           "client_type": 3
         }
