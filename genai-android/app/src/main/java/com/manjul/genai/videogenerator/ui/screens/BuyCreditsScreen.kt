@@ -89,12 +89,22 @@ fun BuyCreditsScreen(
         ) {
             // Background video layer
             if (uiState.config.backgroundVideoUrl.isNotEmpty()) {
+                // Debug: Log the video URL we're receiving
+                LaunchedEffect(uiState.config.backgroundVideoUrl) {
+                    android.util.Log.d("BuyCreditsScreen", "Video URL from config: ${uiState.config.backgroundVideoUrl}")
+                    android.util.Log.d("BuyCreditsScreen", "Video URL length: ${uiState.config.backgroundVideoUrl.length}")
+                    android.util.Log.d("BuyCreditsScreen", "Is m3u8: ${uiState.config.backgroundVideoUrl.contains("m3u8", ignoreCase = true)}")
+                }
+                
+                // HLS-only video player for adaptive streaming
                 BackgroundVideoPlayer(
                     videoUrl = uiState.config.backgroundVideoUrl,
                     modifier = Modifier.fillMaxSize(),
                     overlayAlpha = 0.7f
                 )
             } else {
+                // Fallback: black background if no video URL
+                android.util.Log.w("BuyCreditsScreen", "No video URL in config - showing black background")
                 Box(
                     modifier = Modifier
                         .fillMaxSize()

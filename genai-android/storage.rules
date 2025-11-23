@@ -19,5 +19,11 @@ service firebase.storage {
       allow read: if true;
       allow write: if request.auth != null;
     }
+    
+    // Public read access for landing page videos (adaptive streaming)
+    match /videos/landing/{allPaths=**} {
+      allow read: if true;  // Public read for landing page videos
+      allow write: if request.auth != null;  // Authenticated users can upload
+    }
   }
 }

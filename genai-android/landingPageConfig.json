@@ -1,5 +1,5 @@
 {
-  "backgroundVideoUrl": "https://your-video-url.com/video.mp4",
+  "backgroundVideoUrl": "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/videos%2Flanding%2Flanding_video_master.m3u8?alt=media",
   "features": [
     {
       "title": "Powered by 22 Models",
