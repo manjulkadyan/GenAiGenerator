@@ -13,10 +13,13 @@ import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import com.google.firebase.firestore.FirebaseFirestore
+import com.manjul.genai.videogenerator.data.local.AppDatabase
+import com.manjul.genai.videogenerator.data.local.VideoCacheEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.tasks.await
 
 /**
@@ -57,14 +60,29 @@ object LandingPageVideoCache {
 
                 Log.d(TAG, "Video URL: $videoUrl")
                 
-                // Check if video is already cached (persistent across app launches)
-                if (isCached(context, videoUrl)) {
-                    Log.d(TAG, "✅ Video already cached, skipping pre-cache. Cache persists across app launches.")
+                // Check Room DB first for cache status (more reliable than ExoPlayer cache check)
+                val database = AppDatabase.getDatabase(context)
+                val cacheEntry = database.videoCacheDao().getCacheEntry(videoUrl)
+                
+                // Check if video is already cached (using both Room DB and ExoPlayer cache)
+                val isCachedInExoPlayer = isCachedSuspend(context, videoUrl)
+                val isCachedInDB = cacheEntry?.isCached == true
+                
+                if (isCachedInDB && isCachedInExoPlayer) {
+                    Log.d(TAG, "✅ Video already cached (verified in Room DB and ExoPlayer cache)")
+                    Log.d(TAG, "Cache stored in filesDir - persists even when cache is cleared")
+                    // Update access time
+                    database.videoCacheDao().updateAccess(videoUrl)
                     isPrecaching = false
                     return@launch
+                } else if (isCachedInDB && !isCachedInExoPlayer) {
+                    // DB says cached but ExoPlayer cache missing - mark as not cached
+                    Log.w(TAG, "Cache entry in DB but ExoPlayer cache missing - will re-cache")
+                    database.videoCacheDao().updateCacheStatus(videoUrl, false, 0L)
                 }
                 
-                Log.d(TAG, "Video not cached, starting pre-cache...")
+                Log.d(TAG, "Video not cached, starting pre-cache in background...")
+                Log.d(TAG, "Cache will be stored in filesDir (persistent storage)")
                 
                 // Pre-cache the video (only if not already cached)
                 precacheVideo(context, videoUrl)
@@ -97,10 +115,10 @@ object LandingPageVideoCache {
 
     /**
      * Pre-cache video using ExoPlayer's cache system.
-     * This downloads the video to cacheDir (not heap/stack) for instant playback.
+     * This downloads the video to filesDir (not heap/stack) for instant playback.
      */
     @OptIn(UnstableApi::class)
-    private fun precacheVideo(context: Context, videoUrl: String) {
+    private suspend fun precacheVideo(context: Context, videoUrl: String) {
         try {
             val appContext = context.applicationContext
             
@@ -162,12 +180,34 @@ object LandingPageVideoCache {
             
             if (player.playbackState == ExoPlayer.STATE_READY) {
                 val cachedBytes = cache.cacheSpace
-                Log.d(TAG, "✅ Landing page video pre-cached successfully! (${cachedBytes / 1024 / 1024} MB)")
+                val cacheSizeMB = cachedBytes / 1024 / 1024
+                Log.d(TAG, "✅ Landing page video pre-cached successfully! ($cacheSizeMB MB)")
+                
+                // Update Room DB with cache status (in coroutine scope)
+                kotlinx.coroutines.withContext(Dispatchers.IO) {
+                    val database = AppDatabase.getDatabase(context)
+                    val cacheEntry = database.videoCacheDao().getCacheEntry(videoUrl)
+                    if (cacheEntry != null) {
+                        database.videoCacheDao().updateCacheStatus(videoUrl, true, cachedBytes)
+                    } else {
+                        // Create new cache entry in Room DB
+                        database.videoCacheDao().insertOrUpdate(
+                            VideoCacheEntity(
+                                videoUrl = videoUrl,
+                                modelId = "landing_page",
+                                modelName = "Landing Page Background Video",
+                                isCached = true,
+                                cacheSize = cachedBytes
+                            )
+                        )
+                    }
+                    Log.d(TAG, "Cache status saved to Room DB (persistent)")
+                }
             } else {
                 Log.w(TAG, "⚠️ Pre-caching timed out, but some data may be cached")
             }
             
-            // Release player (cache persists)
+            // Release player (cache persists in filesDir)
             player.release()
             precachePlayer = null
             
@@ -179,38 +219,107 @@ object LandingPageVideoCache {
     }
 
     /**
-     * Check if video is already cached.
-     * Cache persists across app launches (stored in cacheDir).
+     * Check if video is already cached (suspend version for coroutines).
+     * Uses Room DB for reliable cache status tracking.
+     * Cache files stored in filesDir (persistent, only cleared on app uninstall).
+     */
+    @OptIn(UnstableApi::class)
+    private suspend fun isCachedSuspend(context: Context, videoUrl: String): Boolean {
+        return try {
+            // First check Room DB (most reliable)
+            val database = AppDatabase.getDatabase(context)
+            val cacheEntry = database.videoCacheDao().getCacheEntry(videoUrl)
+            
+            if (cacheEntry?.isCached == true) {
+                Log.d(TAG, "✅ Video cached (verified in Room DB, ${cacheEntry.cacheSize / 1024 / 1024} MB)")
+                
+                // Also verify ExoPlayer cache exists
+                val cache = VideoPreviewCache.get(context)
+                val keys = cache.keys
+                val hasExoPlayerCache = keys.isNotEmpty() && keys.any { key ->
+                    key == videoUrl || key.contains(videoUrl) || videoUrl.contains(key)
+                }
+                
+                if (!hasExoPlayerCache) {
+                    Log.w(TAG, "Room DB says cached but ExoPlayer cache missing - marking as not cached")
+                    database.videoCacheDao().updateCacheStatus(videoUrl, false, 0L)
+                    return false
+                }
+                
+                return true
+            }
+            
+            // Fallback: Check ExoPlayer cache directly (for backwards compatibility)
+            val cache = VideoPreviewCache.get(context)
+            val keys = cache.keys
+            
+            if (keys.isEmpty()) {
+                Log.d(TAG, "Cache is empty - video not cached")
+                return false
+            }
+            
+            // For HLS (m3u8), check if master playlist and at least some segments are cached
+            val isCachedInExoPlayer = if (videoUrl.contains(".m3u8", ignoreCase = true)) {
+                val masterPlaylistCached = keys.any { key ->
+                    key == videoUrl || 
+                    key.contains(videoUrl) || 
+                    videoUrl.contains(key) ||
+                    (key.contains(".m3u8") && videoUrl.contains(".m3u8"))
+                }
+                val hasSegments = keys.count { key ->
+                    !key.contains(".m3u8") && (key.contains(videoUrl.substringBeforeLast("/")) || videoUrl.contains(key.substringBeforeLast("/")))
+                } > 0
+                masterPlaylistCached || hasSegments
+            } else {
+                keys.any { key -> key == videoUrl }
+            }
+            
+            if (isCachedInExoPlayer) {
+                Log.d(TAG, "✅ Video cached in ExoPlayer (${keys.size} cache entries)")
+            } else {
+                Log.d(TAG, "Video not cached (${keys.size} other cache entries exist)")
+            }
+            
+            isCachedInExoPlayer
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking cache", e)
+            false
+        }
+    }
+    
+    /**
+     * Check if video is already cached (non-suspend version for backwards compatibility).
+     * Note: This only checks ExoPlayer cache, not Room DB.
+     * For full cache check, use isCachedSuspend() from a coroutine.
      */
     @OptIn(UnstableApi::class)
     fun isCached(context: Context, videoUrl: String): Boolean {
         return try {
+            // Only check ExoPlayer cache (non-blocking)
             val cache = VideoPreviewCache.get(context)
             val keys = cache.keys
             
-            // Check if the exact URL or any related keys are cached
-            // For HLS (m3u8), check both master playlist and individual segments
-            val isCached = keys.any { key ->
-                when {
-                    // Exact match
-                    key == videoUrl -> true
-                    // HLS master playlist - check if segments are cached
-                    videoUrl.contains(".m3u8", ignoreCase = true) -> {
-                        // For HLS, if we have cached data for the URL, it's cached
-                        key.contains(videoUrl) || videoUrl.contains(key)
-                    }
-                    // Progressive video - exact URL match
-                    else -> key == videoUrl
+            if (keys.isEmpty()) {
+                return false
+            }
+            
+            // For HLS (m3u8), check if master playlist and at least some segments are cached
+            val isCachedInExoPlayer = if (videoUrl.contains(".m3u8", ignoreCase = true)) {
+                val masterPlaylistCached = keys.any { key ->
+                    key == videoUrl || 
+                    key.contains(videoUrl) || 
+                    videoUrl.contains(key) ||
+                    (key.contains(".m3u8") && videoUrl.contains(".m3u8"))
                 }
-            }
-            
-            if (isCached) {
-                Log.d(TAG, "✅ Video is already cached (persistent across app launches)")
+                val hasSegments = keys.count { key ->
+                    !key.contains(".m3u8") && (key.contains(videoUrl.substringBeforeLast("/")) || videoUrl.contains(key.substringBeforeLast("/")))
+                } > 0
+                masterPlaylistCached || hasSegments
             } else {
-                Log.d(TAG, "Video not cached, will download on first launch")
+                keys.any { key -> key == videoUrl }
             }
             
-            isCached
+            isCachedInExoPlayer
         } catch (e: Exception) {
             Log.e(TAG, "Error checking cache", e)
             false

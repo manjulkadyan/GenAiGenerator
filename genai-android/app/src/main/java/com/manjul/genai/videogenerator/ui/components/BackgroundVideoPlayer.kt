@@ -78,10 +78,12 @@ fun BackgroundVideoPlayer(
                     .setAllowCrossProtocolRedirects(true)
                 
                 // Create CacheDataSource factory - wraps HTTP data source with cache
+                // Allow both reading from cache and writing to cache during playback
                 val cacheDataSourceFactory = CacheDataSource.Factory()
                     .setCache(cache)
                     .setUpstreamDataSourceFactory(httpDataSourceFactory)
                     .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
+                    // Don't set setCacheWriteDataSinkFactory(null) - allow writing to cache during playback
                 
                 // Create DataSource factory with cache support
                 val dataSourceFactory = DefaultDataSource.Factory(context, cacheDataSourceFactory)
