@@ -127,24 +127,24 @@ fun SubscriptionPlanCard(
                     .align(Alignment.TopCenter)
                     .offset(y = (-14).dp) // Position above card, showing border behind it
             ) {
-                // Gradient badge with purple gradient (same gradient colors as card background)
+                // Gradient badge with horizontal purple gradient (darker left to lighter right)
                 Box(
                     modifier = Modifier
                         .background(
-                            brush = Brush.verticalGradient(
+                            brush = Brush.horizontalGradient(
                                 colors = listOf(
-                                    Color(0xFF6B5FFF), // Lighter purple at top (same as card gradient)
-                                    Color(0xFF4B3FFF)  // Darker purple at bottom (same as card gradient)
+                                    Color(0xFF9089F6), // Darker purple on the left
+                                    Color(0xFF2C20D9)  // Lighter purple on the right
                                 )
                             ),
-                            shape = RoundedCornerShape(8.dp)
+                            shape = RoundedCornerShape(50.dp) // Pill shape (fully rounded)
                         )
                 ) {
                     Text(
                         text = "Popular",
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Medium,
+                        fontWeight = FontWeight.Bold,
                         color = Color.White,
                         fontSize = 11.sp
                     )
