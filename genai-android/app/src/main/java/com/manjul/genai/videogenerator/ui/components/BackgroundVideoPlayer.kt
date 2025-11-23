@@ -265,25 +265,58 @@ fun BackgroundVideoPlayer(
             }
         }
         
-        // Video player
-        if (videoUrl.isNotEmpty() && exoPlayer != null && !hasError) {
-            android.util.Log.d("BackgroundVideoPlayer", "✅ Rendering PlayerView")
-            AndroidView(
-                factory = { ctx ->
-                    android.util.Log.d("BackgroundVideoPlayer", "🏭 Creating PlayerView")
-                    PlayerView(ctx).apply {
-                        player = exoPlayer
-                        useController = false
-                        resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT // Show full video without cropping
-                        android.util.Log.d("BackgroundVideoPlayer", "PlayerView configured with player")
-                    }
-                },
-                modifier = Modifier.fillMaxSize(),
-                update = { view ->
-                    android.util.Log.d("BackgroundVideoPlayer", "🔄 Updating PlayerView with player")
-                    view.player = exoPlayer
+        // Video player - show immediately when player exists, even if not ready yet
+        if (videoUrl.isNotEmpty() && exoPlayer != null) {
+            if (hasError) {
+                // Show error state (black background)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black)
+                ) {
+                    android.util.Log.w("BackgroundVideoPlayer", "Showing error state: $errorMessage")
                 }
-            )
+            } else {
+                android.util.Log.d("BackgroundVideoPlayer", "✅ Rendering PlayerView")
+                AndroidView(
+                    factory = { ctx ->
+                        android.util.Log.d("BackgroundVideoPlayer", "🏭 Creating PlayerView")
+                        PlayerView(ctx).apply {
+                            player = exoPlayer
+                            useController = false
+                            resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT // Show full video without cropping
+                            // Don't show buffering overlay - show video surface immediately
+                            setShowBuffering(androidx.media3.ui.PlayerView.SHOW_BUFFERING_NEVER)
+                            // Ensure view is visible immediately
+                            visibility = android.view.View.VISIBLE
+                            android.util.Log.d("BackgroundVideoPlayer", "PlayerView configured with player")
+                            // Force layout to ensure video surface is attached and visible
+                            post {
+                                visibility = android.view.View.VISIBLE
+                                requestLayout()
+                                invalidate()
+                            }
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                    update = { view ->
+                        android.util.Log.d("BackgroundVideoPlayer", "🔄 Updating PlayerView with player")
+                        if (view.player !== exoPlayer) {
+                            view.player = exoPlayer
+                        }
+                        // Force view to be visible and request layout
+                        // This ensures video surface is attached and visible immediately
+                        view.visibility = android.view.View.VISIBLE
+                        view.requestLayout()
+                        // Post to ensure layout happens after view is attached
+                        view.post {
+                            view.visibility = android.view.View.VISIBLE
+                            view.requestLayout()
+                            view.invalidate()
+                        }
+                    }
+                )
+            }
         } else if (hasError) {
             // Show error state (black background with overlay)
             Box(
