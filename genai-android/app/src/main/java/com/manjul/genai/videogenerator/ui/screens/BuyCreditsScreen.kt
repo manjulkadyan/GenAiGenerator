@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -139,21 +140,31 @@ fun BuyCreditsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
+                    .align(Alignment.TopEnd)
             ) {
                 AnimatedVisibility(
                     visible = showCloseButton,
                     enter = fadeIn(animationSpec = tween(300)),
                     exit = fadeOut(animationSpec = tween(300))
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "Close",
+                    // Close button with subtle background (not too prominent)
+                    Box(
                         modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .size(24.dp)
+                            .background(
+                                color = Color.Black.copy(alpha = 0.3f), // Subtle dark background with alpha
+                                shape = CircleShape
+                            )
+                            .size(32.dp)
                             .clickable(onClick = onBackClick),
-                        tint = Color.White
-                    )
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Close",
+                            modifier = Modifier.size(20.dp),
+                            tint = Color.White.copy(alpha = 0.9f) // Slightly transparent white
+                        )
+                    }
                 }
             }
         }
