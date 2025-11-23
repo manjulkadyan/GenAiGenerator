@@ -1,0 +1,17 @@
+[
+  {
+    "resolution": "1280x720",
+    "file": "downloaded_videos/landing_video_1280x720.mp4",
+    "url": "https://video.twimg.com/amplify_video/1858525650694635520/pl/avc1/1280x720/mMcIfeVfjw-Z1J_D.m3u8"
+  },
+  {
+    "resolution": "640x360",
+    "file": "downloaded_videos/landing_video_640x360.mp4",
+    "url": "https://video.twimg.com/amplify_video/1858525650694635520/pl/avc1/640x360/cbYJT2bxdEuam1A5.m3u8"
+  },
+  {
+    "resolution": "480x270",
+    "file": "downloaded_videos/landing_video_480x270.mp4",
+    "url": "https://video.twimg.com/amplify_video/1858525650694635520/pl/avc1/480x270/P0RHyJWr6wy0B68H.m3u8"
+  }
+]

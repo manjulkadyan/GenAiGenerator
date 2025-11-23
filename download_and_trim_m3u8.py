@@ -79,12 +79,40 @@ def get_video_fps(video_path):
 def download_m3u8(m3u8_url, output_path):
     """Download m3u8 video and convert to MP4."""
     print(f"\n📥 Downloading: {output_path.name}")
-    print(f"   URL: {m3u8_url}")
+    print(f"   Resolution URL: {m3u8_url}")
+    
+    # Use master playlist URL - it contains both video and audio streams
+    # Individual resolution URLs only have video, no audio
+    master_url = "https://video.twimg.com/amplify_video/1858525650694635520/pl/M1N2AhZP1we_u-at.m3u8?variant_version=1&tag=14"
+    
+    # Determine which video/audio stream pair to select based on resolution
+    # From master playlist: audio streams are 0,1,2 and video streams are 3,4,5
+    if "1280x720" in m3u8_url:
+        # 1280x720 video (stream 3) + 128k audio (stream 0)
+        map_video = "0:3"
+        map_audio = "0:0"
+    elif "640x360" in m3u8_url:
+        # 640x360 video (stream 4) + 64k audio (stream 1)
+        map_video = "0:4"
+        map_audio = "0:1"
+    elif "480x270" in m3u8_url:
+        # 480x270 video (stream 5) + 32k audio (stream 2)
+        map_video = "0:5"
+        map_audio = "0:2"
+    else:
+        # Default: use first video and first audio
+        map_video = "0:v:0"
+        map_audio = "0:a:0"
+    
+    print(f"   Using master playlist and mapping video stream {map_video} + audio stream {map_audio}")
     
     cmd = [
         "ffmpeg",
-        "-i", m3u8_url,
-        "-c", "copy",  # Copy codecs (fast, no re-encoding)
+        "-i", master_url,
+        "-map", map_video,  # Map specific video stream
+        "-map", map_audio,  # Map specific audio stream
+        "-c:v", "copy",  # Copy video codec
+        "-c:a", "copy",  # Copy audio codec (preserve audio)
         "-bsf:a", "aac_adtstoasc",  # Fix AAC audio
         "-y",  # Overwrite output file
         str(output_path)
@@ -140,7 +168,9 @@ def trim_video(input_path, output_path, frames_to_trim=None, target_duration=Non
         "ffmpeg",
         "-i", str(input_path),
         "-t", str(new_duration),  # Keep first N seconds
-        "-c", "copy",  # Copy codecs (fast, no re-encoding)
+        "-c:v", "copy",  # Copy video codec
+        "-c:a", "copy",  # Copy audio codec (preserve audio)
+        "-map", "0",  # Map all streams (video + audio)
         "-y",  # Overwrite output file
         str(output_path)
     ]

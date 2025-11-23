@@ -113,9 +113,9 @@ fun BackgroundVideoPlayer(
                     
                     repeatMode = Player.REPEAT_MODE_ONE
                     playWhenReady = true
-                    volume = 1f // Enable audio
+                    volume = 1f // Enable audio - full volume
                     videoScalingMode = androidx.media3.common.C.VIDEO_SCALING_MODE_SCALE_TO_FIT // Show full video without cropping
-                    android.util.Log.d("BackgroundVideoPlayer", "Player configured: repeatMode=ONE, playWhenReady=true, volume=0")
+                    android.util.Log.d("BackgroundVideoPlayer", "Player configured: repeatMode=ONE, playWhenReady=true, volume=${volume}")
                         
                     // Add comprehensive listener for debugging
                     addListener(object : Player.Listener {
@@ -153,6 +153,13 @@ fun BackgroundVideoPlayer(
                             
                             if (playbackState == Player.STATE_READY) {
                                 android.util.Log.d("BackgroundVideoPlayer", "✅ Player is READY - video should be visible")
+                                // Ensure volume is set to 1.0 when ready
+                                if (player.volume != 1f) {
+                                    android.util.Log.w("BackgroundVideoPlayer", "⚠️ Volume is ${player.volume}, setting to 1.0")
+                                    player.volume = 1f
+                                } else {
+                                    android.util.Log.d("BackgroundVideoPlayer", "✅ Volume is correctly set to 1.0")
+                                }
                                 hasError = false
                                 errorMessage = null
                             }
@@ -164,9 +171,27 @@ fun BackgroundVideoPlayer(
                         
                         override fun onTracksChanged(tracks: androidx.media3.common.Tracks) {
                             android.util.Log.d("BackgroundVideoPlayer", "🎬 Tracks changed. Groups: ${tracks.groups.size}")
+                            var hasAudioTrack = false
+                            var audioTrackSelected = false
                             tracks.groups.forEachIndexed { index, group ->
-                                android.util.Log.d("BackgroundVideoPlayer", "  Track group $index: ${group.mediaTrackGroup.length} tracks, selected: ${group.isSelected}")
+                                val trackType = group.mediaTrackGroup.getFormat(0).sampleMimeType
+                                val isAudio = trackType?.startsWith("audio/") == true
+                                android.util.Log.d("BackgroundVideoPlayer", "  Track group $index: ${group.mediaTrackGroup.length} tracks, selected: ${group.isSelected}, type: $trackType")
+                                if (isAudio) {
+                                    hasAudioTrack = true
+                                    if (group.isSelected) {
+                                        audioTrackSelected = true
+                                        android.util.Log.d("BackgroundVideoPlayer", "✅ Audio track found and selected!")
+                                    } else {
+                                        android.util.Log.w("BackgroundVideoPlayer", "⚠️ Audio track found but NOT selected")
+                                    }
+                                }
                             }
+                            if (!hasAudioTrack) {
+                                android.util.Log.w("BackgroundVideoPlayer", "⚠️ No audio track found in video")
+                            }
+                            // Log current volume
+                            android.util.Log.d("BackgroundVideoPlayer", "Current player volume: ${player.volume}")
                         }
                         
                         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
