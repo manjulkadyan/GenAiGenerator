@@ -28,6 +28,9 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.animation.AnimatedVisibility
@@ -40,7 +43,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -73,6 +78,10 @@ fun BuyCreditsScreen(
     // Video takes 50% of screen, leaving room for bottom sheet
     val videoHeightDp = (screenHeightDp * 0.45f).toInt() // 50% of screen for video
     
+    // Snackbar for showing purchase messages
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    
     // Handle system back button - navigate back instead of closing app
     BackHandler(enabled = true) {
         onBackClick()
@@ -84,6 +93,26 @@ fun BuyCreditsScreen(
             val popularPlan = uiState.config.subscriptionPlans.firstOrNull { it.isPopular }
             if (popularPlan != null) {
                 viewModel.selectPlan(popularPlan)
+            }
+        }
+    }
+    
+    // Show purchase success/error messages
+    LaunchedEffect(uiState.purchaseMessage) {
+        uiState.purchaseMessage?.let { message ->
+            scope.launch {
+                snackbarHostState.showSnackbar(message)
+                viewModel.clearPurchaseMessage()
+            }
+        }
+    }
+    
+    // Show error messages
+    LaunchedEffect(uiState.error) {
+        uiState.error?.let { error ->
+            scope.launch {
+                snackbarHostState.showSnackbar(error)
+                viewModel.clearPurchaseMessage()
             }
         }
     }
@@ -230,10 +259,16 @@ fun BuyCreditsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            color = Color.White,
+                            color = if (uiState.isPurchaseInProgress || uiState.selectedPlan == null || !uiState.billingInitialized) {
+                                Color.Gray.copy(alpha = 0.5f)
+                            } else {
+                                Color.White
+                            },
                             shape = RoundedCornerShape(12.dp)
                         )
-                        .clickable {
+                        .clickable(
+                            enabled = !uiState.isPurchaseInProgress && uiState.selectedPlan != null && uiState.billingInitialized
+                        ) {
                             uiState.selectedPlan?.let { plan ->
                                 if (context is Activity && uiState.billingInitialized) {
                                     viewModel.purchasePlan(context, plan)
@@ -243,23 +278,41 @@ fun BuyCreditsScreen(
                         .padding(vertical = 18.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    if (uiState.isPurchaseInProgress) {
                         Text(
-                            text = "Continue",
+                            text = "Processing...",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Color.Black,
+                            color = Color.White,
                             fontSize = 16.sp
                         )
-                        Icon(
-                            imageVector = Icons.Default.ArrowForward,
-                            contentDescription = "Continue",
-                            tint = Color.Black,
-                            modifier = Modifier.size(18.dp)
-                        )
+                    } else {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Continue",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = if (uiState.selectedPlan == null || !uiState.billingInitialized) {
+                                    Color.White.copy(alpha = 0.7f)
+                                } else {
+                                    Color.Black
+                                },
+                                fontSize = 16.sp
+                            )
+                            Icon(
+                                imageVector = Icons.Default.ArrowForward,
+                                contentDescription = "Continue",
+                                tint = if (uiState.selectedPlan == null || !uiState.billingInitialized) {
+                                    Color.White.copy(alpha = 0.7f)
+                                } else {
+                                    Color.Black
+                                },
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
                     }
                 }
                 
@@ -302,6 +355,20 @@ fun BuyCreditsScreen(
                     }
                 }
             }
+        }
+        
+        // Snackbar host for showing purchase messages
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 100.dp) // Position above the sticky bottom section
+        ) { snackbarData ->
+            Snackbar(
+                snackbarData = snackbarData,
+                containerColor = Color(0xFF1F1F1F),
+                contentColor = Color.White
+            )
         }
     }
 }
