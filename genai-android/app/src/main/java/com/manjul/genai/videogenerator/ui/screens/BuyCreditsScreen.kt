@@ -63,7 +63,7 @@ fun BuyCreditsScreen(
     val configuration = LocalConfiguration.current
     val screenHeightDp = configuration.screenHeightDp
     // Video takes 50% of screen, leaving room for bottom sheet
-    val videoHeightDp = (screenHeightDp * 0.6f).toInt() // 50% of screen for video
+    val videoHeightDp = (screenHeightDp * 0.45f).toInt() // 50% of screen for video
     
     // Handle system back button - navigate back instead of closing app
     BackHandler(enabled = true) {
