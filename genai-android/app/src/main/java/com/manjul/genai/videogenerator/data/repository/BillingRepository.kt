@@ -10,10 +10,10 @@ import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesUpdatedListener
-import com.android.billingclient.api.PendingPurchasesParams
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryProductDetailsResult
 import com.android.billingclient.api.QueryPurchasesParams
+import com.android.billingclient.api.PendingPurchasesParams
 import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -97,7 +97,11 @@ class BillingRepository(private val context: Context) {
      * Initialize the billing client.
      */
     fun initialize(): Flow<BillingResult> = callbackFlow {
+        // For Billing Library 8.0.0+, enablePendingPurchases() requires PendingPurchasesParams
+        // Even though we only use subscriptions, we must enable one-time product support
+        // This is required by the Billing Library API
         val pendingPurchasesParams = PendingPurchasesParams.newBuilder()
+            .enableOneTimeProducts() // Required even if we don't use one-time products
             .build()
         
         billingClient = BillingClient.newBuilder(context)
