@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GenAiVideo"
         android:largeHeap="true"
-        android:icon="@mipmap/ic_launcher" >
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true" >
 
     <activity
             android:name=".MainActivity"

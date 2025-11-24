@@ -67,7 +67,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.manjul.genai.videogenerator.data.auth.AuthManager
+import androidx.compose.runtime.LaunchedEffect
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.tasks.await
 import com.manjul.genai.videogenerator.ui.components.AppToolbar
 import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 import com.manjul.genai.videogenerator.ui.designsystem.components.badges.CustomStatusBadge
@@ -93,12 +97,95 @@ fun ProfileScreen(
     val credits by creditsViewModel.state.collectAsState()
     val jobs by historyViewModel.jobs.collectAsState()
 
-    // Get user info from Firebase Auth
+    // Get user info from Firebase Auth (fallback)
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser
-    val userName = currentUser?.displayName ?: "User"
-    val userEmail = currentUser?.email ?: "user@example.com"
     val userId = currentUser?.uid ?: ""
+    
+    // Observe user profile from Firestore (real-time, no delay)
+    var userName by remember { mutableStateOf(currentUser?.displayName ?: "User") }
+    var userEmail by remember { mutableStateOf(currentUser?.email ?: "user@example.com") }
+    
+    // Real-time listener for user profile data from Firestore (no delay)
+    LaunchedEffect(userId) {
+        if (userId.isEmpty()) return@LaunchedEffect
+        
+        val firestore = FirebaseFirestore.getInstance()
+        val userRef = firestore.collection("users").document(userId)
+        
+        // Get initial data immediately (no delay) - blocking call
+        try {
+            val snapshot = userRef.get().await()
+            val firestoreName = snapshot.getString("name")
+            val firestoreEmail = snapshot.getString("email")
+            
+            if (!firestoreName.isNullOrEmpty()) {
+                userName = firestoreName
+                android.util.Log.d("ProfileScreen", "Loaded name from Firestore: $firestoreName")
+            }
+            if (!firestoreEmail.isNullOrEmpty()) {
+                userEmail = firestoreEmail
+                android.util.Log.d("ProfileScreen", "Loaded email from Firestore: $firestoreEmail")
+            }
+        } catch (e: Exception) {
+            android.util.Log.w("ProfileScreen", "Failed to load user profile from Firestore, using Auth fallback", e)
+        }
+        
+        // Set up real-time listener for updates (non-blocking)
+        // Note: Listener runs on main thread, state updates are safe
+        val registration = userRef.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                android.util.Log.w("ProfileScreen", "Error listening to user profile", error)
+                return@addSnapshotListener
+            }
+            
+            val firestoreName = snapshot?.getString("name")
+            val firestoreEmail = snapshot?.getString("email")
+            
+            // Update name - prefer Firestore, fallback to Auth
+            when {
+                !firestoreName.isNullOrEmpty() -> {
+                    userName = firestoreName
+                    android.util.Log.d("ProfileScreen", "User name updated from Firestore: $firestoreName")
+                }
+                currentUser?.displayName != null -> {
+                    userName = currentUser.displayName ?: "User"
+                }
+            }
+            
+            // Update email - prefer Firestore, fallback to Auth
+            when {
+                !firestoreEmail.isNullOrEmpty() -> {
+                    userEmail = firestoreEmail
+                    android.util.Log.d("ProfileScreen", "User email updated from Firestore: $firestoreEmail")
+                }
+                currentUser?.email != null -> {
+                    userEmail = currentUser.email?: "user@example.com"
+                }
+            }
+        }
+        
+        // Cleanup listener when composable leaves composition
+        try {
+            kotlinx.coroutines.awaitCancellation()
+        } finally {
+            registration.remove()
+            android.util.Log.d("ProfileScreen", "Removed user profile listener")
+        }
+    }
+    
+    // Also update from Auth when user changes (immediate fallback)
+    LaunchedEffect(currentUser) {
+        if (currentUser != null) {
+            // Use Auth data as fallback if Firestore doesn't have it yet
+            if (userName == "User" && !currentUser.displayName.isNullOrEmpty()) {
+                userName = currentUser.displayName?: "User"
+            }
+            if (userEmail == "user@example.com" && !currentUser.email.isNullOrEmpty()) {
+                userEmail = currentUser.email?: "user@example.com"
+            }
+        }
+    }
 
     // Calculate video count
     val videoCount = jobs.size
@@ -368,19 +455,35 @@ private fun ProfileScreenContent(
                     }
 
                     authResult.fold(
-                        onSuccess = {
+                        onSuccess = { user ->
                             isSigningIn = false
                             signInError = null
                             // Success - user is now signed in with Google
+                            android.util.Log.d("ProfileScreen", "Google sign-in/linking successful: ${user.uid}")
+                            
+                            // Firestore listener will automatically update name/email when it's saved
+                            // The listener is already active and will pick up changes immediately
                         },
                         onFailure = { error ->
                             isSigningIn = false
+                            android.util.Log.e("ProfileScreen", "Google sign-in/linking failed", error)
+                            
                             val errorMessage = when {
+                                error.message?.contains("already-in-use", ignoreCase = true) == true ||
+                                error.message?.contains("credential-already-in-use", ignoreCase = true) == true ->
+                                    "This Google account is already linked to another account. Signing in with your existing account..."
+
                                 error.message?.contains("credential") == true ->
                                     "Account linking failed. Please try again."
 
                                 error.message?.contains("network") == true ->
                                     "Network error. Please check your connection."
+
+                                error.message?.contains("invalid-credential", ignoreCase = true) == true ->
+                                    "Invalid credentials. Please try again."
+
+                                error.message?.contains("not anonymous", ignoreCase = true) == true ->
+                                    "You are already signed in. Please sign out first."
 
                                 else ->
                                     error.message ?: "Sign in failed. Please try again."

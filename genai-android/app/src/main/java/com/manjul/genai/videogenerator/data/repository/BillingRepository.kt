@@ -41,17 +41,28 @@ class BillingRepository(private val context: Context) {
     val purchaseUpdates: SharedFlow<PurchaseUpdateEvent> = _purchaseUpdates.asSharedFlow()
     
     private val purchasesUpdatedListener = PurchasesUpdatedListener { billingResult, purchases ->
+        android.util.Log.d("BillingRepository", "=== Purchase Update Received ===")
+        android.util.Log.d("BillingRepository", "Response code: ${billingResult.responseCode}, Message: ${billingResult.debugMessage}")
+        android.util.Log.d("BillingRepository", "Purchases count: ${purchases?.size ?: 0}")
+        
         when (billingResult.responseCode) {
             BillingClient.BillingResponseCode.OK -> {
+                android.util.Log.d("BillingRepository", "Purchase successful - processing ${purchases?.size ?: 0} purchase(s)")
                 purchases?.forEach { purchase ->
+                    android.util.Log.d("BillingRepository", "Processing purchase: ${purchase.products.firstOrNull()}, state: ${purchase.purchaseState}, acknowledged: ${purchase.isAcknowledged}")
                     handlePurchase(purchase)
                     _purchaseUpdates.tryEmit(PurchaseUpdateEvent.Success(purchase))
                 }
+                if (purchases.isNullOrEmpty()) {
+                    android.util.Log.w("BillingRepository", "Purchase OK but no purchases in list - this might be a restore or query")
+                }
             }
             BillingClient.BillingResponseCode.USER_CANCELED -> {
+                android.util.Log.d("BillingRepository", "User cancelled the purchase")
                 _purchaseUpdates.tryEmit(PurchaseUpdateEvent.UserCancelled)
             }
             else -> {
+                android.util.Log.e("BillingRepository", "Purchase error: code=${billingResult.responseCode}, message=${billingResult.debugMessage}")
                 _purchaseUpdates.tryEmit(PurchaseUpdateEvent.Error(billingResult))
             }
         }
@@ -68,14 +79,19 @@ class BillingRepository(private val context: Context) {
         
         billingClient?.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
+                android.util.Log.d("BillingRepository", "Billing setup finished: code=${billingResult.responseCode}, message=${billingResult.debugMessage}")
                 trySend(billingResult)
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    // Billing client is ready
+                    android.util.Log.d("BillingRepository", "Billing client is ready and connected")
+                } else {
+                    android.util.Log.e("BillingRepository", "Billing setup failed: ${billingResult.debugMessage}")
                 }
             }
             
             override fun onBillingServiceDisconnected() {
+                android.util.Log.w("BillingRepository", "Billing service disconnected - connection lost")
                 // Try to restart the connection on the next request
+                // The billing client will need to be reinitialized
             }
         })
         
@@ -91,7 +107,15 @@ class BillingRepository(private val context: Context) {
         return suspendCancellableCoroutine { continuation ->
             val billingClient = billingClient
             if (billingClient == null) {
+                android.util.Log.e("BillingRepository", "Billing client is null - cannot query products")
                 continuation.resume(Result.failure(IllegalStateException("Billing client not initialized")))
+                return@suspendCancellableCoroutine
+            }
+            
+            // Check if billing client is ready/connected
+            if (!billingClient.isReady) {
+                android.util.Log.e("BillingRepository", "Billing client is not ready - connection may be disconnected")
+                continuation.resume(Result.failure(IllegalStateException("Billing client is not ready. Service connection is disconnected.")))
                 return@suspendCancellableCoroutine
             }
             
