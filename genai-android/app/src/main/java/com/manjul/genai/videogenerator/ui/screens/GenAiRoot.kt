@@ -339,7 +339,11 @@ fun GenAiRoot() {
                 } else {
                     ProfileScreen(
                         modifier = Modifier.padding(innerPadding),
-                        onBuyCreditsClick = { showBuyCreditsScreen = true }
+                        onBuyCreditsClick = { showBuyCreditsScreen = true },
+                        onVideosClick = {
+                            showBuyCreditsScreen = false
+                            currentRoute = AppDestination.History
+                        }
                     )
                 }
             }

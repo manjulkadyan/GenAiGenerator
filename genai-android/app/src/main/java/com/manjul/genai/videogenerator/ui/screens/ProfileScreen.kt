@@ -93,7 +93,8 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     creditsViewModel: CreditsViewModel = viewModel(factory = CreditsViewModel.Factory),
     historyViewModel: HistoryViewModel = viewModel(factory = HistoryViewModel.Factory),
-    onBuyCreditsClick: () -> Unit = {}
+    onBuyCreditsClick: () -> Unit = {},
+    onVideosClick: () -> Unit = {}
 ) {
     val credits by creditsViewModel.state.collectAsState()
     val jobs by historyViewModel.jobs.collectAsState()
@@ -239,6 +240,7 @@ fun ProfileScreen(
         userEmail = userEmail,
         userId = userId,
         onBuyCreditsClick = onBuyCreditsClick,
+        onVideosClick = onVideosClick,
         onLogout = {
             FirebaseAuth.getInstance().signOut()
         },
@@ -445,6 +447,7 @@ private fun ProfileScreenPreview() {
             userEmail = mockUserEmail,
             userId = mockUserId,
             onBuyCreditsClick = {},
+            onVideosClick = {},
             isAnonymous = true,
             onGoogleSignIn = {}
         )
@@ -461,6 +464,7 @@ private fun ProfileScreenContent(
     userId: String,
     modifier: Modifier = Modifier,
     onBuyCreditsClick: () -> Unit = {},
+    onVideosClick: () -> Unit = {},
     onLogout: () -> Unit = {},
     isAnonymous: Boolean = false,
     onGoogleSignIn: () -> Unit = {}
@@ -716,7 +720,8 @@ private fun ProfileScreenContent(
                             icon = Icons.Default.PlayArrow,
                             label = "Videos",
                             value = videoCount.toString(),
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
+                            onClick = onVideosClick
                         )
 
                         StatCard(
