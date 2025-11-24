@@ -195,7 +195,7 @@ class LandingPageViewModel(
                         
                         // Add credits to user account after successful purchase
                         viewModelScope.launch {
-                            addCreditsForPurchase(event.purchase.products.firstOrNull())
+                            addCreditsForPurchase(event.purchase)
                         }
                         
                         _uiState.value = _uiState.value.copy(
@@ -248,9 +248,10 @@ class LandingPageViewModel(
     
     /**
      * Add credits to user account after successful subscription purchase.
-     * Finds the subscription plan by product ID and adds the corresponding credits.
+     * Finds the subscription plan by product ID and stores subscription info for renewal tracking.
      */
-    private suspend fun addCreditsForPurchase(productId: String?) {
+    private suspend fun addCreditsForPurchase(purchase: com.android.billingclient.api.Purchase) {
+        val productId = purchase.products.firstOrNull()
         if (productId == null) {
             android.util.Log.e("LandingPageViewModel", "Cannot add credits: product ID is null")
             return
@@ -280,29 +281,44 @@ class LandingPageViewModel(
         }
         
         try {
-            android.util.Log.d("LandingPageViewModel", "Adding $creditsToAdd credits to user $userId for product $productId")
+            android.util.Log.d("LandingPageViewModel", "Processing subscription purchase: $productId for user $userId")
             
-            // Call Firebase function to add credits
+            // Call Firebase function to handle subscription purchase
+            // This will add credits AND store subscription info for renewal tracking
             val data = hashMapOf(
                 "userId" to userId,
+                "productId" to productId,
+                "purchaseToken" to purchase.purchaseToken,
                 "credits" to creditsToAdd
             )
             
             val result = functions
-                .getHttpsCallable("addTestCredits")
+                .getHttpsCallable("handleSubscriptionPurchase")
                 .call(data)
                 .await()
             
-            android.util.Log.d("LandingPageViewModel", "✅ Credits added successfully: $result")
+            android.util.Log.d("LandingPageViewModel", "✅ Subscription processed successfully: $result")
             
             // Update UI message to show credits were added
             _uiState.value = _uiState.value.copy(
                 purchaseMessage = "Subscription purchased! ${creditsToAdd} credits added to your account."
             )
         } catch (e: Exception) {
-            android.util.Log.e("LandingPageViewModel", "❌ Failed to add credits", e)
-            // Don't show error to user - purchase was successful, credits can be added manually if needed
-            // But log it for debugging
+            android.util.Log.e("LandingPageViewModel", "❌ Failed to process subscription", e)
+            // Fallback: try to add credits using the old method
+            try {
+                val fallbackData = hashMapOf(
+                    "userId" to userId,
+                    "credits" to creditsToAdd
+                )
+                functions.getHttpsCallable("addTestCredits").call(fallbackData).await()
+                android.util.Log.d("LandingPageViewModel", "✅ Credits added via fallback method")
+                _uiState.value = _uiState.value.copy(
+                    purchaseMessage = "Subscription purchased! ${creditsToAdd} credits added to your account."
+                )
+            } catch (fallbackError: Exception) {
+                android.util.Log.e("LandingPageViewModel", "❌ Fallback also failed", fallbackError)
+            }
         }
     }
     
