@@ -560,8 +560,6 @@ private fun DetailsCard(job: VideoJob) {
             ?.replaceFirstChar { it.uppercaseChar() }
         ?: job.modelName
 
-    // Format cost as dollars
-    val costInDollars = String.format(Locale.US, "$%.2f", job.cost / 100.0)
 
     // Format created date
     val dateFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy, h:mm a", Locale.US)
@@ -591,7 +589,7 @@ private fun DetailsCard(job: VideoJob) {
                 // Seed removed as requested
                 DetailRow(
                     label = "Credits Spent",
-                    value = costInDollars,
+                    value = "${job.cost} credits",
                     valueColor = MaterialTheme.colorScheme.primary
                 )
                 DetailRow(label = "Created", value = formattedDate)
@@ -749,7 +747,7 @@ private fun ResultsScreenPreview() {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
+                            .padding(8.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Text(
