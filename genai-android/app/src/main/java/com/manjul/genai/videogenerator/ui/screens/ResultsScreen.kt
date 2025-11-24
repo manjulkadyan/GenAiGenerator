@@ -15,18 +15,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ContentCopy
@@ -56,8 +57,6 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.media3.common.util.UnstableApi
 import com.manjul.genai.videogenerator.data.local.AppDatabase
 import com.manjul.genai.videogenerator.data.local.toEntity
@@ -100,7 +99,7 @@ private fun parseAspectRatio(ratioString: String?): Float {
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(UnstableApi::class)
 @Composable
-fun ResultsScreenDialog(
+fun ResultsScreen(
     job: VideoJob,
     onClose: () -> Unit,
     onRegenerate: () -> Unit = {},
@@ -144,52 +143,45 @@ fun ResultsScreenDialog(
         }
     }
 
-    Dialog(
-        onDismissRequest = {
-            VideoPlayerManager.unregisterPlayer(videoUrl)
-            onClose()
-        },
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false,
-            decorFitsSystemWindows = true
-        )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .windowInsetsPadding(WindowInsets.systemBars)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .windowInsetsPadding(WindowInsets.statusBars)
-            ) {
-                // Header with back button, title, and status badge
-                HeaderSection(
-                    status = job.status,
-                    onBackClick = {
-                        VideoPlayerManager.unregisterPlayer(videoUrl)
-                        onClose()
-                    }
-                )
+            // Header with back button, title, and status badge
+            HeaderSection(
+                status = job.status,
+                onBackClick = {
+                    VideoPlayerManager.unregisterPlayer(videoUrl)
+                    onClose()
+                }
+            )
 
-                // Scrollable content
-                val scrollState = rememberScrollState()
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                        .verticalScroll(scrollState)
-                        .padding(horizontal = 24.dp, vertical = 24.dp),
-                    verticalArrangement = Arrangement.spacedBy(24.dp)
-                ) {
-                    // Video Player Card
+            // Scrollable content
+            val navPadding = WindowInsets.navigationBars.asPaddingValues()
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentPadding = PaddingValues(
+                    start = 24.dp,
+                    end = 24.dp,
+                    top = 24.dp,
+                    bottom = 24.dp + navPadding.calculateBottomPadding()
+                ),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                item {
                     VideoPlayerCard(
                         videoUrl = videoUrl,
                         aspectRatio = aspectRatio,
                         jobId = job.id,
                         onFullscreenClick = {
-                            // Launch FullscreenVideoActivity
                             val intent =
                                 Intent(context, FullscreenVideoActivity::class.java).apply {
                                     putExtra(FullscreenVideoActivity.EXTRA_VIDEO_URL, videoUrl)
@@ -201,17 +193,17 @@ fun ResultsScreenDialog(
                             context.startActivity(intent)
                         }
                     )
-
-                    // Prompt Card
+                }
+                item {
                     PromptCard(
                         prompt = job.prompt,
                         context = context
                     )
-
-                    // Details Card
+                }
+                item {
                     DetailsCard(job = job)
-
-                    // Action Buttons
+                }
+                item {
                     ActionButtonsSection(
                         context = context,
                         videoUrl = videoUrl,
@@ -227,17 +219,14 @@ fun ResultsScreenDialog(
                                         "AI_Video_${job.id}.mp4"
                                     )
                                     if (uri != null) {
-                                        // Track video downloaded
                                         AnalyticsManager.trackVideoDownloaded(job.id)
-                                        
-                                        // Update local file path in Room DB
+
                                         val cachedFileUri =
                                             VideoFileCache.getCachedFileUri(context, videoUrl)
                                         if (cachedFileUri != null) {
                                             val filePath = cachedFileUri.removePrefix("file://")
                                             jobDao?.updateLocalFilePath(job.id, filePath)
                                         }
-                                        // Show success toast
                                         CoroutineScope(Dispatchers.Main).launch {
                                             android.widget.Toast.makeText(
                                                 context,
@@ -278,7 +267,6 @@ fun ResultsScreenDialog(
                                 try {
                                     val success = VideoSharer.shareVideoFromUrl(context, videoUrl)
                                     if (success) {
-                                        // Track video shared
                                         AnalyticsManager.trackVideoShared(job.id)
                                     }
                                     if (!success) {
@@ -691,7 +679,7 @@ private fun ActionButtonsSection(
 @RequiresApi(Build.VERSION_CODES.O)
 private fun ResultsScreenPreview() {
     GenAiVideoTheme {
-        ResultsScreenDialog(
+        ResultsScreen(
             job = previewVideoJob,
             onClose = {},
             onRegenerate = {}

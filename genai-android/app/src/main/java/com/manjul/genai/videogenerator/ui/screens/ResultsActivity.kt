@@ -94,7 +94,7 @@ class ResultsActivity : ComponentActivity() {
                     CoroutineScope(Dispatchers.Main).launch {
                         setContent {
                             GenAiVideoTheme {
-                                ResultsScreenDialog(
+                                ResultsScreen(
                                     job = job,
                                     onClose = { finish() },
                                     onRegenerate = {
@@ -132,4 +132,3 @@ class ResultsActivity : ComponentActivity() {
         }
     }
 }
-
