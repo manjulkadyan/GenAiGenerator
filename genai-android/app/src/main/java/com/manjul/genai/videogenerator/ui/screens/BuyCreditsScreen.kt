@@ -27,6 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -62,6 +63,9 @@ import com.manjul.genai.videogenerator.ui.components.DraggableBottomSheet
 import com.manjul.genai.videogenerator.ui.components.LandingPageFeatureItem
 import com.manjul.genai.videogenerator.ui.components.SubscriptionPlanCard
 import com.manjul.genai.videogenerator.ui.components.getFeatureIcon
+import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
+import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.dialogs.AppDialog
 import com.manjul.genai.videogenerator.ui.viewmodel.LandingPageViewModel
 import com.manjul.genai.videogenerator.utils.AnalyticsManager
 
@@ -70,6 +74,7 @@ import com.manjul.genai.videogenerator.utils.AnalyticsManager
 fun BuyCreditsScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
+    onPurchaseSuccess: () -> Unit = {}, // Callback when purchase is successful
     viewModel: LandingPageViewModel = viewModel(
         factory = LandingPageViewModel.Factory(LocalContext.current.applicationContext as android.app.Application)
     )
@@ -167,13 +172,23 @@ fun BuyCreditsScreen(
         }
     }
     
+    // Track if we should show success dialog
+    var showSuccessDialog by remember { mutableStateOf(false) }
+    
     // Show purchase success/error messages
     LaunchedEffect(uiState.purchaseMessage) {
         uiState.purchaseMessage?.let { message ->
             android.util.Log.d("BuyCreditsScreen", "Purchase message received: $message")
-            scope.launch {
-                snackbarHostState.showSnackbar(message)
-                viewModel.clearPurchaseMessage()
+            // Check if it's a success message
+            if (message.contains("successfully", ignoreCase = true)) {
+                // Show success dialog instead of snackbar
+                showSuccessDialog = true
+            } else {
+                // Show snackbar for other messages
+                scope.launch {
+                    snackbarHostState.showSnackbar(message)
+                    viewModel.clearPurchaseMessage()
+                }
             }
         }
     }
@@ -482,6 +497,63 @@ fun BuyCreditsScreen(
                 containerColor = Color(0xFF1F1F1F),
                 contentColor = Color.White
             )
+        }
+        
+        // Success dialog for successful purchases
+        if (showSuccessDialog) {
+            AppDialog(
+                onDismissRequest = {
+                    showSuccessDialog = false
+                    viewModel.clearPurchaseMessage()
+                    // Navigate to GenerateScreen and close BuyCreditsScreen
+                    onPurchaseSuccess()
+                },
+                title = "Purchase Successful!"
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Success icon
+                    Box(
+                        modifier = Modifier
+                            .size(64.dp)
+                            .background(
+                                color = Color(0xFF10B981).copy(alpha = 0.2f),
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = "Success",
+                            tint = Color(0xFF10B981),
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
+                    
+                    Text(
+                        text = "Your subscription has been activated successfully. You can now start generating amazing AI videos!",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = AppColors.TextSecondary,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    
+                    AppPrimaryButton(
+                        text = "Start Creating",
+                        onClick = {
+                            showSuccessDialog = false
+                            viewModel.clearPurchaseMessage()
+                            // Navigate to GenerateScreen and close BuyCreditsScreen
+                            onPurchaseSuccess()
+                        },
+                        fullWidth = true
+                    )
+                }
+            }
         }
     }
 }

@@ -329,7 +329,12 @@ fun GenAiRoot() {
                     // Full screen - no padding, no bottom nav
                     BuyCreditsScreen(
                         modifier = Modifier.fillMaxSize(),
-                        onBackClick = { showBuyCreditsScreen = false }
+                        onBackClick = { showBuyCreditsScreen = false },
+                        onPurchaseSuccess = {
+                            // Navigate to GenerateScreen and close BuyCreditsScreen
+                            showBuyCreditsScreen = false
+                            currentRoute = AppDestination.Generate
+                        }
                     )
                 } else {
                     ProfileScreen(
