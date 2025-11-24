@@ -20,6 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.manjul.genai.videogenerator.data.auth.AuthManager
+import com.manjul.genai.videogenerator.data.subscription.SubscriptionRenewalManager
+import kotlinx.coroutines.launch
 
 private sealed interface AuthStatus {
     data object Loading : AuthStatus
@@ -35,7 +37,14 @@ fun AuthGate(content: @Composable () -> Unit) {
     LaunchedEffect(retryKey) {
         val result = AuthManager.ensureAnonymousUser()
         status = result.fold(
-            onSuccess = { AuthStatus.Authenticated },
+            onSuccess = { user ->
+                // Check subscription renewals in background after authentication
+                // This replaces the scheduled server function - credits granted on app launch
+                kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+                    SubscriptionRenewalManager.checkRenewalsAsync(user.uid)
+                }
+                AuthStatus.Authenticated
+            },
             onFailure = { AuthStatus.Error(it.message ?: "Unable to sign in") }
         )
     }
