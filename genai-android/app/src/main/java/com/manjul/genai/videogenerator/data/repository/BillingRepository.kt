@@ -109,12 +109,30 @@ class BillingRepository(private val context: Context) {
             billingClient.queryProductDetailsAsync(
                 params
             ) { billingResult, productDetailsList ->
+                android.util.Log.d("BillingRepository", "Query result: responseCode=${billingResult.responseCode}, products=${productDetailsList?.size ?: 0}")
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    continuation.resume(Result.success(productDetailsList))
+                    if (productDetailsList.isNullOrEmpty()) {
+                        android.util.Log.w("BillingRepository", "No products found for IDs: ${productIds.joinToString()}")
+                        continuation.resume(Result.failure(
+                            Exception("No products found. Make sure products exist in Play Console with IDs: ${productIds.joinToString()}")
+                        ))
+                    } else {
+                        productDetailsList.forEach { product ->
+                            android.util.Log.d("BillingRepository", "Found product: ${product.productId}, offers: ${product.subscriptionOfferDetails?.size ?: 0}")
+                        }
+                        continuation.resume(Result.success(productDetailsList))
+                    }
                 } else {
-                    continuation.resume(Result.failure(
-                        Exception("Failed to query product details: ${billingResult.debugMessage}")
-                    ))
+                    android.util.Log.e("BillingRepository", "Query failed: ${billingResult.debugMessage} (code: ${billingResult.responseCode})")
+                    val errorMessage = when (billingResult.responseCode) {
+                        BillingClient.BillingResponseCode.ITEM_UNAVAILABLE -> 
+                            "Products not found in Play Console. Create subscriptions with IDs: ${productIds.joinToString()}"
+                        BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE ->
+                            "Billing service unavailable. Make sure app is uploaded to Internal testing track."
+                        else ->
+                            "Failed to query products: ${billingResult.debugMessage}"
+                    }
+                    continuation.resume(Result.failure(Exception(errorMessage)))
                 }
             }
         }
