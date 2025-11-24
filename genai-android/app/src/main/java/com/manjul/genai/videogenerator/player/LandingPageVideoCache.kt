@@ -116,13 +116,14 @@ object LandingPageVideoCache {
     /**
      * Pre-cache video using ExoPlayer's cache system.
      * This downloads the video to filesDir (not heap/stack) for instant playback.
+     * ⚠️ All ExoPlayer operations must run on the main thread.
      */
     @OptIn(UnstableApi::class)
     private suspend fun precacheVideo(context: Context, videoUrl: String) {
         try {
             val appContext = context.applicationContext
             
-            // Get cache instance
+            // Get cache instance (can be done on background thread)
             val cache = VideoPreviewCache.get(appContext)
             
             // Create HttpDataSource
@@ -153,67 +154,75 @@ object LandingPageVideoCache {
                     .createMediaSource(mediaItem)
             }
             
-            // Create a temporary ExoPlayer instance for pre-caching
-            val player = ExoPlayer.Builder(appContext)
-                .build()
-            
-            precachePlayer = player
-            
-            // Set media source and prepare (this triggers caching)
-            player.setMediaSource(mediaSource)
-            player.prepare()
-            
-            // Wait for video to be ready (cached)
-            var attempts = 0
-            val maxAttempts = 60 // Wait up to 60 seconds
-            
-            while (player.playbackState != ExoPlayer.STATE_READY && attempts < maxAttempts) {
-                Thread.sleep(1000) // Wait 1 second
-                attempts++
+            // ⚠️ CRITICAL: All ExoPlayer operations must run on main thread
+            withContext(Dispatchers.Main) {
+                // Create a temporary ExoPlayer instance for pre-caching
+                val player = ExoPlayer.Builder(appContext)
+                    .build()
                 
-                // Log progress
-                if (attempts % 10 == 0) {
-                    val cachedBytes = cache.cacheSpace
-                    Log.d(TAG, "Pre-caching progress: ${cachedBytes / 1024 / 1024} MB cached")
-                }
-            }
-            
-            if (player.playbackState == ExoPlayer.STATE_READY) {
-                val cachedBytes = cache.cacheSpace
-                val cacheSizeMB = cachedBytes / 1024 / 1024
-                Log.d(TAG, "✅ Landing page video pre-cached successfully! ($cacheSizeMB MB)")
+                precachePlayer = player
                 
-                // Update Room DB with cache status (in coroutine scope)
-                kotlinx.coroutines.withContext(Dispatchers.IO) {
-                    val database = AppDatabase.getDatabase(context)
-                    val cacheEntry = database.videoCacheDao().getCacheEntry(videoUrl)
-                    if (cacheEntry != null) {
-                        database.videoCacheDao().updateCacheStatus(videoUrl, true, cachedBytes)
-                    } else {
-                        // Create new cache entry in Room DB
-                        database.videoCacheDao().insertOrUpdate(
-                            VideoCacheEntity(
-                                videoUrl = videoUrl,
-                                modelId = "landing_page",
-                                modelName = "Landing Page Background Video",
-                                isCached = true,
-                                cacheSize = cachedBytes
-                            )
-                        )
+                // Set media source and prepare (this triggers caching)
+                player.setMediaSource(mediaSource)
+                player.prepare()
+                
+                // Wait for video to be ready (cached) - use coroutine delay instead of Thread.sleep
+                var attempts = 0
+                val maxAttempts = 60 // Wait up to 60 seconds
+                
+                while (player.playbackState != ExoPlayer.STATE_READY && attempts < maxAttempts) {
+                    kotlinx.coroutines.delay(1000) // Wait 1 second
+                    attempts++
+                    
+                    // Log progress
+                    if (attempts % 10 == 0) {
+                        val cachedBytes = cache.cacheSpace
+                        Log.d(TAG, "Pre-caching progress: ${cachedBytes / 1024 / 1024} MB cached")
                     }
-                    Log.d(TAG, "Cache status saved to Room DB (persistent)")
                 }
-            } else {
-                Log.w(TAG, "⚠️ Pre-caching timed out, but some data may be cached")
+                
+                if (player.playbackState == ExoPlayer.STATE_READY) {
+                    val cachedBytes = cache.cacheSpace
+                    val cacheSizeMB = cachedBytes / 1024 / 1024
+                    Log.d(TAG, "✅ Landing page video pre-cached successfully! ($cacheSizeMB MB)")
+                    
+                    // Update Room DB with cache status (switch to IO thread for DB operations)
+                    kotlinx.coroutines.withContext(Dispatchers.IO) {
+                        val database = AppDatabase.getDatabase(context)
+                        val cacheEntry = database.videoCacheDao().getCacheEntry(videoUrl)
+                        if (cacheEntry != null) {
+                            database.videoCacheDao().updateCacheStatus(videoUrl, true, cachedBytes)
+                        } else {
+                            // Create new cache entry in Room DB
+                            database.videoCacheDao().insertOrUpdate(
+                                VideoCacheEntity(
+                                    videoUrl = videoUrl,
+                                    modelId = "landing_page",
+                                    modelName = "Landing Page Background Video",
+                                    isCached = true,
+                                    cacheSize = cachedBytes
+                                )
+                            )
+                        }
+                        Log.d(TAG, "Cache status saved to Room DB (persistent)")
+                    }
+                } else {
+                    Log.w(TAG, "⚠️ Pre-caching timed out, but some data may be cached")
+                }
+                
+                // Release player (cache persists in filesDir) - must be on main thread
+                player.release()
+                precachePlayer = null
             }
-            
-            // Release player (cache persists in filesDir)
-            player.release()
-            precachePlayer = null
             
         } catch (e: Exception) {
             Log.e(TAG, "Error pre-caching video", e)
-            precachePlayer?.release()
+            // Release player on main thread if it exists
+            precachePlayer?.let { player ->
+                withContext(Dispatchers.Main) {
+                    player.release()
+                }
+            }
             precachePlayer = null
         }
     }
