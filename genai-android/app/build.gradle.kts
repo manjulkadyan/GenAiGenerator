@@ -115,8 +115,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:21.2.0")
     implementation("com.google.code.gson:gson:2.10.1")
     
-    // Google Play Billing
-    implementation("com.android.billingclient:billing-ktx:7.1.1")
+    // Google Play Billing - Updated to 8.0.0+ (required by Aug 31, 2025)
+    implementation("com.android.billingclient:billing-ktx:8.0.0")
     implementation("androidx.media3:media3-exoplayer:1.3.1")
     implementation("androidx.media3:media3-ui:1.3.1")
     implementation("androidx.media3:media3-datasource:1.3.1") // Includes CacheDataSource
