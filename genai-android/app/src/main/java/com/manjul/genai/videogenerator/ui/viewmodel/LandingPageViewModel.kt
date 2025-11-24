@@ -50,38 +50,44 @@ class LandingPageViewModel(
         viewModelScope.launch {
             landingPageRepository.observeConfig().collect { config ->
                 val currentState = _uiState.value
+                android.util.Log.d("LandingPageViewModel", "Config loaded: ${config.subscriptionPlans.size} plans, ${config.features.size} features")
                 _uiState.value = currentState.copy(
                     config = config,
                     isLoading = false,
                     error = null
                 )
-                // Load product details when config is available
-                if (config.subscriptionPlans.isNotEmpty()) {
-                    loadProductDetails(config.subscriptionPlans.map { it.productId })
-                    // Auto-select popular plan as default
-                    if (currentState.selectedPlan == null) {
-                        val popularPlan = config.subscriptionPlans.firstOrNull { it.isPopular }
-                        if (popularPlan != null) {
-                            _uiState.value = _uiState.value.copy(selectedPlan = popularPlan)
-                        }
+                // Auto-select popular plan as default
+                if (currentState.selectedPlan == null) {
+                    val popularPlan = config.subscriptionPlans.firstOrNull { it.isPopular }
+                    if (popularPlan != null) {
+                        android.util.Log.d("LandingPageViewModel", "Auto-selecting popular plan: ${popularPlan.productId}")
+                        _uiState.value = _uiState.value.copy(selectedPlan = popularPlan)
                     }
                 }
+                // NOTE: Do NOT load product details here - wait for billing to be initialized
+                // Product details will be loaded in initializeBilling() after connection is established
             }
         }
     }
     
     private fun initializeBilling() {
         viewModelScope.launch {
+            android.util.Log.d("LandingPageViewModel", "Starting billing initialization...")
             billingRepository.initialize().collect { billingResult ->
+                android.util.Log.d("LandingPageViewModel", "Billing initialization result: code=${billingResult.responseCode}, message=${billingResult.debugMessage}")
                 if (billingResult.responseCode == com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
+                    android.util.Log.d("LandingPageViewModel", "Billing initialized successfully - loading product details")
                     _uiState.value = _uiState.value.copy(billingInitialized = true)
-                    // Load product details after billing is initialized
+                    // Load product details after billing is initialized and ready
                     val currentConfig = _uiState.value.config
                     if (currentConfig.subscriptionPlans.isNotEmpty()) {
+                        android.util.Log.d("LandingPageViewModel", "Loading product details for ${currentConfig.subscriptionPlans.size} plans")
                         loadProductDetails(currentConfig.subscriptionPlans.map { it.productId })
+                    } else {
+                        android.util.Log.w("LandingPageViewModel", "No subscription plans in config to load")
                     }
                 } else {
-                    android.util.Log.e("LandingPageViewModel", "Billing initialization failed: ${billingResult.debugMessage}")
+                    android.util.Log.e("LandingPageViewModel", "Billing initialization failed: ${billingResult.debugMessage} (code: ${billingResult.responseCode})")
                     _uiState.value = _uiState.value.copy(
                         error = "Billing initialization failed: ${billingResult.debugMessage}",
                         billingInitialized = false
@@ -163,18 +169,22 @@ class LandingPageViewModel(
      * Observe purchase updates from BillingRepository
      */
     private fun observePurchaseUpdates() {
+        android.util.Log.d("LandingPageViewModel", "Starting to observe purchase updates")
         billingRepository.purchaseUpdates
             .onEach { event ->
+                android.util.Log.d("LandingPageViewModel", "=== Purchase Event Received ===")
                 when (event) {
                     is PurchaseUpdateEvent.Success -> {
+                        android.util.Log.d("LandingPageViewModel", "✅ Purchase SUCCESS: ${event.purchase.products.firstOrNull()}")
+                        android.util.Log.d("LandingPageViewModel", "Purchase state: ${event.purchase.purchaseState}, Acknowledged: ${event.purchase.isAcknowledged}")
                         _uiState.value = _uiState.value.copy(
                             isPurchaseInProgress = false,
                             purchaseMessage = "Subscription purchased successfully!",
                             error = null
                         )
-                        android.util.Log.d("LandingPageViewModel", "Purchase successful: ${event.purchase.products.firstOrNull()}")
                     }
                     is PurchaseUpdateEvent.Error -> {
+                        android.util.Log.e("LandingPageViewModel", "❌ Purchase ERROR: code=${event.billingResult.responseCode}, message=${event.billingResult.debugMessage}")
                         val errorMessage = when (event.billingResult.responseCode) {
                             com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
                                 "You already have an active subscription"
@@ -194,15 +204,14 @@ class LandingPageViewModel(
                             purchaseMessage = null,
                             error = errorMessage
                         )
-                        android.util.Log.e("LandingPageViewModel", "Purchase error: ${event.billingResult.debugMessage}")
                     }
                     is PurchaseUpdateEvent.UserCancelled -> {
+                        android.util.Log.d("LandingPageViewModel", "⚠️ User CANCELLED purchase")
                         _uiState.value = _uiState.value.copy(
                             isPurchaseInProgress = false,
                             purchaseMessage = null,
                             error = null
                         )
-                        android.util.Log.d("LandingPageViewModel", "User cancelled purchase")
                     }
                 }
             }
