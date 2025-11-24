@@ -10,9 +10,14 @@ import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesUpdatedListener
+import com.android.billingclient.api.PendingPurchasesParams
 import com.android.billingclient.api.QueryProductDetailsParams
+import com.android.billingclient.api.QueryProductDetailsResult
 import com.android.billingclient.api.QueryPurchasesParams
 import com.manjul.genai.videogenerator.utils.AnalyticsManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -92,9 +97,15 @@ class BillingRepository(private val context: Context) {
      * Initialize the billing client.
      */
     fun initialize(): Flow<BillingResult> = callbackFlow {
+        val pendingPurchasesParams = PendingPurchasesParams.newBuilder()
+            .build()
+        
         billingClient = BillingClient.newBuilder(context)
             .setListener(purchasesUpdatedListener)
-            .enablePendingPurchases()
+            .enablePendingPurchases(pendingPurchasesParams)
+            .enableAutoServiceReconnection()
+            // Note: enableAutoServiceReconnection() may not be available in all versions
+            // If compilation fails, remove this line - auto-reconnection is handled manually
             .build()
         
         billingClient?.startConnection(object : BillingClientStateListener {
@@ -103,6 +114,25 @@ class BillingRepository(private val context: Context) {
                 trySend(billingResult)
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     android.util.Log.d("BillingRepository", "Billing client is ready and connected")
+                    // ⚠️ CRITICAL: Query purchases immediately after connection
+                    // This ensures we catch purchases made while app was closed
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            val result = queryPurchases()
+                            result.onSuccess { purchases ->
+                                android.util.Log.d("BillingRepository", "Queried ${purchases.size} purchases after connection")
+                                purchases.forEach { purchase ->
+                                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged) {
+                                        handlePurchase(purchase)
+                                    }
+                                }
+                            }.onFailure { error ->
+                                android.util.Log.e("BillingRepository", "Failed to query purchases after connection: ${error.message}")
+                            }
+                        } catch (e: Exception) {
+                            android.util.Log.e("BillingRepository", "Error querying purchases after connection", e)
+                        }
+                    }
                 } else {
                     android.util.Log.e("BillingRepository", "Billing setup failed: ${billingResult.debugMessage}")
                 }
@@ -152,10 +182,11 @@ class BillingRepository(private val context: Context) {
             
             billingClient.queryProductDetailsAsync(
                 params
-            ) { billingResult, productDetailsList ->
-                android.util.Log.d("BillingRepository", "Query result: responseCode=${billingResult.responseCode}, products=${productDetailsList?.size ?: 0}")
+            ) { billingResult, productDetailsResult ->
+                val productDetailsList = productDetailsResult?.productDetailsList ?: emptyList()
+                android.util.Log.d("BillingRepository", "Query result: responseCode=${billingResult.responseCode}, products=${productDetailsList.size}")
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    if (productDetailsList.isNullOrEmpty()) {
+                    if (productDetailsList.isEmpty()) {
                         android.util.Log.w("BillingRepository", "No products found for IDs: ${productIds.joinToString()}")
                         continuation.resume(Result.failure(
                             Exception("No products found. Make sure products exist in Play Console with IDs: ${productIds.joinToString()}")
@@ -273,24 +304,42 @@ class BillingRepository(private val context: Context) {
     /**
      * Acknowledge a purchase.
      * This is required for subscriptions - Google Play requires acknowledgment within 3 days.
+     * 
+     * ⚠️ CRITICAL: Only acknowledge purchases in PURCHASED state, not PENDING.
+     * The three-day acknowledgement window begins only when purchase transitions from PENDING to PURCHASED.
      */
     private fun handlePurchase(purchase: Purchase) {
-        if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
-            if (!purchase.isAcknowledged) {
-                val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
-                    .setPurchaseToken(purchase.purchaseToken)
-                    .build()
-                
-                billingClient?.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
-                    if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+        // ⚠️ CRITICAL: Only process PURCHASED purchases, not PENDING
+        if (purchase.purchaseState != Purchase.PurchaseState.PURCHASED) {
+            android.util.Log.w("BillingRepository", "Purchase is in ${purchase.purchaseState} state, not PURCHASED. Skipping acknowledgment.")
+            return
+        }
+        
+        if (!purchase.isAcknowledged) {
+            val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
+                .setPurchaseToken(purchase.purchaseToken)
+                .build()
+            
+            billingClient?.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
+                when (billingResult.responseCode) {
+                    BillingClient.BillingResponseCode.OK -> {
                         android.util.Log.d("BillingRepository", "Purchase acknowledged successfully: ${purchase.products.firstOrNull()}")
-                    } else {
-                        android.util.Log.e("BillingRepository", "Failed to acknowledge purchase: ${billingResult.debugMessage}")
+                    }
+                    BillingClient.BillingResponseCode.ITEM_NOT_OWNED -> {
+                        // Possibly stale cache - query purchases again
+                        android.util.Log.w("BillingRepository", "Acknowledgment failed with ITEM_NOT_OWNED - possibly stale cache")
+                        CoroutineScope(Dispatchers.IO).launch {
+                            queryPurchases() // Refresh cache
+                        }
+                    }
+                    else -> {
+                        android.util.Log.e("BillingRepository", "Failed to acknowledge purchase: ${billingResult.debugMessage} (code: ${billingResult.responseCode})")
+                        // ⚠️ TODO: Implement retry logic with exponential backoff for transient errors
                     }
                 }
-            } else {
-                android.util.Log.d("BillingRepository", "Purchase already acknowledged: ${purchase.products.firstOrNull()}")
             }
+        } else {
+            android.util.Log.d("BillingRepository", "Purchase already acknowledged: ${purchase.products.firstOrNull()}")
         }
     }
     

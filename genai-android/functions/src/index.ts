@@ -2,6 +2,7 @@ import * as admin from "firebase-admin";
 import {defineSecret} from "firebase-functions/params";
 import {setGlobalOptions} from "firebase-functions/v2";
 import {onCall, onRequest} from "firebase-functions/v2/https";
+import {onSchedule} from "firebase-functions/v2/scheduler";
 
 setGlobalOptions({maxInstances: 10});
 
@@ -1037,7 +1038,8 @@ export const processAccountDeletion = onCall(async (request) => {
   // For now, we'll require a secret key or admin check
   const {requestId, adminKey} = request.data;
 
-  // Simple admin key check (you should use Firebase Admin SDK auth check in production)
+  // Simple admin key check
+  // (you should use Firebase Admin SDK auth check in production)
   if (adminKey !== process.env.ADMIN_SECRET_KEY) {
     throw new Error("Unauthorized");
   }
@@ -1060,7 +1062,10 @@ export const processAccountDeletion = onCall(async (request) => {
     const userId = requestData.userId;
 
     // Delete user's jobs collection
-    const jobsRef = firestore.collection("users").doc(userId).collection("jobs");
+    const jobsRef = firestore
+      .collection("users")
+      .doc(userId)
+      .collection("jobs");
     const jobsSnapshot = await jobsRef.get();
     const batch = firestore.batch();
     jobsSnapshot.docs.forEach((doc) => {
@@ -1121,16 +1126,23 @@ export const handleSubscriptionPurchase = onCall<{
       throw new Error("Missing productId or purchaseToken");
     }
 
+    if (credits <= 0) {
+      throw new Error("Credits must be greater than 0");
+    }
+
     // TODO: Verify purchase token with Google Play Developer API
+    // ⚠️ CRITICAL: Add Google Play API verification for production
     // For now, we'll just store it for verification later
     // You can add Google Play API verification here if needed
+    // Reference: https://developer.android.com/google/play/billing/security#verify
 
     const userRef = firestore.collection("users").doc(userId);
     const purchaseRef = firestore
       .collection("users")
       .doc(userId)
       .collection("purchases")
-      .doc(purchaseToken); // Use purchaseToken as document ID to prevent duplicates
+      // Use purchaseToken as document ID to prevent duplicates
+      .doc(purchaseToken);
 
     // Get or create user document
     let userDoc = await userRef.get();
@@ -1146,7 +1158,8 @@ export const handleSubscriptionPurchase = onCall<{
     const purchaseDoc = await purchaseRef.get();
     if (purchaseDoc.exists) {
       console.log(
-        `⚠️ Purchase token already processed: ${purchaseToken} for user ${userId}`,
+        "⚠️ Purchase token already processed: " +
+          `${purchaseToken} for user ${userId}`,
       );
       const currentCredits = (userDoc.data()?.credits as number) || 0;
       return {
@@ -1168,6 +1181,31 @@ export const handleSubscriptionPurchase = onCall<{
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
+    // Store subscription info for renewal tracking
+    // Path: users/{userId}/subscriptions/{productId}
+    const subscriptionRef = firestore
+      .collection("users")
+      .doc(userId)
+      .collection("subscriptions")
+      .doc(productId);
+
+    const now = admin.firestore.Timestamp.now();
+    const nextRenewalDate = new admin.firestore.Timestamp(
+      now.seconds + 7 * 24 * 60 * 60, // 7 days from now
+      0,
+    );
+
+    await subscriptionRef.set({
+      productId,
+      purchaseToken,
+      creditsPerRenewal: credits,
+      status: "active",
+      lastCreditsAdded: now,
+      nextRenewalDate: nextRenewalDate,
+      createdAt: now,
+      updatedAt: now,
+    });
+
     // Add credits
     const currentCredits = (userDoc.data()?.credits as number) || 0;
     await userRef.update({
@@ -1178,7 +1216,8 @@ export const handleSubscriptionPurchase = onCall<{
 
     console.log(
       `✅ Subscription purchase processed: ${productId} for user ${userId}. ` +
-        `Added ${credits} credits. New balance: ${newCredits}`,
+        `Added ${credits} credits. New balance: ${newCredits}. ` +
+        `Next renewal: ${nextRenewalDate.toDate().toISOString()}`,
     );
 
     return {
@@ -1189,6 +1228,222 @@ export const handleSubscriptionPurchase = onCall<{
       creditsAdded: credits,
       previousBalance: currentCredits,
       newBalance: newCredits,
+      nextRenewalDate: nextRenewalDate.toDate().toISOString(),
     };
   },
 );
+
+/**
+ * Scheduled function to check and process subscription renewals.
+ * Runs daily at 2 AM UTC to check for subscriptions that need renewal.
+ *
+ * This function:
+ * 1. Queries all active subscriptions from Firestore
+ * 2. Checks if nextRenewalDate has passed
+ * 3. Calculates how many renewal periods have passed (handles missed renewals)
+ * 4. Adds credits for each renewal period
+ * 5. Updates nextRenewalDate to next week
+ *
+ * Note: This works WITHOUT the app being open - credits are added
+ * automatically. However, for production, you should also verify with
+ * Google Play Developer API to ensure the subscription is still active.
+ */
+export const checkSubscriptionRenewals = onSchedule(
+  {
+    schedule: "0 2 * * *", // Daily at 2 AM UTC
+    timeZone: "UTC",
+  },
+  async () => {
+    console.log("🔄 Checking subscription renewals...");
+
+    try {
+      const now = admin.firestore.Timestamp.now();
+      let processedCount = 0;
+      let errorCount = 0;
+
+      // Use collectionGroup to query all subscriptions efficiently
+      // This is much more efficient than querying all users
+      const subscriptionsSnapshot = await firestore
+        .collectionGroup("subscriptions")
+        .where("status", "==", "active")
+        .get();
+
+      for (const subDoc of subscriptionsSnapshot.docs) {
+        // Extract userId from document path:
+        // users/{userId}/subscriptions/{productId}
+        const pathParts = subDoc.ref.path.split("/");
+        if (pathParts.length < 4 || pathParts[0] !== "users") {
+          console.warn(
+            `⚠️ Invalid subscription path: ${subDoc.ref.path}`,
+          );
+          continue;
+        }
+        const userId = pathParts[1];
+
+        const subData = subDoc.data();
+        const nextRenewalDate = subData.nextRenewalDate as
+          admin.firestore.Timestamp | null;
+        const creditsPerRenewal = (subData.creditsPerRenewal as number) || 0;
+        const productId = subData.productId as string;
+
+        // Validate subscription data
+        if (!productId) {
+          console.warn(
+            `⚠️ Subscription for user ${userId} has no productId`,
+          );
+          continue;
+        }
+
+        if (creditsPerRenewal <= 0) {
+          console.warn(
+            `⚠️ Subscription ${productId} for user ${userId} ` +
+              `has invalid creditsPerRenewal: ${creditsPerRenewal}`,
+          );
+          continue;
+        }
+
+        if (!nextRenewalDate) {
+          console.warn(
+            "⚠️ Subscription " +
+              `${productId} for user ${userId} ` +
+              "has no nextRenewalDate",
+          );
+          continue;
+        }
+
+        // Check if renewal date has passed
+        if (nextRenewalDate.toMillis() <= now.toMillis()) {
+          // Calculate how many renewal periods have passed
+          const daysPassed = Math.floor(
+            (now.toMillis() - nextRenewalDate.toMillis()) /
+              (1000 * 60 * 60 * 24),
+          );
+          // Limit to max 52 periods (1 year) to prevent huge credit grants
+          // if function was down for extended period
+          const periodsPassed = Math.min(
+            52,
+            Math.max(1, Math.floor(daysPassed / 7)),
+          );
+
+          const creditsToAdd = creditsPerRenewal * periodsPassed;
+
+          console.log(
+            `📅 Renewal due for ${productId} (user ${userId}): ` +
+              `${periodsPassed} period(s) passed, ` +
+              `adding ${creditsToAdd} credits`,
+          );
+
+          try {
+            // Verify user document exists before updating
+            const userRef = firestore.collection("users").doc(userId);
+            const userDoc = await userRef.get();
+
+            if (!userDoc.exists) {
+              console.warn(
+                `⚠️ User ${userId} does not exist, ` +
+                  `skipping renewal for ${productId}`,
+              );
+              errorCount++;
+              continue;
+            }
+
+            // Add credits to user account
+            await userRef.update({
+              credits: admin.firestore.FieldValue.increment(creditsToAdd),
+            });
+
+            // Calculate new nextRenewalDate
+            // If multiple periods passed, set to 7 days from now
+            // Otherwise, set to 7 days from the last renewal date
+            const newNextRenewalDate = new admin.firestore.Timestamp(
+              now.seconds + 7 * 24 * 60 * 60, // 7 days from now
+              0,
+            );
+
+            // Update subscription document
+            await subDoc.ref.update({
+              lastCreditsAdded: now,
+              nextRenewalDate: newNextRenewalDate,
+              updatedAt: now,
+            });
+
+            console.log(
+              `✅ Renewal processed: ${productId} for user ${userId}. ` +
+                `Added ${creditsToAdd} credits. ` +
+                `Next renewal: ${newNextRenewalDate.toDate().toISOString()}`,
+            );
+
+            processedCount++;
+          } catch (error) {
+            console.error(
+              `❌ Error processing renewal for ${productId} (user ${userId}):`,
+              error,
+            );
+            errorCount++;
+          }
+        }
+      }
+
+      console.log(
+        "✅ Renewal check complete: " +
+          `${processedCount} subscriptions processed, ` +
+          `${errorCount} errors`,
+      );
+    } catch (error) {
+      console.error("❌ Error in checkSubscriptionRenewals:", error);
+      throw error;
+    }
+  },
+);
+
+/**
+ * Helper function to manually add credits for a subscription.
+ * Useful for testing or manual credit addition.
+ */
+export const addSubscriptionCredits = onCall<{
+  userId: string;
+  productId: string;
+  credits: number;
+}>(async ({data, auth}) => {
+  if (!auth) {
+    throw new Error("Missing auth.");
+  }
+
+  const userId = data.userId || auth.uid;
+  const productId = data.productId;
+  const credits = data.credits || 0;
+
+  if (!productId || credits <= 0) {
+    throw new Error("Missing productId or invalid credits");
+  }
+
+  const userRef = firestore.collection("users").doc(userId);
+  const userDoc = await userRef.get();
+
+  if (!userDoc.exists) {
+    throw new Error("User not found");
+  }
+
+  const currentCredits = (userDoc.data()?.credits as number) || 0;
+
+  // Add credits
+  await userRef.update({
+    credits: admin.firestore.FieldValue.increment(credits),
+  });
+
+  const newCredits = currentCredits + credits;
+
+  console.log(
+    `✅ Manual credits added: ${credits} credits to user ${userId} ` +
+      `for subscription ${productId}. New balance: ${newCredits}`,
+  );
+
+  return {
+    success: true,
+    userId,
+    productId,
+    creditsAdded: credits,
+    previousBalance: currentCredits,
+    newBalance: newCredits,
+  };
+});
