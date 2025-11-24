@@ -75,6 +75,7 @@ import com.manjul.genai.videogenerator.player.VideoPlayerManager
 import com.manjul.genai.videogenerator.player.VideoPreviewCache
 import com.manjul.genai.videogenerator.ui.components.AppToolbar
 import com.manjul.genai.videogenerator.ui.viewmodel.AIModelsViewModel
+import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
 import com.manjul.genai.videogenerator.ui.designsystem.components.badges.CustomStatusBadge
 import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
@@ -98,6 +99,11 @@ fun ModelsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     var fullscreenVideoUrl by rememberSaveable { mutableStateOf<String?>(null) }
+
+    // Track screen view
+    LaunchedEffect(Unit) {
+        AnalyticsManager.trackScreenView("Models")
+    }
 
     when {
         state.isLoading -> LoadingState(modifier)
@@ -421,7 +427,10 @@ private fun ModelCard(
                     ModelVideoPlayer(
                         videoUrl = exampleVideoUrl,
                         playbackEnabled = playbackEnabled,
-                        onVideoClick = { onVideoClick(exampleVideoUrl) },
+                        onVideoClick = { 
+                            AnalyticsManager.trackModelPreviewPlayed(model.id)
+                            onVideoClick(exampleVideoUrl) 
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(16f / 9f),

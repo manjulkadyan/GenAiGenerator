@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import kotlinx.coroutines.tasks.await
 
 object AuthManager {
@@ -22,9 +23,14 @@ object AuthManager {
             val result = auth.signInAnonymously().await()
             result.user?.also { user ->
                 Log.d(TAG, "Anonymous sign-in success: ${user.uid}")
+                AnalyticsManager.trackSignInAnonymous()
+                AnalyticsManager.setUserId(user.uid)
+                AnalyticsManager.setIsAnonymous(true)
             } ?: error("Anonymous user is null")
         }.onFailure {
             Log.e(TAG, "Anonymous sign-in failed", it)
+            AnalyticsManager.trackSignInFailed("anonymous", null, it.message)
+            AnalyticsManager.recordException(it)
         }
     }
 
@@ -89,12 +95,17 @@ object AuthManager {
                 
                 Log.d(TAG, "Linked user info: name=$finalDisplayName, email=$finalEmail")
                 updateUserInfoOnLink(user.uid, finalDisplayName, finalEmail)
+                AnalyticsManager.trackLinkAccount("google")
+                AnalyticsManager.setUserId(user.uid)
+                AnalyticsManager.setIsAnonymous(false)
             } ?: error("Linked user is null")
         }.recoverCatching { error ->
             val errorCode = (error as? com.google.firebase.auth.FirebaseAuthException)?.errorCode
             val errorMessage = error.message ?: ""
             
             Log.e(TAG, "Failed to link with Google: errorCode=$errorCode, message=$errorMessage", error)
+            AnalyticsManager.trackSignInFailed("google_link", errorCode, errorMessage)
+            AnalyticsManager.recordException(error)
             
             // Check if credential is already in use (error code 17025 or ERROR_CREDENTIAL_ALREADY_IN_USE)
             val isCredentialInUse = errorCode == "ERROR_CREDENTIAL_ALREADY_IN_USE" ||
@@ -168,6 +179,11 @@ object AuthManager {
                 // Mark anonymous user as merged (preserve data for reference)
                 markAnonymousUserAsMerged(anonymousUid, googleUser.uid)
                 
+                // Track account merge
+                AnalyticsManager.trackAccountMerge(anonymousUid, googleUser.uid)
+                AnalyticsManager.setUserId(googleUser.uid)
+                AnalyticsManager.setIsAnonymous(false)
+                
                 return Result.success(googleUser)
             } else {
                 // Re-throw other errors
@@ -240,21 +256,29 @@ object AuthManager {
             }
             
             Log.d(TAG, "Google sign-in complete: name=$finalDisplayName, email=$finalEmail")
+            AnalyticsManager.trackSignInGoogle()
+            AnalyticsManager.setUserId(user.uid)
+            AnalyticsManager.setIsAnonymous(false)
             user
         }.onFailure { error ->
             // Check for specific Firebase Auth errors
             val errorMessage = error.message ?: ""
+            val errorCode = (error as? com.google.firebase.auth.FirebaseAuthException)?.errorCode
             when {
                 errorMessage.contains("already-in-use", ignoreCase = true) -> {
                     Log.w(TAG, "Google account already linked to another user")
+                    AnalyticsManager.trackSignInFailed("google", errorCode, errorMessage)
                 }
                 errorMessage.contains("credential-already-in-use", ignoreCase = true) -> {
                     Log.w(TAG, "Credential already in use")
+                    AnalyticsManager.trackSignInFailed("google", errorCode, errorMessage)
                 }
                 else -> {
                     Log.e(TAG, "Google sign-in failed", error)
+                    AnalyticsManager.trackSignInFailed("google", errorCode, errorMessage)
                 }
             }
+            AnalyticsManager.recordException(error)
         }
     }
     
@@ -285,6 +309,7 @@ object AuthManager {
             AnonymousUserData(credits, jobs)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to get anonymous user data", e)
+            AnalyticsManager.recordException(e)
             AnonymousUserData(0, emptyList())
         }
     }
@@ -377,6 +402,7 @@ object AuthManager {
             Log.d(TAG, "Data merge completed successfully. Previous user IDs: $previousUserIds")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to merge user data", e)
+            AnalyticsManager.recordException(e)
             // Don't throw - merging is best effort, user is already signed in
         }
     }
@@ -410,6 +436,7 @@ object AuthManager {
             Log.d(TAG, "Updated user info on link: name=$displayName, email=$email")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to update user info on link", e)
+            AnalyticsManager.recordException(e)
         }
     }
     
@@ -448,6 +475,7 @@ object AuthManager {
             Log.d(TAG, "Updated user info: name=$displayName, email=$email, previous_user_ids=$previousUserIds")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to update user info", e)
+            AnalyticsManager.recordException(e)
         }
     }
     

@@ -15,6 +15,7 @@ import com.manjul.genai.videogenerator.data.repository.BillingRepository
 import com.manjul.genai.videogenerator.data.repository.LandingPageRepository
 import com.manjul.genai.videogenerator.data.repository.PurchaseUpdateEvent
 import com.manjul.genai.videogenerator.data.repository.RepositoryProvider
+import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -56,12 +57,17 @@ class LandingPageViewModel(
                     isLoading = false,
                     error = null
                 )
+                
+                // Track subscription viewed
+                AnalyticsManager.trackSubscriptionViewed()
+                
                 // Auto-select popular plan as default
                 if (currentState.selectedPlan == null) {
                     val popularPlan = config.subscriptionPlans.firstOrNull { it.isPopular }
                     if (popularPlan != null) {
                         android.util.Log.d("LandingPageViewModel", "Auto-selecting popular plan: ${popularPlan.productId}")
                         _uiState.value = _uiState.value.copy(selectedPlan = popularPlan)
+                        AnalyticsManager.trackSubscriptionPlanSelected(popularPlan.productId, popularPlan.credits.toDouble())
                     }
                 }
                 // NOTE: Do NOT load product details here - wait for billing to be initialized
@@ -142,6 +148,7 @@ class LandingPageViewModel(
     
     fun selectPlan(plan: SubscriptionPlan) {
         _uiState.value = _uiState.value.copy(selectedPlan = plan)
+        AnalyticsManager.trackSubscriptionPlanSelected(plan.productId, plan.credits.toDouble())
     }
     
     fun purchasePlan(activity: Activity, plan: SubscriptionPlan): BillingResult {

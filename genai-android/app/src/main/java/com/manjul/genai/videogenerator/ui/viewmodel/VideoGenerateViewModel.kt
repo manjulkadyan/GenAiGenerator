@@ -11,6 +11,7 @@ import com.manjul.genai.videogenerator.data.model.GenerateRequest
 import com.manjul.genai.videogenerator.data.repository.RepositoryProvider
 import com.manjul.genai.videogenerator.data.repository.ModelRepository
 import com.manjul.genai.videogenerator.data.repository.VideoGenerateRepository
+import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -100,6 +101,7 @@ class VideoGenerateViewModel(
                 successMessage = null
             )
         }
+        AnalyticsManager.trackModelSelected(model.id, model.name)
     }
 
     fun updatePrompt(prompt: String) {
@@ -112,18 +114,22 @@ class VideoGenerateViewModel(
 
     fun updateDuration(duration: Int) {
         _state.update { it.copy(selectedDuration = duration, errorMessage = null, successMessage = null) }
+        AnalyticsManager.trackDurationSelected(duration)
     }
 
     fun updateAspectRatio(ratio: String) {
         _state.update { it.copy(selectedAspectRatio = ratio, errorMessage = null, successMessage = null) }
+        AnalyticsManager.trackAspectRatioSelected(ratio)
     }
 
     fun togglePromptOptimizer(enabled: Boolean) {
         _state.update { it.copy(usePromptOptimizer = enabled) }
+        AnalyticsManager.trackPromptOptimizerToggled(enabled)
     }
 
     fun toggleAudio(enabled: Boolean) {
         _state.update { it.copy(enableAudio = enabled) }
+        AnalyticsManager.trackAudioEnabled(enabled)
     }
 
     fun setFirstFrameUri(uri: Uri?) {
@@ -149,11 +155,15 @@ class VideoGenerateViewModel(
             // Upload frames first (before setting isGenerating)
             val firstUrl = snapshot.firstFrameUri?.let { uri ->
                 _state.update { it.copy(uploadMessage = "Uploading first frame...") }
-                uploadReferenceFrame(uri, "first frame") ?: return@launch
+                val url = uploadReferenceFrame(uri, "first frame")
+                AnalyticsManager.trackReferenceFrameUploaded("first", url != null)
+                url ?: return@launch
             }
             val lastUrl = snapshot.lastFrameUri?.let { uri ->
                 _state.update { it.copy(uploadMessage = "Uploading last frame...") }
-                uploadReferenceFrame(uri, "last frame") ?: return@launch
+                val url = uploadReferenceFrame(uri, "last frame")
+                AnalyticsManager.trackReferenceFrameUploaded("last", url != null)
+                url ?: return@launch
             }
 
             // Now prepare the request and check credits BEFORE setting isGenerating
@@ -172,6 +182,18 @@ class VideoGenerateViewModel(
 
             // Update message before credit check
             _state.update { it.copy(uploadMessage = "Submitting generation request...") }
+            
+            // Track generation started
+            AnalyticsManager.trackGenerateVideoStarted(
+                modelId = model.id,
+                modelName = model.name,
+                durationSeconds = duration,
+                aspectRatio = ratio,
+                cost = snapshot.estimatedCost,
+                hasAudio = snapshot.enableAudio,
+                usePromptOptimizer = snapshot.usePromptOptimizer
+            )
+            
             // Call the repository - it will check credits
             generateRepository.requestVideoGeneration(request)
                 .onSuccess {
@@ -187,13 +209,25 @@ class VideoGenerateViewModel(
                 }
                 .onFailure { throwable ->
                     // Don't show generating screen if credits are insufficient or other error
+                    val errorMessage = throwable.message ?: "Unable to start generation"
                     _state.update {
                         it.copy(
                             isGenerating = false,
                             uploadMessage = null,
-                            errorMessage = throwable.message ?: "Unable to start generation"
+                            errorMessage = errorMessage
                         )
                     }
+                    
+                    // Track failure
+                    if (errorMessage.contains("Insufficient credits", ignoreCase = true)) {
+                        val required = snapshot.estimatedCost
+                        // Try to get available credits from error message or use 0
+                        val availableMatch = errorMessage.find { it.isDigit() }?.digitToIntOrNull() ?: 0
+                        AnalyticsManager.trackGenerateVideoInsufficientCredits(required, availableMatch)
+                    } else {
+                        AnalyticsManager.trackGenerateVideoFailed(model.id, errorMessage)
+                    }
+                    AnalyticsManager.recordException(throwable)
                 }
         }
     }
@@ -203,6 +237,7 @@ class VideoGenerateViewModel(
         val result = generateRepository.uploadReferenceFrame(uri)
         return result.getOrElse {
             Log.e(TAG, "Failed to upload $label", it)
+            AnalyticsManager.recordException(it)
             _state.update {
                 it.copy(
                     isGenerating = false,
