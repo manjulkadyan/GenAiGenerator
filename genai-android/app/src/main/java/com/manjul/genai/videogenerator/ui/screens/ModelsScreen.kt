@@ -3,6 +3,7 @@ package com.manjul.genai.videogenerator.ui.screens
 import androidx.annotation.OptIn
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -205,6 +206,7 @@ private fun ErrorState(modifier: Modifier, message: String) {
     }
 }
 
+@kotlin.OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ModelsList(
     modifier: Modifier,
@@ -297,12 +299,19 @@ private fun ModelsList(
         state = listState,
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        item {
-            AppToolbar(
-                title = "AI Video Models",
-                subtitle = "${models.size} models available",
-                showBorder = false
-            )
+        stickyHeader {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(bottom = 4.dp)
+            ) {
+                AppToolbar(
+                    title = "AI Video Models",
+                    subtitle = "${models.size} models available",
+                    showBorder = false
+                )
+            }
         }
 
         itemsIndexed(models, key = { _, item -> item.id }) { index, model ->
@@ -1223,5 +1232,4 @@ private fun ModelsScreenPreview() {
         )
     }
 }
-
 
