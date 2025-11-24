@@ -8,7 +8,6 @@ import android.os.Build
 import androidx.annotation.OptIn
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,6 +52,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -78,6 +78,7 @@ import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -106,9 +107,10 @@ fun ResultsScreenDialog(
     onDelete: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val isInPreview = LocalInspectionMode.current
     val videoUrl = job.storageUrl ?: job.previewUrl ?: return
-    val database = remember { AppDatabase.getDatabase(context) }
-    val jobDao = remember { database.videoJobDao() }
+    val database = remember { if (isInPreview) null else AppDatabase.getDatabase(context) }
+    val jobDao = remember { database?.videoJobDao() }
 
     // Parse aspect ratio to determine video aspect
     val aspectRatio = parseAspectRatio(job.aspectRatio)
@@ -116,18 +118,22 @@ fun ResultsScreenDialog(
     var isSharing by rememberSaveable { mutableStateOf(false) }
 
     // Track screen view
-    LaunchedEffect(job.id) {
-        AnalyticsManager.trackScreenView("Results")
-        AnalyticsManager.trackVideoPlayed(job.id, job.modelId)
+    if (!isInPreview) {
+        LaunchedEffect(job.id) {
+            AnalyticsManager.trackScreenView("Results")
+            AnalyticsManager.trackVideoPlayed(job.id, job.modelId)
+        }
     }
     
     // Save job to Room DB when viewing (for regeneration and local storage)
-    LaunchedEffect(job.id) {
-        try {
-            val entity = job.toEntity()
-            jobDao.insertJob(entity)
-        } catch (e: Exception) {
-            android.util.Log.e("ResultsScreen", "Failed to save job to Room DB", e)
+    if (!isInPreview) {
+        LaunchedEffect(job.id) {
+            try {
+                val entity = job.toEntity()
+                jobDao?.insertJob(entity)
+            } catch (e: Exception) {
+                android.util.Log.e("ResultsScreen", "Failed to save job to Room DB", e)
+            }
         }
     }
 
@@ -171,7 +177,8 @@ fun ResultsScreenDialog(
                 val scrollState = rememberScrollState()
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .weight(1f)
+                        .fillMaxWidth()
                         .verticalScroll(scrollState)
                         .padding(horizontal = 24.dp, vertical = 24.dp),
                     verticalArrangement = Arrangement.spacedBy(24.dp)
@@ -228,7 +235,7 @@ fun ResultsScreenDialog(
                                             VideoFileCache.getCachedFileUri(context, videoUrl)
                                         if (cachedFileUri != null) {
                                             val filePath = cachedFileUri.removePrefix("file://")
-                                            jobDao.updateLocalFilePath(job.id, filePath)
+                                            jobDao?.updateLocalFilePath(job.id, filePath)
                                         }
                                         // Show success toast
                                         CoroutineScope(Dispatchers.Main).launch {
@@ -384,7 +391,8 @@ private fun VideoPlayerCard(
     onFullscreenClick: () -> Unit
 ) {
     AppCard(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        padding = PaddingValues(0.dp)
     ) {
         Box(
             modifier = Modifier
@@ -496,9 +504,8 @@ private fun PromptCard(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(32.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // Header with title and copy button
             Row(
@@ -542,7 +549,7 @@ private fun PromptCard(
                 }
             }
             Text(
-                text = prompt,
+                text = "A pirate ship battling massive ocean waves during a violent storm, cinematic style like Pirates of the Caribbean, with dramatic lighting, crashing water, and intense motion",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = MaterialTheme.typography.bodyLarge.lineHeight
@@ -590,7 +597,6 @@ private fun DetailsCard(job: VideoJob) {
                 DetailRow(
                     label = "Credits Spent",
                     value = "${job.cost} credits",
-                    valueColor = MaterialTheme.colorScheme.primary
                 )
                 DetailRow(label = "Created", value = formattedDate)
             }
@@ -682,144 +688,28 @@ private fun ActionButtonsSection(
     showSystemUi = true
 )
 @Composable
+@RequiresApi(Build.VERSION_CODES.O)
 private fun ResultsScreenPreview() {
     GenAiVideoTheme {
-        // Preview shows the structure without requiring context
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            // Header
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Video Details",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Normal,
-                    color = AppColors.TextPrimary
-                )
-                CustomStatusBadge(
-                    text = "completed",
-                    backgroundColor = AppColors.StatusSuccessBackground,
-                    textColor = AppColors.StatusSuccess
-                )
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 24.dp, vertical = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp)
-            ) {
-                // Video Player Card
-                AppCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(
-                            width = 2.dp,
-                            color = MaterialTheme.colorScheme.outline,
-                            shape = RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 0.dp)
-                        ), padding = PaddingValues(2.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .background(Color.Black),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.PlayArrow,
-                            contentDescription = null,
-                            modifier = Modifier.size(48.dp),
-                            tint = AppColors.TextSecondary
-                        )
-                    }
-                }
-
-                // Prompt Card
-                AppCard(modifier = Modifier.fillMaxWidth(), padding = PaddingValues(0.dp)) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Text(
-                            text = "Prompt",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Medium,
-                            color = AppColors.TextPrimary
-                        )
-                        Text(
-                            text = "A cinematic video of a sunset over mountains with dramatic clouds",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = AppColors.TextSecondary
-                        )
-                    }
-                }
-
-                // Details Card
-                AppCard(modifier = Modifier.fillMaxWidth(), padding = PaddingValues(0.dp)) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Text(
-                            text = "Details",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Medium,
-                            color = AppColors.TextPrimary
-                        )
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "Model",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = AppColors.TextSecondary
-                            )
-                            Text(
-                                text = "Veo 3.1",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = AppColors.TextPrimary
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "Duration",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = AppColors.TextSecondary
-                            )
-                            Text(
-                                text = "4s",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = AppColors.TextPrimary
-                            )
-                        }
-                    }
-                }
-
-                // Action Buttons
-                AppPrimaryButton(
-                    text = "Download Video",
-                    onClick = {},
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        }
+        ResultsScreenDialog(
+            job = previewVideoJob,
+            onClose = {},
+            onRegenerate = {}
+        )
     }
 }
 
-
+@RequiresApi(Build.VERSION_CODES.O)
+private val previewVideoJob = VideoJob(
+    id = "preview-job-id",
+    prompt = "A cinematic video of a sunset over mountains with dramatic clouds",
+    modelName = "veo-3-1",
+    durationSeconds = 4,
+    aspectRatio = "16:9",
+    status = VideoJobStatus.COMPLETE,
+    previewUrl = "https://storage.googleapis.com/example/preview.mp4",
+    createdAt = Instant.now(),
+    storageUrl = "https://storage.googleapis.com/example/final.mp4",
+    cost = 8,
+    modelId = "veo-3-1"
+)
