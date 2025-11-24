@@ -177,12 +177,42 @@ fun ProfileScreen(
     // Also update from Auth when user changes (immediate fallback)
     LaunchedEffect(currentUser) {
         if (currentUser != null) {
-            // Use Auth data as fallback if Firestore doesn't have it yet
-            if (userName == "User" && !currentUser.displayName.isNullOrEmpty()) {
-                userName = currentUser.displayName?: "User"
-            }
-            if (userEmail == "user@example.com" && !currentUser.email.isNullOrEmpty()) {
-                userEmail = currentUser.email?: "user@example.com"
+            android.util.Log.d("ProfileScreen", "Current user changed: uid=${currentUser.uid}, displayName=${currentUser.displayName}, email=${currentUser.email}")
+            
+            // Try to reload user profile to get fresh data
+            try {
+                currentUser.reload().await()
+                val reloadedUser = auth.currentUser
+                android.util.Log.d("ProfileScreen", "After reload: displayName=${reloadedUser?.displayName}, email=${reloadedUser?.email}")
+                
+                // Use Auth data as fallback if Firestore doesn't have it yet
+                val authDisplayName = reloadedUser?.displayName ?: currentUser.displayName
+                val authEmail = reloadedUser?.email ?: currentUser.email
+                
+                // Try provider data if displayName is still null
+                val providerDisplayName = currentUser.providerData.firstOrNull { 
+                    it.providerId == "google.com" 
+                }?.displayName
+                
+                val finalAuthName = authDisplayName ?: providerDisplayName
+                
+                if (userName == "User" && !finalAuthName.isNullOrEmpty()) {
+                    userName = finalAuthName
+                    android.util.Log.d("ProfileScreen", "Updated name from Auth: $finalAuthName")
+                }
+                if (userEmail == "user@example.com" && !authEmail.isNullOrEmpty()) {
+                    userEmail = authEmail
+                    android.util.Log.d("ProfileScreen", "Updated email from Auth: $authEmail")
+                }
+            } catch (e: Exception) {
+                android.util.Log.w("ProfileScreen", "Failed to reload user profile", e)
+                // Fallback to current user data without reload
+                if (userName == "User" && !currentUser.displayName.isNullOrEmpty()) {
+                    userName = currentUser.displayName?: ""
+                }
+                if (userEmail == "user@example.com" && !currentUser.email.isNullOrEmpty()) {
+                    userEmail = currentUser.email?: ""
+                }
             }
         }
     }
@@ -445,13 +475,18 @@ private fun ProfileScreenContent(
                 account?.idToken?.let { idToken ->
                     isSigningIn = true
                     signInError = null
+                    
+                    // Get name and email from GoogleSignIn account (available immediately)
+                    val googleAccountName = account.displayName ?: ""
+                    val googleAccountEmail = account.email ?: ""
+                    android.util.Log.d("ProfileScreen", "Google account info: name=$googleAccountName, email=$googleAccountEmail")
 
                     val authResult = if (isAnonymous) {
                         // Link anonymous account with Google
-                        AuthManager.linkWithGoogle(idToken)
+                        AuthManager.linkWithGoogle(idToken, googleAccountName, googleAccountEmail)
                     } else {
                         // Sign in with Google
-                        AuthManager.signInWithGoogle(idToken)
+                        AuthManager.signInWithGoogle(idToken, googleAccountName, googleAccountEmail)
                     }
 
                     authResult.fold(
