@@ -110,6 +110,7 @@ import com.manjul.genai.videogenerator.ui.designsystem.components.selection.Sele
 import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
 import com.manjul.genai.videogenerator.ui.viewmodel.CreditsViewModel
 import com.manjul.genai.videogenerator.ui.viewmodel.VideoGenerateViewModel
+import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import kotlinx.coroutines.delay
 
 @Composable
@@ -126,6 +127,11 @@ fun GenerateScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val creditsState by creditsViewModel.state.collectAsState()
+
+    // Track screen view
+    LaunchedEffect(Unit) {
+        AnalyticsManager.trackScreenView("Generate")
+    }
 
     BackHandler(enabled = true) {
         if (state.selectedModel != null) {

@@ -12,6 +12,7 @@ import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
+import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -51,6 +52,17 @@ class BillingRepository(private val context: Context) {
                 purchases?.forEach { purchase ->
                     android.util.Log.d("BillingRepository", "Processing purchase: ${purchase.products.firstOrNull()}, state: ${purchase.purchaseState}, acknowledged: ${purchase.isAcknowledged}")
                     handlePurchase(purchase)
+                    
+                    // Track purchase completion
+                    val productId = purchase.products.firstOrNull() ?: "unknown"
+                    AnalyticsManager.trackPurchaseCompleted(
+                        productId = productId,
+                        purchaseToken = purchase.purchaseToken
+                    )
+                    
+                    // Update subscription status
+                    AnalyticsManager.setSubscriptionStatus("active")
+                    
                     _purchaseUpdates.tryEmit(PurchaseUpdateEvent.Success(purchase))
                 }
                 if (purchases.isNullOrEmpty()) {
@@ -59,10 +71,18 @@ class BillingRepository(private val context: Context) {
             }
             BillingClient.BillingResponseCode.USER_CANCELED -> {
                 android.util.Log.d("BillingRepository", "User cancelled the purchase")
+                // Track cancellation - we don't have product ID here, so use "unknown"
+                AnalyticsManager.trackPurchaseCancelled("unknown")
                 _purchaseUpdates.tryEmit(PurchaseUpdateEvent.UserCancelled)
             }
             else -> {
                 android.util.Log.e("BillingRepository", "Purchase error: code=${billingResult.responseCode}, message=${billingResult.debugMessage}")
+                // Track purchase failure
+                AnalyticsManager.trackPurchaseFailed(
+                    productId = "unknown",
+                    errorCode = billingResult.responseCode,
+                    errorMessage = billingResult.debugMessage ?: "Unknown error"
+                )
                 _purchaseUpdates.tryEmit(PurchaseUpdateEvent.Error(billingResult))
             }
         }
@@ -208,6 +228,9 @@ class BillingRepository(private val context: Context) {
             .setProductDetailsParamsList(listOf(productDetailsParams))
             .build()
         
+        // Track purchase started
+        AnalyticsManager.trackPurchaseStarted(productDetails.productId, "subscription")
+        
         return billingClient.launchBillingFlow(activity, billingFlowParams)
     }
     
@@ -230,6 +253,13 @@ class BillingRepository(private val context: Context) {
                 params
             ) { billingResult, purchases ->
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                    // Update subscription status
+                    val hasActiveSubscription = purchases.any { 
+                        it.purchaseState == Purchase.PurchaseState.PURCHASED 
+                    }
+                    AnalyticsManager.setSubscriptionStatus(
+                        if (hasActiveSubscription) "active" else "inactive"
+                    )
                     continuation.resume(Result.success(purchases))
                 } else {
                     continuation.resume(Result.failure(

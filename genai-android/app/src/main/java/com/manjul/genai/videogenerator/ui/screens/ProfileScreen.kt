@@ -85,6 +85,7 @@ import com.manjul.genai.videogenerator.ui.designsystem.components.sections.Secti
 import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
 import com.manjul.genai.videogenerator.ui.viewmodel.CreditsViewModel
 import com.manjul.genai.videogenerator.ui.viewmodel.HistoryViewModel
+import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import kotlinx.coroutines.launch
 
 @Composable
@@ -96,6 +97,12 @@ fun ProfileScreen(
 ) {
     val credits by creditsViewModel.state.collectAsState()
     val jobs by historyViewModel.jobs.collectAsState()
+
+    // Track screen view
+    LaunchedEffect(Unit) {
+        AnalyticsManager.trackScreenView("Profile")
+        AnalyticsManager.trackProfileViewed()
+    }
 
     // Get user info from Firebase Auth (fallback)
     val auth = FirebaseAuth.getInstance()

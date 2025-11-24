@@ -32,6 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,6 +64,7 @@ import com.manjul.genai.videogenerator.ui.designsystem.components.badges.FilterC
 import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
 import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
 import com.manjul.genai.videogenerator.ui.viewmodel.HistoryViewModel
+import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import java.time.Duration
 import java.time.Instant
 
@@ -82,6 +84,12 @@ fun HistoryScreen(
 ) {
     val jobs by viewModel.jobs.collectAsState()
     var selectedFilter by rememberSaveable { mutableStateOf(HistoryFilter.ALL) }
+    
+    // Track screen view
+    LaunchedEffect(Unit) {
+        AnalyticsManager.trackScreenView("History")
+        AnalyticsManager.trackHistoryViewed()
+    }
     
     // Note: Badge clearing is handled in GenAiRoot when route changes to History
 

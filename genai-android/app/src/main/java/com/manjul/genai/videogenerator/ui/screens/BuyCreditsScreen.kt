@@ -63,6 +63,7 @@ import com.manjul.genai.videogenerator.ui.components.LandingPageFeatureItem
 import com.manjul.genai.videogenerator.ui.components.SubscriptionPlanCard
 import com.manjul.genai.videogenerator.ui.components.getFeatureIcon
 import com.manjul.genai.videogenerator.ui.viewmodel.LandingPageViewModel
+import com.manjul.genai.videogenerator.utils.AnalyticsManager
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -84,8 +85,10 @@ fun BuyCreditsScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     
-    // Log screen initialization
+    // Track screen view
     LaunchedEffect(Unit) {
+        AnalyticsManager.trackScreenView("BuyCredits")
+        AnalyticsManager.trackCreditsViewed()
         android.util.Log.d("BuyCreditsScreen", "=== Screen Initialized ===")
         android.util.Log.d("BuyCreditsScreen", "Screen height: ${screenHeightDp}dp, Video height: ${videoHeightDp}dp")
     }

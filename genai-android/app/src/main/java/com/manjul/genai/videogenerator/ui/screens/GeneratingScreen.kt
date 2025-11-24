@@ -45,6 +45,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
 import com.manjul.genai.videogenerator.ui.components.NotificationPermissionDialog
 import com.manjul.genai.videogenerator.data.notification.NotificationManager
+import com.manjul.genai.videogenerator.utils.AnalyticsManager
 
 @Composable
 fun GeneratingScreen(
@@ -61,6 +62,11 @@ fun GeneratingScreen(
     android.util.Log.d("GeneratingScreen", "statusMessage: $statusMessage")
     android.util.Log.d("GeneratingScreen", "errorMessage: $errorMessage")
     android.util.Log.d("GeneratingScreen", "showNotificationDialog initial: $showNotificationDialog")
+    
+    // Track screen view
+    LaunchedEffect(Unit) {
+        AnalyticsManager.trackScreenView("Generating")
+    }
     
     // Show notification dialog on first appearance if notifications are not enabled
     // Use Unit as key to ensure this only runs once per screen composition

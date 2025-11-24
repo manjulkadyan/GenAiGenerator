@@ -3,6 +3,8 @@ package com.manjul.genai.videogenerator
 import android.app.Application
 import android.content.ComponentCallbacks2
 import com.google.firebase.FirebaseApp
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.manjul.genai.videogenerator.data.local.AppDatabase
@@ -11,12 +13,34 @@ import com.manjul.genai.videogenerator.player.VideoPlayerManager
 import com.manjul.genai.videogenerator.player.VideoPreviewCache
 import com.manjul.genai.videogenerator.player.VideoFileCache
 import com.manjul.genai.videogenerator.player.LandingPageVideoCache
+import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import kotlinx.coroutines.launch
 
 class GenAiApp : Application() {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
+
+        // Initialize Firebase Analytics
+        FirebaseAnalytics.getInstance(this)
+        
+        // Initialize Firebase Crashlytics
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+        
+        // Initialize AnalyticsManager
+        AnalyticsManager.initialize(this)
+        
+        // Set app version for Crashlytics
+        try {
+            val packageInfo = packageManager.getPackageInfo(packageName, 0)
+            val versionName = packageInfo.versionName ?: "unknown"
+            FirebaseCrashlytics.getInstance().setCustomKey("app_version", versionName)
+            FirebaseCrashlytics.getInstance().setCustomKey("version_code", packageInfo.versionCode)
+            AnalyticsManager.setAppVersion(versionName)
+        } catch (e: Exception) {
+            android.util.Log.e("GenAiApp", "Error getting package info", e)
+            FirebaseCrashlytics.getInstance().recordException(e)
+        }
 
         FirebaseFirestore.getInstance().firestoreSettings = FirebaseFirestoreSettings.Builder()
             .setPersistenceEnabled(true)
@@ -46,6 +70,7 @@ class GenAiApp : Application() {
                 VideoFileCache.deleteOldCache(this@GenAiApp, 7)
             } catch (e: Exception) {
                 android.util.Log.e("GenAiApp", "Error cleaning old cache entries", e)
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }

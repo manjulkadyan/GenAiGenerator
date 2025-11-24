@@ -74,6 +74,7 @@ import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
 import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
 import com.manjul.genai.videogenerator.utils.VideoDownloader
 import com.manjul.genai.videogenerator.utils.VideoSharer
+import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -114,6 +115,12 @@ fun ResultsScreenDialog(
     var isDownloading by rememberSaveable { mutableStateOf(false) }
     var isSharing by rememberSaveable { mutableStateOf(false) }
 
+    // Track screen view
+    LaunchedEffect(job.id) {
+        AnalyticsManager.trackScreenView("Results")
+        AnalyticsManager.trackVideoPlayed(job.id, job.modelId)
+    }
+    
     // Save job to Room DB when viewing (for regeneration and local storage)
     LaunchedEffect(job.id) {
         try {
@@ -213,6 +220,9 @@ fun ResultsScreenDialog(
                                         "AI_Video_${job.id}.mp4"
                                     )
                                     if (uri != null) {
+                                        // Track video downloaded
+                                        AnalyticsManager.trackVideoDownloaded(job.id)
+                                        
                                         // Update local file path in Room DB
                                         val cachedFileUri =
                                             VideoFileCache.getCachedFileUri(context, videoUrl)
@@ -260,6 +270,10 @@ fun ResultsScreenDialog(
                             CoroutineScope(Dispatchers.IO).launch {
                                 try {
                                     val success = VideoSharer.shareVideoFromUrl(context, videoUrl)
+                                    if (success) {
+                                        // Track video shared
+                                        AnalyticsManager.trackVideoShared(job.id)
+                                    }
                                     if (!success) {
                                         CoroutineScope(Dispatchers.Main).launch {
                                             android.widget.Toast.makeText(
