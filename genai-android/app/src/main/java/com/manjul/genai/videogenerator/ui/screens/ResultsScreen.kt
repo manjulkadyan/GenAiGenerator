@@ -537,7 +537,7 @@ private fun PromptCard(
                 }
             }
             Text(
-                text = "A pirate ship battling massive ocean waves during a violent storm, cinematic style like Pirates of the Caribbean, with dramatic lighting, crashing water, and intense motion",
+                text = prompt,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = MaterialTheme.typography.bodyLarge.lineHeight
