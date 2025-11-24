@@ -2,6 +2,9 @@ package com.manjul.genai.videogenerator
 
 import android.app.Application
 import android.content.ComponentCallbacks2
+import android.os.StrictMode
+import androidx.annotation.OptIn
+import androidx.media3.common.util.UnstableApi
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -20,6 +23,22 @@ class GenAiApp : Application() {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
+
+        // StrictMode for debug builds to surface performance and resource issues early
+        if (BuildConfig.STRICT_MODE_ENABLED) {
+            StrictMode.setThreadPolicy(
+                StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build()
+            )
+            StrictMode.setVmPolicy(
+                StrictMode.VmPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build()
+            )
+        }
 
         // Initialize Firebase Analytics
         FirebaseAnalytics.getInstance(this)
@@ -74,7 +93,7 @@ class GenAiApp : Application() {
             }
         }
     }
-    
+
     override fun onLowMemory() {
         super.onLowMemory()
         // Release all video players when system is low on memory
@@ -82,7 +101,8 @@ class GenAiApp : Application() {
         // Optionally clear video cache (LRU eviction will handle it automatically)
         // VideoPreviewCache.clearCache()
     }
-    
+
+    @OptIn(UnstableApi::class)
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
         // Release players when system requests memory trim

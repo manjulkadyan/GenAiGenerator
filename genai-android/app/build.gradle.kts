@@ -60,6 +60,12 @@ android {
             if (keystorePropertiesFile.exists()) {
                 signingConfig = signingConfigs.getByName("release")
             }
+            buildConfigField("Boolean", "STRICT_MODE_ENABLED", "false")
+            buildConfigField("Boolean", "DEBUG", "false")
+        }
+        getByName("debug") {
+            buildConfigField("Boolean", "STRICT_MODE_ENABLED", "true")
+            buildConfigField("Boolean", "DEBUG", "true")
         }
     }
 
@@ -74,6 +80,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true // needed for custom BuildConfig fields (STRICT_MODE_ENABLED, DEBUG_BUILD)
     }
 
     // Compose Compiler is now configured via the Gradle plugin (Kotlin 2.0+)
