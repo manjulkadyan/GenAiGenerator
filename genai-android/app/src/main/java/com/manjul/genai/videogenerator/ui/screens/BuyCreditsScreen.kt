@@ -209,7 +209,7 @@ fun BuyCreditsScreen(
             // Can be dragged up to full screen (covering video) but always remains visible
             // Starts at 50% of screen, positioned from bottom
             DraggableBottomSheet(
-                initialHeightPercent = 0.7f // Start at 50% of screen (will overlap video slightly)
+                initialHeightPercent = 0.6f // Start at 60% of screen (will overlap video slightly)
             ) {
                 // Features section - NOT scrollable, sheet itself is draggable
                 if (uiState.config.features.isNotEmpty()) {
