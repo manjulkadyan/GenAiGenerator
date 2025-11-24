@@ -408,7 +408,7 @@ private fun ModelCard(
         modifier = Modifier
             .fillMaxWidth()
             .scale(scale)
-            .padding(vertical = 8.dp, horizontal = 16.dp),
+            .padding(vertical = 8.dp, horizontal = 12.dp),
         onClick = onModelClick
     ) {
         Column(modifier = Modifier.padding(0.dp)) {
@@ -465,7 +465,7 @@ private fun ModelCard(
 
             // Content Section
             Column(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(vertical = 4.dp, horizontal = 0.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 // Title and Badge Row

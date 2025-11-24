@@ -75,19 +75,61 @@ class LandingPageViewModel(
             billingRepository.initialize().collect { billingResult ->
                 if (billingResult.responseCode == com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
                     _uiState.value = _uiState.value.copy(billingInitialized = true)
+                    // Load product details after billing is initialized
+                    val currentConfig = _uiState.value.config
+                    if (currentConfig.subscriptionPlans.isNotEmpty()) {
+                        loadProductDetails(currentConfig.subscriptionPlans.map { it.productId })
+                    }
+                } else {
+                    android.util.Log.e("LandingPageViewModel", "Billing initialization failed: ${billingResult.debugMessage}")
+                    _uiState.value = _uiState.value.copy(
+                        error = "Billing initialization failed: ${billingResult.debugMessage}",
+                        billingInitialized = false
+                    )
                 }
             }
         }
     }
     
     private suspend fun loadProductDetails(productIds: List<String>) {
+        if (productIds.isEmpty()) {
+            android.util.Log.w("LandingPageViewModel", "No product IDs to load")
+            return
+        }
+        
+        android.util.Log.d("LandingPageViewModel", "Loading product details for: ${productIds.joinToString()}")
         val result = billingRepository.queryProductDetails(productIds)
         result.onSuccess { productDetailsList ->
-            val productDetailsMap = productDetailsList.associateBy { it.productId }
-            _uiState.value = _uiState.value.copy(productDetails = productDetailsMap)
+            android.util.Log.d("LandingPageViewModel", "Loaded ${productDetailsList.size} product details")
+            if (productDetailsList.isEmpty()) {
+                _uiState.value = _uiState.value.copy(
+                    error = "No products found. Please create subscription products in Google Play Console with IDs: ${productIds.joinToString()}"
+                )
+            } else {
+                val productDetailsMap = productDetailsList.associateBy { it.productId }
+                _uiState.value = _uiState.value.copy(
+                    productDetails = productDetailsMap,
+                    error = null
+                )
+                // Log which products were found
+                val foundIds = productDetailsList.map { it.productId }
+                val missingIds = productIds.filter { it !in foundIds }
+                if (missingIds.isNotEmpty()) {
+                    android.util.Log.w("LandingPageViewModel", "Missing products: ${missingIds.joinToString()}")
+                }
+            }
         }.onFailure { exception ->
+            android.util.Log.e("LandingPageViewModel", "Failed to load product details", exception)
+            val errorMessage = when {
+                exception.message?.contains("not found") == true -> 
+                    "Products not found in Play Console. Create subscriptions with IDs: ${productIds.joinToString()}"
+                exception.message?.contains("not available") == true ->
+                    "Products not available. Make sure app is uploaded to Internal testing track in Play Console."
+                else -> 
+                    "Failed to load products: ${exception.message}. Check Play Console setup."
+            }
             _uiState.value = _uiState.value.copy(
-                error = "Failed to load product details: ${exception.message}"
+                error = errorMessage
             )
         }
     }
