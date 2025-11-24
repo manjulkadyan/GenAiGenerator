@@ -1096,3 +1096,99 @@ export const processAccountDeletion = onCall(async (request) => {
     throw error;
   }
 });
+
+/**
+ * Handle subscription purchase - verify purchase token and add credits
+ * Called from Android app after successful purchase
+ */
+export const handleSubscriptionPurchase = onCall<{
+  userId: string;
+  productId: string;
+  purchaseToken: string;
+  credits: number;
+}>(
+  async ({data, auth}) => {
+    if (!auth) {
+      throw new Error("Missing auth.");
+    }
+
+    const userId = data.userId || auth.uid;
+    const productId = data.productId;
+    const purchaseToken = data.purchaseToken;
+    const credits = data.credits || 0;
+
+    if (!productId || !purchaseToken) {
+      throw new Error("Missing productId or purchaseToken");
+    }
+
+    // TODO: Verify purchase token with Google Play Developer API
+    // For now, we'll just store it for verification later
+    // You can add Google Play API verification here if needed
+
+    const userRef = firestore.collection("users").doc(userId);
+    const purchaseRef = firestore
+      .collection("users")
+      .doc(userId)
+      .collection("purchases")
+      .doc(purchaseToken); // Use purchaseToken as document ID to prevent duplicates
+
+    // Get or create user document
+    let userDoc = await userRef.get();
+    if (!userDoc.exists) {
+      await userRef.set({
+        credits: 0,
+        created_at: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      userDoc = await userRef.get();
+    }
+
+    // Check if this purchase token was already processed
+    const purchaseDoc = await purchaseRef.get();
+    if (purchaseDoc.exists) {
+      console.log(
+        `⚠️ Purchase token already processed: ${purchaseToken} for user ${userId}`,
+      );
+      const currentCredits = (userDoc.data()?.credits as number) || 0;
+      return {
+        success: true,
+        userId,
+        productId,
+        creditsAdded: 0,
+        newBalance: currentCredits,
+        message: "Purchase already processed",
+      };
+    }
+
+    // Store purchase info for verification/audit
+    await purchaseRef.set({
+      productId,
+      purchaseToken,
+      credits: credits,
+      status: "completed",
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    // Add credits
+    const currentCredits = (userDoc.data()?.credits as number) || 0;
+    await userRef.update({
+      credits: admin.firestore.FieldValue.increment(credits),
+    });
+
+    const newCredits = currentCredits + credits;
+
+    console.log(
+      `✅ Subscription purchase processed: ${productId} for user ${userId}. ` +
+        `Added ${credits} credits. New balance: ${newCredits}`,
+    );
+
+    return {
+      success: true,
+      userId,
+      productId,
+      purchaseToken,
+      creditsAdded: credits,
+      previousBalance: currentCredits,
+      newBalance: newCredits,
+    };
+  },
+);
