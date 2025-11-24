@@ -38,8 +38,15 @@ object AuthManager {
     /**
      * Link anonymous account with Google account using idToken
      * If the credential is already in use, signs out anonymous user and signs in with Google directly
+     * @param idToken Google ID token
+     * @param displayName Display name from GoogleSignIn account (available immediately)
+     * @param email Email from GoogleSignIn account (available immediately)
      */
-    suspend fun linkWithGoogle(idToken: String): Result<FirebaseUser> {
+    suspend fun linkWithGoogle(
+        idToken: String,
+        displayName: String = "",
+        email: String = ""
+    ): Result<FirebaseUser> {
         val currentUser = auth.currentUser
             ?: return Result.failure(IllegalStateException("No user signed in"))
 
@@ -55,10 +62,33 @@ object AuthManager {
             result.user?.also { user ->
                 Log.d(TAG, "Successfully linked anonymous account with Google: ${user.uid}")
                 
-                // Update user info with Google account details
-                val displayName = user.displayName ?: ""
-                val email = user.email ?: ""
-                updateUserInfoOnLink(user.uid, displayName, email)
+                // Use provided name/email from GoogleSignIn account (most reliable)
+                // Fallback to reloaded user data if not provided
+                var finalDisplayName = displayName
+                var finalEmail = email
+                
+                if (finalDisplayName.isEmpty() || finalEmail.isEmpty()) {
+                    // Reload user profile to get fresh data
+                    user.reload().await()
+                    val updatedUser = auth.currentUser ?: user
+                    
+                    if (finalDisplayName.isEmpty()) {
+                        finalDisplayName = updatedUser.displayName ?: ""
+                        // Try provider data as fallback
+                        if (finalDisplayName.isEmpty()) {
+                            finalDisplayName = updatedUser.providerData.firstOrNull { 
+                                it.providerId == GoogleAuthProvider.PROVIDER_ID 
+                            }?.displayName ?: ""
+                        }
+                    }
+                    
+                    if (finalEmail.isEmpty()) {
+                        finalEmail = updatedUser.email ?: ""
+                    }
+                }
+                
+                Log.d(TAG, "Linked user info: name=$finalDisplayName, email=$finalEmail")
+                updateUserInfoOnLink(user.uid, finalDisplayName, finalEmail)
             } ?: error("Linked user is null")
         }.recoverCatching { error ->
             val errorCode = (error as? com.google.firebase.auth.FirebaseAuthException)?.errorCode
@@ -87,14 +117,36 @@ object AuthManager {
                 
                 // Sign in directly with Google instead (this will use the existing account)
                 val signInResult = auth.signInWithCredential(credential).await()
-                val googleUser = signInResult.user ?: error("Google user is null after sign-in")
+                var googleUser = signInResult.user ?: error("Google user is null after sign-in")
                 
                 Log.d(TAG, "Successfully signed in with Google (account was already linked): ${googleUser.uid}")
                 
-                // Get user's display name from Google Auth
-                val displayName = googleUser.displayName ?: ""
-                val email = googleUser.email ?: ""
-                Log.d(TAG, "Google user info: name=$displayName, email=$email")
+                // Use provided name/email from GoogleSignIn account (most reliable)
+                // Fallback to reloaded user data if not provided
+                var finalDisplayName = displayName
+                var finalEmail = email
+                
+                if (finalDisplayName.isEmpty() || finalEmail.isEmpty()) {
+                    // Reload user profile to get fresh data
+                    googleUser.reload().await()
+                    googleUser = auth.currentUser ?: googleUser
+                    
+                    if (finalDisplayName.isEmpty()) {
+                        finalDisplayName = googleUser.displayName ?: ""
+                        // Try provider data as fallback
+                        if (finalDisplayName.isEmpty()) {
+                            finalDisplayName = googleUser.providerData.firstOrNull { 
+                                it.providerId == GoogleAuthProvider.PROVIDER_ID 
+                            }?.displayName ?: ""
+                        }
+                    }
+                    
+                    if (finalEmail.isEmpty()) {
+                        finalEmail = googleUser.email ?: ""
+                    }
+                }
+                
+                Log.d(TAG, "Google user info: name=$finalDisplayName, email=$finalEmail")
                 
                 // Merge anonymous user's data into Google account
                 if (anonymousData.credits > 0 || anonymousData.jobs.isNotEmpty()) {
@@ -104,13 +156,13 @@ object AuthManager {
                         googleUser.uid, 
                         anonymousData.credits, 
                         anonymousData.jobs,
-                        displayName,
+                        finalDisplayName,
                         email
                     )
                 } else {
                     Log.d(TAG, "No data to merge from anonymous user")
                     // Still update user info and store previous user ID
-                    updateUserInfo(googleUser.uid, displayName, email, anonymousUid)
+                    updateUserInfo(googleUser.uid, finalDisplayName, email, anonymousUid)
                 }
                 
                 // Mark anonymous user as merged (preserve data for reference)
@@ -126,8 +178,15 @@ object AuthManager {
 
     /**
      * Sign in with Google using idToken (for new users or when not anonymous)
+     * @param idToken Google ID token
+     * @param displayName Display name from GoogleSignIn account (available immediately)
+     * @param email Email from GoogleSignIn account (available immediately)
      */
-    suspend fun signInWithGoogle(idToken: String): Result<FirebaseUser> {
+    suspend fun signInWithGoogle(
+        idToken: String,
+        displayName: String = "",
+        email: String = ""
+    ): Result<FirebaseUser> {
         val currentUser = auth.currentUser
         
         // If user is already signed in with Google, check if it's the same account
@@ -146,9 +205,42 @@ object AuthManager {
         return runCatching {
             val credential = GoogleAuthProvider.getCredential(idToken, null)
             val result = auth.signInWithCredential(credential).await()
-            result.user?.also { user ->
-                Log.d(TAG, "Google sign-in success: ${user.uid}")
-            } ?: error("Google user is null")
+            var user = result.user ?: error("Google user is null")
+            
+            Log.d(TAG, "Google sign-in success: ${user.uid}")
+            
+            // Use provided name/email from GoogleSignIn account (most reliable)
+            // Fallback to reloaded user data if not provided
+            var finalDisplayName = displayName
+            var finalEmail = email
+            
+            if (finalDisplayName.isEmpty() || finalEmail.isEmpty()) {
+                // Reload user profile to get fresh data
+                user.reload().await()
+                user = auth.currentUser ?: user
+                
+                if (finalDisplayName.isEmpty()) {
+                    finalDisplayName = user.displayName ?: ""
+                    // Try provider data as fallback
+                    if (finalDisplayName.isEmpty()) {
+                        finalDisplayName = user.providerData.firstOrNull { 
+                            it.providerId == GoogleAuthProvider.PROVIDER_ID 
+                        }?.displayName ?: ""
+                    }
+                }
+                
+                if (finalEmail.isEmpty()) {
+                    finalEmail = user.email ?: ""
+                }
+            }
+            
+            // Update user info in Firestore
+            if (finalDisplayName.isNotEmpty() || finalEmail.isNotEmpty()) {
+                updateUserInfoOnLink(user.uid, finalDisplayName, finalEmail)
+            }
+            
+            Log.d(TAG, "Google sign-in complete: name=$finalDisplayName, email=$finalEmail")
+            user
         }.onFailure { error ->
             // Check for specific Firebase Auth errors
             val errorMessage = error.message ?: ""
