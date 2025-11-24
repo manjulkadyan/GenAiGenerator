@@ -2,7 +2,8 @@ import * as admin from "firebase-admin";
 import {defineSecret} from "firebase-functions/params";
 import {setGlobalOptions} from "firebase-functions/v2";
 import {onCall, onRequest} from "firebase-functions/v2/https";
-import {onSchedule} from "firebase-functions/v2/scheduler";
+// onSchedule import removed - scheduled function disabled
+// (using app-side checking instead)
 
 setGlobalOptions({maxInstances: 10});
 
@@ -1237,6 +1238,13 @@ export const handleSubscriptionPurchase = onCall<{
  * Scheduled function to check and process subscription renewals.
  * Runs daily at 2 AM UTC to check for subscriptions that need renewal.
  *
+ * ⚠️ DISABLED: Using app-side checking instead
+ * (checkUserSubscriptionRenewal)
+ * Credits are granted when user opens the app,
+ * saving Cloud Function CPU costs.
+ *
+ * To re-enable: Uncomment this function and deploy.
+ *
  * This function:
  * 1. Queries all active subscriptions from Firestore
  * 2. Checks if nextRenewalDate has passed
@@ -1248,7 +1256,8 @@ export const handleSubscriptionPurchase = onCall<{
  * automatically. However, for production, you should also verify with
  * Google Play Developer API to ensure the subscription is still active.
  */
-export const checkSubscriptionRenewals = onSchedule(
+// DISABLED - Using app-side checking instead
+/* export const checkSubscriptionRenewals = onSchedule(
   {
     schedule: "0 2 * * *", // Daily at 2 AM UTC
     timeZone: "UTC",
@@ -1394,7 +1403,183 @@ export const checkSubscriptionRenewals = onSchedule(
       throw error;
     }
   },
-);
+); */
+
+/**
+ * Callable function to check and process subscription renewals
+ * for a specific user.
+ * Called from the app on launch to grant credits for pending renewals.
+ *
+ * This replaces the need for a scheduled function - credits are granted
+ * when the user opens the app, saving server CPU costs.
+ *
+ * @param userId - Optional user ID (defaults to authenticated user)
+ * @returns Summary of renewals processed
+ */
+export const checkUserSubscriptionRenewal = onCall<{
+  userId?: string;
+}>(async ({data, auth}) => {
+  if (!auth) {
+    throw new Error("Unauthorized - user must be authenticated");
+  }
+
+  const userId = data?.userId || auth.uid;
+  const now = admin.firestore.Timestamp.now();
+  let processedCount = 0;
+  let totalCreditsAdded = 0;
+  const processedSubscriptions: Array<{
+    productId: string;
+    creditsAdded: number;
+    periodsPassed: number;
+  }> = [];
+
+  try {
+    // Get all active subscriptions for this user
+    const subscriptionsSnapshot = await firestore
+      .collection("users")
+      .doc(userId)
+      .collection("subscriptions")
+      .where("status", "==", "active")
+      .get();
+
+    if (subscriptionsSnapshot.empty) {
+      console.log(`No active subscriptions found for user ${userId}`);
+      return {
+        success: true,
+        userId,
+        processedCount: 0,
+        totalCreditsAdded: 0,
+        subscriptions: [],
+        message: "No active subscriptions",
+      };
+    }
+
+    // Verify user document exists
+    const userRef = firestore.collection("users").doc(userId);
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+      console.warn(`User ${userId} does not exist`);
+      return {
+        success: false,
+        userId,
+        error: "User not found",
+        processedCount: 0,
+        totalCreditsAdded: 0,
+        subscriptions: [],
+      };
+    }
+
+    // Process each subscription
+    for (const subDoc of subscriptionsSnapshot.docs) {
+      const subData = subDoc.data();
+      const nextRenewalDate = subData.nextRenewalDate as
+        admin.firestore.Timestamp | null;
+      const creditsPerRenewal = (subData.creditsPerRenewal as number) || 0;
+      const productId = subData.productId as string;
+
+      // Validate subscription data
+      if (!productId || creditsPerRenewal <= 0 || !nextRenewalDate) {
+        console.warn(
+          `⚠️ Invalid subscription data for user ${userId}, ` +
+            `product ${productId}`,
+        );
+        continue;
+      }
+
+      // Check if renewal date has passed
+      if (nextRenewalDate.toMillis() <= now.toMillis()) {
+        // Calculate how many renewal periods have passed
+        const daysPassed = Math.floor(
+          (now.toMillis() - nextRenewalDate.toMillis()) /
+            (1000 * 60 * 60 * 24),
+        );
+        // Limit to max 52 periods (1 year) to prevent huge credit grants
+        const periodsPassed = Math.min(
+          52,
+          Math.max(1, Math.floor(daysPassed / 7)),
+        );
+
+        const creditsToAdd = creditsPerRenewal * periodsPassed;
+
+        console.log(
+          `📅 Renewal due for ${productId} (user ${userId}): ` +
+            `${periodsPassed} period(s) passed, ` +
+            `adding ${creditsToAdd} credits`,
+        );
+
+        try {
+          // Add credits to user account
+          await userRef.update({
+            credits: admin.firestore.FieldValue.increment(creditsToAdd),
+          });
+
+          // Calculate new nextRenewalDate (7 days from now)
+          const newNextRenewalDate = new admin.firestore.Timestamp(
+            now.seconds + 7 * 24 * 60 * 60,
+            0,
+          );
+
+          // Update subscription document
+          await subDoc.ref.update({
+            lastCreditsAdded: now,
+            nextRenewalDate: newNextRenewalDate,
+            updatedAt: now,
+          });
+
+          console.log(
+            `✅ Renewal processed: ${productId} for user ${userId}. ` +
+              `Added ${creditsToAdd} credits. ` +
+              `Next renewal: ${newNextRenewalDate.toDate().toISOString()}`,
+          );
+
+          processedCount++;
+          totalCreditsAdded += creditsToAdd;
+          processedSubscriptions.push({
+            productId,
+            creditsAdded: creditsToAdd,
+            periodsPassed,
+          });
+        } catch (error) {
+          console.error(
+            `❌ Error processing renewal for ${productId} (user ${userId}):`,
+            error,
+          );
+          // Continue processing other subscriptions even if one fails
+        }
+      }
+    }
+
+    return {
+      success: true,
+      userId,
+      processedCount,
+      totalCreditsAdded,
+      subscriptions: processedSubscriptions,
+      message:
+        processedCount > 0 ?
+          `Processed ${processedCount} renewal(s), ` +
+            `added ${totalCreditsAdded} credits` :
+          "No renewals due",
+    };
+  } catch (error) {
+    console.error(
+      `❌ Error in checkUserSubscriptionRenewal for user ${userId}:`,
+      error,
+    );
+    return {
+      success: false,
+      userId,
+      error:
+        error instanceof Error ?
+          error.message :
+          "Unknown error",
+      processedCount: 0,
+      totalCreditsAdded: 0,
+      subscriptions: [],
+    };
+  }
+});
 
 /**
  * Helper function to manually add credits for a subscription.
