@@ -30,9 +30,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 import com.manjul.genai.videogenerator.ui.designsystem.components.badges.StatusBadge
@@ -50,7 +60,7 @@ private object SectionCardConstants {
     const val TITLE_DESCRIPTION_SPACING = 4
     const val BORDER_WIDTH = 1
     const val ELEVATION = 2
-    const val BACKGROUND_ALPHA = 0.6f
+    const val BACKGROUND_ALPHA = 0.9f
     const val BORDER_ALPHA = 0.3f
     const val DESCRIPTION_ALPHA = 0.8f
     const val INFO_ICON_SIZE = 32
@@ -79,6 +89,7 @@ private object SectionCardConstants {
  * @param onHeaderClick Optional callback invoked when the header is clicked
  * @param expandable Whether the section can be expanded/collapsed
  * @param expanded Whether the section is currently expanded (only relevant if expandable is true)
+ * @param useGradientBorder Whether to use a gradient border instead of solid border. Defaults to false (optional).
  * @param content The content to be displayed inside the section card
  *
  * @sample com.manjul.genai.videogenerator.ui.designsystem.components.sections.SectionCardPreview
@@ -95,19 +106,37 @@ fun SectionCard(
     onHeaderClick: (() -> Unit)? = null,
     expandable: Boolean = false,
     expanded: Boolean = true,
+    useGradientBorder: Boolean = false,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val shape = RoundedCornerShape(SectionCardConstants.CARD_CORNER_RADIUS.dp)
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        shape = shape,
-        color = AppColors.CardBackground.copy(alpha = SectionCardConstants.BACKGROUND_ALPHA),
-        tonalElevation = SectionCardConstants.ELEVATION.dp,
-        border = BorderStroke(
-            SectionCardConstants.BORDER_WIDTH.dp,
-            AppColors.CardBorder.copy(alpha = SectionCardConstants.BORDER_ALPHA)
-        )
+    val gradientBorderWidth = 1.5.dp // Slightly thicker than normal border for visibility
+    
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .gradientBorder(
+                enabled = useGradientBorder,
+                width = gradientBorderWidth,
+                cornerRadius = SectionCardConstants.CARD_CORNER_RADIUS.dp
+            )
     ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(if (useGradientBorder) gradientBorderWidth else 0.dp),
+            shape = shape,
+            color = AppColors.CardBackground,
+            tonalElevation = if (useGradientBorder) 4.dp else SectionCardConstants.ELEVATION.dp,
+            border = if (!useGradientBorder) {
+                BorderStroke(
+                    SectionCardConstants.BORDER_WIDTH.dp,
+                    AppColors.CardBorder.copy(alpha = SectionCardConstants.BORDER_ALPHA)
+                )
+            } else {
+                null // No solid border when gradient border is enabled
+            }
+        ) {
         Column(
             modifier = Modifier.padding(SectionCardConstants.PADDING.dp),
             verticalArrangement = Arrangement.spacedBy(SectionCardConstants.CONTENT_SPACING.dp)
@@ -178,8 +207,60 @@ fun SectionCard(
                 content()
             }
         }
+        }
     }
 }
+
+/**
+ * Gradient border modifier that draws a gradient border around a composable.
+ * Uses app theme colors (purple to orange) to create a focused, attention-grabbing border.
+ * 
+ * @param enabled Whether to show the gradient border. Defaults to false (optional).
+ * @param width The width of the border in Dp. Should match or be slightly thicker than the normal border.
+ * @param cornerRadius The corner radius of the border. Must match the shape's corner radius exactly.
+ */
+private fun Modifier.gradientBorder(
+    enabled: Boolean = false,
+    width: Dp = 1.5.dp,
+    cornerRadius: Dp = 24.dp
+): Modifier = this.then(
+    if (enabled) {
+        Modifier.drawBehind {
+            val strokeWidth = width.toPx()
+            val halfStroke = strokeWidth / 2
+            
+            // Bright gradient colors matching app theme - vibrant purple to bright orange
+            val gradientBrush = Brush.linearGradient(
+                colors = listOf(
+                    Color(0xFFAD96FF), // Brighter purple
+                    Color(0xFFC5B5FF), // Light purple
+                    Color(0xFFFF916B) // Bright vibrant orange
+                ),
+                start = Offset(0f, 0f),
+                end = Offset(size.width, size.height)
+            )
+            
+            // Draw gradient border centered on the edge
+            // The stroke is centered, so we need to offset by half the stroke width
+            drawRoundRect(
+                brush = gradientBrush,
+                topLeft = Offset(halfStroke, halfStroke),
+                size = Size(
+                    size.width - strokeWidth,
+                    size.height - strokeWidth
+                ),
+                cornerRadius = CornerRadius(cornerRadius.toPx() - halfStroke),
+                style = Stroke(
+                    width = strokeWidth,
+                    cap = StrokeCap.Round,
+                    join = StrokeJoin.Round
+                )
+            )
+        }
+    } else {
+        Modifier
+    }
+)
 
 @Composable
 private fun InfoIcon(
@@ -310,6 +391,49 @@ private fun SectionCardExpandablePreview() {
             ) {
                 Text(
                     text = "This content can be expanded/collapsed",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = AppColors.TextSecondary
+                )
+            }
+        }
+    }
+}
+
+@Preview(
+    name = "Section Card - Gradient Border",
+    showBackground = true,
+    backgroundColor = 0xFF000000
+)
+@Composable
+private fun SectionCardGradientBorderPreview() {
+    GenAiVideoTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            SectionCard(
+                title = "AI Model",
+                description = "Choose the AI model for video generation",
+                required = true,
+                useGradientBorder = true
+            ) {
+                Text(
+                    text = "This card has a gradient border for focus",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = AppColors.TextSecondary
+                )
+            }
+            SectionCard(
+                title = "Advanced Settings",
+                description = "Adjust Aspect Ratio and Duration settings",
+                required = false,
+                optionalLabel = "Optional",
+                useGradientBorder = true
+            ) {
+                Text(
+                    text = "This card also has a gradient border",
                     style = MaterialTheme.typography.bodyMedium,
                     color = AppColors.TextSecondary
                 )
