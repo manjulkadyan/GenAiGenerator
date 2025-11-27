@@ -3,6 +3,7 @@ package com.manjul.genai.videogenerator.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,7 +27,18 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.ViewInAr
+import androidx.compose.material.icons.outlined.History
+import androidx.compose.material.icons.outlined.Face
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
+import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
 
 @Composable
 fun GlassmorphicNavigationBar(
@@ -119,7 +131,7 @@ private fun GlassmorphicNavigationItem(
 ) {
     val backgroundModifier = if (isSelected) {
         Modifier
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
@@ -127,12 +139,6 @@ private fun GlassmorphicNavigationItem(
                         AppColors.PrimaryPurpleDark.copy(alpha = 0.25f)
                     )
                 )
-            )
-            .shadow(
-                elevation = 4.dp,
-                shape = RoundedCornerShape(20.dp),
-                spotColor = AppColors.PrimaryPurple.copy(alpha = 0.4f),
-                ambientColor = AppColors.PrimaryPurple.copy(alpha = 0.2f)
             )
     } else {
         Modifier
@@ -199,4 +205,63 @@ data class NavigationItem(
     val label: String,
     val badgeCount: Int = 0 // Badge count for notifications
 )
+
+// ==================== Preview ====================
+
+@Preview(
+    name = "Glassmorphic Navigation Bar",
+    showBackground = true,
+    backgroundColor = 0xFF000000,
+    showSystemUi = true
+)
+@Composable
+private fun GlassmorphicNavigationBarPreview() {
+    GenAiVideoTheme {
+        var selectedItem by remember {
+            mutableStateOf(
+                NavigationItem(
+                    icon = Icons.Outlined.AutoAwesome,
+                    label = "Generate",
+                    badgeCount = 0
+                )
+            )
+        }
+
+        val navigationItems = listOf(
+            NavigationItem(
+                icon = Icons.Outlined.AutoAwesome,
+                label = "Generate",
+                badgeCount = 0
+            ),
+            NavigationItem(
+                icon = Icons.Outlined.ViewInAr,
+                label = "Models",
+                badgeCount = 0
+            ),
+            NavigationItem(
+                icon = Icons.Outlined.History,
+                label = "History",
+                badgeCount = 3 // Show badge example
+            ),
+            NavigationItem(
+                icon = Icons.Outlined.Face,
+                label = "Profile",
+                badgeCount = 0
+            )
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(AppColors.BackgroundDark)
+                .padding(vertical = 200.dp)
+        ) {
+            GlassmorphicNavigationBar(
+                items = navigationItems,
+                selectedItem = selectedItem,
+                onItemSelected = { selectedItem = it }
+            )
+        }
+    }
+}
 
