@@ -66,7 +66,7 @@ object AppColors {
 
     // Border Colors
     val BorderDefault = Color(0xFF2C2D3F)
-    val BorderLight = Color(0xFF2C2D3F).copy(alpha = 0.3f)
+    val BorderLight = PrimaryPurple.copy(alpha = 0.4f)
     val BorderSelected = PrimaryPurple
 
     // Button Colors
