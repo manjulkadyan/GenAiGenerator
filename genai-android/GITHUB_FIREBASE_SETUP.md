@@ -146,3 +146,5 @@ After deployment (either method):
 
 **Note:** Firebase App Hosting is different from Firebase Hosting. Since we have static HTML files, we use Firebase Hosting with GitHub Actions for automatic deployment.
 
+
+

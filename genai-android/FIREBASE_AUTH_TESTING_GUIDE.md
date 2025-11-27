@@ -357,3 +357,5 @@ Check that `google-services.json` contains your package name:
 4. **Check logs first** - Most issues are visible in logcat
 5. **Test on real device** - Emulators may have issues with Google Sign-In
 
+
+
