@@ -149,7 +149,7 @@ private fun GlassmorphicNavigationItem(
     Box(
         modifier = backgroundModifier
             .clickable(onClick = onClick)
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .padding(horizontal = 12.dp, vertical = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(
