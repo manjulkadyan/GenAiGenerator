@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 
 @Composable
 fun GlassmorphicNavigationBar(
@@ -40,8 +41,7 @@ fun GlassmorphicNavigationBar(
             .padding(horizontal = 16.dp, vertical = 12.dp)
             .zIndex(10f)
     ) {
-        // Glassmorphic background - iOS-style transparent glass effect
-        // Using very low opacity to simulate true glass transparency
+        // Glassmorphic background - Dark theme glass effect matching app theme
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -49,20 +49,20 @@ fun GlassmorphicNavigationBar(
                 .shadow(
                     elevation = 20.dp,
                     shape = RoundedCornerShape(32.dp),
-                    spotColor = Color.Black.copy(alpha = 0.15f),
-                    ambientColor = Color.Black.copy(alpha = 0.1f)
+                    spotColor = Color.Black.copy(alpha = 0.3f),
+                    ambientColor = Color.Black.copy(alpha = 0.2f)
                 )
                 .clip(RoundedCornerShape(32.dp))
                 .border(
                     width = 0.5.dp,
-                    color = Color.White.copy(alpha = 0.18f),
+                    color = AppColors.BorderDefault.copy(alpha = 0.5f),
                     shape = RoundedCornerShape(32.dp)
                 )
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
-                            Color.White.copy(alpha = 0.25f), // Very transparent like iOS
-                            Color.White.copy(alpha = 0.15f)
+                            AppColors.SurfaceElevated.copy(alpha = 0.95f),
+                            AppColors.SurfaceDark.copy(alpha = 0.9f)
                         )
                     )
                 )
@@ -83,7 +83,7 @@ fun GlassmorphicNavigationBar(
                     .background(
                         Brush.verticalGradient(
                             colors = listOf(
-                                Color.White.copy(alpha = 0.1f),
+                                AppColors.PrimaryPurple.copy(alpha = 0.1f),
                                 Color.Transparent
                             )
                         )
@@ -123,15 +123,16 @@ private fun GlassmorphicNavigationItem(
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF6C5CE7).copy(alpha = 0.2f),
-                        Color(0xFF6C5CE7).copy(alpha = 0.15f)
+                        AppColors.PrimaryPurple.copy(alpha = 0.3f),
+                        AppColors.PrimaryPurpleDark.copy(alpha = 0.25f)
                     )
                 )
             )
             .shadow(
                 elevation = 4.dp,
                 shape = RoundedCornerShape(20.dp),
-                spotColor = Color(0xFF6C5CE7).copy(alpha = 0.3f)
+                spotColor = AppColors.PrimaryPurple.copy(alpha = 0.4f),
+                ambientColor = AppColors.PrimaryPurple.copy(alpha = 0.2f)
             )
     } else {
         Modifier
@@ -155,9 +156,9 @@ private fun GlassmorphicNavigationItem(
                     contentDescription = item.label,
                     modifier = Modifier.size(24.dp),
                     tint = if (isSelected) {
-                        Color.White
+                        AppColors.OnPrimaryPurple // White for selected (as user mentioned it's okay)
                     } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                        AppColors.TextSecondary // Use theme text color for unselected
                     }
                 )
                 // Badge indicator
@@ -167,7 +168,7 @@ private fun GlassmorphicNavigationItem(
                             .align(Alignment.TopEnd)
                             .size(16.dp)
                             .clip(CircleShape)
-                            .background(Color(0xFFEF4444)) // Red badge
+                            .background(AppColors.StatusError) // Use theme error color
                             .padding(2.dp)
                     ) {
                         Text(
@@ -184,9 +185,9 @@ private fun GlassmorphicNavigationItem(
                 text = item.label,
                 style = MaterialTheme.typography.labelSmall,
                 color = if (isSelected) {
-                    Color.White
+                    AppColors.OnPrimaryPurple // White for selected (as user mentioned it's okay)
                 } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                    AppColors.TextSecondary // Use theme text color for unselected
                 }
             )
         }
