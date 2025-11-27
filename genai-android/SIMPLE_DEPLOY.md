@@ -74,3 +74,5 @@ No GitHub, no complex setup, no CI/CD - just simple static file hosting!
 
 **Note:** The GitHub Actions workflow I created earlier is optional. You can delete it if you don't want it. The static files will work perfectly with just `firebase deploy --only hosting`.
 
+
+

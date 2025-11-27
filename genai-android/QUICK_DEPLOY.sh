@@ -64,3 +64,5 @@ echo "  1. Go to Firebase Console → Firestore"
 echo "  2. Look for 'deletion_requests' collection"
 echo ""
 
+
+

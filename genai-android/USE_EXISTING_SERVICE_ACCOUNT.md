@@ -82,3 +82,5 @@ That's it! The service account is only needed if you want GitHub Actions to auto
 
 **Recommendation**: For a simple static website, just use manual deployment. No need for GitHub Actions or the service account!
 
+
+
