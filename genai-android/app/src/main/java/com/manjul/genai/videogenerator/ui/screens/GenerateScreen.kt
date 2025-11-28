@@ -161,6 +161,7 @@ fun GenerateScreen(
     var generationMode by rememberSaveable { mutableStateOf(GenerationMode.TextToVideo) }
     var showAdvanced by rememberSaveable { mutableStateOf(true) }
     var showPricingDialog by rememberSaveable { mutableStateOf(false) }
+    var isSubmitting by remember { mutableStateOf(false) }
 
     // Handle mode change and model compatibility
     val onModeSelected: (GenerationMode) -> Unit = { newMode ->
@@ -189,6 +190,13 @@ fun GenerateScreen(
         }
     }
 
+    // Reset isSubmitting when generation state changes
+    LaunchedEffect(state.isGenerating, state.errorMessage) {
+        if (!state.isGenerating || state.errorMessage != null) {
+            isSubmitting = false
+        }
+    }
+
     // Premium dark background with subtle gradient
     Box(
         modifier = modifier
@@ -212,6 +220,7 @@ fun GenerateScreen(
                     creditsCount = creditsState.credits,
                     generationMode = generationMode,
                     showAdvanced = showAdvanced,
+                    isSubmitting = isSubmitting,
                     onModeSelected = onModeSelected,
                     onModelSelected = viewModel::selectModel,
                     onPromptChanged = viewModel::updatePrompt,
@@ -225,8 +234,11 @@ fun GenerateScreen(
                     onClearLastFrame = { viewModel.setLastFrameUri(null) },
                     onAdvancedToggle = { showAdvanced = !showAdvanced },
                     onGenerateClick = {
-                        viewModel.dismissMessage()
-                        viewModel.generate()
+                        if (!isSubmitting && state.canGenerate && !state.isGenerating) {
+                            isSubmitting = true
+                            viewModel.dismissMessage()
+                            viewModel.generate()
+                        }
                     },
                     onSettingsClick = onSettingsClick,
                     onCreditsClick = onCreditsClick,
@@ -279,6 +291,7 @@ private fun GenerateScreenContent(
     creditsCount: Int,
     generationMode: GenerationMode,
     showAdvanced: Boolean,
+    isSubmitting: Boolean,
     onModeSelected: (GenerationMode) -> Unit,
     onModelSelected: (AIModel) -> Unit,
     onPromptChanged: (String) -> Unit,
@@ -528,10 +541,10 @@ private fun GenerateScreenContent(
             ) {
                 // Gradient Generate Button
                 GradientGenerateButton(
-                    text = if (state.isGenerating) "Generating..." else "Generate AI Video",
+                    text = if (state.isGenerating || isSubmitting) "Submitting..." else "Generate AI Video",
                     onClick = onGenerateClick,
-                    enabled = state.canGenerate,
-                    isLoading = state.isGenerating
+                    enabled = state.canGenerate && !isSubmitting && !state.isGenerating,
+                    isLoading = state.isGenerating || isSubmitting
                 )
                 // Cost and audio indicator on the left
                 Row(
@@ -2173,6 +2186,7 @@ private fun GenerateScreenPreview() {
                 creditsCount = 1250,
                 generationMode = generationMode,
                 showAdvanced = showAdvanced,
+                isSubmitting = false,
                 onModeSelected = { generationMode = it },
                 onModelSelected = { selectedModel = it },
                 onPromptChanged = { promptText = it },

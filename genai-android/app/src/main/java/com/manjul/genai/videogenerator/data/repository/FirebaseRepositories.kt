@@ -249,7 +249,7 @@ class FirebaseVideoGenerateRepository(
             // TODO: Switch to "testCallReplicateVeoAPIV2/callReplicateVeoAPIV2" for testing (see TESTING_CREDITS.md)
             // IMPORTANT: Function name must match exactly (case-sensitive)
             val callableResult = functions
-                .getHttpsCallable("callReplicateVeoAPIV2") // Fixed: lowercase 'c' to match deployed function
+                .getHttpsCallable("testCallReplicateVeoAPIV2") // Fixed: lowercase 'c' to match deployed function
                 .call(data)
                 .await()
             
