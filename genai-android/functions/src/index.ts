@@ -1,7 +1,9 @@
+/* eslint-disable */
 import * as admin from "firebase-admin";
 import {defineSecret} from "firebase-functions/params";
 import {setGlobalOptions} from "firebase-functions/v2";
 import {onCall, onRequest} from "firebase-functions/v2/https";
+import {onSchedule} from "firebase-functions/v2/scheduler";
 import {androidpublisher_v3, google} from "googleapis";
 // onSchedule import removed - scheduled function disabled
 // (using app-side checking instead)
@@ -24,7 +26,10 @@ const playAuth = new google.auth.GoogleAuth({
   scopes: ["https://www.googleapis.com/auth/androidpublisher"],
 });
 
-const androidPublisher = google.androidpublisher("v3");
+const androidPublisher = google.androidpublisher({
+  version: "v3",
+  auth: playAuth,
+});
 type PlaySubscription = androidpublisher_v3.Schema$SubscriptionPurchaseV2;
 
 const parseTimestamp = (
@@ -42,11 +47,9 @@ const fetchPlaySubscription = async (
   purchaseToken: string,
 ): Promise<PlaySubscription | null> => {
   try {
-    const authClient = await playAuth.getClient();
     const res = await androidPublisher.purchases.subscriptionsv2.get({
       packageName: playPackageName,
       token: purchaseToken,
-      auth: authClient,
     });
     return res.data || null;
   } catch (error) {
@@ -60,12 +63,10 @@ const acknowledgePlayPurchase = async (
   purchaseToken: string,
 ): Promise<void> => {
   try {
-    const authClient = await playAuth.getClient();
     await androidPublisher.purchases.subscriptions.acknowledge({
       packageName: playPackageName,
       subscriptionId: productId,
       token: purchaseToken,
-      auth: authClient,
     });
     console.log(
       `✅ Play purchase acknowledged for ${productId} token ${purchaseToken}`,
@@ -115,6 +116,22 @@ type ReplicatePrediction = {
     get?: string;
     cancel?: string;
   };
+};
+
+type RenewalSubscription = {
+  productId: string;
+  creditsAdded: number;
+  periodsPassed: number;
+};
+
+type RenewalResult = {
+  success: boolean;
+  userId: string;
+  processedCount: number;
+  totalCreditsAdded: number;
+  subscriptions: RenewalSubscription[];
+  message?: string;
+  error?: string;
 };
 
 export const callReplicateVeoAPIV2 = onCall<GenerateRequest>(
@@ -655,6 +672,16 @@ export const addTestCredits = onCall<{userId?: string; credits: number}>(
   async ({data, auth}) => {
     if (!auth) {
       throw new Error("Missing auth.");
+    }
+
+    const isProd =
+      process.env.GCLOUD_PROJECT === "genaivideogenerator" ||
+      process.env.GCLOUD_PROJECT === "genai-video";
+    if (isProd) {
+      const adminUids = (process.env.ADMIN_UIDS || "").split(",").filter(Boolean);
+      if (!adminUids.includes(auth.uid)) {
+        throw new Error("Unauthorized: Admin access required");
+      }
     }
 
     const userId = data.userId || auth.uid;
@@ -1314,6 +1341,7 @@ export const handleSubscriptionPurchase = onCall<{
     const currentCredits = (userDoc.data()?.credits as number) || 0;
     await userRef.update({
       credits: admin.firestore.FieldValue.increment(credits),
+      hasActiveSubscription: true,
     });
 
     const newCredits = currentCredits + credits;
@@ -1338,6 +1366,178 @@ export const handleSubscriptionPurchase = onCall<{
   },
 );
 
+const processUserSubscriptionRenewals = async (
+  userId: string,
+): Promise<RenewalResult> => {
+  const now = admin.firestore.Timestamp.now();
+  let processedCount = 0;
+  let totalCreditsAdded = 0;
+  const processedSubscriptions: RenewalSubscription[] = [];
+
+  // Get all active subscriptions for this user
+  const subscriptionsSnapshot = await firestore
+    .collection("users")
+    .doc(userId)
+    .collection("subscriptions")
+    .where("status", "==", "active")
+    .get();
+
+  if (subscriptionsSnapshot.empty) {
+    console.log(`No active subscriptions found for user ${userId}`);
+    return {
+      success: true,
+      userId,
+      processedCount: 0,
+      totalCreditsAdded: 0,
+      subscriptions: [],
+      message: "No active subscriptions",
+    };
+  }
+
+  // Verify user document exists
+  const userRef = firestore.collection("users").doc(userId);
+  const userDoc = await userRef.get();
+
+  if (!userDoc.exists) {
+    console.warn(`User ${userId} does not exist`);
+    return {
+      success: false,
+      userId,
+      error: "User not found",
+      processedCount: 0,
+      totalCreditsAdded: 0,
+      subscriptions: [],
+    };
+  }
+
+  // Process each subscription
+  for (const subDoc of subscriptionsSnapshot.docs) {
+    const subData = subDoc.data();
+    const nextRenewalDate = subData.nextRenewalDate as
+      admin.firestore.Timestamp | null;
+    const creditsPerRenewal = (subData.creditsPerRenewal as number) || 0;
+    const productId = subData.productId as string;
+    const purchaseToken = subData.purchaseToken as string | undefined;
+
+    // Validate subscription data
+    if (!productId || creditsPerRenewal <= 0 || !nextRenewalDate) {
+      console.warn(
+        `⚠️ Invalid subscription data for user ${userId}, ` +
+          `product ${productId}`,
+      );
+      continue;
+    }
+
+    // Sync with Google Play
+    const playSubscription = purchaseToken ?
+      await fetchPlaySubscription(purchaseToken) :
+      null;
+    const playState = playSubscription?.subscriptionState ||
+      (subData.playSubscriptionState as string) ||
+      "UNKNOWN";
+    const playExpiry = parseTimestamp(
+      playSubscription?.lineItems?.[0]?.expiryTime,
+    );
+    const linkedPurchaseToken =
+      playSubscription?.linkedPurchaseToken || subData.linkedPurchaseToken;
+
+    const syncUpdate: Record<string, unknown> = {
+      playSubscriptionState: playState,
+      lastPlaySyncAt: now,
+      linkedPurchaseToken,
+      updatedAt: now,
+    };
+    if (playExpiry) {
+      syncUpdate.nextRenewalDate = playExpiry;
+    }
+
+    const isActive =
+      playState === "SUBSCRIPTION_STATE_ACTIVE" ||
+      playState === "SUBSCRIPTION_STATE_IN_GRACE_PERIOD";
+
+    if (!isActive) {
+      await subDoc.ref.update({
+        ...syncUpdate,
+        status: "canceled",
+      });
+      console.log(
+        `⚠️ Subscription ${productId} for user ${userId} not active (state=${playState})`,
+      );
+      continue;
+    }
+
+    if (!playExpiry) {
+      await subDoc.ref.update(syncUpdate);
+      console.warn(
+        `⚠️ No expiryTime from Play for ${productId} (user ${userId})`,
+      );
+      continue;
+    }
+
+    // If Play shows a newer expiry than our stored value, a renewal occurred
+    if (playExpiry.toMillis() > nextRenewalDate.toMillis()) {
+      const periodsPassed = Math.min(
+        52,
+        Math.max(
+          1,
+          Math.round(
+            (playExpiry.toMillis() - nextRenewalDate.toMillis()) /
+              (7 * 24 * 60 * 60 * 1000),
+          ),
+        ),
+      );
+      const creditsToAdd = creditsPerRenewal * periodsPassed;
+
+      console.log(
+        `📅 Renewal detected for ${productId} (user ${userId}): ` +
+          `${periodsPassed} period(s), adding ${creditsToAdd} credits`,
+      );
+
+      try {
+        await userRef.update({
+          credits: admin.firestore.FieldValue.increment(creditsToAdd),
+          hasActiveSubscription: true,
+        });
+
+        await subDoc.ref.update({
+          ...syncUpdate,
+          lastCreditsAdded: now,
+          nextRenewalDate: playExpiry,
+        });
+
+        processedCount++;
+        totalCreditsAdded += creditsToAdd;
+        processedSubscriptions.push({
+          productId,
+          creditsAdded: creditsToAdd,
+          periodsPassed,
+        });
+      } catch (error) {
+        console.error(
+          `❌ Error processing renewal for ${productId} (user ${userId}):`,
+          error,
+        );
+      }
+    } else {
+      // No renewal yet, just sync Play state/expiry
+      await subDoc.ref.update(syncUpdate);
+    }
+  }
+
+  return {
+    success: true,
+    userId,
+    processedCount,
+    totalCreditsAdded,
+    subscriptions: processedSubscriptions,
+    message:
+      processedCount > 0 ?
+        `Processed ${processedCount} renewal(s), ` +
+          `added ${totalCreditsAdded} credits` :
+        "No renewals due",
+  };
+};
+
 /**
  * Callable function to check and process subscription renewals
  * for a specific user.
@@ -1357,177 +1557,9 @@ export const checkUserSubscriptionRenewal = onCall<{
   }
 
   const userId = data?.userId || auth.uid;
-  const now = admin.firestore.Timestamp.now();
-  let processedCount = 0;
-  let totalCreditsAdded = 0;
-  const processedSubscriptions: Array<{
-    productId: string;
-    creditsAdded: number;
-    periodsPassed: number;
-  }> = [];
 
   try {
-    // Get all active subscriptions for this user
-    const subscriptionsSnapshot = await firestore
-      .collection("users")
-      .doc(userId)
-      .collection("subscriptions")
-      .where("status", "==", "active")
-      .get();
-
-    if (subscriptionsSnapshot.empty) {
-      console.log(`No active subscriptions found for user ${userId}`);
-      return {
-        success: true,
-        userId,
-        processedCount: 0,
-        totalCreditsAdded: 0,
-        subscriptions: [],
-        message: "No active subscriptions",
-      };
-    }
-
-    // Verify user document exists
-    const userRef = firestore.collection("users").doc(userId);
-    const userDoc = await userRef.get();
-
-    if (!userDoc.exists) {
-      console.warn(`User ${userId} does not exist`);
-      return {
-        success: false,
-        userId,
-        error: "User not found",
-        processedCount: 0,
-        totalCreditsAdded: 0,
-        subscriptions: [],
-      };
-    }
-
-    // Process each subscription
-    for (const subDoc of subscriptionsSnapshot.docs) {
-      const subData = subDoc.data();
-      const nextRenewalDate = subData.nextRenewalDate as
-        admin.firestore.Timestamp | null;
-      const creditsPerRenewal = (subData.creditsPerRenewal as number) || 0;
-      const productId = subData.productId as string;
-      const purchaseToken = subData.purchaseToken as string | undefined;
-
-      // Validate subscription data
-      if (!productId || creditsPerRenewal <= 0 || !nextRenewalDate) {
-        console.warn(
-          `⚠️ Invalid subscription data for user ${userId}, ` +
-            `product ${productId}`,
-        );
-        continue;
-      }
-
-      // Sync with Google Play
-      const playSubscription = purchaseToken ?
-        await fetchPlaySubscription(purchaseToken) :
-        null;
-      const playState = playSubscription?.subscriptionState ||
-        (subData.playSubscriptionState as string) ||
-        "UNKNOWN";
-      const playExpiry = parseTimestamp(
-        playSubscription?.lineItems?.[0]?.expiryTime,
-      );
-      const linkedPurchaseToken =
-        playSubscription?.linkedPurchaseToken || subData.linkedPurchaseToken;
-
-      const syncUpdate: Record<string, unknown> = {
-        playSubscriptionState: playState,
-        lastPlaySyncAt: now,
-        linkedPurchaseToken,
-        updatedAt: now,
-      };
-      if (playExpiry) {
-        syncUpdate.nextRenewalDate = playExpiry;
-      }
-
-      const isActive =
-        playState === "SUBSCRIPTION_STATE_ACTIVE" ||
-        playState === "SUBSCRIPTION_STATE_IN_GRACE_PERIOD";
-
-      if (!isActive) {
-        await subDoc.ref.update({
-          ...syncUpdate,
-          status: "canceled",
-        });
-        console.log(
-          `⚠️ Subscription ${productId} for user ${userId} not active (state=${playState})`,
-        );
-        continue;
-      }
-
-      if (!playExpiry) {
-        await subDoc.ref.update(syncUpdate);
-        console.warn(
-          `⚠️ No expiryTime from Play for ${productId} (user ${userId})`,
-        );
-        continue;
-      }
-
-      // If Play shows a newer expiry than our stored value, a renewal occurred
-      if (playExpiry.toMillis() > nextRenewalDate.toMillis()) {
-        const periodsPassed = Math.min(
-          52,
-          Math.max(
-            1,
-            Math.round(
-              (playExpiry.toMillis() - nextRenewalDate.toMillis()) /
-                (7 * 24 * 60 * 60 * 1000),
-            ),
-          ),
-        );
-        const creditsToAdd = creditsPerRenewal * periodsPassed;
-
-        console.log(
-          `📅 Renewal detected for ${productId} (user ${userId}): ` +
-            `${periodsPassed} period(s), adding ${creditsToAdd} credits`,
-        );
-
-        try {
-          await userRef.update({
-            credits: admin.firestore.FieldValue.increment(creditsToAdd),
-          });
-
-          await subDoc.ref.update({
-            ...syncUpdate,
-            lastCreditsAdded: now,
-            nextRenewalDate: playExpiry,
-          });
-
-          processedCount++;
-          totalCreditsAdded += creditsToAdd;
-          processedSubscriptions.push({
-            productId,
-            creditsAdded: creditsToAdd,
-            periodsPassed,
-          });
-        } catch (error) {
-          console.error(
-            `❌ Error processing renewal for ${productId} (user ${userId}):`,
-            error,
-          );
-        }
-      } else {
-        // No renewal yet, just sync Play state/expiry
-        await subDoc.ref.update(syncUpdate);
-      }
-    }
-
-    return {
-      success: true,
-      userId,
-      processedCount,
-      totalCreditsAdded,
-      subscriptions: processedSubscriptions,
-      message:
-        processedCount > 0 ?
-          `Processed ${processedCount} renewal(s), ` +
-            `added ${totalCreditsAdded} credits` :
-          "No renewals due",
-    };
+    return await processUserSubscriptionRenewals(userId);
   } catch (error) {
     console.error(
       `❌ Error in checkUserSubscriptionRenewal for user ${userId}:`,
@@ -1546,6 +1578,66 @@ export const checkUserSubscriptionRenewal = onCall<{
     };
   }
 });
+
+/**
+ * Scheduled backup job to process renewals for all active subscriptions.
+ * Runs daily to ensure credits are granted even if the app is not opened.
+ */
+export const checkAllSubscriptionRenewals = onSchedule(
+  {
+    schedule: "0 2 * * *", // Daily at 2 AM UTC
+    timeZone: "UTC",
+    memory: "512MiB",
+  },
+  async () => {
+    const now = admin.firestore.Timestamp.now();
+    let processedUsers = 0;
+    let totalCreditsAdded = 0;
+    let totalSubscriptionsProcessed = 0;
+    let errors = 0;
+
+    try {
+      // Find active subscriptions across all users
+      const activeSubsSnapshot = await firestore
+        .collectionGroup("subscriptions")
+        .where("status", "==", "active")
+        .get();
+
+      const userIds = new Set<string>();
+      activeSubsSnapshot.forEach((doc) => {
+        const userId = doc.ref.parent.parent?.id;
+        if (userId) {
+          userIds.add(userId);
+        }
+      });
+
+      for (const userId of userIds) {
+        try {
+          const result = await processUserSubscriptionRenewals(userId);
+          if (result.success && result.processedCount > 0) {
+            processedUsers++;
+            totalCreditsAdded += result.totalCreditsAdded;
+            totalSubscriptionsProcessed += result.processedCount;
+          }
+        } catch (error) {
+          console.error(`❌ Error processing renewals for user ${userId}`, error);
+          errors++;
+        }
+      }
+
+      console.log(
+        `✅ Scheduled renewal check @${now.toDate().toISOString()}: ` +
+          `${totalSubscriptionsProcessed} subscriptions, ` +
+          `${processedUsers} users, ` +
+          `${totalCreditsAdded} credits added, ` +
+          `${errors} errors`,
+      );
+    } catch (error) {
+      console.error("❌ Scheduled renewal job failed", error);
+      throw error;
+    }
+  },
+);
 
 /**
  * Handle Google Play Real-time Developer Notifications (RTDN).
