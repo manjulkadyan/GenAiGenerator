@@ -458,6 +458,7 @@ private fun GenerateScreenContent(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
+                .padding(horizontal = 2.dp)
                 .drawBehind {
                     val borderWidth = 2.dp.toPx()
                     val cornerRadius = 32.dp.toPx()

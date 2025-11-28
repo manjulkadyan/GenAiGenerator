@@ -39,14 +39,17 @@ const getAndroidPublisher = (): androidpublisher_v3.Androidpublisher => {
     const serviceAccountJson = playServiceAccountSecret.value();
     
     if (!serviceAccountJson) {
+      console.error("❌ PLAY_SERVICE_ACCOUNT_JSON secret not found");
       throw new Error("PLAY_SERVICE_ACCOUNT_JSON secret not found");
     }
+    
+    console.log(`📝 Service account JSON length: ${serviceAccountJson.length} characters`);
     
     // Write to temp file to avoid OpenSSL parsing issues
     const tempDir = os.tmpdir();
     const tempFile = path.join(tempDir, `play-sa-${Date.now()}.json`);
     fs.writeFileSync(tempFile, serviceAccountJson, "utf8");
-    console.log("✅ Service account JSON written to temp file");
+    console.log(`✅ Service account JSON written to temp file: ${tempFile}`);
     
     const playAuth = new google.auth.GoogleAuth({
       keyFile: tempFile,
@@ -61,9 +64,12 @@ const getAndroidPublisher = (): androidpublisher_v3.Androidpublisher => {
     androidPublisherInitialized = true;
     console.log("✅ Google Play API initialized successfully");
     return androidPublisher;
-  } catch (error) {
-    console.error("❌ Error initializing Google Play API:", error);
-    throw new Error("Failed to initialize Google Play API");
+  } catch (error: any) {
+    console.error("❌ Error initializing Google Play API:", {
+      message: error?.message,
+      stack: error?.stack,
+    });
+    throw new Error(`Failed to initialize Google Play API: ${error?.message}`);
   }
 };
 type PlaySubscription = androidpublisher_v3.Schema$SubscriptionPurchaseV2;
@@ -83,14 +89,26 @@ const fetchPlaySubscription = async (
   purchaseToken: string,
 ): Promise<PlaySubscription | null> => {
   try {
+    console.log(`🔍 Fetching Play subscription for token: ${purchaseToken.substring(0, 20)}...`);
     const publisher = getAndroidPublisher();
     const res = await publisher.purchases.subscriptionsv2.get({
       packageName: playPackageName,
       token: purchaseToken,
     });
+    console.log(`✅ Successfully fetched Play subscription:`, {
+      subscriptionState: res.data.subscriptionState,
+      acknowledgementState: res.data.acknowledgementState,
+    });
     return res.data || null;
-  } catch (error) {
-    console.error("❌ Error fetching Play subscription", error);
+  } catch (error: any) {
+    console.error("❌ Error fetching Play subscription:", {
+      message: error?.message,
+      code: error?.code,
+      errors: error?.errors,
+      status: error?.response?.status,
+      statusText: error?.response?.statusText,
+      data: error?.response?.data,
+    });
     return null;
   }
 };
@@ -1242,7 +1260,8 @@ export const handleSubscriptionPurchase = onCall<{
   productId: string;
   purchaseToken: string;
   credits: number;
- }>(
+}>(
+  {secrets: [playServiceAccountSecret]},
   async ({data, auth}) => {
     if (!auth) {
       throw new Error("Missing auth.");
@@ -1589,7 +1608,9 @@ const processUserSubscriptionRenewals = async (
  */
 export const checkUserSubscriptionRenewal = onCall<{
   userId?: string;
-}>(async ({data, auth}) => {
+}>(
+  {secrets: [playServiceAccountSecret]},
+  async ({data, auth}) => {
   if (!auth) {
     throw new Error("Unauthorized - user must be authenticated");
   }
@@ -1626,6 +1647,7 @@ export const checkAllSubscriptionRenewals = onSchedule(
     schedule: "0 2 * * *", // Daily at 2 AM UTC
     timeZone: "UTC",
     memory: "512MiB",
+    secrets: [playServiceAccountSecret],
   },
   async () => {
     const now = admin.firestore.Timestamp.now();
