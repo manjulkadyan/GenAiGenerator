@@ -12,4 +12,11 @@ node_modules/
 # Service account keys (NEVER commit these!)
 service-account-key.json
 *-service-account*.json
+*.json.keygenaivideogenerator-f36629920139.json
+.env
+.env.*
+.env
+.env.*
+!.env.example
+genaivideogenerator-*.json
 *.json.key
