@@ -224,7 +224,8 @@ class BillingRepository(private val context: Context) {
     fun launchBillingFlow(
         activity: Activity,
         productDetails: ProductDetails,
-        obfuscatedAccountId: String? = null
+        obfuscatedAccountId: String? = null,
+        obfuscatedProfileId: String? = null
     ): BillingResult {
         val billingClient = billingClient
         if (billingClient == null) {
@@ -266,6 +267,7 @@ class BillingRepository(private val context: Context) {
         val billingFlowParamsBuilder = BillingFlowParams.newBuilder()
             .setProductDetailsParamsList(listOf(productDetailsParams))
         obfuscatedAccountId?.let { billingFlowParamsBuilder.setObfuscatedAccountId(it) }
+        obfuscatedProfileId?.let { billingFlowParamsBuilder.setObfuscatedProfileId(it) }
         val billingFlowParams = billingFlowParamsBuilder.build()
         
         // Track purchase started
@@ -307,6 +309,33 @@ class BillingRepository(private val context: Context) {
                     ))
                 }
             }
+        }
+    }
+
+    /**
+     * Re-query existing purchases and acknowledge any unacknowledged PURCHASED items.
+     * Useful for catching pending -> purchased transitions when the app resumes.
+     */
+    suspend fun reprocessExistingPurchases(): Result<Int> {
+        return try {
+            val result = queryPurchases()
+            result.fold(
+                onSuccess = { purchases ->
+                    var processed = 0
+                    purchases.forEach { purchase ->
+                        if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED &&
+                            !purchase.isAcknowledged
+                        ) {
+                            handlePurchase(purchase)
+                            processed++
+                        }
+                    }
+                    Result.success(processed)
+                },
+                onFailure = { error -> Result.failure(error) },
+            )
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
     
