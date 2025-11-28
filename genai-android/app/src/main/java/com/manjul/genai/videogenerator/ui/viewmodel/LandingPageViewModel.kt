@@ -208,11 +208,25 @@ class LandingPageViewModel(
                     error = null
                 )
                     }
+                    is PurchaseUpdateEvent.AlreadyOwned -> {
+                        android.util.Log.d("LandingPageViewModel", "ℹ️ Subscription already owned - syncing: ${event.purchase.products.firstOrNull()}")
+                        // Process existing subscription on the server to sync
+                        viewModelScope.launch {
+                            processSubscriptionPurchase(event.purchase)
+                        }
+                        _uiState.value = _uiState.value.copy(
+                            isPurchaseInProgress = false,
+                            purchaseMessage = "Your subscription is already active! Syncing...",
+                            error = null
+                        )
+                    }
                     is PurchaseUpdateEvent.Error -> {
                         android.util.Log.e("LandingPageViewModel", "❌ Purchase ERROR: code=${event.billingResult.responseCode}, message=${event.billingResult.debugMessage}")
                         val errorMessage = when (event.billingResult.responseCode) {
                             com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
-                                "You already have an active subscription"
+                                // This shouldn't happen now since we have AlreadyOwned event
+                                android.util.Log.d("LandingPageViewModel", "Item already owned - will sync existing subscription")
+                                "Your subscription is already active"
                             }
                             com.android.billingclient.api.BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> {
                                 "Billing service is unavailable. Please try again later."

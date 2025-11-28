@@ -33,6 +33,7 @@ import kotlin.coroutines.resume
 sealed class PurchaseUpdateEvent {
     data class Success(val purchase: Purchase) : PurchaseUpdateEvent()
     data class Error(val billingResult: BillingResult) : PurchaseUpdateEvent()
+    data class AlreadyOwned(val purchase: Purchase) : PurchaseUpdateEvent()
     object UserCancelled : PurchaseUpdateEvent()
 }
 
@@ -79,6 +80,33 @@ class BillingRepository(private val context: Context) {
                 // Track cancellation - we don't have product ID here, so use "unknown"
                 AnalyticsManager.trackPurchaseCancelled("unknown")
                 _purchaseUpdates.tryEmit(PurchaseUpdateEvent.UserCancelled)
+            }
+            BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
+                android.util.Log.w("BillingRepository", "Item already owned - querying existing purchases to sync")
+                // Query existing purchases and process them to ensure backend is synced
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val result = queryPurchases()
+                        result.onSuccess { existingPurchases ->
+                            android.util.Log.d("BillingRepository", "Found ${existingPurchases.size} existing purchases")
+                            if (existingPurchases.isNotEmpty()) {
+                                // Process the first unacknowledged purchase or the most recent one
+                                val purchaseToProcess = existingPurchases.firstOrNull { !it.isAcknowledged }
+                                    ?: existingPurchases.firstOrNull()
+                                
+                                purchaseToProcess?.let { purchase ->
+                                    android.util.Log.d("BillingRepository", "Re-processing existing purchase: ${purchase.products.firstOrNull()}")
+                                    handlePurchase(purchase)
+                                    _purchaseUpdates.tryEmit(PurchaseUpdateEvent.AlreadyOwned(purchase))
+                                }
+                            } else {
+                                android.util.Log.w("BillingRepository", "No existing purchases found despite ITEM_ALREADY_OWNED error")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        android.util.Log.e("BillingRepository", "Error querying existing purchases", e)
+                    }
+                }
             }
             else -> {
                 android.util.Log.e("BillingRepository", "Purchase error: code=${billingResult.responseCode}, message=${billingResult.debugMessage}")
