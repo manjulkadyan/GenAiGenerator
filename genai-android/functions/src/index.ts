@@ -2,6 +2,7 @@ import * as admin from "firebase-admin";
 import {defineSecret} from "firebase-functions/params";
 import {setGlobalOptions} from "firebase-functions/v2";
 import {onCall, onRequest} from "firebase-functions/v2/https";
+import {androidpublisher_v3, google} from "googleapis";
 // onSchedule import removed - scheduled function disabled
 // (using app-side checking instead)
 
@@ -10,6 +11,70 @@ setGlobalOptions({maxInstances: 10});
 admin.initializeApp();
 const firestore = admin.firestore();
 const replicateToken = defineSecret("REPLICATE_API_TOKEN");
+
+// Google Play Developer API setup
+const playPackageName =
+  process.env.PLAY_PACKAGE_NAME || "com.manjul.genai.videogenerator";
+const playServiceAccountJson = process.env.PLAY_SERVICE_ACCOUNT_KEY;
+
+const playAuth = new google.auth.GoogleAuth({
+  credentials: playServiceAccountJson ?
+    JSON.parse(playServiceAccountJson) :
+    undefined,
+  scopes: ["https://www.googleapis.com/auth/androidpublisher"],
+});
+
+const androidPublisher = google.androidpublisher("v3");
+type PlaySubscription = androidpublisher_v3.Schema$SubscriptionPurchaseV2;
+
+const parseTimestamp = (
+  value?: string | number | null,
+): admin.firestore.Timestamp | null => {
+  if (!value) return null;
+  const millis = typeof value === "number" ?
+    value :
+    Date.parse(value);
+  if (Number.isNaN(millis)) return null;
+  return admin.firestore.Timestamp.fromMillis(millis);
+};
+
+const fetchPlaySubscription = async (
+  purchaseToken: string,
+): Promise<PlaySubscription | null> => {
+  try {
+    const authClient = await playAuth.getClient();
+    const res = await androidPublisher.purchases.subscriptionsv2.get({
+      packageName: playPackageName,
+      token: purchaseToken,
+      auth: authClient,
+    });
+    return res.data || null;
+  } catch (error) {
+    console.error("❌ Error fetching Play subscription", error);
+    return null;
+  }
+};
+
+const acknowledgePlayPurchase = async (
+  productId: string,
+  purchaseToken: string,
+): Promise<void> => {
+  try {
+    const authClient = await playAuth.getClient();
+    await androidPublisher.purchases.subscriptions.acknowledge({
+      packageName: playPackageName,
+      subscriptionId: productId,
+      token: purchaseToken,
+      auth: authClient,
+    });
+    console.log(
+      `✅ Play purchase acknowledged for ${productId} token ${purchaseToken}`,
+    );
+  } catch (error) {
+    console.error("❌ Error acknowledging Play purchase", error);
+    throw error;
+  }
+};
 
 type GenerateRequest = {
   modelId: string;
@@ -1112,7 +1177,7 @@ export const handleSubscriptionPurchase = onCall<{
   productId: string;
   purchaseToken: string;
   credits: number;
-}>(
+ }>(
   async ({data, auth}) => {
     if (!auth) {
       throw new Error("Missing auth.");
@@ -1131,11 +1196,47 @@ export const handleSubscriptionPurchase = onCall<{
       throw new Error("Credits must be greater than 0");
     }
 
-    // TODO: Verify purchase token with Google Play Developer API
-    // ⚠️ CRITICAL: Add Google Play API verification for production
-    // For now, we'll just store it for verification later
-    // You can add Google Play API verification here if needed
-    // Reference: https://developer.android.com/google/play/billing/security#verify
+    // Verify purchase with Google Play before granting entitlement
+    const playSubscription = await fetchPlaySubscription(purchaseToken);
+    if (!playSubscription) {
+      throw new Error("Failed to verify purchase with Google Play");
+    }
+
+    const playState = playSubscription.subscriptionState || "UNKNOWN";
+    const isActive =
+      playState === "SUBSCRIPTION_STATE_ACTIVE" ||
+      playState === "SUBSCRIPTION_STATE_IN_GRACE_PERIOD";
+    if (!isActive) {
+      throw new Error(
+        `Purchase token is not active in Play (state=${playState})`,
+      );
+    }
+
+    // Validate product match
+    const playProductId =
+      playSubscription.lineItems?.[0]?.productId || playSubscription.latestOrderId;
+    if (playProductId && playProductId !== productId) {
+      console.warn(
+        `⚠️ Product mismatch: requested ${productId}, Play returned ${playProductId}`,
+      );
+    }
+
+    // Acknowledge if pending
+    if (playSubscription.acknowledgementState ===
+        "ACKNOWLEDGEMENT_STATE_PENDING") {
+      const ackProductId =
+        playSubscription.lineItems?.[0]?.productId || productId;
+      await acknowledgePlayPurchase(ackProductId, purchaseToken);
+    }
+
+    const expiryTimestamp = parseTimestamp(
+      playSubscription.lineItems?.[0]?.expiryTime,
+    );
+    const fallbackExpiry = admin.firestore.Timestamp.fromMillis(
+      admin.firestore.Timestamp.now().toMillis() + 7 * 24 * 60 * 60 * 1000,
+    );
+    const nextRenewalTimestamp = expiryTimestamp || fallbackExpiry;
+    const linkedPurchaseToken = playSubscription.linkedPurchaseToken || null;
 
     const userRef = firestore.collection("users").doc(userId);
     const purchaseRef = firestore
@@ -1179,6 +1280,9 @@ export const handleSubscriptionPurchase = onCall<{
       purchaseToken,
       credits: credits,
       status: "completed",
+      playVerified: true,
+      playSubscriptionState: playState,
+      linkedPurchaseToken,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
@@ -1191,18 +1295,17 @@ export const handleSubscriptionPurchase = onCall<{
       .doc(productId);
 
     const now = admin.firestore.Timestamp.now();
-    const nextRenewalDate = new admin.firestore.Timestamp(
-      now.seconds + 7 * 24 * 60 * 60, // 7 days from now
-      0,
-    );
 
     await subscriptionRef.set({
       productId,
       purchaseToken,
       creditsPerRenewal: credits,
       status: "active",
+      playSubscriptionState: playState,
+      linkedPurchaseToken,
       lastCreditsAdded: now,
-      nextRenewalDate: nextRenewalDate,
+      nextRenewalDate: nextRenewalTimestamp,
+      lastPlaySyncAt: now,
       createdAt: now,
       updatedAt: now,
     });
@@ -1218,7 +1321,7 @@ export const handleSubscriptionPurchase = onCall<{
     console.log(
       `✅ Subscription purchase processed: ${productId} for user ${userId}. ` +
         `Added ${credits} credits. New balance: ${newCredits}. ` +
-        `Next renewal: ${nextRenewalDate.toDate().toISOString()}`,
+        `Next renewal: ${nextRenewalTimestamp.toDate().toISOString()}`,
     );
 
     return {
@@ -1229,7 +1332,8 @@ export const handleSubscriptionPurchase = onCall<{
       creditsAdded: credits,
       previousBalance: currentCredits,
       newBalance: newCredits,
-      nextRenewalDate: nextRenewalDate.toDate().toISOString(),
+      nextRenewalDate: nextRenewalTimestamp.toDate().toISOString(),
+      playSubscriptionState: playState,
     };
   },
 );
@@ -1306,6 +1410,7 @@ export const checkUserSubscriptionRenewal = onCall<{
         admin.firestore.Timestamp | null;
       const creditsPerRenewal = (subData.creditsPerRenewal as number) || 0;
       const productId = subData.productId as string;
+      const purchaseToken = subData.purchaseToken as string | undefined;
 
       // Validate subscription data
       if (!productId || creditsPerRenewal <= 0 || !nextRenewalDate) {
@@ -1316,51 +1421,81 @@ export const checkUserSubscriptionRenewal = onCall<{
         continue;
       }
 
-      // Check if renewal date has passed
-      if (nextRenewalDate.toMillis() <= now.toMillis()) {
-        // Calculate how many renewal periods have passed
-        const daysPassed = Math.floor(
-          (now.toMillis() - nextRenewalDate.toMillis()) /
-            (1000 * 60 * 60 * 24),
+      // Sync with Google Play
+      const playSubscription = purchaseToken ?
+        await fetchPlaySubscription(purchaseToken) :
+        null;
+      const playState = playSubscription?.subscriptionState ||
+        (subData.playSubscriptionState as string) ||
+        "UNKNOWN";
+      const playExpiry = parseTimestamp(
+        playSubscription?.lineItems?.[0]?.expiryTime,
+      );
+      const linkedPurchaseToken =
+        playSubscription?.linkedPurchaseToken || subData.linkedPurchaseToken;
+
+      const syncUpdate: Record<string, unknown> = {
+        playSubscriptionState: playState,
+        lastPlaySyncAt: now,
+        linkedPurchaseToken,
+        updatedAt: now,
+      };
+      if (playExpiry) {
+        syncUpdate.nextRenewalDate = playExpiry;
+      }
+
+      const isActive =
+        playState === "SUBSCRIPTION_STATE_ACTIVE" ||
+        playState === "SUBSCRIPTION_STATE_IN_GRACE_PERIOD";
+
+      if (!isActive) {
+        await subDoc.ref.update({
+          ...syncUpdate,
+          status: "canceled",
+        });
+        console.log(
+          `⚠️ Subscription ${productId} for user ${userId} not active (state=${playState})`,
         );
-        // Limit to max 52 periods (1 year) to prevent huge credit grants
+        continue;
+      }
+
+      if (!playExpiry) {
+        await subDoc.ref.update(syncUpdate);
+        console.warn(
+          `⚠️ No expiryTime from Play for ${productId} (user ${userId})`,
+        );
+        continue;
+      }
+
+      // If Play shows a newer expiry than our stored value, a renewal occurred
+      if (playExpiry.toMillis() > nextRenewalDate.toMillis()) {
         const periodsPassed = Math.min(
           52,
-          Math.max(1, Math.floor(daysPassed / 7)),
+          Math.max(
+            1,
+            Math.round(
+              (playExpiry.toMillis() - nextRenewalDate.toMillis()) /
+                (7 * 24 * 60 * 60 * 1000),
+            ),
+          ),
         );
-
         const creditsToAdd = creditsPerRenewal * periodsPassed;
 
         console.log(
-          `📅 Renewal due for ${productId} (user ${userId}): ` +
-            `${periodsPassed} period(s) passed, ` +
-            `adding ${creditsToAdd} credits`,
+          `📅 Renewal detected for ${productId} (user ${userId}): ` +
+            `${periodsPassed} period(s), adding ${creditsToAdd} credits`,
         );
 
         try {
-          // Add credits to user account
           await userRef.update({
             credits: admin.firestore.FieldValue.increment(creditsToAdd),
           });
 
-          // Calculate new nextRenewalDate (7 days from now)
-          const newNextRenewalDate = new admin.firestore.Timestamp(
-            now.seconds + 7 * 24 * 60 * 60,
-            0,
-          );
-
-          // Update subscription document
           await subDoc.ref.update({
+            ...syncUpdate,
             lastCreditsAdded: now,
-            nextRenewalDate: newNextRenewalDate,
-            updatedAt: now,
+            nextRenewalDate: playExpiry,
           });
-
-          console.log(
-            `✅ Renewal processed: ${productId} for user ${userId}. ` +
-              `Added ${creditsToAdd} credits. ` +
-              `Next renewal: ${newNextRenewalDate.toDate().toISOString()}`,
-          );
 
           processedCount++;
           totalCreditsAdded += creditsToAdd;
@@ -1374,8 +1509,10 @@ export const checkUserSubscriptionRenewal = onCall<{
             `❌ Error processing renewal for ${productId} (user ${userId}):`,
             error,
           );
-          // Continue processing other subscriptions even if one fails
         }
+      } else {
+        // No renewal yet, just sync Play state/expiry
+        await subDoc.ref.update(syncUpdate);
       }
     }
 
@@ -1407,6 +1544,131 @@ export const checkUserSubscriptionRenewal = onCall<{
       totalCreditsAdded: 0,
       subscriptions: [],
     };
+  }
+});
+
+/**
+ * Handle Google Play Real-time Developer Notifications (RTDN).
+ * Updates subscription documents with the latest Play state so renewals,
+ * cancellations, and holds are reflected quickly.
+ */
+export const handlePlayRtdn = onRequest(async (req, res) => {
+  if (req.method !== "POST") {
+    res.status(405).send("Method not allowed");
+    return;
+  }
+
+  const messageData = req.body?.message?.data;
+  if (!messageData) {
+    res.status(400).send("Missing message data");
+    return;
+  }
+
+  let decoded: Record<string, any>;
+  try {
+    decoded = JSON.parse(
+      Buffer.from(messageData, "base64").toString("utf-8"),
+    );
+  } catch (error) {
+    console.error("❌ Failed to decode RTDN message", error);
+    res.status(400).send("Invalid message");
+    return;
+  }
+
+  const subNotification = decoded.subscriptionNotification;
+  if (!subNotification) {
+    res.status(200).send("No subscription notification");
+    return;
+  }
+
+  const purchaseToken = subNotification.purchaseToken as string | undefined;
+  if (!purchaseToken) {
+    res.status(400).send("Missing purchaseToken");
+    return;
+  }
+
+  const notificationType = subNotification.notificationType;
+  console.log(
+    `📨 RTDN received: type=${notificationType}, token=${purchaseToken}`,
+  );
+
+  try {
+    // Find user by purchase token
+    const purchaseSnapshot = await firestore
+      .collectionGroup("purchases")
+      .where("purchaseToken", "==", purchaseToken)
+      .limit(1)
+      .get();
+
+    if (purchaseSnapshot.empty) {
+      console.warn(
+        `⚠️ RTDN token not linked to any user: ${purchaseToken}`,
+      );
+      res.status(200).send("No user mapping");
+      return;
+    }
+
+    const purchaseDoc = purchaseSnapshot.docs[0];
+    const userId = purchaseDoc.ref.parent.parent?.id;
+    const purchaseData = purchaseDoc.data() as {
+      productId?: string;
+    };
+
+    if (!userId || !purchaseData.productId) {
+      console.warn(
+        `⚠️ RTDN missing user/product mapping for token ${purchaseToken}`,
+      );
+      res.status(200).send("Missing user/product mapping");
+      return;
+    }
+
+    const playSubscription = await fetchPlaySubscription(purchaseToken);
+    const playState = playSubscription?.subscriptionState || "UNKNOWN";
+    const playExpiry = parseTimestamp(
+      playSubscription?.lineItems?.[0]?.expiryTime,
+    );
+    const linkedPurchaseToken = playSubscription?.linkedPurchaseToken || null;
+
+    const subRef = firestore
+      .collection("users")
+      .doc(userId)
+      .collection("subscriptions")
+      .doc(purchaseData.productId);
+
+    const updateData: Record<string, unknown> = {
+      playSubscriptionState: playState,
+      linkedPurchaseToken,
+      lastNotificationType: notificationType,
+      lastPlaySyncAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    };
+
+    if (playExpiry) {
+      updateData.nextRenewalDate = playExpiry;
+    }
+
+    if (
+      playState === "SUBSCRIPTION_STATE_EXPIRED" ||
+      playState === "SUBSCRIPTION_STATE_CANCELED" ||
+      playState === "SUBSCRIPTION_STATE_ON_HOLD"
+    ) {
+      updateData.status = "canceled";
+    } else if (
+      playState === "SUBSCRIPTION_STATE_ACTIVE" ||
+      playState === "SUBSCRIPTION_STATE_IN_GRACE_PERIOD"
+    ) {
+      updateData.status = "active";
+    }
+
+    await subRef.set(updateData, {merge: true});
+    console.log(
+      `✅ RTDN processed for user ${userId}, product ${purchaseData.productId}, state=${playState}`,
+    );
+
+    res.status(200).send("OK");
+  } catch (error) {
+    console.error("❌ Error handling RTDN", error);
+    res.status(500).send("Internal error");
   }
 });
 
