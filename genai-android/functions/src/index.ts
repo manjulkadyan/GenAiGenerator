@@ -35,21 +35,16 @@ const getAndroidPublisher = (): androidpublisher_v3.Androidpublisher => {
   }
 
   try {
-    console.log("🔧 Initializing Google Play API client...");
     const serviceAccountJson = playServiceAccountSecret.value();
     
     if (!serviceAccountJson) {
-      console.error("❌ PLAY_SERVICE_ACCOUNT_JSON secret not found");
       throw new Error("PLAY_SERVICE_ACCOUNT_JSON secret not found");
     }
-    
-    console.log(`📝 Service account JSON length: ${serviceAccountJson.length} characters`);
     
     // Write to temp file to avoid OpenSSL parsing issues
     const tempDir = os.tmpdir();
     const tempFile = path.join(tempDir, `play-sa-${Date.now()}.json`);
     fs.writeFileSync(tempFile, serviceAccountJson, "utf8");
-    console.log(`✅ Service account JSON written to temp file: ${tempFile}`);
     
     const playAuth = new google.auth.GoogleAuth({
       keyFile: tempFile,
@@ -62,13 +57,10 @@ const getAndroidPublisher = (): androidpublisher_v3.Androidpublisher => {
     });
     
     androidPublisherInitialized = true;
-    console.log("✅ Google Play API initialized successfully");
+    console.log("✅ Google Play API initialized");
     return androidPublisher;
   } catch (error: any) {
-    console.error("❌ Error initializing Google Play API:", {
-      message: error?.message,
-      stack: error?.stack,
-    });
+    console.error("❌ Error initializing Google Play API:", error?.message);
     throw new Error(`Failed to initialize Google Play API: ${error?.message}`);
   }
 };
@@ -89,25 +81,17 @@ const fetchPlaySubscription = async (
   purchaseToken: string,
 ): Promise<PlaySubscription | null> => {
   try {
-    console.log(`🔍 Fetching Play subscription for token: ${purchaseToken.substring(0, 20)}...`);
     const publisher = getAndroidPublisher();
     const res = await publisher.purchases.subscriptionsv2.get({
       packageName: playPackageName,
       token: purchaseToken,
     });
-    console.log(`✅ Successfully fetched Play subscription:`, {
-      subscriptionState: res.data.subscriptionState,
-      acknowledgementState: res.data.acknowledgementState,
-    });
     return res.data || null;
   } catch (error: any) {
-    console.error("❌ Error fetching Play subscription:", {
+    console.error("❌ Error verifying purchase with Google Play:", {
       message: error?.message,
       code: error?.code,
-      errors: error?.errors,
-      status: error?.response?.status,
-      statusText: error?.response?.statusText,
-      data: error?.response?.data,
+      reason: error?.errors?.[0]?.reason,
     });
     return null;
   }
@@ -1040,8 +1024,7 @@ export const replicateWebhook = onRequest(
       res.status(200).send("OK");
     } catch (error) {
       console.error("Error processing webhook:", error);
-      // Still return 200 to prevent Replicate from retrying
-      // Log the error for debugging
+      // Return 200 to prevent Replicate from retrying
       res.status(200).send("OK");
     }
   },
