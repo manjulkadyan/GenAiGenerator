@@ -70,6 +70,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
@@ -457,13 +458,64 @@ private fun GenerateScreenContent(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .border(
-                    width = 0.5.dp,
-                    color = AppColors.BorderSelected,
-                    shape = RoundedCornerShape(32.dp,32.dp,0.dp,0.dp)
-                ),
+                .drawBehind {
+                    val borderWidth = 2.dp.toPx()
+                    val cornerRadius = 32.dp.toPx()
+                    
+                    // Draw top border with rounded corners
+                    val topPath = Path().apply {
+                        // Start from top-left, after the rounded corner starts
+                        moveTo(0f, cornerRadius)
+                        // Draw arc for top-left rounded corner
+                        arcTo(
+                            rect = androidx.compose.ui.geometry.Rect(
+                                offset = Offset(0f, 0f),
+                                size = Size(cornerRadius * 2, cornerRadius * 2)
+                            ),
+                            startAngleDegrees = 180f,
+                            sweepAngleDegrees = 90f,
+                            forceMoveTo = false
+                        )
+                        // Draw straight top border line
+                        lineTo(size.width - cornerRadius, 0f)
+                        // Draw arc for top-right rounded corner
+                        arcTo(
+                            rect = androidx.compose.ui.geometry.Rect(
+                                offset = Offset(size.width - cornerRadius * 2, 0f),
+                                size = Size(cornerRadius * 2, cornerRadius * 2)
+                            ),
+                            startAngleDegrees = -90f,
+                            sweepAngleDegrees = 90f,
+                            forceMoveTo = false
+                        )
+                    }
+                    drawPath(
+                        path = topPath,
+                        color = AppColors.BorderSelected,
+                        style = Stroke(width = borderWidth, cap = StrokeCap.Round)
+                    )
+                    
+                    // Draw left border (straight line from below top corner to bottom)
+                    drawLine(
+                        color = AppColors.BorderSelected,
+                        start = Offset(0f, cornerRadius),
+                        end = Offset(0f, size.height),
+                        strokeWidth = borderWidth,
+                        cap = StrokeCap.Round
+                    )
+                    
+                    // Draw right border (straight line from below top corner to bottom)
+                    drawLine(
+                        color = AppColors.BorderSelected,
+                        start = Offset(size.width, cornerRadius),
+                        end = Offset(size.width, size.height),
+                        strokeWidth = borderWidth,
+                        cap = StrokeCap.Round
+                    )
+                },
             color = AppColors.BackgroundDarkGray,
-            tonalElevation = 8.dp
+            tonalElevation = 8.dp,
+            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp, bottomStart = 0.dp, bottomEnd = 0.dp)
         ) {
             Column(
                 modifier = Modifier
