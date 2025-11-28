@@ -177,22 +177,36 @@ fun GeneratingScreen(
                 
                 Spacer(modifier = Modifier.size(16.dp))
                 
-                // Status message (e.g., "Uploading first frame...", "Submitting generation request...")
+                // Status message with better formatting and emojis for clarity
                 if (statusMessage != null) {
                     Text(
                         text = statusMessage,
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
                     )
-                    Spacer(modifier = Modifier.size(8.dp))
+                    Spacer(modifier = Modifier.size(12.dp))
                 }
                 
-                // Subtitle
+                // Subtitle - context-aware based on status with helpful tips
+                val subtitleText = when {
+                    statusMessage?.contains("Uploading", ignoreCase = true) == true -> 
+                        "Preparing your reference images..."
+                    statusMessage?.contains("Submitting", ignoreCase = true) == true ->
+                        "Checking credits and queuing your request..."
+                    statusMessage?.contains("AI is generating", ignoreCase = true) == true || 
+                    statusMessage?.contains("Processing", ignoreCase = true) == true ->
+                        "Your video is being created by AI. You'll get a notification when ready!"
+                    else -> "This will only take a moment."
+                }
+                
                 Text(
-                    text = "This will only take a moment.",
+                    text = subtitleText,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 24.dp)
                 )
                 
                 Spacer(modifier = Modifier.size(4.dp))
