@@ -16,12 +16,17 @@ import com.manjul.genai.videogenerator.data.repository.LandingPageRepository
 import com.manjul.genai.videogenerator.data.repository.PurchaseUpdateEvent
 import com.manjul.genai.videogenerator.data.repository.RepositoryProvider
 import com.manjul.genai.videogenerator.utils.AnalyticsManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.ktx.functions
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 data class LandingPageUiState(
     val config: LandingPageConfig = LandingPageConfig(),
@@ -40,6 +45,8 @@ class LandingPageViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LandingPageUiState())
     val uiState: StateFlow<LandingPageUiState> = _uiState.asStateFlow()
+    private val functions: FirebaseFunctions by lazy { Firebase.functions }
+    private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     
     init {
         loadConfig()
@@ -159,7 +166,14 @@ class LandingPageViewModel(
                 isPurchaseInProgress = true,
                 purchaseMessage = null
             )
-            billingRepository.launchBillingFlow(activity, productDetails)
+            val obfuscatedAccountId = auth.currentUser?.uid?.hashCode()?.toString()
+            val obfuscatedProfileId = auth.currentUser?.uid?.reversed()?.hashCode()?.toString()
+            billingRepository.launchBillingFlow(
+                activity,
+                productDetails,
+                obfuscatedAccountId,
+                obfuscatedProfileId
+            )
         } else {
             _uiState.value = _uiState.value.copy(
                 error = "Product details not available. Please try again.",
@@ -182,13 +196,17 @@ class LandingPageViewModel(
                 android.util.Log.d("LandingPageViewModel", "=== Purchase Event Received ===")
                 when (event) {
                     is PurchaseUpdateEvent.Success -> {
-                        android.util.Log.d("LandingPageViewModel", "✅ Purchase SUCCESS: ${event.purchase.products.firstOrNull()}")
-                        android.util.Log.d("LandingPageViewModel", "Purchase state: ${event.purchase.purchaseState}, Acknowledged: ${event.purchase.isAcknowledged}")
-                        _uiState.value = _uiState.value.copy(
-                            isPurchaseInProgress = false,
-                            purchaseMessage = "Subscription purchased successfully!",
-                            error = null
-                        )
+                android.util.Log.d("LandingPageViewModel", "✅ Purchase SUCCESS: ${event.purchase.products.firstOrNull()}")
+                android.util.Log.d("LandingPageViewModel", "Purchase state: ${event.purchase.purchaseState}, Acknowledged: ${event.purchase.isAcknowledged}")
+                // Process subscription on the server (adds credits, stores renewal info)
+                viewModelScope.launch {
+                    processSubscriptionPurchase(event.purchase)
+                }
+                _uiState.value = _uiState.value.copy(
+                    isPurchaseInProgress = false,
+                    purchaseMessage = "Subscription purchased successfully!",
+                    error = null
+                )
                     }
                     is PurchaseUpdateEvent.Error -> {
                         android.util.Log.e("LandingPageViewModel", "❌ Purchase ERROR: code=${event.billingResult.responseCode}, message=${event.billingResult.debugMessage}")
@@ -231,6 +249,62 @@ class LandingPageViewModel(
     fun clearPurchaseMessage() {
         _uiState.value = _uiState.value.copy(purchaseMessage = null, error = null)
     }
+
+    /**
+     * Send subscription purchase to backend for verification and credit grant.
+     */
+    private suspend fun processSubscriptionPurchase(purchase: com.android.billingclient.api.Purchase) {
+        val productId = purchase.products.firstOrNull()
+        if (productId == null) {
+            android.util.Log.e("LandingPageViewModel", "Cannot process subscription: product ID is null")
+            return
+        }
+
+        if (purchase.purchaseState != com.android.billingclient.api.Purchase.PurchaseState.PURCHASED) {
+            android.util.Log.w(
+                "LandingPageViewModel",
+                "Purchase state is not PURCHASED (state=${purchase.purchaseState}), skipping server processing"
+            )
+            return
+        }
+
+        val plan = _uiState.value.config.subscriptionPlans.firstOrNull {
+            it.productId == productId
+        }
+        if (plan == null) {
+            android.util.Log.e("LandingPageViewModel", "Cannot process subscription: plan not found for product $productId")
+            return
+        }
+
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            android.util.Log.e("LandingPageViewModel", "Cannot process subscription: user not authenticated")
+            return
+        }
+
+        val data = hashMapOf(
+            "userId" to userId,
+            "productId" to productId,
+            "purchaseToken" to purchase.purchaseToken,
+            "credits" to plan.credits
+        )
+
+        try {
+            functions
+                .getHttpsCallable("handleSubscriptionPurchase")
+                .call(data)
+                .await()
+            android.util.Log.d("LandingPageViewModel", "✅ Subscription sent to backend for processing")
+            _uiState.value = _uiState.value.copy(
+                purchaseMessage = "Subscription purchased! ${plan.credits} credits added to your account."
+            )
+        } catch (e: Exception) {
+            android.util.Log.e("LandingPageViewModel", "❌ Failed to process subscription on backend", e)
+            _uiState.value = _uiState.value.copy(
+                error = "Subscription purchase succeeded but verification failed. Please contact support if credits are missing."
+            )
+        }
+    }
     
     companion object {
         fun Factory(application: Application): ViewModelProvider.Factory {
@@ -246,4 +320,3 @@ class LandingPageViewModel(
         }
     }
 }
-
