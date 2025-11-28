@@ -5,6 +5,9 @@ import {setGlobalOptions} from "firebase-functions/v2";
 import {onCall, onRequest} from "firebase-functions/v2/https";
 import {onSchedule} from "firebase-functions/v2/scheduler";
 import {androidpublisher_v3, google} from "googleapis";
+import * as fs from "fs";
+import * as path from "path";
+import * as os from "os";
 // onSchedule import removed - scheduled function disabled
 // (using app-side checking instead)
 
@@ -13,37 +16,56 @@ setGlobalOptions({maxInstances: 10});
 admin.initializeApp();
 const firestore = admin.firestore();
 const replicateToken = defineSecret("REPLICATE_API_TOKEN");
+const playServiceAccountSecret = defineSecret("PLAY_SERVICE_ACCOUNT_JSON");
 
 // Google Play Developer API setup
 const playPackageName =
   process.env.PLAY_PACKAGE_NAME || "com.manjul.genai.videogenerator";
-const playServiceAccountJson = process.env.PLAY_SERVICE_ACCOUNT_KEY;
 
-const parseServiceAccount = (): any | undefined => {
-  if (!playServiceAccountJson) return undefined;
-  // Accept raw JSON or base64-encoded JSON
+// Lazy initialization of androidPublisher to avoid secret access during deployment
+let androidPublisher: androidpublisher_v3.Androidpublisher | null = null;
+let androidPublisherInitialized = false;
+
+/**
+ * Initialize Google Play API client (lazy initialization at runtime)
+ */
+const getAndroidPublisher = (): androidpublisher_v3.Androidpublisher => {
+  if (androidPublisherInitialized && androidPublisher) {
+    return androidPublisher;
+  }
+
   try {
-    return JSON.parse(playServiceAccountJson);
-  } catch (_) {
-    try {
-      const decoded = Buffer.from(playServiceAccountJson, "base64").toString("utf8");
-      return JSON.parse(decoded);
-    } catch (err) {
-      console.error("❌ Failed to parse PLAY_SERVICE_ACCOUNT_KEY. Ensure it is JSON or base64-encoded JSON.");
-      return undefined;
+    console.log("🔧 Initializing Google Play API client...");
+    const serviceAccountJson = playServiceAccountSecret.value();
+    
+    if (!serviceAccountJson) {
+      throw new Error("PLAY_SERVICE_ACCOUNT_JSON secret not found");
     }
+    
+    // Write to temp file to avoid OpenSSL parsing issues
+    const tempDir = os.tmpdir();
+    const tempFile = path.join(tempDir, `play-sa-${Date.now()}.json`);
+    fs.writeFileSync(tempFile, serviceAccountJson, "utf8");
+    console.log("✅ Service account JSON written to temp file");
+    
+    const playAuth = new google.auth.GoogleAuth({
+      keyFile: tempFile,
+      scopes: ["https://www.googleapis.com/auth/androidpublisher"],
+    });
+    
+    androidPublisher = google.androidpublisher({
+      version: "v3",
+      auth: playAuth,
+    });
+    
+    androidPublisherInitialized = true;
+    console.log("✅ Google Play API initialized successfully");
+    return androidPublisher;
+  } catch (error) {
+    console.error("❌ Error initializing Google Play API:", error);
+    throw new Error("Failed to initialize Google Play API");
   }
 };
-
-const playAuth = new google.auth.GoogleAuth({
-  credentials: parseServiceAccount(),
-  scopes: ["https://www.googleapis.com/auth/androidpublisher"],
-});
-
-const androidPublisher = google.androidpublisher({
-  version: "v3",
-  auth: playAuth,
-});
 type PlaySubscription = androidpublisher_v3.Schema$SubscriptionPurchaseV2;
 
 const parseTimestamp = (
@@ -61,7 +83,8 @@ const fetchPlaySubscription = async (
   purchaseToken: string,
 ): Promise<PlaySubscription | null> => {
   try {
-    const res = await androidPublisher.purchases.subscriptionsv2.get({
+    const publisher = getAndroidPublisher();
+    const res = await publisher.purchases.subscriptionsv2.get({
       packageName: playPackageName,
       token: purchaseToken,
     });
@@ -77,7 +100,8 @@ const acknowledgePlayPurchase = async (
   purchaseToken: string,
 ): Promise<void> => {
   try {
-    await androidPublisher.purchases.subscriptions.acknowledge({
+    const publisher = getAndroidPublisher();
+    await publisher.purchases.subscriptions.acknowledge({
       packageName: playPackageName,
       subscriptionId: productId,
       token: purchaseToken,
