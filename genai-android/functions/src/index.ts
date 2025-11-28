@@ -19,10 +19,24 @@ const playPackageName =
   process.env.PLAY_PACKAGE_NAME || "com.manjul.genai.videogenerator";
 const playServiceAccountJson = process.env.PLAY_SERVICE_ACCOUNT_KEY;
 
+const parseServiceAccount = (): any | undefined => {
+  if (!playServiceAccountJson) return undefined;
+  // Accept raw JSON or base64-encoded JSON
+  try {
+    return JSON.parse(playServiceAccountJson);
+  } catch (_) {
+    try {
+      const decoded = Buffer.from(playServiceAccountJson, "base64").toString("utf8");
+      return JSON.parse(decoded);
+    } catch (err) {
+      console.error("❌ Failed to parse PLAY_SERVICE_ACCOUNT_KEY. Ensure it is JSON or base64-encoded JSON.");
+      return undefined;
+    }
+  }
+};
+
 const playAuth = new google.auth.GoogleAuth({
-  credentials: playServiceAccountJson ?
-    JSON.parse(playServiceAccountJson) :
-    undefined,
+  credentials: parseServiceAccount(),
   scopes: ["https://www.googleapis.com/auth/androidpublisher"],
 });
 
