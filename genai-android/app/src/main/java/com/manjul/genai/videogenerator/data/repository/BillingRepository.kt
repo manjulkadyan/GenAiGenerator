@@ -221,7 +221,11 @@ class BillingRepository(private val context: Context) {
      * Launch the billing flow for a subscription purchase.
      * Handles subscription offers (base plans and offers) for Google Play Billing Library 5.0+
      */
-    fun launchBillingFlow(activity: Activity, productDetails: ProductDetails): BillingResult {
+    fun launchBillingFlow(
+        activity: Activity,
+        productDetails: ProductDetails,
+        obfuscatedAccountId: String? = null
+    ): BillingResult {
         val billingClient = billingClient
         if (billingClient == null) {
             return BillingResult.newBuilder()
@@ -259,9 +263,10 @@ class BillingRepository(private val context: Context) {
             .setOfferToken(offerToken)
             .build()
         
-        val billingFlowParams = BillingFlowParams.newBuilder()
+        val billingFlowParamsBuilder = BillingFlowParams.newBuilder()
             .setProductDetailsParamsList(listOf(productDetailsParams))
-            .build()
+        obfuscatedAccountId?.let { billingFlowParamsBuilder.setObfuscatedAccountId(it) }
+        val billingFlowParams = billingFlowParamsBuilder.build()
         
         // Track purchase started
         AnalyticsManager.trackPurchaseStarted(productDetails.productId, "subscription")
@@ -354,4 +359,3 @@ class BillingRepository(private val context: Context) {
         return billingClient?.isReady == true
     }
 }
-

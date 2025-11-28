@@ -16,17 +16,12 @@ import com.manjul.genai.videogenerator.data.repository.LandingPageRepository
 import com.manjul.genai.videogenerator.data.repository.PurchaseUpdateEvent
 import com.manjul.genai.videogenerator.data.repository.RepositoryProvider
 import com.manjul.genai.videogenerator.utils.AnalyticsManager
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.functions.FirebaseFunctions
-import com.google.firebase.functions.ktx.functions
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 data class LandingPageUiState(
     val config: LandingPageConfig = LandingPageConfig(),
@@ -45,9 +40,6 @@ class LandingPageViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LandingPageUiState())
     val uiState: StateFlow<LandingPageUiState> = _uiState.asStateFlow()
-    
-    private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
-    private val functions: FirebaseFunctions by lazy { Firebase.functions }
     
     init {
         loadConfig()
@@ -192,12 +184,6 @@ class LandingPageViewModel(
                     is PurchaseUpdateEvent.Success -> {
                         android.util.Log.d("LandingPageViewModel", "✅ Purchase SUCCESS: ${event.purchase.products.firstOrNull()}")
                         android.util.Log.d("LandingPageViewModel", "Purchase state: ${event.purchase.purchaseState}, Acknowledged: ${event.purchase.isAcknowledged}")
-                        
-                        // Add credits to user account after successful purchase
-                        viewModelScope.launch {
-                            addCreditsForPurchase(event.purchase)
-                        }
-                        
                         _uiState.value = _uiState.value.copy(
                             isPurchaseInProgress = false,
                             purchaseMessage = "Subscription purchased successfully!",
@@ -244,82 +230,6 @@ class LandingPageViewModel(
      */
     fun clearPurchaseMessage() {
         _uiState.value = _uiState.value.copy(purchaseMessage = null, error = null)
-    }
-    
-    /**
-     * Add credits to user account after successful subscription purchase.
-     * Finds the subscription plan by product ID and stores subscription info for renewal tracking.
-     */
-    private suspend fun addCreditsForPurchase(purchase: com.android.billingclient.api.Purchase) {
-        val productId = purchase.products.firstOrNull()
-        if (productId == null) {
-            android.util.Log.e("LandingPageViewModel", "Cannot add credits: product ID is null")
-            return
-        }
-        
-        // Find the subscription plan that matches the purchased product ID
-        val subscriptionPlan = _uiState.value.config.subscriptionPlans.firstOrNull { 
-            it.productId == productId 
-        }
-        
-        if (subscriptionPlan == null) {
-            android.util.Log.e("LandingPageViewModel", "Cannot add credits: subscription plan not found for product ID: $productId")
-            return
-        }
-        
-        val creditsToAdd = subscriptionPlan.credits
-        if (creditsToAdd <= 0) {
-            android.util.Log.w("LandingPageViewModel", "Subscription plan has 0 or negative credits: $creditsToAdd")
-            return
-        }
-        
-        // Get current user ID
-        val userId = auth.currentUser?.uid
-        if (userId == null) {
-            android.util.Log.e("LandingPageViewModel", "Cannot add credits: user not authenticated")
-            return
-        }
-        
-        try {
-            android.util.Log.d("LandingPageViewModel", "Processing subscription purchase: $productId for user $userId")
-            
-            // Call Firebase function to handle subscription purchase
-            // This will add credits AND store subscription info for renewal tracking
-            val data = hashMapOf(
-                "userId" to userId,
-                "productId" to productId,
-                "purchaseToken" to purchase.purchaseToken,
-                "credits" to creditsToAdd
-            )
-            
-            val result = functions
-                .getHttpsCallable("handleSubscriptionPurchase")
-                .call(data)
-                .await()
-            
-            android.util.Log.d("LandingPageViewModel", "✅ Subscription processed successfully: $result")
-            
-            // Update UI message to show credits were added
-            _uiState.value = _uiState.value.copy(
-                purchaseMessage = "Subscription purchased! ${creditsToAdd} credits added to your account."
-            )
-        } catch (e: Exception) {
-            android.util.Log.e("LandingPageViewModel", "❌ Failed to process subscription", e)
-            // Fallback: try to add credits using the old method
-            try {
-                val fallbackData = hashMapOf(
-                    "userId" to userId,
-                    "credits" to creditsToAdd
-                )
-                functions.getHttpsCallable("addTestCredits").call(fallbackData).await()
-                android.util.Log.d("LandingPageViewModel", "✅ Credits added via fallback method")
-                _uiState.value = _uiState.value.copy(
-                    purchaseMessage = "Subscription purchased! ${creditsToAdd} credits added to your account."
-                )
-            } catch (fallbackError: Exception) {
-                android.util.Log.e("LandingPageViewModel", "❌ Fallback also failed", fallbackError)
-            }
-        }
     }
     
     companion object {
