@@ -450,17 +450,11 @@ private fun GenerateScreenContent(
                             }
                         }
                     }
-
-                    state.uploadMessage?.let { message ->
-                        StatusBanner(message = message)
-                    }
                 }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
             state.selectedModel?.let { model -> VideoExamplesSection(model = model) }
-
-            Spacer(modifier = Modifier.height(20.dp))
             ContentGuidelinesCard()
 
             Spacer(modifier = Modifier.height(40.dp))
@@ -534,17 +528,26 @@ private fun GenerateScreenContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(vertical = 16.dp),
+                    .padding(top = 16.dp, bottom = 4.dp, start= 16.dp, end = 16.dp ),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 horizontalAlignment = Alignment.End
             ) {
-                // Gradient Generate Button
+                // Determine button state and text based on all conditions
+                val isUploading = state.uploadMessage != null
+                val buttonText = when {
+                    isUploading -> state.uploadMessage ?: "Uploading..."
+                    state.isGenerating || isSubmitting -> "Submitting..."
+                    else -> "Generate AI Video"
+                }
+                val isButtonLoading = state.isGenerating || isSubmitting || isUploading
+                val isButtonEnabled = state.canGenerate && !isSubmitting && !state.isGenerating && !isUploading
+                
+                // Gradient Generate Button with dynamic state
                 GradientGenerateButton(
-                    text = if (state.isGenerating || isSubmitting) "Submitting..." else "Generate AI Video",
+                    text = buttonText,
                     onClick = onGenerateClick,
-                    enabled = state.canGenerate && !isSubmitting && !state.isGenerating,
-                    isLoading = state.isGenerating || isSubmitting
+                    enabled = isButtonEnabled,
+                    isLoading = isButtonLoading
                 )
                 // Cost and audio indicator on the left
                 Row(
@@ -1637,31 +1640,6 @@ private fun AudioToggle(
                 )
             }
             Switch(checked = enabled, onCheckedChange = onToggle)
-        }
-    }
-}
-
-@Composable
-private fun StatusBanner(message: String) {
-    AppCard {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(18.dp),
-            horizontalArrangement = Arrangement.spacedBy(14.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(24.dp),
-                color = AppColors.PrimaryPurple,
-                strokeWidth = 2.5.dp
-            )
-            Text(
-                text = message,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
-                color = AppColors.TextPrimary
-            )
         }
     }
 }
