@@ -30,3 +30,37 @@ data class Testimonial(
     val text: String
 )
 
+/**
+ * One-time credit purchase product (INAPP type, not subscription)
+ */
+data class OneTimeProduct(
+    val productId: String,
+    val name: String,
+    val credits: Int,
+    val price: String,
+    val isPopular: Boolean = false,
+    val isBestValue: Boolean = false
+)
+
+/**
+ * Purchase history item (for both subscriptions and one-time purchases)
+ */
+data class PurchaseHistoryItem(
+    val purchaseToken: String = "",
+    val productId: String = "",
+    val type: PurchaseType = PurchaseType.ONE_TIME,
+    val credits: Int = 0,
+    val price: String = "",
+    val currency: String = "USD",
+    val date: Long = 0L,
+    val productName: String = ""
+)
+
+/**
+ * Type of purchase
+ */
+enum class PurchaseType {
+    SUBSCRIPTION,
+    ONE_TIME
+}
+
