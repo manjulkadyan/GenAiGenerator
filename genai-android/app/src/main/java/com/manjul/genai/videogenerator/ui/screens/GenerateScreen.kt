@@ -234,7 +234,7 @@ fun GenerateScreen(
                     onClearLastFrame = { viewModel.setLastFrameUri(null) },
                     onAdvancedToggle = { showAdvanced = !showAdvanced },
                     onGenerateClick = {
-                        if (!isSubmitting && state.canGenerate && !state.isGenerating) {
+                        if (!isSubmitting && state.canGenerate && !state.isGenerating && state.uploadMessage == null) {
                             isSubmitting = true
                             viewModel.dismissMessage()
                             viewModel.generate()
@@ -539,6 +539,12 @@ private fun GenerateScreenContent(
                     state.isGenerating || isSubmitting -> "Submitting..."
                     else -> "Generate AI Video"
                 }
+                
+                // Debug logging
+                LaunchedEffect(state.uploadMessage, buttonText) {
+                    android.util.Log.d("GenerateScreen", "📱 Button Update - uploadMessage: '${state.uploadMessage}', buttonText: '$buttonText', isUploading: $isUploading")
+                }
+                
                 val isButtonLoading = state.isGenerating || isSubmitting || isUploading
                 val isButtonEnabled = state.canGenerate && !isSubmitting && !state.isGenerating && !isUploading
                 
