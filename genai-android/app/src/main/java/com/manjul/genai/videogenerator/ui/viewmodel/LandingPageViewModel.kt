@@ -11,6 +11,8 @@ import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ProductDetails
 import com.manjul.genai.videogenerator.data.model.LandingPageConfig
 import com.manjul.genai.videogenerator.data.model.SubscriptionPlan
+import com.manjul.genai.videogenerator.data.model.OneTimeProduct
+import com.manjul.genai.videogenerator.data.model.PurchaseType
 import com.manjul.genai.videogenerator.data.repository.BillingRepository
 import com.manjul.genai.videogenerator.data.repository.LandingPageRepository
 import com.manjul.genai.videogenerator.data.repository.PurchaseUpdateEvent
@@ -36,7 +38,12 @@ data class LandingPageUiState(
     val productDetails: Map<String, ProductDetails> = emptyMap(),
     val billingInitialized: Boolean = false,
     val purchaseMessage: String? = null, // Success or error message for purchase
-    val isPurchaseInProgress: Boolean = false
+    val isPurchaseInProgress: Boolean = false,
+    // One-time products support
+    val oneTimeProducts: List<OneTimeProduct> = emptyList(),
+    val oneTimeProductDetails: Map<String, ProductDetails> = emptyMap(),
+    val selectedPurchaseType: PurchaseType = PurchaseType.SUBSCRIPTION,
+    val selectedOneTimeProduct: OneTimeProduct? = null
 )
 
 class LandingPageViewModel(
@@ -52,6 +59,7 @@ class LandingPageViewModel(
         loadConfig()
         initializeBilling()
         observePurchaseUpdates()
+        initializeOneTimeProducts()
     }
     
     private fun loadConfig() {
@@ -198,13 +206,30 @@ class LandingPageViewModel(
                     is PurchaseUpdateEvent.Success -> {
                 android.util.Log.d("LandingPageViewModel", "✅ Purchase SUCCESS: ${event.purchase.products.firstOrNull()}")
                 android.util.Log.d("LandingPageViewModel", "Purchase state: ${event.purchase.purchaseState}, Acknowledged: ${event.purchase.isAcknowledged}")
-                // Process subscription on the server (adds credits, stores renewal info)
+                
+                // Determine if this is a subscription or one-time purchase
+                val productId = event.purchase.products.firstOrNull() ?: ""
+                val isSubscription = productId.startsWith("weekly_")
+                val isOneTime = productId.startsWith("credits_")
+                
+                // Process the appropriate type on the server
                 viewModelScope.launch {
-                    processSubscriptionPurchase(event.purchase)
+                    if (isSubscription) {
+                        processSubscriptionPurchase(event.purchase)
+                    } else if (isOneTime) {
+                        processOneTimePurchase(event.purchase)
+                    } else {
+                        android.util.Log.w("LandingPageViewModel", "Unknown purchase type for product: $productId")
+                    }
                 }
+                
                 _uiState.value = _uiState.value.copy(
                     isPurchaseInProgress = false,
-                    purchaseMessage = "Subscription purchased successfully!",
+                    purchaseMessage = if (isSubscription) {
+                        "Subscription purchased successfully!"
+                    } else {
+                        "Credits purchased successfully!"
+                    },
                     error = null
                 )
                     }
@@ -316,6 +341,203 @@ class LandingPageViewModel(
             android.util.Log.e("LandingPageViewModel", "❌ Failed to process subscription on backend", e)
             _uiState.value = _uiState.value.copy(
                 error = "Subscription purchase succeeded but verification failed. Please contact support if credits are missing."
+            )
+        }
+    }
+    
+    /**
+     * Initialize hardcoded one-time product tiers
+     */
+    private fun initializeOneTimeProducts() {
+        val products = listOf(
+            OneTimeProduct(
+                productId = "credits_50",
+                name = "50 Credits",
+                credits = 50,
+                price = "$9.99",
+                isPopular = false,
+                isBestValue = false
+            ),
+            OneTimeProduct(
+                productId = "credits_100",
+                name = "100 Credits",
+                credits = 100,
+                price = "$17.99",
+                isPopular = false,
+                isBestValue = false
+            ),
+            OneTimeProduct(
+                productId = "credits_150",
+                name = "150 Credits",
+                credits = 150,
+                price = "$24.99",
+                isPopular = false,
+                isBestValue = false
+            ),
+            OneTimeProduct(
+                productId = "credits_250",
+                name = "250 Credits",
+                credits = 250,
+                price = "$39.99",
+                isPopular = true,
+                isBestValue = true
+            ),
+            OneTimeProduct(
+                productId = "credits_500",
+                name = "500 Credits",
+                credits = 500,
+                price = "$69.99",
+                isPopular = false,
+                isBestValue = true
+            )
+        )
+        _uiState.value = _uiState.value.copy(oneTimeProducts = products)
+    }
+    
+    /**
+     * Load one-time product details from Play Store
+     */
+    suspend fun loadOneTimeProductDetails() {
+        val productIds = _uiState.value.oneTimeProducts.map { it.productId }
+        if (productIds.isEmpty()) {
+            android.util.Log.w("LandingPageViewModel", "No one-time product IDs to load")
+            return
+        }
+        
+        android.util.Log.d("LandingPageViewModel", "Loading one-time product details for: ${productIds.joinToString()}")
+        val result = billingRepository.queryOneTimeProducts(productIds)
+        result.onSuccess { productDetailsList ->
+            android.util.Log.d("LandingPageViewModel", "Loaded ${productDetailsList.size} one-time product details")
+            if (productDetailsList.isEmpty()) {
+                _uiState.value = _uiState.value.copy(
+                    error = "No one-time products found. Please create INAPP products in Google Play Console with IDs: ${productIds.joinToString()}"
+                )
+            } else {
+                val productDetailsMap = productDetailsList.associateBy { it.productId }
+                _uiState.value = _uiState.value.copy(
+                    oneTimeProductDetails = productDetailsMap,
+                    error = null
+                )
+                // Log which products were found
+                val foundIds = productDetailsList.map { it.productId }
+                val missingIds = productIds.filter { it !in foundIds }
+                if (missingIds.isNotEmpty()) {
+                    android.util.Log.w("LandingPageViewModel", "Missing one-time products: ${missingIds.joinToString()}")
+                }
+            }
+        }.onFailure { exception ->
+            android.util.Log.e("LandingPageViewModel", "Failed to load one-time product details", exception)
+            _uiState.value = _uiState.value.copy(
+                error = "Failed to load one-time products: ${exception.message}"
+            )
+        }
+    }
+    
+    /**
+     * Select purchase type (subscription or one-time)
+     */
+    fun selectPurchaseType(type: PurchaseType) {
+        _uiState.value = _uiState.value.copy(selectedPurchaseType = type)
+        android.util.Log.d("LandingPageViewModel", "Purchase type selected: $type")
+        
+        // Load one-time product details when switching to one-time type
+        if (type == PurchaseType.ONE_TIME && _uiState.value.oneTimeProductDetails.isEmpty()) {
+            viewModelScope.launch {
+                loadOneTimeProductDetails()
+            }
+        }
+    }
+    
+    /**
+     * Select one-time product
+     */
+    fun selectOneTimeProduct(product: OneTimeProduct) {
+        _uiState.value = _uiState.value.copy(selectedOneTimeProduct = product)
+        android.util.Log.d("LandingPageViewModel", "One-time product selected: ${product.productId}")
+    }
+    
+    /**
+     * Purchase one-time product
+     */
+    fun purchaseOneTimeProduct(activity: Activity, product: OneTimeProduct): BillingResult {
+        val productDetails = _uiState.value.oneTimeProductDetails[product.productId]
+        return if (productDetails != null) {
+            // Set purchase in progress
+            _uiState.value = _uiState.value.copy(
+                isPurchaseInProgress = true,
+                purchaseMessage = null
+            )
+            val obfuscatedAccountId = auth.currentUser?.uid?.hashCode()?.toString()
+            val obfuscatedProfileId = auth.currentUser?.uid?.reversed()?.hashCode()?.toString()
+            billingRepository.launchOneTimePurchase(
+                activity,
+                productDetails,
+                obfuscatedAccountId,
+                obfuscatedProfileId
+            )
+        } else {
+            _uiState.value = _uiState.value.copy(
+                error = "Product details not available. Please try again.",
+                isPurchaseInProgress = false
+            )
+            BillingResult.newBuilder()
+                .setResponseCode(com.android.billingclient.api.BillingClient.BillingResponseCode.ERROR)
+                .setDebugMessage("Product details not available")
+                .build()
+        }
+    }
+    
+    /**
+     * Send one-time purchase to backend for verification and credit grant.
+     */
+    private suspend fun processOneTimePurchase(purchase: com.android.billingclient.api.Purchase) {
+        val productId = purchase.products.firstOrNull()
+        if (productId == null) {
+            android.util.Log.e("LandingPageViewModel", "Cannot process one-time purchase: product ID is null")
+            return
+        }
+
+        if (purchase.purchaseState != com.android.billingclient.api.Purchase.PurchaseState.PURCHASED) {
+            android.util.Log.w(
+                "LandingPageViewModel",
+                "Purchase state is not PURCHASED (state=${purchase.purchaseState}), skipping server processing"
+            )
+            return
+        }
+
+        val product = _uiState.value.oneTimeProducts.firstOrNull {
+            it.productId == productId
+        }
+        if (product == null) {
+            android.util.Log.e("LandingPageViewModel", "Cannot process one-time purchase: product not found for $productId")
+            return
+        }
+
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            android.util.Log.e("LandingPageViewModel", "Cannot process one-time purchase: user not authenticated")
+            return
+        }
+
+        val data = hashMapOf(
+            "userId" to userId,
+            "productId" to productId,
+            "purchaseToken" to purchase.purchaseToken
+        )
+
+        try {
+            functions
+                .getHttpsCallable("handleOneTimePurchase")
+                .call(data)
+                .await()
+            android.util.Log.d("LandingPageViewModel", "✅ One-time purchase sent to backend for processing")
+            _uiState.value = _uiState.value.copy(
+                purchaseMessage = "Purchase successful! ${product.credits} credits added to your account."
+            )
+        } catch (e: Exception) {
+            android.util.Log.e("LandingPageViewModel", "❌ Failed to process one-time purchase on backend", e)
+            _uiState.value = _uiState.value.copy(
+                error = "Purchase succeeded but verification failed. Please contact support if credits are missing."
             )
         }
     }

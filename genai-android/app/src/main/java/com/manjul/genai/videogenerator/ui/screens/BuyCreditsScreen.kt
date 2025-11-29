@@ -22,9 +22,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.CheckCircle
@@ -40,6 +42,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.offset
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -69,6 +73,8 @@ import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPri
 import com.manjul.genai.videogenerator.ui.designsystem.components.dialogs.AppDialog
 import com.manjul.genai.videogenerator.ui.viewmodel.LandingPageViewModel
 import com.manjul.genai.videogenerator.utils.AnalyticsManager
+import com.manjul.genai.videogenerator.data.model.PurchaseType
+import com.manjul.genai.videogenerator.data.model.OneTimeProduct
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -205,7 +211,7 @@ fun BuyCreditsScreen(
             android.util.Log.e("BuyCreditsScreen", "ERROR: $error")
             android.util.Log.e("BuyCreditsScreen", "Error stack trace:", Exception("Error context"))
             scope.launch {
-                snackbarHostState.showSnackbar(error)
+                //snackbarHostState.showSnackbar(error)
                 viewModel.clearPurchaseMessage()
             }
         }
@@ -336,7 +342,7 @@ fun BuyCreditsScreen(
                 }
             }
             
-            // Sticky bottom section: Pricing cards + Continue button + Footer
+            // Sticky bottom section: Tab selector + Pricing cards + Continue button + Footer
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -345,59 +351,171 @@ fun BuyCreditsScreen(
                     .padding(horizontal = 24.dp, vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Subscription plans section - sticky at bottom
-                if (uiState.config.subscriptionPlans.isNotEmpty()) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        uiState.config.subscriptionPlans.forEach { plan ->
-                            SubscriptionPlanCard(
-                                plan = plan,
-                                isSelected = uiState.selectedPlan?.productId == plan.productId,
-                                onClick = {
-                                    android.util.Log.d("BuyCreditsScreen", "Plan clicked: ${plan.productId}")
-                                    viewModel.selectPlan(plan)
-                                },
-                                modifier = Modifier.weight(1f)
+                // Tab selector for subscription vs one-time purchase
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF2A2A2A), RoundedCornerShape(12.dp))
+                        .padding(4.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    // Subscription tab
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .background(
+                                if (uiState.selectedPurchaseType == PurchaseType.SUBSCRIPTION)
+                                    Color.White
+                                else
+                                    Color.Transparent,
+                                RoundedCornerShape(10.dp)
                             )
+                            .clickable {
+                                viewModel.selectPurchaseType(PurchaseType.SUBSCRIPTION)
+                            }
+                            .padding(vertical = 12.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Weekly Plans",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = if (uiState.selectedPurchaseType == PurchaseType.SUBSCRIPTION)
+                                Color.Black
+                            else
+                                Color.White.copy(alpha = 0.7f),
+                            fontSize = 14.sp
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.width(4.dp))
+                    
+                    // One-time purchase tab
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .background(
+                                if (uiState.selectedPurchaseType == PurchaseType.ONE_TIME)
+                                    Color.White
+                                else
+                                    Color.Transparent,
+                                RoundedCornerShape(10.dp)
+                            )
+                            .clickable {
+                                viewModel.selectPurchaseType(PurchaseType.ONE_TIME)
+                            }
+                            .padding(vertical = 12.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Top-Up Credits",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = if (uiState.selectedPurchaseType == PurchaseType.ONE_TIME)
+                                Color.Black
+                            else
+                                Color.White.copy(alpha = 0.7f),
+                            fontSize = 14.sp
+                        )
+                    }
+                }
+                
+                // Explanatory text
+                Text(
+                    text = if (uiState.selectedPurchaseType == PurchaseType.SUBSCRIPTION) {
+                        "Get credits every week with auto-renewing subscriptions"
+                    } else {
+                        "Buy credits once - no recurring charges"
+                    },
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFF9CA3AF),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+                
+                // Pricing cards - different based on selected tab
+                if (uiState.selectedPurchaseType == PurchaseType.SUBSCRIPTION) {
+                    // Subscription plans section - 3 cards in a row
+                    if (uiState.config.subscriptionPlans.isNotEmpty()) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            uiState.config.subscriptionPlans.forEach { plan ->
+                                SubscriptionPlanCard(
+                                    plan = plan,
+                                    isSelected = uiState.selectedPlan?.productId == plan.productId,
+                                    onClick = {
+                                        android.util.Log.d("BuyCreditsScreen", "Plan clicked: ${plan.productId}")
+                                        viewModel.selectPlan(plan)
+                                    },
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    // One-time products section - 5 cards in a horizontal scrollable row
+                    if (uiState.oneTimeProducts.isNotEmpty()) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .horizontalScroll(rememberScrollState()),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            uiState.oneTimeProducts.forEach { product ->
+                                OneTimeProductCard(
+                                    product = product,
+                                    isSelected = uiState.selectedOneTimeProduct?.productId == product.productId,
+                                    onClick = {
+                                        android.util.Log.d("BuyCreditsScreen", "One-time product clicked: ${product.productId}")
+                                        viewModel.selectOneTimeProduct(product)
+                                    },
+                                    modifier = Modifier.width(120.dp)
+                                )
+                            }
                         }
                     }
                 }
                 
                 // Continue button - sticky at bottom
+                val canPurchase = if (uiState.selectedPurchaseType == PurchaseType.SUBSCRIPTION) {
+                    !uiState.isPurchaseInProgress && uiState.selectedPlan != null && uiState.billingInitialized
+                } else {
+                    !uiState.isPurchaseInProgress && uiState.selectedOneTimeProduct != null && uiState.billingInitialized
+                }
+                
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            color = if (uiState.isPurchaseInProgress || uiState.selectedPlan == null || !uiState.billingInitialized) {
-                                Color.Gray.copy(alpha = 0.5f)
-                            } else {
+                            color = if (canPurchase) {
                                 Color.White
+                            } else {
+                                Color.Gray.copy(alpha = 0.5f)
                             },
                             shape = RoundedCornerShape(12.dp)
                         )
-                        .clickable(
-                            enabled = !uiState.isPurchaseInProgress && uiState.selectedPlan != null && uiState.billingInitialized
-                        ) {
+                        .clickable(enabled = canPurchase) {
                             android.util.Log.d("BuyCreditsScreen", "=== Continue Button Clicked ===")
-                            android.util.Log.d("BuyCreditsScreen", "Button enabled: ${!uiState.isPurchaseInProgress && uiState.selectedPlan != null && uiState.billingInitialized}")
-                            android.util.Log.d("BuyCreditsScreen", "Purchase in progress: ${uiState.isPurchaseInProgress}")
-                            android.util.Log.d("BuyCreditsScreen", "Selected plan: ${uiState.selectedPlan?.productId ?: "null"}")
-                            android.util.Log.d("BuyCreditsScreen", "Billing initialized: ${uiState.billingInitialized}")
-                            android.util.Log.d("BuyCreditsScreen", "Context is Activity: ${context is Activity}")
+                            android.util.Log.d("BuyCreditsScreen", "Purchase type: ${uiState.selectedPurchaseType}")
                             
-                            uiState.selectedPlan?.let { plan ->
-                                android.util.Log.d("BuyCreditsScreen", "Attempting to purchase plan: ${plan.productId}")
-                                if (context is Activity && uiState.billingInitialized) {
-                                    android.util.Log.d("BuyCreditsScreen", "Calling viewModel.purchasePlan()")
-                                    val billingResult = viewModel.purchasePlan(context, plan)
-                                    android.util.Log.d("BuyCreditsScreen", "Purchase initiated - Response code: ${billingResult.responseCode}, Debug message: ${billingResult.debugMessage}")
-                                } else {
-                                    android.util.Log.e("BuyCreditsScreen", "Cannot purchase - Context is Activity: ${context is Activity}, Billing initialized: ${uiState.billingInitialized}")
+                            if (uiState.selectedPurchaseType == PurchaseType.SUBSCRIPTION) {
+                                uiState.selectedPlan?.let { plan ->
+                                    android.util.Log.d("BuyCreditsScreen", "Attempting to purchase plan: ${plan.productId}")
+                                    if (context is Activity && uiState.billingInitialized) {
+                                        val billingResult = viewModel.purchasePlan(context, plan)
+                                        android.util.Log.d("BuyCreditsScreen", "Purchase initiated - Response code: ${billingResult.responseCode}")
+                                    }
                                 }
-                            } ?: run {
-                                android.util.Log.e("BuyCreditsScreen", "Cannot purchase - No plan selected")
+                            } else {
+                                uiState.selectedOneTimeProduct?.let { product ->
+                                    android.util.Log.d("BuyCreditsScreen", "Attempting to purchase one-time product: ${product.productId}")
+                                    if (context is Activity && uiState.billingInitialized) {
+                                        val billingResult = viewModel.purchaseOneTimeProduct(context, product)
+                                        android.util.Log.d("BuyCreditsScreen", "Purchase initiated - Response code: ${billingResult.responseCode}")
+                                    }
+                                }
                             }
                         }
                         .padding(vertical = 18.dp),
@@ -420,21 +538,13 @@ fun BuyCreditsScreen(
                                 text = "Continue",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = if (uiState.selectedPlan == null || !uiState.billingInitialized) {
-                                    Color.White.copy(alpha = 0.7f)
-                                } else {
-                                    Color.Black
-                                },
+                                color = if (canPurchase) Color.Black else Color.White.copy(alpha = 0.7f),
                                 fontSize = 16.sp
                             )
                             Icon(
                                 imageVector = Icons.Default.ArrowForward,
                                 contentDescription = "Continue",
-                                tint = if (uiState.selectedPlan == null || !uiState.billingInitialized) {
-                                    Color.White.copy(alpha = 0.7f)
-                                } else {
-                                    Color.Black
-                                },
+                                tint = if (canPurchase) Color.Black else Color.White.copy(alpha = 0.7f),
                                 modifier = Modifier.size(18.dp)
                             )
                         }
@@ -608,6 +718,126 @@ fun BuyCreditsScreen(
                             onPurchaseSuccess()
                         },
                         fullWidth = true
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * One-time product card for displaying top-up credit bundles
+ * Matches SubscriptionPlanCard design for consistency
+ */
+@Composable
+fun OneTimeProductCard(
+    product: OneTimeProduct,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    // Match SubscriptionPlanCard color scheme
+    val backgroundColor = if (isSelected) {
+        Color(0xFFE8E8E8) // Light grey for selected (same as subscription)
+    } else {
+        Color(0xFF2A2A2A) // Darker grey for unselected (slightly different from subscription's 0xFF1F1F1F)
+    }
+    
+    val borderColor = if (isSelected) {
+        Color(0xFFD1D1D1) // Grey border for selected
+    } else {
+        Color.White.copy(alpha = 1.0f) // White border for unselected
+    }
+    
+    val textColor = if (isSelected) Color.Black else Color.White
+    val secondaryTextColor = if (isSelected) Color(0xFF6B7280) else Color(0xFF9CA3AF)
+
+    Box(
+        modifier = modifier
+    ) {
+        // Card content - matches subscription card structure
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .background(
+                    color = backgroundColor,
+                    shape = RoundedCornerShape(16.dp)
+                )
+                .border(
+                    width = 1.dp,
+                    color = borderColor,
+                    shape = RoundedCornerShape(16.dp)
+                )
+                .padding(horizontal = 12.dp, vertical = 16.dp)
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                // Credits number (large and bold, like subscription card)
+                Text(
+                    text = "${product.credits}",
+                    style = MaterialTheme.typography.displaySmall,
+                    fontWeight = FontWeight.Bold,
+                    color = textColor,
+                    fontSize = 32.sp,
+                    lineHeight = 40.sp
+                )
+                
+                // "Credits" text
+                Text(
+                    text = "Credits",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = textColor,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp
+                )
+                
+                // Price
+                Text(
+                    text = product.price,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = secondaryTextColor,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 14.sp
+                )
+                
+                // Per-credit cost (unique to top-up cards - helps users compare value)
+                val perCredit = product.price.replace("$", "").toDoubleOrNull()?.div(product.credits)
+                if (perCredit != null) {
+                    Text(
+                        text = "$${String.format("%.3f", perCredit)}/credit",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = secondaryTextColor.copy(alpha = 0.8f),
+                        fontSize = 11.sp
+                    )
+                }
+            }
+        }
+        
+        // Badge positioned ABOVE card (like subscription's "Popular" badge)
+        if (product.isBestValue || product.isPopular) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .offset(y = (-14).dp) // Position above card
+            ) {
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = if (product.isBestValue) Color(0xFFF59E0B) else Color(0xFF10B981),
+                            shape = RoundedCornerShape(50.dp) // Pill shape
+                        )
+                        .padding(horizontal = 12.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = if (product.isBestValue) "BEST VALUE" else "POPULAR",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontSize = 11.sp
                     )
                 }
             }

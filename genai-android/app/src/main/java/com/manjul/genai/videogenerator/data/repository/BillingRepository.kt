@@ -246,6 +246,69 @@ class BillingRepository(private val context: Context) {
     }
     
     /**
+     * Query product details for one-time INAPP products (not subscriptions).
+     */
+    suspend fun queryOneTimeProducts(productIds: List<String>): Result<List<ProductDetails>> {
+        return suspendCancellableCoroutine { continuation ->
+            val billingClient = billingClient
+            if (billingClient == null) {
+                android.util.Log.e("BillingRepository", "Billing client is null - cannot query one-time products")
+                continuation.resume(Result.failure(IllegalStateException("Billing client not initialized")))
+                return@suspendCancellableCoroutine
+            }
+            
+            // Check if billing client is ready/connected
+            if (!billingClient.isReady) {
+                android.util.Log.e("BillingRepository", "Billing client is not ready - connection may be disconnected")
+                continuation.resume(Result.failure(IllegalStateException("Billing client is not ready. Service connection is disconnected.")))
+                return@suspendCancellableCoroutine
+            }
+            
+            val productList = productIds.map { productId ->
+                QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId(productId)
+                    .setProductType(BillingClient.ProductType.INAPP)  // INAPP type for one-time purchases
+                    .build()
+            }
+            
+            val params = QueryProductDetailsParams.newBuilder()
+                .setProductList(productList)
+                .build()
+            
+            billingClient.queryProductDetailsAsync(
+                params
+            ) { billingResult, productDetailsResult ->
+                val productDetailsList = productDetailsResult?.productDetailsList ?: emptyList()
+                android.util.Log.d("BillingRepository", "Query one-time products result: responseCode=${billingResult.responseCode}, products=${productDetailsList.size}")
+                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                    if (productDetailsList.isEmpty()) {
+                        android.util.Log.w("BillingRepository", "No one-time products found for IDs: ${productIds.joinToString()}")
+                        continuation.resume(Result.failure(
+                            Exception("No one-time products found. Make sure INAPP products exist in Play Console with IDs: ${productIds.joinToString()}")
+                        ))
+                    } else {
+                        productDetailsList.forEach { product ->
+                            android.util.Log.d("BillingRepository", "Found one-time product: ${product.productId}")
+                        }
+                        continuation.resume(Result.success(productDetailsList))
+                    }
+                } else {
+                    android.util.Log.e("BillingRepository", "Query one-time products failed: ${billingResult.debugMessage} (code: ${billingResult.responseCode})")
+                    val errorMessage = when (billingResult.responseCode) {
+                        BillingClient.BillingResponseCode.ITEM_UNAVAILABLE -> 
+                            "One-time products not found in Play Console. Create INAPP products with IDs: ${productIds.joinToString()}"
+                        BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE ->
+                            "Billing service unavailable. Make sure app is uploaded to Internal testing track."
+                        else ->
+                            "Failed to query one-time products: ${billingResult.debugMessage}"
+                    }
+                    continuation.resume(Result.failure(Exception(errorMessage)))
+                }
+            }
+        }
+    }
+    
+    /**
      * Launch the billing flow for a subscription purchase.
      * Handles subscription offers (base plans and offers) for Google Play Billing Library 5.0+
      */
@@ -305,7 +368,45 @@ class BillingRepository(private val context: Context) {
     }
     
     /**
-     * Query existing purchases.
+     * Launch the billing flow for a one-time INAPP purchase.
+     * Simpler than subscriptions - no subscription offers/base plans.
+     */
+    fun launchOneTimePurchase(
+        activity: Activity,
+        productDetails: ProductDetails,
+        obfuscatedAccountId: String? = null,
+        obfuscatedProfileId: String? = null
+    ): BillingResult {
+        val billingClient = billingClient
+        if (billingClient == null) {
+            return BillingResult.newBuilder()
+                .setResponseCode(BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE)
+                .setDebugMessage("Billing client not initialized")
+                .build()
+        }
+        
+        // For INAPP (one-time) purchases, we don't need subscription offer details
+        // Just create product details params directly
+        val productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
+            .setProductDetails(productDetails)
+            .build()
+        
+        val billingFlowParamsBuilder = BillingFlowParams.newBuilder()
+            .setProductDetailsParamsList(listOf(productDetailsParams))
+        obfuscatedAccountId?.let { billingFlowParamsBuilder.setObfuscatedAccountId(it) }
+        obfuscatedProfileId?.let { billingFlowParamsBuilder.setObfuscatedProfileId(it) }
+        val billingFlowParams = billingFlowParamsBuilder.build()
+        
+        // Track purchase started
+        AnalyticsManager.trackPurchaseStarted(productDetails.productId, "one_time")
+        
+        android.util.Log.d("BillingRepository", "Launching one-time purchase flow for: ${productDetails.productId}")
+        
+        return billingClient.launchBillingFlow(activity, billingFlowParams)
+    }
+    
+    /**
+     * Query existing purchases (subscriptions and one-time INAPP products).
      */
     suspend fun queryPurchases(): Result<List<Purchase>> {
         return suspendCancellableCoroutine { continuation ->
@@ -315,25 +416,49 @@ class BillingRepository(private val context: Context) {
                 return@suspendCancellableCoroutine
             }
             
-            val params = QueryPurchasesParams.newBuilder()
+            // Query both subscription and INAPP purchases
+            val subsParams = QueryPurchasesParams.newBuilder()
                 .setProductType(BillingClient.ProductType.SUBS)
                 .build()
             
-            billingClient.queryPurchasesAsync(
-                params
-            ) { billingResult, purchases ->
-                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    // Update subscription status
-                    val hasActiveSubscription = purchases.any { 
-                        it.purchaseState == Purchase.PurchaseState.PURCHASED 
+            val inappParams = QueryPurchasesParams.newBuilder()
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
+            
+            val allPurchases = mutableListOf<Purchase>()
+            
+            // Query subscriptions first
+            billingClient.queryPurchasesAsync(subsParams) { subsBillingResult, subsPurchases ->
+                if (subsBillingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                    android.util.Log.d("BillingRepository", "Found ${subsPurchases.size} subscription purchases")
+                    allPurchases.addAll(subsPurchases)
+                    
+                    // Then query INAPP purchases
+                    billingClient.queryPurchasesAsync(inappParams) { inappBillingResult, inappPurchases ->
+                        if (inappBillingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                            android.util.Log.d("BillingRepository", "Found ${inappPurchases.size} INAPP purchases")
+                            allPurchases.addAll(inappPurchases)
+                            
+                            // Update subscription status
+                            val hasActiveSubscription = allPurchases.any { 
+                                it.purchaseState == Purchase.PurchaseState.PURCHASED &&
+                                it.products.any { productId -> productId.startsWith("weekly_") }
+                            }
+                            AnalyticsManager.setSubscriptionStatus(
+                                if (hasActiveSubscription) "active" else "inactive"
+                            )
+                            
+                            continuation.resume(Result.success(allPurchases))
+                        } else {
+                            android.util.Log.e("BillingRepository", "Failed to query INAPP purchases: ${inappBillingResult.debugMessage}")
+                            // Still return subscriptions even if INAPP query fails
+                            continuation.resume(Result.success(allPurchases))
+                        }
                     }
-                    AnalyticsManager.setSubscriptionStatus(
-                        if (hasActiveSubscription) "active" else "inactive"
-                    )
-                    continuation.resume(Result.success(purchases))
                 } else {
+                    android.util.Log.e("BillingRepository", "Failed to query subscription purchases: ${subsBillingResult.debugMessage}")
                     continuation.resume(Result.failure(
-                        Exception("Failed to query purchases: ${billingResult.debugMessage}")
+                        Exception("Failed to query purchases: ${subsBillingResult.debugMessage}")
                     ))
                 }
             }
