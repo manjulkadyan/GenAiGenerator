@@ -9,7 +9,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -469,7 +468,7 @@ private fun GenerateScreenContent(
                 .drawBehind {
                     val borderWidth = 2.dp.toPx()
                     val cornerRadius = 32.dp.toPx()
-                    
+
                     // Draw top border with rounded corners
                     val topPath = Path().apply {
                         // Start from top-left, after the rounded corner starts
@@ -502,7 +501,7 @@ private fun GenerateScreenContent(
                         color = AppColors.BorderSelected,
                         style = Stroke(width = borderWidth, cap = StrokeCap.Round)
                     )
-                    
+
                     // Draw left border (straight line from below top corner to bottom)
                     drawLine(
                         color = AppColors.BorderSelected,
@@ -511,7 +510,7 @@ private fun GenerateScreenContent(
                         strokeWidth = borderWidth,
                         cap = StrokeCap.Round
                     )
-                    
+
                     // Draw right border (straight line from below top corner to bottom)
                     drawLine(
                         color = AppColors.BorderSelected,
@@ -523,12 +522,17 @@ private fun GenerateScreenContent(
                 },
             color = AppColors.BackgroundDarkGray,
             tonalElevation = 8.dp,
-            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp, bottomStart = 0.dp, bottomEnd = 0.dp)
+            shape = RoundedCornerShape(
+                topStart = 32.dp,
+                topEnd = 32.dp,
+                bottomStart = 0.dp,
+                bottomEnd = 0.dp
+            )
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 4.dp, start= 16.dp, end = 16.dp ),
+                    .padding(top = 16.dp, bottom = 4.dp, start = 16.dp, end = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 horizontalAlignment = Alignment.End
             ) {
@@ -539,15 +543,19 @@ private fun GenerateScreenContent(
                     state.isGenerating || isSubmitting -> "Submitting..."
                     else -> "Generate AI Video"
                 }
-                
+
                 // Debug logging
                 LaunchedEffect(state.uploadMessage, buttonText) {
-                    android.util.Log.d("GenerateScreen", "📱 Button Update - uploadMessage: '${state.uploadMessage}', buttonText: '$buttonText', isUploading: $isUploading")
+                    android.util.Log.d(
+                        "GenerateScreen",
+                        "📱 Button Update - uploadMessage: '${state.uploadMessage}', buttonText: '$buttonText', isUploading: $isUploading"
+                    )
                 }
-                
+
                 val isButtonLoading = state.isGenerating || isSubmitting || isUploading
-                val isButtonEnabled = state.canGenerate && !isSubmitting && !state.isGenerating && !isUploading
-                
+                val isButtonEnabled =
+                    state.canGenerate && !isSubmitting && !state.isGenerating && !isUploading
+
                 // Gradient Generate Button with dynamic state
                 GradientGenerateButton(
                     text = buttonText,
