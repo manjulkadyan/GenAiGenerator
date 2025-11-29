@@ -263,10 +263,6 @@ fun GenAiRoot() {
                             if (resultJobId != null) {
                                 resultJobId = null
                             }
-                            // Reset buy credits screen when navigating away from Profile
-                            if (destination != AppDestination.Profile) {
-                                showBuyCreditsScreen = false
-                            }
                             currentRoute = destination
                         }
                     )
@@ -274,88 +270,67 @@ fun GenAiRoot() {
             }
         }
     ) { innerPadding ->
-        when (currentRoute) {
-            AppDestination.Models -> ModelsScreen(
-                modifier = Modifier.padding(innerPadding),
-                onModelClick = { modelId ->
-                    selectedModelId = modelId
-                    highlightModelId = null
-                    currentRoute = AppDestination.Generate
-                },
-                highlightModelId = highlightModelId,
-                onHighlightCleared = { highlightModelId = null }
-            )
-            AppDestination.Generate -> {
-                // Only show GenerateScreen if ResultsScreen is not showing
-                if (resultJob == null) {
-                    GenerateScreen(
-                        modifier = Modifier.padding(innerPadding),
-                        preselectedModelId = selectedModelId,
-                        onModelSelected = { selectedModelId = null },
-                        onBackToModels = { 
-                            highlightModelId = selectedModelId
-                            currentRoute = AppDestination.Models
-                        },
-                        onGenerateStarted = { 
-                            // This is now handled by observing generateState in LaunchedEffect above
-                            // Only show generating screen when generation actually starts successfully
-                        },
-                        onSettingsClick = {
-                            // Navigate to Profile screen
-                            currentRoute = AppDestination.Profile
-                            showBuyCreditsScreen = false
-                        },
-                        onCreditsClick = {
-                            // Navigate to Profile route and show BuyCreditsScreen
-                            // This keeps Profile in backstack, so back goes to ProfileScreen
-                            showInsufficientCreditsDialog = false
-                            requiredCredits = 0
-                            currentRoute = AppDestination.Profile
-                            showBuyCreditsScreen = true
-                        },
-                        onBuyCreditsClick = { credits ->
-                            // Navigate to BuyCreditsScreen when insufficient credits
-                            showInsufficientCreditsDialog = true
-                            requiredCredits = credits
-                            currentRoute = AppDestination.Profile
-                            showBuyCreditsScreen = true
-                        }
-                    )
-                }
-            }
-            AppDestination.History -> HistoryScreen(
-                modifier = Modifier.padding(innerPadding),
-                onVideoClick = { job ->
-                    if (job.status == com.manjul.genai.videogenerator.data.model.VideoJobStatus.COMPLETE) {
-                        // Launch ResultsActivity instead of showing dialog
-                        val intent = android.content.Intent(context, ResultsActivity::class.java).apply {
-                            putExtra(ResultsActivity.EXTRA_JOB_ID, job.id)
-                        }
-                        context.startActivity(intent)
+        Box(modifier = Modifier.fillMaxSize()) {
+            // Main navigation content
+            when (currentRoute) {
+                AppDestination.Models -> ModelsScreen(
+                    modifier = Modifier.padding(innerPadding),
+                    onModelClick = { modelId ->
+                        selectedModelId = modelId
+                        highlightModelId = null
+                        currentRoute = AppDestination.Generate
+                    },
+                    highlightModelId = highlightModelId,
+                    onHighlightCleared = { highlightModelId = null }
+                )
+                AppDestination.Generate -> {
+                    // Only show GenerateScreen if ResultsScreen is not showing
+                    if (resultJob == null) {
+                        GenerateScreen(
+                            modifier = Modifier.padding(innerPadding),
+                            preselectedModelId = selectedModelId,
+                            onModelSelected = { selectedModelId = null },
+                            onBackToModels = { 
+                                highlightModelId = selectedModelId
+                                currentRoute = AppDestination.Models
+                            },
+                            onGenerateStarted = { 
+                                // This is now handled by observing generateState in LaunchedEffect above
+                                // Only show generating screen when generation actually starts successfully
+                            },
+                            onSettingsClick = {
+                                // Navigate to Profile screen
+                                currentRoute = AppDestination.Profile
+                                showBuyCreditsScreen = false
+                            },
+                            onCreditsClick = {
+                                // Show BuyCreditsScreen overlay (no dialog, just show plans)
+                                showInsufficientCreditsDialog = false
+                                requiredCredits = 0
+                                showBuyCreditsScreen = true
+                            },
+                            onBuyCreditsClick = { credits ->
+                                // Show BuyCreditsScreen overlay with insufficient credits dialog
+                                showInsufficientCreditsDialog = true
+                                requiredCredits = credits
+                                showBuyCreditsScreen = true
+                            }
+                        )
                     }
                 }
-            )
-            AppDestination.Profile -> {
-                if (showBuyCreditsScreen) {
-                    // Full screen - no padding, no bottom nav
-                    BuyCreditsScreen(
-                        modifier = Modifier.fillMaxSize(),
-                        onBackClick = { 
-                            showBuyCreditsScreen = false
-                            showInsufficientCreditsDialog = false
-                            requiredCredits = 0
-                        },
-                        onPurchaseSuccess = {
-                            // Navigate to GenerateScreen and close BuyCreditsScreen
-                            showBuyCreditsScreen = false
-                            showInsufficientCreditsDialog = false
-                            requiredCredits = 0
-                            currentRoute = AppDestination.Generate
-                        },
-                        showInsufficientCreditsDialog = showInsufficientCreditsDialog,
-                        requiredCredits = requiredCredits
-                    )
-                } else {
+                AppDestination.History -> HistoryScreen(
+                    modifier = Modifier.padding(innerPadding),
+                    onVideoClick = { job ->
+                        if (job.status == com.manjul.genai.videogenerator.data.model.VideoJobStatus.COMPLETE) {
+                            // Launch ResultsActivity instead of showing dialog
+                            val intent = android.content.Intent(context, ResultsActivity::class.java).apply {
+                                putExtra(ResultsActivity.EXTRA_JOB_ID, job.id)
+                            }
+                            context.startActivity(intent)
+                        }
+                    }
+                )
+                AppDestination.Profile -> {
                     ProfileScreen(
                         modifier = Modifier.padding(innerPadding),
                         onBuyCreditsClick = { 
@@ -364,13 +339,31 @@ fun GenAiRoot() {
                             showBuyCreditsScreen = true 
                         },
                         onVideosClick = {
-                            showBuyCreditsScreen = false
-                            showInsufficientCreditsDialog = false
-                            requiredCredits = 0
                             currentRoute = AppDestination.History
                         }
                     )
                 }
+            }
+            
+            // BuyCreditsScreen as overlay - shown on top of any screen
+            if (showBuyCreditsScreen) {
+                BuyCreditsScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    onBackClick = { 
+                        showBuyCreditsScreen = false
+                        showInsufficientCreditsDialog = false
+                        requiredCredits = 0
+                    },
+                    onPurchaseSuccess = {
+                        // Close BuyCreditsScreen and navigate to GenerateScreen
+                        showBuyCreditsScreen = false
+                        showInsufficientCreditsDialog = false
+                        requiredCredits = 0
+                        currentRoute = AppDestination.Generate
+                    },
+                    showInsufficientCreditsDialog = showInsufficientCreditsDialog,
+                    requiredCredits = requiredCredits
+                )
             }
         }
         
