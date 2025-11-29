@@ -122,7 +122,8 @@ fun GenerateScreen(
     onBackToModels: () -> Unit = {},
     onGenerateStarted: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
-    onCreditsClick: () -> Unit = {}
+    onCreditsClick: () -> Unit = {},
+    onBuyCreditsClick: (requiredCredits: Int) -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
     val creditsState by creditsViewModel.state.collectAsState()
@@ -234,9 +235,16 @@ fun GenerateScreen(
                     onAdvancedToggle = { showAdvanced = !showAdvanced },
                     onGenerateClick = {
                         if (!isSubmitting && state.canGenerate && !state.isGenerating && state.uploadMessage == null) {
-                            isSubmitting = true
-                            viewModel.dismissMessage()
-                            viewModel.generate()
+                            // Check if user has enough credits
+                            val estimatedCost = state.estimatedCost
+                            if (creditsState.credits < estimatedCost) {
+                                // Navigate to BuyCreditsScreen if insufficient credits
+                                onBuyCreditsClick(estimatedCost)
+                            } else {
+                                isSubmitting = true
+                                viewModel.dismissMessage()
+                                viewModel.generate()
+                            }
                         }
                     },
                     onSettingsClick = onSettingsClick,
@@ -248,26 +256,39 @@ fun GenerateScreen(
     }
 
     if (!state.isGenerating && state.errorMessage != null) {
-        AppDialog(
-            onDismissRequest = viewModel::dismissMessage,
-            title = "Error"
-        ) {
-            Text(
-                text = state.errorMessage ?: "Unknown error",
-                style = MaterialTheme.typography.bodyMedium,
-                color = AppColors.TextSecondary,
-                modifier = Modifier.padding(top = 16.dp)
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp),
-                horizontalArrangement = Arrangement.End
+        // Only show error dialog for non-credit related errors
+        // Credit-related errors are handled by navigating to BuyCreditsScreen
+        val errorMessage = state.errorMessage ?: ""
+        if (!errorMessage.contains("Insufficient credits", ignoreCase = true) && 
+            !errorMessage.contains("not enough credits", ignoreCase = true)) {
+            AppDialog(
+                onDismissRequest = viewModel::dismissMessage,
+                title = "Error"
             ) {
-                AppTextButton(
-                    text = "OK",
-                    onClick = viewModel::dismissMessage
+                Text(
+                    text = errorMessage.ifBlank { "Unknown error" },
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = AppColors.TextSecondary,
+                    modifier = Modifier.padding(top = 16.dp)
                 )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    AppTextButton(
+                        text = "OK",
+                        onClick = viewModel::dismissMessage
+                    )
+                }
+            }
+        } else {
+            // For credit errors, dismiss the message and navigate to BuyCreditsScreen
+            LaunchedEffect(errorMessage) {
+                viewModel.dismissMessage()
+                // Try to extract the required credits from error message, default to estimated cost
+                onBuyCreditsClick(state.estimatedCost)
             }
         }
     }

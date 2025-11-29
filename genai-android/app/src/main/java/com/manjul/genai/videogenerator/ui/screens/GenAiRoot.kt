@@ -103,6 +103,8 @@ fun GenAiRoot() {
     var resultJobId by rememberSaveable { mutableStateOf<String?>(null) }
     var pendingJobId by rememberSaveable { mutableStateOf<String?>(null) }
     var showBuyCreditsScreen by rememberSaveable { mutableStateOf(false) }
+    var showInsufficientCreditsDialog by rememberSaveable { mutableStateOf(false) }
+    var requiredCredits by rememberSaveable { mutableStateOf(0) }
     val destinations = remember { listOf(AppDestination.Generate, AppDestination.Models, AppDestination.History, AppDestination.Profile) }
     
     // Watch for job completion when generating
@@ -306,6 +308,15 @@ fun GenAiRoot() {
                         onCreditsClick = {
                             // Navigate to Profile route and show BuyCreditsScreen
                             // This keeps Profile in backstack, so back goes to ProfileScreen
+                            showInsufficientCreditsDialog = false
+                            requiredCredits = 0
+                            currentRoute = AppDestination.Profile
+                            showBuyCreditsScreen = true
+                        },
+                        onBuyCreditsClick = { credits ->
+                            // Navigate to BuyCreditsScreen when insufficient credits
+                            showInsufficientCreditsDialog = true
+                            requiredCredits = credits
                             currentRoute = AppDestination.Profile
                             showBuyCreditsScreen = true
                         }
@@ -329,19 +340,33 @@ fun GenAiRoot() {
                     // Full screen - no padding, no bottom nav
                     BuyCreditsScreen(
                         modifier = Modifier.fillMaxSize(),
-                        onBackClick = { showBuyCreditsScreen = false },
+                        onBackClick = { 
+                            showBuyCreditsScreen = false
+                            showInsufficientCreditsDialog = false
+                            requiredCredits = 0
+                        },
                         onPurchaseSuccess = {
                             // Navigate to GenerateScreen and close BuyCreditsScreen
                             showBuyCreditsScreen = false
+                            showInsufficientCreditsDialog = false
+                            requiredCredits = 0
                             currentRoute = AppDestination.Generate
-                        }
+                        },
+                        showInsufficientCreditsDialog = showInsufficientCreditsDialog,
+                        requiredCredits = requiredCredits
                     )
                 } else {
                     ProfileScreen(
                         modifier = Modifier.padding(innerPadding),
-                        onBuyCreditsClick = { showBuyCreditsScreen = true },
+                        onBuyCreditsClick = { 
+                            showInsufficientCreditsDialog = false
+                            requiredCredits = 0
+                            showBuyCreditsScreen = true 
+                        },
                         onVideosClick = {
                             showBuyCreditsScreen = false
+                            showInsufficientCreditsDialog = false
+                            requiredCredits = 0
                             currentRoute = AppDestination.History
                         }
                     )
