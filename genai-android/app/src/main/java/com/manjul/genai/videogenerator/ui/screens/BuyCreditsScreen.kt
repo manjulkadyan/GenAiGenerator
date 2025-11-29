@@ -538,9 +538,9 @@ fun BuyCreditsScreen(
                     
                     Text(
                         text = if (requiredCredits > 0) {
-                            "You need $requiredCredits credits to generate this video. Please purchase a plan below to continue."
+                            "You need $requiredCredits credits to generate this video. Please purchase a plan or top-up your credit below to continue."
                         } else {
-                            "You don't have enough credits to generate this video. Please purchase a plan below to continue."
+                            "You don't have enough credits to generate this video. Please purchase a plan or top-up your credit below to continue."
                         },
                         style = MaterialTheme.typography.bodyLarge,
                         color = AppColors.TextSecondary,
