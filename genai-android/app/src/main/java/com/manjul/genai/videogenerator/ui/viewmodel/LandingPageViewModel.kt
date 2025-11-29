@@ -441,9 +441,23 @@ class LandingPageViewModel(
         android.util.Log.d("LandingPageViewModel", "Purchase type selected: $type")
         
         // Load one-time product details when switching to one-time type
-        if (type == PurchaseType.ONE_TIME && _uiState.value.oneTimeProductDetails.isEmpty()) {
-            viewModelScope.launch {
-                loadOneTimeProductDetails()
+        if (type == PurchaseType.ONE_TIME) {
+            if (_uiState.value.oneTimeProductDetails.isEmpty()) {
+                viewModelScope.launch {
+                    loadOneTimeProductDetails()
+                }
+            }
+            
+            // Auto-select second-to-last product (500 credits) if nothing selected
+            if (_uiState.value.selectedOneTimeProduct == null && _uiState.value.oneTimeProducts.isNotEmpty()) {
+                // Get second-to-last product (index: size - 2)
+                // Products: [100, 200, 300, 500, 1000] -> second-to-last is 500 at index 3
+                val products = _uiState.value.oneTimeProducts
+                val secondToLast = products.filter { it.isPopular }.getOrNull(0)
+                if (secondToLast != null) {
+                    android.util.Log.d("LandingPageViewModel", "Auto-selecting second-to-last product: ${secondToLast.productId} (${secondToLast.credits} credits)")
+                    _uiState.value = _uiState.value.copy(selectedOneTimeProduct = secondToLast)
+                }
             }
         }
     }

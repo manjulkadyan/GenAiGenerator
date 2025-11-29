@@ -23,6 +23,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -455,15 +458,30 @@ fun BuyCreditsScreen(
                         }
                     }
                 } else {
-                    // One-time products section - 5 cards in a horizontal scrollable row
+                    // One-time products section - 5 cards in a horizontal scrollable LazyRow
                     if (uiState.oneTimeProducts.isNotEmpty()) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .horizontalScroll(rememberScrollState()),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        val listState = rememberLazyListState()
+                        
+                        // Auto-scroll to selected product when it changes
+                        LaunchedEffect(uiState.selectedOneTimeProduct?.productId) {
+                            uiState.selectedOneTimeProduct?.let { selectedProduct ->
+                                val selectedIndex = uiState.oneTimeProducts.indexOfFirst { 
+                                    it.productId == selectedProduct.productId 
+                                }
+                                if (selectedIndex >= 0) {
+                                    android.util.Log.d("BuyCreditsScreen", "Auto-scrolling to product at index $selectedIndex")
+                                    listState.animateScrollToItem(selectedIndex)
+                                }
+                            }
+                        }
+                        
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            state = listState,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 4.dp)
                         ) {
-                            uiState.oneTimeProducts.forEach { product ->
+                            items(uiState.oneTimeProducts) { product ->
                                 OneTimeProductCard(
                                     product = product,
                                     isSelected = uiState.selectedOneTimeProduct?.productId == product.productId,
@@ -833,7 +851,7 @@ fun OneTimeProductCard(
                         .padding(horizontal = 12.dp, vertical = 4.dp)
                 ) {
                     Text(
-                        text = if (product.isBestValue) "BEST VALUE" else "POPULAR",
+                        text = if (product.isBestValue) "Best Value" else "Popular",
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
