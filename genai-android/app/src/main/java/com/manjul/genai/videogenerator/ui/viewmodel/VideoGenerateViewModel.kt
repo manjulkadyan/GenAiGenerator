@@ -155,13 +155,17 @@ class VideoGenerateViewModel(
             // Upload frames first (before setting isGenerating)
             val firstUrl = snapshot.firstFrameUri?.let { uri ->
                 _state.update { it.copy(uploadMessage = "📤 Uploading first frame...") }
+                android.util.Log.d("VideoGenerateVM", "📤 Set uploadMessage: Uploading first frame...")
                 val url = uploadReferenceFrame(uri, "first frame")
+                android.util.Log.d("VideoGenerateVM", "✅ First frame upload complete: $url")
                 AnalyticsManager.trackReferenceFrameUploaded("first", url != null)
                 url ?: return@launch
             }
             val lastUrl = snapshot.lastFrameUri?.let { uri ->
                 _state.update { it.copy(uploadMessage = "📤 Uploading last frame...") }
+                android.util.Log.d("VideoGenerateVM", "📤 Set uploadMessage: Uploading last frame...")
                 val url = uploadReferenceFrame(uri, "last frame")
+                android.util.Log.d("VideoGenerateVM", "✅ Last frame upload complete: $url")
                 AnalyticsManager.trackReferenceFrameUploaded("last", url != null)
                 url ?: return@launch
             }
@@ -182,6 +186,8 @@ class VideoGenerateViewModel(
 
             // Update message before credit check
             _state.update { it.copy(uploadMessage = "✅ Frames uploaded • Submitting request...") }
+            android.util.Log.d("VideoGenerateVM", "✅ Set uploadMessage: Frames uploaded • Submitting request...")
+            
             
             // Track generation started
             AnalyticsManager.trackGenerateVideoStarted(
