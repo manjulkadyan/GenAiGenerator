@@ -238,8 +238,8 @@ fun GenAiRoot() {
     
     Scaffold(
         bottomBar = {
-            // Hide bottom navigation bar when BuyCreditsScreen is shown (full screen)
-            if (!showBuyCreditsScreen) {
+            // Hide bottom navigation bar when BuyCreditsScreen or SubscriptionManagementScreen is shown (full screen)
+            if (!showBuyCreditsScreen && !showSubscriptionManagementScreen) {
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.BottomCenter

@@ -76,8 +76,12 @@ fun SubscriptionManagementScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val billingRepository = remember { com.manjul.genai.videogenerator.data.repository.BillingRepository(context) }
     val viewModel: SubscriptionManagementViewModel = viewModel(
-        factory = SubscriptionManagementViewModelFactory(context.applicationContext as android.app.Application)
+        factory = SubscriptionManagementViewModelFactory(
+            context.applicationContext as android.app.Application,
+            billingRepository
+        )
     )
     val uiState by viewModel.uiState.collectAsState()
 
