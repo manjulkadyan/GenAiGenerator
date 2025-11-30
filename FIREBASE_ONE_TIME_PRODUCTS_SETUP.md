@@ -17,40 +17,51 @@ One-time product configurations are now fetched from Firebase (just like subscri
   "subscriptionPlans": [ ... existing plans ... ],
   "oneTimeProducts": [
     {
-      "productId": "credits_100",
-      "credits": 100,
+  "oneTimeProducts": [
+    {
+      "productId": "credits_50",
+      "credits": 50,
       "price": "$9.99",
       "isPopular": false,
       "isBestValue": false
     },
     {
-      "productId": "credits_200",
-      "credits": 200,
+      "productId": "credits_100",
+      "credits": 100,
       "price": "$17.99",
       "isPopular": false,
-      "isBestValue": true
+      "isBestValue": false
     },
     {
-      "productId": "credits_300",
-      "credits": 300,
+      "productId": "credits_150",
+      "credits": 150,
       "price": "$24.99",
       "isPopular": false,
       "isBestValue": false
     },
     {
-      "productId": "credits_500",
-      "credits": 500,
+      "productId": "credits_250",
+      "credits": 250,
       "price": "$39.99",
       "isPopular": true,
+      "isBestValue": true
+    },
+    {
+      "productId": "credits_500",
+      "credits": 500,
+      "price": "$69.99",
+      "isPopular": false,
       "isBestValue": false
     },
     {
       "productId": "credits_1000",
       "credits": 1000,
-      "price": "$69.99",
+      "price": "$129.99",
       "isPopular": false,
       "isBestValue": false
     }
+  ]
+}
   ],
   "testimonials": [ ... existing testimonials ... ]
 }

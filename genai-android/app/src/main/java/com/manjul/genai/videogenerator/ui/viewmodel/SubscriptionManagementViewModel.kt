@@ -4,14 +4,17 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.android.billingclient.api.Purchase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.manjul.genai.videogenerator.data.model.PurchaseHistoryItem
 import com.manjul.genai.videogenerator.data.model.PurchaseType
+import com.manjul.genai.videogenerator.data.repository.BillingRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,12 +26,13 @@ import java.util.*
 /**
  * ViewModel for Subscription Management Screen
  * Handles:
- * - Active subscription status
- * - Purchase history (subscriptions + one-time purchases)
+ * - Active subscription status FROM GOOGLE PLAY BILLING LIBRARY (real-time)
+ * - Purchase history (subscriptions + one-time purchases) from Firestore
  * - Deep links to Google Play subscription management
  */
 class SubscriptionManagementViewModel(
-    private val application: Application
+    private val application: Application,
+    private val billingRepository: BillingRepository
 ) : ViewModel() {
 
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
@@ -38,76 +42,139 @@ class SubscriptionManagementViewModel(
     val uiState: StateFlow<SubscriptionManagementUiState> = _uiState.asStateFlow()
 
     init {
-        loadSubscriptionStatus()
+        Log.d("SubscriptionMgmtVM", "Initializing - will query Google Play Billing")
+        loadSubscriptionStatusFromGooglePlay()
         loadPurchaseHistory()
     }
 
     /**
-     * Load active subscription status from Firestore
+     * Load active subscription status FROM GOOGLE PLAY BILLING LIBRARY
+     * This queries Google Play directly for real-time subscription status
      */
-    private fun loadSubscriptionStatus() {
+    private fun loadSubscriptionStatusFromGooglePlay() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
 
             try {
-                val userId = auth.currentUser?.uid
-                if (userId == null) {
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        error = "User not authenticated"
-                    )
-                    return@launch
-                }
+                Log.d("SubscriptionMgmtVM", "Querying purchases from Google Play Billing...")
+                
+                // Query purchases from Google Play Billing Library
+                val result = billingRepository.queryPurchases()
+                
+                result.fold(
+                    onSuccess = { purchases ->
+                        Log.d("SubscriptionMgmtVM", "Found ${purchases.size} total purchases from Google Play")
+                        
+                        // Filter for active subscriptions (PURCHASED state and product ID starts with "weekly_")
+                        val activeSubscriptions = purchases.filter { purchase ->
+                            purchase.purchaseState == Purchase.PurchaseState.PURCHASED &&
+                            purchase.products.any { it.startsWith("weekly_") }
+                        }
+                        
+                        Log.d("SubscriptionMgmtVM", "Found ${activeSubscriptions.size} active subscriptions")
+                        
+                        if (activeSubscriptions.isEmpty()) {
+                            _uiState.value = _uiState.value.copy(
+                                isLoading = false,
+                                hasActiveSubscription = false,
+                                activeSubscription = null
+                            )
+                            return@fold
+                        }
 
-                // Query active subscriptions
-                val subscriptionsSnapshot = firestore
-                    .collection("users")
-                    .document(userId)
-                    .collection("subscriptions")
-                    .whereEqualTo("status", "active")
-                    .get()
-                    .await()
-
-                if (subscriptionsSnapshot.isEmpty) {
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        hasActiveSubscription = false,
-                        activeSubscription = null
-                    )
-                    return@launch
-                }
-
-                // Get the first active subscription
-                val subscriptionDoc = subscriptionsSnapshot.documents.firstOrNull()
-                if (subscriptionDoc != null) {
-                    val productId = subscriptionDoc.getString("productId") ?: ""
-                    val creditsPerRenewal = subscriptionDoc.getLong("creditsPerRenewal")?.toInt() ?: 0
-                    val nextRenewalDate = subscriptionDoc.getTimestamp("nextRenewalDate")
-                    val createdAt = subscriptionDoc.getTimestamp("createdAt")
-
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        hasActiveSubscription = true,
-                        activeSubscription = ActiveSubscriptionInfo(
-                            productId = productId,
-                            creditsPerWeek = creditsPerRenewal,
-                            startDate = createdAt?.toDate(),
-                            nextRenewalDate = nextRenewalDate?.toDate()
+                        // Get the first active subscription
+                        val subscription = activeSubscriptions.firstOrNull()
+                        if (subscription != null) {
+                            val productId = subscription.products.firstOrNull() ?: ""
+                            
+                            // Now fetch additional details from Firestore (like credits per renewal)
+                            loadSubscriptionDetailsFromFirestore(productId, subscription.purchaseToken)
+                        } else {
+                            _uiState.value = _uiState.value.copy(
+                                isLoading = false,
+                                hasActiveSubscription = false
+                            )
+                        }
+                    },
+                    onFailure = { error ->
+                        Log.e("SubscriptionMgmtVM", "Error querying purchases from Google Play", error)
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            error = "Failed to load subscription status: ${error.message}"
                         )
-                    )
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        hasActiveSubscription = false
-                    )
-                }
+                    }
+                )
             } catch (e: Exception) {
-                android.util.Log.e("SubscriptionMgmtVM", "Error loading subscription status", e)
+                Log.e("SubscriptionMgmtVM", "Error loading subscription status", e)
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
                     error = "Failed to load subscription status: ${e.message}"
                 )
             }
+        }
+    }
+
+    /**
+     * Load subscription details from Firestore (credits, renewal date, etc.)
+     * This supplements the Google Play data with our backend info
+     */
+    private suspend fun loadSubscriptionDetailsFromFirestore(productId: String, purchaseToken: String) {
+        try {
+            val userId = auth.currentUser?.uid
+            if (userId == null) {
+                Log.w("SubscriptionMgmtVM", "User not authenticated")
+                _uiState.value = _uiState.value.copy(isLoading = false)
+                return
+            }
+
+            Log.d("SubscriptionMgmtVM", "Loading Firestore details for product: $productId")
+
+            // Query subscription details from Firestore
+            val subscriptionDoc = firestore
+                .collection("users")
+                .document(userId)
+                .collection("subscriptions")
+                .document(productId)
+                .get()
+                .await()
+
+            if (subscriptionDoc.exists()) {
+                val creditsPerRenewal = subscriptionDoc.getLong("creditsPerRenewal")?.toInt() ?: 0
+                val nextRenewalDate = subscriptionDoc.getTimestamp("nextRenewalDate")
+                val createdAt = subscriptionDoc.getTimestamp("createdAt")
+
+                Log.d("SubscriptionMgmtVM", "Found subscription: $creditsPerRenewal credits/week, next renewal: $nextRenewalDate")
+
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    hasActiveSubscription = true,
+                    activeSubscription = ActiveSubscriptionInfo(
+                        productId = productId,
+                        creditsPerWeek = creditsPerRenewal,
+                        startDate = createdAt?.toDate(),
+                        nextRenewalDate = nextRenewalDate?.toDate()
+                    )
+                )
+            } else {
+                Log.w("SubscriptionMgmtVM", "Subscription found in Google Play but not in Firestore. This might be normal for new subscriptions.")
+                // Still show that there's an active subscription, even if we don't have all details
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    hasActiveSubscription = true,
+                    activeSubscription = ActiveSubscriptionInfo(
+                        productId = productId,
+                        creditsPerWeek = 0, // Unknown
+                        startDate = null,
+                        nextRenewalDate = null
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            Log.e("SubscriptionMgmtVM", "Error loading Firestore subscription details", e)
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                error = "Failed to load subscription details: ${e.message}"
+            )
         }
     }
 
@@ -123,6 +190,8 @@ class SubscriptionManagementViewModel(
                     return@launch
                 }
 
+                Log.d("SubscriptionMgmtVM", "Loading purchase history from Firestore...")
+
                 // Query all purchases, sorted by date (newest first)
                 val purchasesSnapshot = firestore
                     .collection("users")
@@ -132,6 +201,8 @@ class SubscriptionManagementViewModel(
                     .limit(50) // Limit to last 50 purchases
                     .get()
                     .await()
+
+                Log.d("SubscriptionMgmtVM", "Found ${purchasesSnapshot.size()} purchase history items")
 
                 val purchaseHistory = purchasesSnapshot.documents.mapNotNull { doc ->
                     try {
@@ -170,7 +241,7 @@ class SubscriptionManagementViewModel(
                             productName = productName
                         )
                     } catch (e: Exception) {
-                        android.util.Log.e("SubscriptionMgmtVM", "Error parsing purchase: ${doc.id}", e)
+                        Log.e("SubscriptionMgmtVM", "Error parsing purchase: ${doc.id}", e)
                         null
                     }
                 }
@@ -180,7 +251,7 @@ class SubscriptionManagementViewModel(
                     isLoadingHistory = false
                 )
             } catch (e: Exception) {
-                android.util.Log.e("SubscriptionMgmtVM", "Error loading purchase history", e)
+                Log.e("SubscriptionMgmtVM", "Error loading purchase history", e)
                 _uiState.value = _uiState.value.copy(
                     isLoadingHistory = false,
                     error = "Failed to load purchase history: ${e.message}"
@@ -205,11 +276,12 @@ class SubscriptionManagementViewModel(
     fun openSubscriptionManagement(context: Context) {
         try {
             val url = getSubscriptionManagementUrl()
+            Log.d("SubscriptionMgmtVM", "Opening subscription management: $url")
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
         } catch (e: Exception) {
-            android.util.Log.e("SubscriptionMgmtVM", "Error opening subscription management", e)
+            Log.e("SubscriptionMgmtVM", "Error opening subscription management", e)
             _uiState.value = _uiState.value.copy(
                 error = "Failed to open subscription management"
             )
@@ -239,7 +311,8 @@ class SubscriptionManagementViewModel(
      * Refresh all data
      */
     fun refresh() {
-        loadSubscriptionStatus()
+        Log.d("SubscriptionMgmtVM", "Refreshing subscription status and purchase history")
+        loadSubscriptionStatusFromGooglePlay()
         loadPurchaseHistory()
     }
 
@@ -264,7 +337,7 @@ data class SubscriptionManagementUiState(
 )
 
 /**
- * Active subscription information
+ * Active subscription information (from Google Play + Firestore)
  */
 data class ActiveSubscriptionInfo(
     val productId: String,
@@ -277,12 +350,13 @@ data class ActiveSubscriptionInfo(
  * Factory for creating SubscriptionManagementViewModel
  */
 class SubscriptionManagementViewModelFactory(
-    private val application: Application
+    private val application: Application,
+    private val billingRepository: BillingRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SubscriptionManagementViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return SubscriptionManagementViewModel(application) as T
+            return SubscriptionManagementViewModel(application, billingRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
