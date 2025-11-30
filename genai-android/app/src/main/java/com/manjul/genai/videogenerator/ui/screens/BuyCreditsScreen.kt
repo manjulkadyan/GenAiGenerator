@@ -463,16 +463,27 @@ fun BuyCreditsScreen(
                     // Using same SubscriptionPlanCard component for consistency
                     if (uiState.oneTimeProducts.isNotEmpty()) {
                         val listState = rememberLazyListState()
+                        val configuration = LocalConfiguration.current
+                        val screenWidth = configuration.screenWidthDp.dp
                         
-                        // Auto-scroll to selected product when it changes
+                        // Auto-scroll to center the selected product when it changes
                         LaunchedEffect(uiState.selectedOneTimeProduct?.productId) {
                             uiState.selectedOneTimeProduct?.let { selectedProduct ->
                                 val selectedIndex = uiState.oneTimeProducts.indexOfFirst { 
                                     it.productId == selectedProduct.productId 
                                 }
                                 if (selectedIndex >= 0) {
-                                    android.util.Log.d("BuyCreditsScreen", "Auto-scrolling to product at index $selectedIndex")
-                                    listState.animateScrollToItem(selectedIndex)
+                                    android.util.Log.d("BuyCreditsScreen", "Auto-scrolling to center product at index $selectedIndex")
+                                    
+                                    // Calculate offset to center the item
+                                    // Card width is 120.dp + 8.dp spacing, screen width / 2 to center
+                                    val cardWidth = 128 // 120dp card + 8dp spacing
+                                    val offset = (screenWidth.value  - cardWidth ).toInt().coerceAtLeast(0)
+                                    
+                                    listState.animateScrollToItem(
+                                        index = selectedIndex,
+                                        scrollOffset = -offset
+                                    )
                                 }
                             }
                         }
