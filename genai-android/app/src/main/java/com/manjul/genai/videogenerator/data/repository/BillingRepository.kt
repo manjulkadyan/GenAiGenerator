@@ -499,6 +499,10 @@ class BillingRepository(private val context: Context) {
      * 
      * ⚠️ CRITICAL: Only acknowledge purchases in PURCHASED state, not PENDING.
      * The three-day acknowledgement window begins only when purchase transitions from PENDING to PURCHASED.
+     * 
+     * ⚠️ NOTE: For ONE-TIME purchases (INAPP), we DON'T acknowledge here.
+     * The backend (Cloud Function) handles acknowledgment AFTER verification and credit addition.
+     * This prevents duplicate acknowledgments and ensures entitlement is granted before acknowledging.
      */
     private fun handlePurchase(purchase: Purchase) {
         // ⚠️ CRITICAL: Only process PURCHASED purchases, not PENDING
@@ -507,6 +511,16 @@ class BillingRepository(private val context: Context) {
             return
         }
         
+        // Check if this is a one-time purchase (product ID starts with "credits_")
+        val productId = purchase.products.firstOrNull() ?: ""
+        val isOneTimePurchase = productId.startsWith("credits_")
+        
+        if (isOneTimePurchase) {
+            Log.d("BillingRepository", "One-time purchase detected: $productId. Backend will handle acknowledgment.")
+            return // Backend Cloud Function will acknowledge after verification
+        }
+        
+        // For subscriptions, acknowledge locally
         if (!purchase.isAcknowledged) {
             val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
                 .setPurchaseToken(purchase.purchaseToken)
@@ -515,7 +529,7 @@ class BillingRepository(private val context: Context) {
             billingClient?.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
                 when (billingResult.responseCode) {
                     BillingClient.BillingResponseCode.OK -> {
-                        Log.d("BillingRepository", "Purchase acknowledged successfully: ${purchase.products.firstOrNull()}")
+                        Log.d("BillingRepository", "Subscription acknowledged successfully: ${purchase.products.firstOrNull()}")
                     }
                     BillingClient.BillingResponseCode.ITEM_NOT_OWNED -> {
                         // Possibly stale cache - query purchases again
@@ -525,13 +539,13 @@ class BillingRepository(private val context: Context) {
                         }
                     }
                     else -> {
-                        android.util.Log.e("BillingRepository", "Failed to acknowledge purchase: ${billingResult.debugMessage} (code: ${billingResult.responseCode})")
+                        android.util.Log.e("BillingRepository", "Failed to acknowledge subscription: ${billingResult.debugMessage} (code: ${billingResult.responseCode})")
                         // ⚠️ TODO: Implement retry logic with exponential backoff for transient errors
                     }
                 }
             }
         } else {
-            Log.d("BillingRepository", "Purchase already acknowledged: ${purchase.products.firstOrNull()}")
+            Log.d("BillingRepository", "Subscription already acknowledged: ${purchase.products.firstOrNull()}")
         }
     }
     
