@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -107,8 +108,8 @@ fun BuyCreditsScreen(
     LaunchedEffect(Unit) {
         AnalyticsManager.trackScreenView("BuyCredits")
         AnalyticsManager.trackCreditsViewed()
-        android.util.Log.d("BuyCreditsScreen", "=== Screen Initialized ===")
-        android.util.Log.d("BuyCreditsScreen", "Screen height: ${screenHeightDp}dp, Video height: ${videoHeightDp}dp")
+        Log.d("BuyCreditsScreen", "=== Screen Initialized ===")
+        Log.d("BuyCreditsScreen", "Screen height: ${screenHeightDp}dp, Video height: ${videoHeightDp}dp")
     }
     
     // Log complete state summary when key values change
@@ -119,56 +120,56 @@ fun BuyCreditsScreen(
         uiState.config.subscriptionPlans.size,
         uiState.productDetails.keys.size
     ) {
-        android.util.Log.d("BuyCreditsScreen", "=== State Summary ===")
-        android.util.Log.d("BuyCreditsScreen", "Loading: ${uiState.isLoading}")
-        android.util.Log.d("BuyCreditsScreen", "Billing initialized: ${uiState.billingInitialized}")
-        android.util.Log.d("BuyCreditsScreen", "Purchase in progress: ${uiState.isPurchaseInProgress}")
-        android.util.Log.d("BuyCreditsScreen", "Selected plan: ${uiState.selectedPlan?.productId ?: "none"}")
-        android.util.Log.d("BuyCreditsScreen", "Plans available: ${uiState.config.subscriptionPlans.size}")
-        android.util.Log.d("BuyCreditsScreen", "Product details loaded: ${uiState.productDetails.keys.size}")
-        android.util.Log.d("BuyCreditsScreen", "Features count: ${uiState.config.features.size}")
-        android.util.Log.d("BuyCreditsScreen", "Error: ${uiState.error ?: "none"}")
-        android.util.Log.d("BuyCreditsScreen", "Purchase message: ${uiState.purchaseMessage ?: "none"}")
-        android.util.Log.d("BuyCreditsScreen", "Continue button enabled: ${!uiState.isPurchaseInProgress && uiState.selectedPlan != null && uiState.billingInitialized}")
+        Log.d("BuyCreditsScreen", "=== State Summary ===")
+        Log.d("BuyCreditsScreen", "Loading: ${uiState.isLoading}")
+        Log.d("BuyCreditsScreen", "Billing initialized: ${uiState.billingInitialized}")
+        Log.d("BuyCreditsScreen", "Purchase in progress: ${uiState.isPurchaseInProgress}")
+        Log.d("BuyCreditsScreen", "Selected plan: ${uiState.selectedPlan?.productId ?: "none"}")
+        Log.d("BuyCreditsScreen", "Plans available: ${uiState.config.subscriptionPlans.size}")
+        Log.d("BuyCreditsScreen", "Product details loaded: ${uiState.productDetails.keys.size}")
+        Log.d("BuyCreditsScreen", "Features count: ${uiState.config.features.size}")
+        Log.d("BuyCreditsScreen", "Error: ${uiState.error ?: "none"}")
+        Log.d("BuyCreditsScreen", "Purchase message: ${uiState.purchaseMessage ?: "none"}")
+        Log.d("BuyCreditsScreen", "Continue button enabled: ${!uiState.isPurchaseInProgress && uiState.selectedPlan != null && uiState.billingInitialized}")
     }
     
     // Log UI state changes
     LaunchedEffect(uiState.billingInitialized) {
-        android.util.Log.d("BuyCreditsScreen", "Billing initialized: ${uiState.billingInitialized}")
+        Log.d("BuyCreditsScreen", "Billing initialized: ${uiState.billingInitialized}")
     }
     
     LaunchedEffect(uiState.selectedPlan) {
-        android.util.Log.d("BuyCreditsScreen", "Selected plan changed: ${uiState.selectedPlan?.productId ?: "null"}")
+        Log.d("BuyCreditsScreen", "Selected plan changed: ${uiState.selectedPlan?.productId ?: "null"}")
         if (uiState.selectedPlan != null) {
-            android.util.Log.d("BuyCreditsScreen", "Plan details - ProductId: ${uiState.selectedPlan?.productId}, Credits: ${uiState.selectedPlan?.credits}, Price: ${uiState.selectedPlan?.price}")
+            Log.d("BuyCreditsScreen", "Plan details - ProductId: ${uiState.selectedPlan?.productId}, Credits: ${uiState.selectedPlan?.credits}, Price: ${uiState.selectedPlan?.price}")
         }
     }
     
     LaunchedEffect(uiState.isPurchaseInProgress) {
-        android.util.Log.d("BuyCreditsScreen", "Purchase in progress: ${uiState.isPurchaseInProgress}")
+        Log.d("BuyCreditsScreen", "Purchase in progress: ${uiState.isPurchaseInProgress}")
     }
     
     LaunchedEffect(uiState.isLoading) {
-        android.util.Log.d("BuyCreditsScreen", "Loading state: ${uiState.isLoading}")
+        Log.d("BuyCreditsScreen", "Loading state: ${uiState.isLoading}")
     }
     
     LaunchedEffect(uiState.config.subscriptionPlans.size) {
-        android.util.Log.d("BuyCreditsScreen", "Subscription plans count: ${uiState.config.subscriptionPlans.size}")
+        Log.d("BuyCreditsScreen", "Subscription plans count: ${uiState.config.subscriptionPlans.size}")
         uiState.config.subscriptionPlans.forEachIndexed { index, plan ->
-            android.util.Log.d("BuyCreditsScreen", "Plan $index: productId=${plan.productId}, price=${plan.price}, credits=${plan.credits}, isPopular=${plan.isPopular}")
+            Log.d("BuyCreditsScreen", "Plan $index: productId=${plan.productId}, price=${plan.price}, credits=${plan.credits}, isPopular=${plan.isPopular}")
         }
     }
     
     LaunchedEffect(uiState.productDetails.keys.size) {
-        android.util.Log.d("BuyCreditsScreen", "Product details loaded: ${uiState.productDetails.keys.size} products")
+        Log.d("BuyCreditsScreen", "Product details loaded: ${uiState.productDetails.keys.size} products")
         uiState.productDetails.forEach { (productId, _) ->
-            android.util.Log.d("BuyCreditsScreen", "Product detail available: $productId")
+            Log.d("BuyCreditsScreen", "Product detail available: $productId")
         }
     }
     
     // Handle system back button - navigate back instead of closing app
     BackHandler(enabled = true) {
-        android.util.Log.d("BuyCreditsScreen", "Back button pressed - navigating back")
+        Log.d("BuyCreditsScreen", "Back button pressed - navigating back")
         onBackClick()
     }
     
@@ -177,7 +178,7 @@ fun BuyCreditsScreen(
         if (uiState.selectedPlan == null && uiState.config.subscriptionPlans.isNotEmpty()) {
             val popularPlan = uiState.config.subscriptionPlans.firstOrNull { it.isPopular }
             if (popularPlan != null) {
-                android.util.Log.d("BuyCreditsScreen", "Auto-selecting popular plan: ${popularPlan.productId}")
+                Log.d("BuyCreditsScreen", "Auto-selecting popular plan: ${popularPlan.productId}")
                 viewModel.selectPlan(popularPlan)
             } else {
                 android.util.Log.w("BuyCreditsScreen", "No popular plan found in ${uiState.config.subscriptionPlans.size} plans")
@@ -194,7 +195,7 @@ fun BuyCreditsScreen(
     // Show purchase success/error messages
     LaunchedEffect(uiState.purchaseMessage) {
         uiState.purchaseMessage?.let { message ->
-            android.util.Log.d("BuyCreditsScreen", "Purchase message received: $message")
+            Log.d("BuyCreditsScreen", "Purchase message received: $message")
             // Check if it's a success message
             if (message.contains("successfully", ignoreCase = true)) {
                 // Show success dialog instead of snackbar
@@ -239,10 +240,10 @@ fun BuyCreditsScreen(
             if (uiState.config.backgroundVideoUrl.isNotEmpty()) {
                 // Debug: Log the video URL we're receiving
                 LaunchedEffect(uiState.config.backgroundVideoUrl) {
-                    android.util.Log.d("BuyCreditsScreen", "=== Video Configuration ===")
-                    android.util.Log.d("BuyCreditsScreen", "Video URL from config: ${uiState.config.backgroundVideoUrl}")
-                    android.util.Log.d("BuyCreditsScreen", "Video URL length: ${uiState.config.backgroundVideoUrl.length}")
-                    android.util.Log.d("BuyCreditsScreen", "Is m3u8: ${uiState.config.backgroundVideoUrl.contains("m3u8", ignoreCase = true)}")
+                    Log.d("BuyCreditsScreen", "=== Video Configuration ===")
+                    Log.d("BuyCreditsScreen", "Video URL from config: ${uiState.config.backgroundVideoUrl}")
+                    Log.d("BuyCreditsScreen", "Video URL length: ${uiState.config.backgroundVideoUrl.length}")
+                    Log.d("BuyCreditsScreen", "Is m3u8: ${uiState.config.backgroundVideoUrl.contains("m3u8", ignoreCase = true)}")
                 }
                 
                 // HLS-only video player for adaptive streaming
@@ -294,7 +295,7 @@ fun BuyCreditsScreen(
                             )
                             .size(32.dp)
                             .clickable(onClick = {
-                                android.util.Log.d("BuyCreditsScreen", "Close button clicked")
+                                Log.d("BuyCreditsScreen", "Close button clicked")
                                 onBackClick()
                             }),
                         contentAlignment = Alignment.Center
@@ -324,7 +325,7 @@ fun BuyCreditsScreen(
                 // Features section - NOT scrollable, sheet itself is draggable
                 LaunchedEffect(uiState.config.features.size) {
                     if (uiState.config.features.isNotEmpty()) {
-                        android.util.Log.d("BuyCreditsScreen", "Displaying ${uiState.config.features.size} features")
+                        Log.d("BuyCreditsScreen", "Displaying ${uiState.config.features.size} features")
                     } else {
                         android.util.Log.w("BuyCreditsScreen", "No features in config to display")
                     }
@@ -450,7 +451,7 @@ fun BuyCreditsScreen(
                                     plan = plan,
                                     isSelected = uiState.selectedPlan?.productId == plan.productId,
                                     onClick = {
-                                        android.util.Log.d("BuyCreditsScreen", "Plan clicked: ${plan.productId}")
+                                        Log.d("BuyCreditsScreen", "Plan clicked: ${plan.productId}")
                                         viewModel.selectPlan(plan)
                                     },
                                     modifier = Modifier.weight(1f)
@@ -473,7 +474,7 @@ fun BuyCreditsScreen(
                                     it.productId == selectedProduct.productId 
                                 }
                                 if (selectedIndex >= 0) {
-                                    android.util.Log.d("BuyCreditsScreen", "Auto-scrolling to center product at index $selectedIndex")
+                                    Log.d("BuyCreditsScreen", "Auto-scrolling to center product at index $selectedIndex")
                                     
                                     // Calculate offset to center the item
                                     // Card width is 120.dp + 8.dp spacing, screen width / 2 to center
@@ -509,7 +510,7 @@ fun BuyCreditsScreen(
                                     plan = planForDisplay,
                                     isSelected = uiState.selectedOneTimeProduct?.productId == product.productId,
                                     onClick = {
-                                        android.util.Log.d("BuyCreditsScreen", "One-time product clicked: ${product.productId}")
+                                        Log.d("BuyCreditsScreen", "One-time product clicked: ${product.productId}")
                                         viewModel.selectOneTimeProduct(product)
                                     },
                                     modifier = Modifier.width(120.dp),
@@ -540,23 +541,23 @@ fun BuyCreditsScreen(
                             shape = RoundedCornerShape(12.dp)
                         )
                         .clickable(enabled = canPurchase) {
-                            android.util.Log.d("BuyCreditsScreen", "=== Continue Button Clicked ===")
-                            android.util.Log.d("BuyCreditsScreen", "Purchase type: ${uiState.selectedPurchaseType}")
+                            Log.d("BuyCreditsScreen", "=== Continue Button Clicked ===")
+                            Log.d("BuyCreditsScreen", "Purchase type: ${uiState.selectedPurchaseType}")
                             
                             if (uiState.selectedPurchaseType == PurchaseType.SUBSCRIPTION) {
                                 uiState.selectedPlan?.let { plan ->
-                                    android.util.Log.d("BuyCreditsScreen", "Attempting to purchase plan: ${plan.productId}")
+                                    Log.d("BuyCreditsScreen", "Attempting to purchase plan: ${plan.productId}")
                                     if (context is Activity && uiState.billingInitialized) {
                                         val billingResult = viewModel.purchasePlan(context, plan)
-                                        android.util.Log.d("BuyCreditsScreen", "Purchase initiated - Response code: ${billingResult.responseCode}")
+                                        Log.d("BuyCreditsScreen", "Purchase initiated - Response code: ${billingResult.responseCode}")
                                     }
                                 }
                             } else {
                                 uiState.selectedOneTimeProduct?.let { product ->
-                                    android.util.Log.d("BuyCreditsScreen", "Attempting to purchase one-time product: ${product.productId}")
+                                    Log.d("BuyCreditsScreen", "Attempting to purchase one-time product: ${product.productId}")
                                     if (context is Activity && uiState.billingInitialized) {
                                         val billingResult = viewModel.purchaseOneTimeProduct(context, product)
-                                        android.util.Log.d("BuyCreditsScreen", "Purchase initiated - Response code: ${billingResult.responseCode}")
+                                        Log.d("BuyCreditsScreen", "Purchase initiated - Response code: ${billingResult.responseCode}")
                                     }
                                 }
                             }
@@ -631,7 +632,7 @@ fun BuyCreditsScreen(
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                     TextButton(onClick = { 
-                        android.util.Log.d("BuyCreditsScreen", "Restore button clicked")
+                        Log.d("BuyCreditsScreen", "Restore button clicked")
                         // TODO: Implement restore purchases
                     }) {
                         Text(

@@ -2,6 +2,7 @@ package com.manjul.genai.videogenerator.ui.viewmodel
 
 import android.app.Activity
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -59,16 +60,29 @@ class LandingPageViewModel(
         loadConfig()
         initializeBilling()
         observePurchaseUpdates()
-        initializeOneTimeProducts()
     }
     
     private fun loadConfig() {
         viewModelScope.launch {
             landingPageRepository.observeConfig().collect { config ->
                 val currentState = _uiState.value
-                android.util.Log.d("LandingPageViewModel", "Config loaded: ${config.subscriptionPlans.size} plans, ${config.features.size} features")
+                android.util.Log.d("LandingPageViewModel", "Config loaded: ${config.subscriptionPlans.size} plans, ${config.oneTimeProducts.size} one-time products, ${config.features.size} features")
+                
+                // Convert OneTimeProductConfig to OneTimeProduct
+                val oneTimeProducts = config.oneTimeProducts.map { configProduct ->
+                    OneTimeProduct(
+                        productId = configProduct.productId,
+                        name = "${configProduct.credits} Credits",
+                        credits = configProduct.credits,
+                        price = configProduct.price,
+                        isPopular = configProduct.isPopular,
+                        isBestValue = configProduct.isBestValue
+                    )
+                }
+                
                 _uiState.value = currentState.copy(
                     config = config,
+                    oneTimeProducts = oneTimeProducts,
                     isLoading = false,
                     error = null
                 )
@@ -93,16 +107,16 @@ class LandingPageViewModel(
     
     private fun initializeBilling() {
         viewModelScope.launch {
-            android.util.Log.d("LandingPageViewModel", "Starting billing initialization...")
+            Log.d("LandingPageViewModel", "Starting billing initialization...")
             billingRepository.initialize().collect { billingResult ->
-                android.util.Log.d("LandingPageViewModel", "Billing initialization result: code=${billingResult.responseCode}, message=${billingResult.debugMessage}")
+                Log.d("LandingPageViewModel", "Billing initialization result: code=${billingResult.responseCode}, message=${billingResult.debugMessage}")
                 if (billingResult.responseCode == com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
-                    android.util.Log.d("LandingPageViewModel", "Billing initialized successfully - loading product details")
+                    Log.d("LandingPageViewModel", "Billing initialized successfully - loading product details")
                     _uiState.value = _uiState.value.copy(billingInitialized = true)
                     // Load product details after billing is initialized and ready
                     val currentConfig = _uiState.value.config
                     if (currentConfig.subscriptionPlans.isNotEmpty()) {
-                        android.util.Log.d("LandingPageViewModel", "Loading product details for ${currentConfig.subscriptionPlans.size} plans")
+                        Log.d("LandingPageViewModel", "Loading product details for ${currentConfig.subscriptionPlans.size} plans")
                         loadProductDetails(currentConfig.subscriptionPlans.map { it.productId })
                     } else {
                         android.util.Log.w("LandingPageViewModel", "No subscription plans in config to load")
@@ -124,10 +138,10 @@ class LandingPageViewModel(
             return
         }
         
-        android.util.Log.d("LandingPageViewModel", "Loading product details for: ${productIds.joinToString()}")
+        Log.d("LandingPageViewModel", "Loading product details for: ${productIds.joinToString()}")
         val result = billingRepository.queryProductDetails(productIds)
         result.onSuccess { productDetailsList ->
-            android.util.Log.d("LandingPageViewModel", "Loaded ${productDetailsList.size} product details")
+            Log.d("LandingPageViewModel", "Loaded ${productDetailsList.size} product details")
             if (productDetailsList.isEmpty()) {
                 _uiState.value = _uiState.value.copy(
                     error = "No products found. Please create subscription products in Google Play Console with IDs: ${productIds.joinToString()}"
@@ -198,14 +212,14 @@ class LandingPageViewModel(
      * Observe purchase updates from BillingRepository
      */
     private fun observePurchaseUpdates() {
-        android.util.Log.d("LandingPageViewModel", "Starting to observe purchase updates")
+        Log.d("LandingPageViewModel", "Starting to observe purchase updates")
         billingRepository.purchaseUpdates
             .onEach { event ->
-                android.util.Log.d("LandingPageViewModel", "=== Purchase Event Received ===")
+                Log.d("LandingPageViewModel", "=== Purchase Event Received ===")
                 when (event) {
                     is PurchaseUpdateEvent.Success -> {
-                android.util.Log.d("LandingPageViewModel", "✅ Purchase SUCCESS: ${event.purchase.products.firstOrNull()}")
-                android.util.Log.d("LandingPageViewModel", "Purchase state: ${event.purchase.purchaseState}, Acknowledged: ${event.purchase.isAcknowledged}")
+                Log.d("LandingPageViewModel", "✅ Purchase SUCCESS: ${event.purchase.products.firstOrNull()}")
+                Log.d("LandingPageViewModel", "Purchase state: ${event.purchase.purchaseState}, Acknowledged: ${event.purchase.isAcknowledged}")
                 
                 // Determine if this is a subscription or one-time purchase
                 val productId = event.purchase.products.firstOrNull() ?: ""
@@ -234,7 +248,7 @@ class LandingPageViewModel(
                 )
                     }
                     is PurchaseUpdateEvent.AlreadyOwned -> {
-                        android.util.Log.d("LandingPageViewModel", "ℹ️ Subscription already owned - syncing: ${event.purchase.products.firstOrNull()}")
+                        Log.d("LandingPageViewModel", "ℹ️ Subscription already owned - syncing: ${event.purchase.products.firstOrNull()}")
                         // Process existing subscription on the server to sync
                         viewModelScope.launch {
                             processSubscriptionPurchase(event.purchase)
@@ -250,7 +264,7 @@ class LandingPageViewModel(
                         val errorMessage = when (event.billingResult.responseCode) {
                             com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
                                 // This shouldn't happen now since we have AlreadyOwned event
-                                android.util.Log.d("LandingPageViewModel", "Item already owned - will sync existing subscription")
+                                Log.d("LandingPageViewModel", "Item already owned - will sync existing subscription")
                                 "Your subscription is already active"
                             }
                             com.android.billingclient.api.BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> {
@@ -270,7 +284,7 @@ class LandingPageViewModel(
                         )
                     }
                     is PurchaseUpdateEvent.UserCancelled -> {
-                        android.util.Log.d("LandingPageViewModel", "⚠️ User CANCELLED purchase")
+                        Log.d("LandingPageViewModel", "⚠️ User CANCELLED purchase")
                         _uiState.value = _uiState.value.copy(
                             isPurchaseInProgress = false,
                             purchaseMessage = null,
@@ -333,7 +347,7 @@ class LandingPageViewModel(
                 .getHttpsCallable("handleSubscriptionPurchase")
                 .call(data)
                 .await()
-            android.util.Log.d("LandingPageViewModel", "✅ Subscription sent to backend for processing")
+            Log.d("LandingPageViewModel", "✅ Subscription sent to backend for processing")
             _uiState.value = _uiState.value.copy(
                 purchaseMessage = "Subscription purchased! ${plan.credits} credits added to your account."
             )
@@ -346,63 +360,6 @@ class LandingPageViewModel(
     }
     
     /**
-     * Initialize hardcoded one-time product tiers
-     */
-    private fun initializeOneTimeProducts() {
-        val products = listOf(
-            OneTimeProduct(
-                productId = "credits_50",
-                name = "50 Credits",
-                credits = 50,
-                price = "$9.99",
-                isPopular = false,
-                isBestValue = false
-            ),
-            OneTimeProduct(
-                productId = "credits_100",
-                name = "100 Credits",
-                credits = 100,
-                price = "$17.99",
-                isPopular = false,
-                isBestValue = false
-            ),
-            OneTimeProduct(
-                productId = "credits_150",
-                name = "150 Credits",
-                credits = 150,
-                price = "$24.99",
-                isPopular = false,
-                isBestValue = false
-            ),
-            OneTimeProduct(
-                productId = "credits_250",
-                name = "250 Credits",
-                credits = 250,
-                price = "$39.99",
-                isPopular = true,
-                isBestValue = true
-            ),
-            OneTimeProduct(
-                productId = "credits_500",
-                name = "500 Credits",
-                credits = 500,
-                price = "$69.99",
-                isPopular = false,
-                isBestValue = true
-            ),
-            OneTimeProduct(
-                productId = "credits_1000",
-                name = "1000 Credits",
-                credits = 1000,
-                price = "$129.99",
-                isPopular = false,
-                isBestValue = false
-            )
-        )
-        _uiState.value = _uiState.value.copy(oneTimeProducts = products)
-    }
-    
-    /**
      * Load one-time product details from Play Store
      */
     suspend fun loadOneTimeProductDetails() {
@@ -412,10 +369,10 @@ class LandingPageViewModel(
             return
         }
         
-        android.util.Log.d("LandingPageViewModel", "Loading one-time product details for: ${productIds.joinToString()}")
+        Log.d("LandingPageViewModel", "Loading one-time product details for: ${productIds.joinToString()}")
         val result = billingRepository.queryOneTimeProducts(productIds)
         result.onSuccess { productDetailsList ->
-            android.util.Log.d("LandingPageViewModel", "Loaded ${productDetailsList.size} one-time product details")
+            Log.d("LandingPageViewModel", "Loaded ${productDetailsList.size} one-time product details")
             if (productDetailsList.isEmpty()) {
                 _uiState.value = _uiState.value.copy(
                     error = "No one-time products found. Please create INAPP products in Google Play Console with IDs: ${productIds.joinToString()}"
@@ -446,7 +403,7 @@ class LandingPageViewModel(
      */
     fun selectPurchaseType(type: PurchaseType) {
         _uiState.value = _uiState.value.copy(selectedPurchaseType = type)
-        android.util.Log.d("LandingPageViewModel", "Purchase type selected: $type")
+        Log.d("LandingPageViewModel", "Purchase type selected: $type")
         
         // Load one-time product details when switching to one-time type
         if (type == PurchaseType.ONE_TIME) {
@@ -463,7 +420,7 @@ class LandingPageViewModel(
                 val products = _uiState.value.oneTimeProducts
                 val secondToLast = products.filter { it.isPopular }.getOrNull(0)
                 if (secondToLast != null) {
-                    android.util.Log.d("LandingPageViewModel", "Auto-selecting second-to-last product: ${secondToLast.productId} (${secondToLast.credits} credits)")
+                    Log.d("LandingPageViewModel", "Auto-selecting second-to-last product: ${secondToLast.productId} (${secondToLast.credits} credits)")
                     _uiState.value = _uiState.value.copy(selectedOneTimeProduct = secondToLast)
                 }
             }
@@ -475,7 +432,7 @@ class LandingPageViewModel(
      */
     fun selectOneTimeProduct(product: OneTimeProduct) {
         _uiState.value = _uiState.value.copy(selectedOneTimeProduct = product)
-        android.util.Log.d("LandingPageViewModel", "One-time product selected: ${product.productId}")
+        Log.d("LandingPageViewModel", "One-time product selected: ${product.productId}")
     }
     
     /**
@@ -552,7 +509,7 @@ class LandingPageViewModel(
                 .getHttpsCallable("handleOneTimePurchase")
                 .call(data)
                 .await()
-            android.util.Log.d("LandingPageViewModel", "✅ One-time purchase sent to backend for processing")
+            Log.d("LandingPageViewModel", "✅ One-time purchase sent to backend for processing")
             _uiState.value = _uiState.value.copy(
                 purchaseMessage = "Purchase successful! ${product.credits} credits added to your account."
             )

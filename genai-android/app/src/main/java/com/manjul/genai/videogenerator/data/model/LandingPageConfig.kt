@@ -7,6 +7,7 @@ data class LandingPageConfig(
     val backgroundVideoUrl: String = "",
     val features: List<LandingPageFeature> = emptyList(),
     val subscriptionPlans: List<SubscriptionPlan> = emptyList(),
+    val oneTimeProducts: List<OneTimeProductConfig> = emptyList(), // Added one-time products
     val testimonials: List<Testimonial> = emptyList()
 )
 
@@ -32,7 +33,20 @@ data class Testimonial(
 )
 
 /**
+ * One-time product configuration from Firebase
+ * Matches the structure for Firebase Firestore fetching
+ */
+data class OneTimeProductConfig(
+    val credits: Int = 0,
+    val price: String = "",
+    val isPopular: Boolean = false,
+    val isBestValue: Boolean = false,
+    val productId: String = "" // Google Play product ID (e.g., credits_100, credits_200)
+)
+
+/**
  * One-time credit purchase product (INAPP type, not subscription)
+ * Used for runtime product details from Play Store
  */
 data class OneTimeProduct(
     val productId: String,
