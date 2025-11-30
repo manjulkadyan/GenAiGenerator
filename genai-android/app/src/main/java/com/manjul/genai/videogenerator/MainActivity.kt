@@ -2,6 +2,7 @@ package com.manjul.genai.videogenerator
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -45,7 +46,7 @@ class MainActivity : ComponentActivity() {
                 val processed = billingRepository.reprocessExistingPurchases()
                 processed.onSuccess {
                     if (it > 0) {
-                        android.util.Log.d(
+                        Log.d(
                             "MainActivity",
                             "Reprocessed $it purchase(s) on resume",
                         )

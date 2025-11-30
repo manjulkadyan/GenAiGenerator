@@ -1406,6 +1406,176 @@ export const handleSubscriptionPurchase = onCall<{
   },
 );
 
+/**
+ * Cloud Function: Handle One-Time Credit Purchase
+ * Verifies one-time INAPP purchase with Google Play and adds credits to user account
+ */
+export const handleOneTimePurchase = onCall<{
+  userId: string;
+  productId: string;
+  purchaseToken: string;
+}>(
+  {secrets: [playServiceAccountSecret]},
+
+  async ({data, auth}) => {
+    if (!auth) {
+      throw new Error("Missing auth.");
+    }
+
+    const {userId, productId, purchaseToken} = data;
+
+    console.log(
+      `=== handleOneTimePurchase called ===\n` +
+        `User: ${userId}\n` +
+        `Product: ${productId}\n` +
+        `Token: ${purchaseToken.substring(0, 20)}...`,
+    );
+
+    // Validate input
+    if (!userId || !productId || !purchaseToken) {
+      throw new Error("Missing required fields: userId, productId, purchaseToken");
+    }
+
+    // Extract credits from productId (e.g., "credits_200" -> 200)
+    const creditsMatch = productId.match(/credits_(\d+)/);
+    if (!creditsMatch) {
+      throw new Error(`Invalid product ID format: ${productId}. Expected format: credits_XXX`);
+    }
+    const credits = parseInt(creditsMatch[1], 10);
+
+    console.log(`Extracted ${credits} credits from product ID ${productId}`);
+
+    // Verify purchase with Google Play
+    let playPurchase = null;
+    try {
+      const publisher = getAndroidPublisher();
+      const response = await publisher.purchases.products.get({
+        packageName: playPackageName,
+        productId: productId,
+        token: purchaseToken,
+      });
+      playPurchase = response.data;
+      console.log(`✅ Google Play verified one-time purchase: ${productId}`);
+    } catch (error: any) {
+      console.error("❌ Error verifying one-time purchase with Google Play:", {
+        message: error?.message,
+        code: error?.code,
+        reason: error?.errors?.[0]?.reason,
+      });
+      throw new Error(`Failed to verify purchase with Google Play: ${error?.message}`);
+    }
+
+    // Check if purchase is valid
+    if (!playPurchase) {
+      throw new Error("Purchase verification returned null");
+    }
+
+    // Check purchase state (0 = purchased, 1 = canceled, 2 = pending)
+    if (playPurchase.purchaseState !== 0) {
+      throw new Error(
+        `Purchase not in valid state. State: ${playPurchase.purchaseState} (0=purchased, 1=canceled, 2=pending)`,
+      );
+    }
+
+    // Check if already acknowledged
+    if (playPurchase.acknowledgementState === 1) {
+      console.log("⚠️ Purchase already acknowledged, checking if credits were already added");
+    }
+
+    // Get user document
+    const userRef = firestore.collection("users").doc(userId);
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+      throw new Error(`User ${userId} not found`);
+    }
+
+    const currentCredits = (userDoc.data()?.credits as number) || 0;
+
+    // Check if this purchase was already processed (idempotency)
+    const purchaseRef = userRef.collection("purchases").doc(purchaseToken);
+    const existingPurchase = await purchaseRef.get();
+
+    if (existingPurchase.exists) {
+      console.log(`⚠️ Purchase ${purchaseToken} already processed, skipping credit addition`);
+      return {
+        success: true,
+        userId,
+        productId,
+        purchaseToken,
+        creditsAdded: 0,
+        previousBalance: currentCredits,
+        newBalance: currentCredits,
+        alreadyProcessed: true,
+      };
+    }
+
+    // Store purchase in history
+    const now = admin.firestore.Timestamp.now();
+    const priceMicros = parseInt(playPurchase.priceMicros || "0", 10);
+    const currency = playPurchase.priceCurrencyCode || "USD";
+
+    await purchaseRef.set({
+      purchaseToken,
+      productId,
+      type: "one_time",
+      credits,
+      priceMicros,
+      currency,
+      purchaseTime: now,
+      acknowledged: playPurchase.acknowledgementState === 1,
+      orderId: playPurchase.orderId || "",
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    // Add credits to user account
+    await userRef.update({
+      credits: admin.firestore.FieldValue.increment(credits),
+    });
+
+    const newCredits = currentCredits + credits;
+
+    console.log(
+      `✅ One-time purchase processed: ${productId} for user ${userId}. ` +
+        `Added ${credits} credits. New balance: ${newCredits}`,
+    );
+
+    // Acknowledge purchase with Google Play (if not already acknowledged)
+    if (playPurchase.acknowledgementState !== 1) {
+      try {
+        const publisher = getAndroidPublisher();
+        await publisher.purchases.products.acknowledge({
+          packageName: playPackageName,
+          productId: productId,
+          token: purchaseToken,
+        });
+        console.log(`✅ Acknowledged purchase ${purchaseToken} with Google Play`);
+
+        // Update purchase record
+        await purchaseRef.update({
+          acknowledged: true,
+          updatedAt: admin.firestore.Timestamp.now(),
+        });
+      } catch (error: any) {
+        console.error("❌ Failed to acknowledge purchase with Google Play:", error?.message);
+        // Don't throw - credits already added, acknowledgment can be retried
+      }
+    }
+
+    return {
+      success: true,
+      userId,
+      productId,
+      purchaseToken,
+      creditsAdded: credits,
+      previousBalance: currentCredits,
+      newBalance: newCredits,
+      alreadyProcessed: false,
+    };
+  },
+);
+
 const processUserSubscriptionRenewals = async (
   userId: string,
 ): Promise<RenewalResult> => {

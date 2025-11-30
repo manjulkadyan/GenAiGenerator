@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -38,7 +39,7 @@ object NotificationManager {
      */
     fun hasAskedForPermission(context: Context): Boolean {
         val result = getSharedPreferences(context).getBoolean(KEY_NOTIFICATION_PERMISSION_ASKED, false)
-        android.util.Log.d("NotificationManager", "hasAskedForPermission: $result")
+        Log.d("NotificationManager", "hasAskedForPermission: $result")
         return result
     }
     
@@ -46,11 +47,11 @@ object NotificationManager {
      * Mark that we've asked for notification permission
      */
     fun setPermissionAsked(context: Context) {
-        android.util.Log.d("NotificationManager", "setPermissionAsked called")
+        Log.d("NotificationManager", "setPermissionAsked called")
         getSharedPreferences(context).edit()
             .putBoolean(KEY_NOTIFICATION_PERMISSION_ASKED, true)
             .apply()
-        android.util.Log.d("NotificationManager", "Permission asked flag saved")
+        Log.d("NotificationManager", "Permission asked flag saved")
     }
     
     /**
@@ -58,7 +59,7 @@ object NotificationManager {
      */
     fun isNotificationEnabled(context: Context): Boolean {
         val result = getSharedPreferences(context).getBoolean(KEY_NOTIFICATION_ENABLED, false)
-        android.util.Log.d("NotificationManager", "isNotificationEnabled: $result")
+        Log.d("NotificationManager", "isNotificationEnabled: $result")
         return result
     }
     
@@ -66,11 +67,11 @@ object NotificationManager {
      * Set notification enabled status
      */
     fun setNotificationEnabled(context: Context, enabled: Boolean) {
-        android.util.Log.d("NotificationManager", "setNotificationEnabled: $enabled")
+        Log.d("NotificationManager", "setNotificationEnabled: $enabled")
         getSharedPreferences(context).edit()
             .putBoolean(KEY_NOTIFICATION_ENABLED, enabled)
             .apply()
-        android.util.Log.d("NotificationManager", "Notification enabled flag saved: $enabled")
+        Log.d("NotificationManager", "Notification enabled flag saved: $enabled")
     }
     
     /**
@@ -90,7 +91,7 @@ object NotificationManager {
             userRef.set(mapOf("fcm_token" to token), SetOptions.merge())
                 .await()
             
-            android.util.Log.d("NotificationManager", "FCM token saved for user $userId")
+            Log.d("NotificationManager", "FCM token saved for user $userId")
             Result.success(token)
         } catch (e: Exception) {
             android.util.Log.e("NotificationManager", "Failed to save FCM token", e)
@@ -105,7 +106,7 @@ object NotificationManager {
         return try {
             val token = saveFCMTokenToFirestore()
             token.onSuccess {
-                android.util.Log.d("NotificationManager", "Notifications enabled")
+                Log.d("NotificationManager", "Notifications enabled")
             }
             token
         } catch (e: Exception) {
@@ -129,7 +130,7 @@ object NotificationManager {
         getSharedPreferences(context).edit()
             .putInt(KEY_UNREAD_NOTIFICATION_COUNT, current + 1)
             .apply()
-        android.util.Log.d("NotificationManager", "Unread count incremented to: ${current + 1}")
+        Log.d("NotificationManager", "Unread count incremented to: ${current + 1}")
     }
     
     /**
@@ -139,7 +140,7 @@ object NotificationManager {
         getSharedPreferences(context).edit()
             .putInt(KEY_UNREAD_NOTIFICATION_COUNT, 0)
             .apply()
-        android.util.Log.d("NotificationManager", "Unread count cleared")
+        Log.d("NotificationManager", "Unread count cleared")
     }
     
     /**
@@ -164,9 +165,9 @@ object NotificationManager {
                     setSound(android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_NOTIFICATION), null)
                 }
                 notificationManager.createNotificationChannel(channel)
-                android.util.Log.d("NotificationManager", "Notification channel created with IMPORTANCE_HIGH")
+                Log.d("NotificationManager", "Notification channel created with IMPORTANCE_HIGH")
             } else {
-                android.util.Log.d("NotificationManager", "Notification channel already exists with importance: ${existingChannel.importance}")
+                Log.d("NotificationManager", "Notification channel already exists with importance: ${existingChannel.importance}")
             }
         }
     }
@@ -209,12 +210,12 @@ object NotificationManager {
         message: String,
         jobId: String? = null
     ) {
-        android.util.Log.d("NotificationManager", "=== Attempting to show notification ===")
-        android.util.Log.d("NotificationManager", "Title: $title, Message: $message, JobId: $jobId")
+        Log.d("NotificationManager", "=== Attempting to show notification ===")
+        Log.d("NotificationManager", "Title: $title, Message: $message, JobId: $jobId")
         
         // Check if notifications are enabled
         val notificationsEnabled = areNotificationsEnabled(context)
-        android.util.Log.d("NotificationManager", "Notifications enabled: $notificationsEnabled")
+        Log.d("NotificationManager", "Notifications enabled: $notificationsEnabled")
         
         if (!notificationsEnabled) {
             android.util.Log.w("NotificationManager", "Notifications are disabled for this app")
@@ -226,7 +227,7 @@ object NotificationManager {
         
         // Check if channel is enabled
         val channelEnabled = isNotificationChannelEnabled(context)
-        android.util.Log.d("NotificationManager", "Notification channel enabled: $channelEnabled")
+        Log.d("NotificationManager", "Notification channel enabled: $channelEnabled")
         
         if (!channelEnabled) {
             android.util.Log.w("NotificationManager", "Notification channel is disabled")
@@ -284,13 +285,13 @@ object NotificationManager {
             if (notificationManagerCompat.areNotificationsEnabled()) {
                 // Use notify() which should show the notification even in foreground
                 notificationManagerCompat.notify(notificationId, notification)
-                android.util.Log.d("NotificationManager", "✅ Notification posted with ID: $notificationId")
+                Log.d("NotificationManager", "✅ Notification posted with ID: $notificationId")
                 
                 // Verify notification was actually posted
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     val activeNotifications = notificationManagerCompat.activeNotifications
                     val wasPosted = activeNotifications.any { it.id == notificationId }
-                    android.util.Log.d("NotificationManager", "Notification verification: posted=$wasPosted, active count=${activeNotifications.size}")
+                    Log.d("NotificationManager", "Notification verification: posted=$wasPosted, active count=${activeNotifications.size}")
                 }
             } else {
                 android.util.Log.w("NotificationManager", "❌ Cannot show notification - notifications disabled")
@@ -301,7 +302,7 @@ object NotificationManager {
             android.util.Log.e("NotificationManager", "❌ Error showing notification", e)
         }
         
-        android.util.Log.d("NotificationManager", "=== Notification attempt complete ===")
+        Log.d("NotificationManager", "=== Notification attempt complete ===")
     }
 }
 

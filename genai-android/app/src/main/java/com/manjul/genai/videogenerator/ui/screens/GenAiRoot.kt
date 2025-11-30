@@ -1,6 +1,7 @@
 package com.manjul.genai.videogenerator.ui.screens
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -93,7 +94,7 @@ fun GenAiRoot() {
             currentRoute = AppDestination.History
             // Clear the intent extra after handling it
             activity?.intent?.removeExtra("navigate_to")
-            android.util.Log.d("GenAiRoot", "Navigated to History from notification")
+            Log.d("GenAiRoot", "Navigated to History from notification")
         }
     }
     var selectedModelId by rememberSaveable { mutableStateOf<String?>(null) }
@@ -123,30 +124,30 @@ fun GenAiRoot() {
     // Show generating screen only when generation actually starts successfully
     // (isGenerating = true AND uploadMessage exists, meaning upload/request started)
     LaunchedEffect(generateState.isGenerating, generateState.uploadMessage, generateState.errorMessage) {
-        android.util.Log.d("GenAiRoot", "=== GeneratingScreen LaunchedEffect Triggered ===")
-        android.util.Log.d("GenAiRoot", "isGenerating: ${generateState.isGenerating}")
-        android.util.Log.d("GenAiRoot", "uploadMessage: ${generateState.uploadMessage}")
-        android.util.Log.d("GenAiRoot", "errorMessage: ${generateState.errorMessage}")
-        android.util.Log.d("GenAiRoot", "showGeneratingScreen (current): $showGeneratingScreen")
+        Log.d("GenAiRoot", "=== GeneratingScreen LaunchedEffect Triggered ===")
+        Log.d("GenAiRoot", "isGenerating: ${generateState.isGenerating}")
+        Log.d("GenAiRoot", "uploadMessage: ${generateState.uploadMessage}")
+        Log.d("GenAiRoot", "errorMessage: ${generateState.errorMessage}")
+        Log.d("GenAiRoot", "showGeneratingScreen (current): $showGeneratingScreen")
         
         if (generateState.isGenerating && generateState.uploadMessage != null && generateState.errorMessage == null) {
             // Generation actually started (uploads began or request submitted)
             // Only show if not already showing
             if (!showGeneratingScreen) {
-                android.util.Log.d("GenAiRoot", "Conditions met! Setting showGeneratingScreen = true")
+                Log.d("GenAiRoot", "Conditions met! Setting showGeneratingScreen = true")
                 showGeneratingScreen = true
-                android.util.Log.d("GenAiRoot", "showGeneratingScreen set to: $showGeneratingScreen")
+                Log.d("GenAiRoot", "showGeneratingScreen set to: $showGeneratingScreen")
             } else {
-                android.util.Log.d("GenAiRoot", "GeneratingScreen already showing, skipping")
+                Log.d("GenAiRoot", "GeneratingScreen already showing, skipping")
             }
         } else if (generateState.errorMessage != null && !generateState.isGenerating) {
             // Error occurred and generation stopped - hide generating screen
-            android.util.Log.d("GenAiRoot", "Error occurred, hiding generating screen")
+            Log.d("GenAiRoot", "Error occurred, hiding generating screen")
             showGeneratingScreen = false
         } else {
-            android.util.Log.d("GenAiRoot", "Conditions not met for showing generating screen")
+            Log.d("GenAiRoot", "Conditions not met for showing generating screen")
         }
-        android.util.Log.d("GenAiRoot", "=== GeneratingScreen LaunchedEffect Completed ===")
+        Log.d("GenAiRoot", "=== GeneratingScreen LaunchedEffect Completed ===")
     }
     
     // Auto-navigate to ResultsScreen when job completes
@@ -206,7 +207,7 @@ fun GenAiRoot() {
             kotlinx.coroutines.delay(500) // Check every 500ms for responsive updates
             val currentCount = com.manjul.genai.videogenerator.data.notification.NotificationManager.getUnreadNotificationCount(context)
             if (currentCount != unreadCount) {
-                android.util.Log.d("GenAiRoot", "Unread count changed: $unreadCount -> $currentCount")
+                Log.d("GenAiRoot", "Unread count changed: $unreadCount -> $currentCount")
                 unreadCount = currentCount
             }
         }
@@ -215,7 +216,7 @@ fun GenAiRoot() {
     // Clear badge only when user actually views History screen
     LaunchedEffect(currentRoute) {
         if (currentRoute == AppDestination.History) {
-            android.util.Log.d("GenAiRoot", "User viewed History screen - clearing badge")
+            Log.d("GenAiRoot", "User viewed History screen - clearing badge")
             com.manjul.genai.videogenerator.data.notification.NotificationManager.clearUnreadCount(context)
             unreadCount = 0
         }

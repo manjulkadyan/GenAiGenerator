@@ -1,5 +1,6 @@
 package com.manjul.genai.videogenerator.ui.screens
 
+import android.util.Log
 import androidx.annotation.OptIn
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -401,7 +402,7 @@ private fun FullscreenVideoDialog(
             // When dialog is dismissed, immediately release the player
             VideoPlayerManager.unregisterPlayer(fullscreenKey)
             VideoPlayerManager.unregisterPlayer(videoUrl) // Fallback
-            android.util.Log.d("FullscreenVideoDialog", "Released fullscreen player for: $videoUrl")
+            Log.d("FullscreenVideoDialog", "Released fullscreen player for: $videoUrl")
         }
     }
 }
@@ -718,19 +719,19 @@ internal fun ModelVideoPlayer(
             val videoSourceUri = when {
                 isExoCached -> {
                     // ExoPlayer cache is fastest and most reliable
-                    android.util.Log.d("ModelVideoPlayer", "Using ExoPlayer cache: $actualVideoUrl")
+                    Log.d("ModelVideoPlayer", "Using ExoPlayer cache: $actualVideoUrl")
                     actualVideoUrl
                 }
 
                 fileCacheUri != null -> {
                     // File cache is persistent but may have issues, use with fallback
-                    android.util.Log.d("ModelVideoPlayer", "Using file cache: $fileCacheUri")
+                    Log.d("ModelVideoPlayer", "Using file cache: $fileCacheUri")
                     fileCacheUri
                 }
 
                 else -> {
                     // Use network URL (ExoPlayer will cache it)
-                    android.util.Log.d("ModelVideoPlayer", "Using network: $actualVideoUrl")
+                    Log.d("ModelVideoPlayer", "Using network: $actualVideoUrl")
                     actualVideoUrl
                 }
             }
@@ -792,7 +793,7 @@ internal fun ModelVideoPlayer(
                     coroutineScope.launch {
                         try {
                             VideoFileCache.downloadVideo(context, actualVideoUrl)
-                            android.util.Log.d(
+                            Log.d(
                                 "ModelVideoPlayer",
                                 "Video downloaded to file cache: $actualVideoUrl"
                             )
@@ -930,7 +931,7 @@ internal fun ModelVideoPlayer(
                     VideoPlayerManager.unregisterPlayer(videoUrl)
                     // Release player resources
                     it.release()
-                    android.util.Log.d("ModelVideoPlayer", "Released player for: $videoUrl")
+                    Log.d("ModelVideoPlayer", "Released player for: $videoUrl")
                 } catch (e: Exception) {
                     android.util.Log.e(
                         "ModelVideoPlayer",

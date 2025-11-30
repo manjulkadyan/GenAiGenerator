@@ -1,6 +1,7 @@
 package com.manjul.genai.videogenerator.player
 
 import android.content.Context
+import android.util.Log
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.database.StandaloneDatabaseProvider
@@ -25,9 +26,9 @@ object VideoPreviewCache {
                 // filesDir persists even when cache is cleared (only cleared on app uninstall)
                 // This is better for video caching that should persist across app launches
                 val cacheDir = File(appContext.filesDir, "video_cache")
-                android.util.Log.d("VideoPreviewCache", "Cache directory: ${cacheDir.absolutePath}")
-                android.util.Log.d("VideoPreviewCache", "Cache directory exists: ${cacheDir.exists()}")
-                android.util.Log.d("VideoPreviewCache", "Using filesDir (more persistent than cacheDir)")
+                Log.d("VideoPreviewCache", "Cache directory: ${cacheDir.absolutePath}")
+                Log.d("VideoPreviewCache", "Cache directory exists: ${cacheDir.exists()}")
+                Log.d("VideoPreviewCache", "Using filesDir (more persistent than cacheDir)")
                 
                 SimpleCache(
                     cacheDir,

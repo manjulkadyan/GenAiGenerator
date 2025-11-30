@@ -3,6 +3,7 @@ package com.manjul.genai.videogenerator
 import android.app.Application
 import android.content.ComponentCallbacks2
 import android.os.StrictMode
+import android.util.Log
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import com.google.firebase.FirebaseApp
@@ -74,7 +75,7 @@ class GenAiApp : Application() {
         // Pre-cache landing page video on app start (background, non-blocking)
         // This downloads video to ExoPlayer cache (cacheDir) for instant playback
         LandingPageVideoCache.startPrecaching(this)
-        android.util.Log.d("GenAiApp", "Started landing page video pre-caching")
+        Log.d("GenAiApp", "Started landing page video pre-caching")
         
         // Clean up old cache entries on app start (older than 7 days)
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {

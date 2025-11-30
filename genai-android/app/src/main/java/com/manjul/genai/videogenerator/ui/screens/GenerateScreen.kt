@@ -1,6 +1,7 @@
 package com.manjul.genai.videogenerator.ui.screens
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -567,7 +568,7 @@ private fun GenerateScreenContent(
 
                 // Debug logging
                 LaunchedEffect(state.uploadMessage, buttonText) {
-                    android.util.Log.d(
+                    Log.d(
                         "GenerateScreen",
                         "📱 Button Update - uploadMessage: '${state.uploadMessage}', buttonText: '$buttonText', isUploading: $isUploading"
                     )
