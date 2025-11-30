@@ -211,3 +211,4 @@ firebase deploy --only functions
 
 All subscription functions are now using file-based credentials that avoid OpenSSL compatibility issues. Test a subscription purchase to verify the fix!
 
+
