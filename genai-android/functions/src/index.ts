@@ -1477,17 +1477,17 @@ export const handleOneTimePurchase = onCall<{
       );
     }
 
-    // Check if already acknowledged
-    if (playPurchase.acknowledgementState === 1) {
-      console.log("⚠️ Purchase already acknowledged, checking if credits were already added");
-    }
-
-    // Get user document
+    // Get or create user document
     const userRef = firestore.collection("users").doc(userId);
-    const userDoc = await userRef.get();
+    let userDoc = await userRef.get();
 
     if (!userDoc.exists) {
-      throw new Error(`User ${userId} not found`);
+      console.log(`Creating new user document for ${userId}`);
+      await userRef.set({
+        credits: 0,
+        created_at: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      userDoc = await userRef.get();
     }
 
     const currentCredits = (userDoc.data()?.credits as number) || 0;
@@ -1510,10 +1510,34 @@ export const handleOneTimePurchase = onCall<{
       };
     }
 
+    // Acknowledge purchase with Google Play BEFORE adding credits (to prevent duplicates)
+    if (playPurchase.acknowledgementState !== 1) {
+      try {
+        const publisher = getAndroidPublisher();
+        await publisher.purchases.products.acknowledge({
+          packageName: playPackageName,
+          productId: productId,
+          token: purchaseToken,
+        });
+        console.log(`✅ Acknowledged purchase ${purchaseToken} with Google Play`);
+      } catch (error: any) {
+        console.error("❌ Failed to acknowledge purchase with Google Play:", error?.message);
+        throw new Error(`Failed to acknowledge purchase: ${error?.message}`);
+      }
+    } else {
+      console.log("Purchase already acknowledged by Google Play");
+    }
+
     // Store purchase in history
     const now = admin.firestore.Timestamp.now();
-    const priceMicros = parseInt(playPurchase.priceMicros || "0", 10);
-    const currency = playPurchase.priceCurrencyCode || "USD";
+    
+    // For INAPP products, safely access price information
+    // Google Play API may have different schemas for different product types
+    const purchaseData = playPurchase as any;
+    const priceMicros = purchaseData?.priceMicros ? 
+      parseInt(String(purchaseData.priceMicros), 10) : 0;
+    const currency = purchaseData?.priceCurrencyCode || 
+      purchaseData?.currency || "USD";
 
     await purchaseRef.set({
       purchaseToken,
@@ -1523,7 +1547,7 @@ export const handleOneTimePurchase = onCall<{
       priceMicros,
       currency,
       purchaseTime: now,
-      acknowledged: playPurchase.acknowledgementState === 1,
+      acknowledged: true, // Always true at this point
       orderId: playPurchase.orderId || "",
       createdAt: now,
       updatedAt: now,
@@ -1540,28 +1564,6 @@ export const handleOneTimePurchase = onCall<{
       `✅ One-time purchase processed: ${productId} for user ${userId}. ` +
         `Added ${credits} credits. New balance: ${newCredits}`,
     );
-
-    // Acknowledge purchase with Google Play (if not already acknowledged)
-    if (playPurchase.acknowledgementState !== 1) {
-      try {
-        const publisher = getAndroidPublisher();
-        await publisher.purchases.products.acknowledge({
-          packageName: playPackageName,
-          productId: productId,
-          token: purchaseToken,
-        });
-        console.log(`✅ Acknowledged purchase ${purchaseToken} with Google Play`);
-
-        // Update purchase record
-        await purchaseRef.update({
-          acknowledged: true,
-          updatedAt: admin.firestore.Timestamp.now(),
-        });
-      } catch (error: any) {
-        console.error("❌ Failed to acknowledge purchase with Google Play:", error?.message);
-        // Don't throw - credits already added, acknowledgment can be retried
-      }
-    }
 
     return {
       success: true,
