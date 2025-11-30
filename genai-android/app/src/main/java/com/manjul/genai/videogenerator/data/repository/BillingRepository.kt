@@ -2,6 +2,7 @@ package com.manjul.genai.videogenerator.data.repository
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
@@ -48,15 +49,15 @@ class BillingRepository(private val context: Context) {
     val purchaseUpdates: SharedFlow<PurchaseUpdateEvent> = _purchaseUpdates.asSharedFlow()
     
     private val purchasesUpdatedListener = PurchasesUpdatedListener { billingResult, purchases ->
-        android.util.Log.d("BillingRepository", "=== Purchase Update Received ===")
-        android.util.Log.d("BillingRepository", "Response code: ${billingResult.responseCode}, Message: ${billingResult.debugMessage}")
-        android.util.Log.d("BillingRepository", "Purchases count: ${purchases?.size ?: 0}")
+        Log.d("BillingRepository", "=== Purchase Update Received ===")
+        Log.d("BillingRepository", "Response code: ${billingResult.responseCode}, Message: ${billingResult.debugMessage}")
+        Log.d("BillingRepository", "Purchases count: ${purchases?.size ?: 0}")
         
         when (billingResult.responseCode) {
             BillingClient.BillingResponseCode.OK -> {
-                android.util.Log.d("BillingRepository", "Purchase successful - processing ${purchases?.size ?: 0} purchase(s)")
+                Log.d("BillingRepository", "Purchase successful - processing ${purchases?.size ?: 0} purchase(s)")
                 purchases?.forEach { purchase ->
-                    android.util.Log.d("BillingRepository", "Processing purchase: ${purchase.products.firstOrNull()}, state: ${purchase.purchaseState}, acknowledged: ${purchase.isAcknowledged}")
+                    Log.d("BillingRepository", "Processing purchase: ${purchase.products.firstOrNull()}, state: ${purchase.purchaseState}, acknowledged: ${purchase.isAcknowledged}")
                     handlePurchase(purchase)
                     
                     // Track purchase completion
@@ -76,7 +77,7 @@ class BillingRepository(private val context: Context) {
                 }
             }
             BillingClient.BillingResponseCode.USER_CANCELED -> {
-                android.util.Log.d("BillingRepository", "User cancelled the purchase")
+                Log.d("BillingRepository", "User cancelled the purchase")
                 // Track cancellation - we don't have product ID here, so use "unknown"
                 AnalyticsManager.trackPurchaseCancelled("unknown")
                 _purchaseUpdates.tryEmit(PurchaseUpdateEvent.UserCancelled)
@@ -88,14 +89,14 @@ class BillingRepository(private val context: Context) {
                     try {
                         val result = queryPurchases()
                         result.onSuccess { existingPurchases ->
-                            android.util.Log.d("BillingRepository", "Found ${existingPurchases.size} existing purchases")
+                            Log.d("BillingRepository", "Found ${existingPurchases.size} existing purchases")
                             if (existingPurchases.isNotEmpty()) {
                                 // Process the first unacknowledged purchase or the most recent one
                                 val purchaseToProcess = existingPurchases.firstOrNull { !it.isAcknowledged }
                                     ?: existingPurchases.firstOrNull()
                                 
                                 purchaseToProcess?.let { purchase ->
-                                    android.util.Log.d("BillingRepository", "Re-processing existing purchase: ${purchase.products.firstOrNull()}")
+                                    Log.d("BillingRepository", "Re-processing existing purchase: ${purchase.products.firstOrNull()}")
                                     handlePurchase(purchase)
                                     _purchaseUpdates.tryEmit(PurchaseUpdateEvent.AlreadyOwned(purchase))
                                 }
@@ -142,17 +143,17 @@ class BillingRepository(private val context: Context) {
         
         billingClient?.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
-                android.util.Log.d("BillingRepository", "Billing setup finished: code=${billingResult.responseCode}, message=${billingResult.debugMessage}")
+                Log.d("BillingRepository", "Billing setup finished: code=${billingResult.responseCode}, message=${billingResult.debugMessage}")
                 trySend(billingResult)
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    android.util.Log.d("BillingRepository", "Billing client is ready and connected")
+                    Log.d("BillingRepository", "Billing client is ready and connected")
                     // ⚠️ CRITICAL: Query purchases immediately after connection
                     // This ensures we catch purchases made while app was closed
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
                             val result = queryPurchases()
                             result.onSuccess { purchases ->
-                                android.util.Log.d("BillingRepository", "Queried ${purchases.size} purchases after connection")
+                                Log.d("BillingRepository", "Queried ${purchases.size} purchases after connection")
                                 purchases.forEach { purchase ->
                                     if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged) {
                                         handlePurchase(purchase)
@@ -216,7 +217,7 @@ class BillingRepository(private val context: Context) {
                 params
             ) { billingResult, productDetailsResult ->
                 val productDetailsList = productDetailsResult?.productDetailsList ?: emptyList()
-                android.util.Log.d("BillingRepository", "Query result: responseCode=${billingResult.responseCode}, products=${productDetailsList.size}")
+                Log.d("BillingRepository", "Query result: responseCode=${billingResult.responseCode}, products=${productDetailsList.size}")
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     if (productDetailsList.isEmpty()) {
                         android.util.Log.w("BillingRepository", "No products found for IDs: ${productIds.joinToString()}")
@@ -225,7 +226,7 @@ class BillingRepository(private val context: Context) {
                         ))
                     } else {
                         productDetailsList.forEach { product ->
-                            android.util.Log.d("BillingRepository", "Found product: ${product.productId}, offers: ${product.subscriptionOfferDetails?.size ?: 0}")
+                            Log.d("BillingRepository", "Found product: ${product.productId}, offers: ${product.subscriptionOfferDetails?.size ?: 0}")
                         }
                         continuation.resume(Result.success(productDetailsList))
                     }
@@ -279,7 +280,7 @@ class BillingRepository(private val context: Context) {
                 params
             ) { billingResult, productDetailsResult ->
                 val productDetailsList = productDetailsResult?.productDetailsList ?: emptyList()
-                android.util.Log.d("BillingRepository", "Query one-time products result: responseCode=${billingResult.responseCode}, products=${productDetailsList.size}")
+                Log.d("BillingRepository", "Query one-time products result: responseCode=${billingResult.responseCode}, products=${productDetailsList.size}")
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     if (productDetailsList.isEmpty()) {
                         android.util.Log.w("BillingRepository", "No one-time products found for IDs: ${productIds.joinToString()}")
@@ -288,7 +289,7 @@ class BillingRepository(private val context: Context) {
                         ))
                     } else {
                         productDetailsList.forEach { product ->
-                            android.util.Log.d("BillingRepository", "Found one-time product: ${product.productId}")
+                            Log.d("BillingRepository", "Found one-time product: ${product.productId}")
                         }
                         continuation.resume(Result.success(productDetailsList))
                     }
@@ -400,7 +401,7 @@ class BillingRepository(private val context: Context) {
         // Track purchase started
         AnalyticsManager.trackPurchaseStarted(productDetails.productId, "one_time")
         
-        android.util.Log.d("BillingRepository", "Launching one-time purchase flow for: ${productDetails.productId}")
+        Log.d("BillingRepository", "Launching one-time purchase flow for: ${productDetails.productId}")
         
         return billingClient.launchBillingFlow(activity, billingFlowParams)
     }
@@ -430,13 +431,13 @@ class BillingRepository(private val context: Context) {
             // Query subscriptions first
             billingClient.queryPurchasesAsync(subsParams) { subsBillingResult, subsPurchases ->
                 if (subsBillingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    android.util.Log.d("BillingRepository", "Found ${subsPurchases.size} subscription purchases")
+                    Log.d("BillingRepository", "Found ${subsPurchases.size} subscription purchases")
                     allPurchases.addAll(subsPurchases)
                     
                     // Then query INAPP purchases
                     billingClient.queryPurchasesAsync(inappParams) { inappBillingResult, inappPurchases ->
                         if (inappBillingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                            android.util.Log.d("BillingRepository", "Found ${inappPurchases.size} INAPP purchases")
+                            Log.d("BillingRepository", "Found ${inappPurchases.size} INAPP purchases")
                             allPurchases.addAll(inappPurchases)
                             
                             // Update subscription status
@@ -514,7 +515,7 @@ class BillingRepository(private val context: Context) {
             billingClient?.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
                 when (billingResult.responseCode) {
                     BillingClient.BillingResponseCode.OK -> {
-                        android.util.Log.d("BillingRepository", "Purchase acknowledged successfully: ${purchase.products.firstOrNull()}")
+                        Log.d("BillingRepository", "Purchase acknowledged successfully: ${purchase.products.firstOrNull()}")
                     }
                     BillingClient.BillingResponseCode.ITEM_NOT_OWNED -> {
                         // Possibly stale cache - query purchases again
@@ -530,7 +531,7 @@ class BillingRepository(private val context: Context) {
                 }
             }
         } else {
-            android.util.Log.d("BillingRepository", "Purchase already acknowledged: ${purchase.products.firstOrNull()}")
+            Log.d("BillingRepository", "Purchase already acknowledged: ${purchase.products.firstOrNull()}")
         }
     }
     

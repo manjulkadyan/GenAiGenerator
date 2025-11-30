@@ -1,5 +1,6 @@
 package com.manjul.genai.videogenerator.ui.screens
 
+import android.util.Log
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -58,10 +59,10 @@ fun GeneratingScreen(
     val context = LocalContext.current
     var showNotificationDialog by remember { mutableStateOf(false) }
     
-    android.util.Log.d("GeneratingScreen", "=== GeneratingScreen Composed ===")
-    android.util.Log.d("GeneratingScreen", "statusMessage: $statusMessage")
-    android.util.Log.d("GeneratingScreen", "errorMessage: $errorMessage")
-    android.util.Log.d("GeneratingScreen", "showNotificationDialog initial: $showNotificationDialog")
+    Log.d("GeneratingScreen", "=== GeneratingScreen Composed ===")
+    Log.d("GeneratingScreen", "statusMessage: $statusMessage")
+    Log.d("GeneratingScreen", "errorMessage: $errorMessage")
+    Log.d("GeneratingScreen", "showNotificationDialog initial: $showNotificationDialog")
     
     // Track screen view
     LaunchedEffect(Unit) {
@@ -71,7 +72,7 @@ fun GeneratingScreen(
     // Show notification dialog on first appearance if notifications are not enabled
     // Use Unit as key to ensure this only runs once per screen composition
     LaunchedEffect(Unit) {
-        android.util.Log.d("GeneratingScreen", "=== LaunchedEffect Started ===")
+        Log.d("GeneratingScreen", "=== LaunchedEffect Started ===")
         
         // Check if we should show the dialog
         // Only show if we haven't asked before AND notifications are not enabled
@@ -79,34 +80,34 @@ fun GeneratingScreen(
         val isEnabled = NotificationManager.isNotificationEnabled(context)
         val hasAsked = NotificationManager.hasAskedForPermission(context)
         
-        android.util.Log.d("GeneratingScreen", "Permission check results:")
-        android.util.Log.d("GeneratingScreen", "  - hasAskedForPermission: $hasAsked")
-        android.util.Log.d("GeneratingScreen", "  - isNotificationEnabled: $isEnabled")
-        android.util.Log.d("GeneratingScreen", "  - Should show dialog: ${!hasAsked && !isEnabled}")
+        Log.d("GeneratingScreen", "Permission check results:")
+        Log.d("GeneratingScreen", "  - hasAskedForPermission: $hasAsked")
+        Log.d("GeneratingScreen", "  - isNotificationEnabled: $isEnabled")
+        Log.d("GeneratingScreen", "  - Should show dialog: ${!hasAsked && !isEnabled}")
         
         // Show dialog only if we haven't asked before AND notifications are not enabled
         // This ensures the dialog shows once per user, not on every generation
         if (!hasAsked && !isEnabled) {
-            android.util.Log.d("GeneratingScreen", "First time - notifications not enabled. Will show dialog after delay...")
+            Log.d("GeneratingScreen", "First time - notifications not enabled. Will show dialog after delay...")
             // Small delay to let the generating screen appear first
             kotlinx.coroutines.delay(500)
-            android.util.Log.d("GeneratingScreen", "Delay complete. Setting showNotificationDialog = true")
+            Log.d("GeneratingScreen", "Delay complete. Setting showNotificationDialog = true")
             showNotificationDialog = true
-            android.util.Log.d("GeneratingScreen", "showNotificationDialog set to: $showNotificationDialog")
+            Log.d("GeneratingScreen", "showNotificationDialog set to: $showNotificationDialog")
         } else {
             if (hasAsked) {
-                android.util.Log.d("GeneratingScreen", "Skipping notification dialog: Already asked before")
+                Log.d("GeneratingScreen", "Skipping notification dialog: Already asked before")
             }
             if (isEnabled) {
-                android.util.Log.d("GeneratingScreen", "Skipping notification dialog: Notifications already enabled")
+                Log.d("GeneratingScreen", "Skipping notification dialog: Notifications already enabled")
             }
         }
-        android.util.Log.d("GeneratingScreen", "=== LaunchedEffect Completed ===")
+        Log.d("GeneratingScreen", "=== LaunchedEffect Completed ===")
     }
     
     // Log when showNotificationDialog changes
     LaunchedEffect(showNotificationDialog) {
-        android.util.Log.d("GeneratingScreen", "showNotificationDialog changed to: $showNotificationDialog")
+        Log.d("GeneratingScreen", "showNotificationDialog changed to: $showNotificationDialog")
     }
     
     Box(
@@ -221,23 +222,23 @@ fun GeneratingScreen(
         
         // Notification Permission Dialog - Show on top
         if (showNotificationDialog) {
-            android.util.Log.d("GeneratingScreen", "Rendering NotificationPermissionDialog")
+            Log.d("GeneratingScreen", "Rendering NotificationPermissionDialog")
             NotificationPermissionDialog(
                 onDismiss = {
-                    android.util.Log.d("GeneratingScreen", "NotificationPermissionDialog onDismiss called")
+                    Log.d("GeneratingScreen", "NotificationPermissionDialog onDismiss called")
                     showNotificationDialog = false
                     NotificationManager.setPermissionAsked(context)
-                    android.util.Log.d("GeneratingScreen", "Permission asked flag set")
+                    Log.d("GeneratingScreen", "Permission asked flag set")
                 },
                 onPermissionGranted = {
-                    android.util.Log.d("GeneratingScreen", "NotificationPermissionDialog onPermissionGranted called")
+                    Log.d("GeneratingScreen", "NotificationPermissionDialog onPermissionGranted called")
                     showNotificationDialog = false
                     NotificationManager.setPermissionAsked(context)
-                    android.util.Log.d("GeneratingScreen", "Permission granted and flag set")
+                    Log.d("GeneratingScreen", "Permission granted and flag set")
                 }
             )
         } else {
-            android.util.Log.d("GeneratingScreen", "NotificationPermissionDialog NOT rendered (showNotificationDialog = false)")
+            Log.d("GeneratingScreen", "NotificationPermissionDialog NOT rendered (showNotificationDialog = false)")
         }
     }
 }

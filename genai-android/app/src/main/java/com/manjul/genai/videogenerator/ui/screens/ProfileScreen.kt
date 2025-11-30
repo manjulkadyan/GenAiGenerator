@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -129,11 +130,11 @@ fun ProfileScreen(
             
             if (!firestoreName.isNullOrEmpty()) {
                 userName = firestoreName
-                android.util.Log.d("ProfileScreen", "Loaded name from Firestore: $firestoreName")
+                Log.d("ProfileScreen", "Loaded name from Firestore: $firestoreName")
             }
             if (!firestoreEmail.isNullOrEmpty()) {
                 userEmail = firestoreEmail
-                android.util.Log.d("ProfileScreen", "Loaded email from Firestore: $firestoreEmail")
+                Log.d("ProfileScreen", "Loaded email from Firestore: $firestoreEmail")
             }
         } catch (e: Exception) {
             android.util.Log.w("ProfileScreen", "Failed to load user profile from Firestore, using Auth fallback", e)
@@ -154,7 +155,7 @@ fun ProfileScreen(
             when {
                 !firestoreName.isNullOrEmpty() -> {
                     userName = firestoreName
-                    android.util.Log.d("ProfileScreen", "User name updated from Firestore: $firestoreName")
+                    Log.d("ProfileScreen", "User name updated from Firestore: $firestoreName")
                 }
                 currentUser?.displayName != null -> {
                     userName = currentUser.displayName ?: "User"
@@ -165,7 +166,7 @@ fun ProfileScreen(
             when {
                 !firestoreEmail.isNullOrEmpty() -> {
                     userEmail = firestoreEmail
-                    android.util.Log.d("ProfileScreen", "User email updated from Firestore: $firestoreEmail")
+                    Log.d("ProfileScreen", "User email updated from Firestore: $firestoreEmail")
                 }
                 currentUser?.email != null -> {
                     userEmail = currentUser.email?: "user@example.com"
@@ -178,20 +179,20 @@ fun ProfileScreen(
             kotlinx.coroutines.awaitCancellation()
         } finally {
             registration.remove()
-            android.util.Log.d("ProfileScreen", "Removed user profile listener")
+            Log.d("ProfileScreen", "Removed user profile listener")
         }
     }
     
     // Also update from Auth when user changes (immediate fallback)
     LaunchedEffect(currentUser) {
         if (currentUser != null) {
-            android.util.Log.d("ProfileScreen", "Current user changed: uid=${currentUser.uid}, displayName=${currentUser.displayName}, email=${currentUser.email}")
+            Log.d("ProfileScreen", "Current user changed: uid=${currentUser.uid}, displayName=${currentUser.displayName}, email=${currentUser.email}")
             
             // Try to reload user profile to get fresh data
             try {
                 currentUser.reload().await()
                 val reloadedUser = auth.currentUser
-                android.util.Log.d("ProfileScreen", "After reload: displayName=${reloadedUser?.displayName}, email=${reloadedUser?.email}")
+                Log.d("ProfileScreen", "After reload: displayName=${reloadedUser?.displayName}, email=${reloadedUser?.email}")
                 
                 // Use Auth data as fallback if Firestore doesn't have it yet
                 val authDisplayName = reloadedUser?.displayName ?: currentUser.displayName
@@ -206,11 +207,11 @@ fun ProfileScreen(
                 
                 if (userName == "User" && !finalAuthName.isNullOrEmpty()) {
                     userName = finalAuthName
-                    android.util.Log.d("ProfileScreen", "Updated name from Auth: $finalAuthName")
+                    Log.d("ProfileScreen", "Updated name from Auth: $finalAuthName")
                 }
                 if (userEmail == "user@example.com" && !authEmail.isNullOrEmpty()) {
                     userEmail = authEmail
-                    android.util.Log.d("ProfileScreen", "Updated email from Auth: $authEmail")
+                    Log.d("ProfileScreen", "Updated email from Auth: $authEmail")
                 }
             } catch (e: Exception) {
                 android.util.Log.w("ProfileScreen", "Failed to reload user profile", e)
@@ -490,7 +491,7 @@ private fun ProfileScreenContent(
                     // Get name and email from GoogleSignIn account (available immediately)
                     val googleAccountName = account.displayName ?: ""
                     val googleAccountEmail = account.email ?: ""
-                    android.util.Log.d("ProfileScreen", "Google account info: name=$googleAccountName, email=$googleAccountEmail")
+                    Log.d("ProfileScreen", "Google account info: name=$googleAccountName, email=$googleAccountEmail")
 
                     val authResult = if (isAnonymous) {
                         // Link anonymous account with Google
@@ -505,7 +506,7 @@ private fun ProfileScreenContent(
                             isSigningIn = false
                             signInError = null
                             // Success - user is now signed in with Google
-                            android.util.Log.d("ProfileScreen", "Google sign-in/linking successful: ${user.uid}")
+                            Log.d("ProfileScreen", "Google sign-in/linking successful: ${user.uid}")
                             
                             // Firestore listener will automatically update name/email when it's saved
                             // The listener is already active and will pick up changes immediately
