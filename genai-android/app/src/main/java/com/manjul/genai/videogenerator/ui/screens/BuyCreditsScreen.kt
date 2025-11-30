@@ -78,6 +78,7 @@ import com.manjul.genai.videogenerator.ui.viewmodel.LandingPageViewModel
 import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import com.manjul.genai.videogenerator.data.model.PurchaseType
 import com.manjul.genai.videogenerator.data.model.OneTimeProduct
+import com.manjul.genai.videogenerator.data.model.SubscriptionPlan
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -459,6 +460,7 @@ fun BuyCreditsScreen(
                     }
                 } else {
                     // One-time products section - 5 cards in a horizontal scrollable LazyRow
+                    // Using same SubscriptionPlanCard component for consistency
                     if (uiState.oneTimeProducts.isNotEmpty()) {
                         val listState = rememberLazyListState()
                         
@@ -482,14 +484,26 @@ fun BuyCreditsScreen(
                             contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 4.dp)
                         ) {
                             items(uiState.oneTimeProducts) { product ->
-                                OneTimeProductCard(
-                                    product = product,
+                                // Convert OneTimeProduct to SubscriptionPlan for card display
+                                val planForDisplay = SubscriptionPlan(
+                                    productId = product.productId,
+                                    credits = product.credits,
+                                    price = product.price,
+                                    period = "One Time", // Show "One Time" instead of "Weekly"
+                                    isPopular = product.isPopular,
+                                    isBestValue = product.isBestValue
+                                )
+                                
+                                SubscriptionPlanCard(
+                                    plan = planForDisplay,
                                     isSelected = uiState.selectedOneTimeProduct?.productId == product.productId,
                                     onClick = {
                                         android.util.Log.d("BuyCreditsScreen", "One-time product clicked: ${product.productId}")
                                         viewModel.selectOneTimeProduct(product)
                                     },
-                                    modifier = Modifier.width(120.dp)
+                                    modifier = Modifier.width(120.dp),
+                                    periodText = "One Time"
+                                    // showPerCreditCost defaults to true
                                 )
                             }
                         }
@@ -736,126 +750,6 @@ fun BuyCreditsScreen(
                             onPurchaseSuccess()
                         },
                         fullWidth = true
-                    )
-                }
-            }
-        }
-    }
-}
-
-/**
- * One-time product card for displaying top-up credit bundles
- * Matches SubscriptionPlanCard design for consistency
- */
-@Composable
-fun OneTimeProductCard(
-    product: OneTimeProduct,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    // Match SubscriptionPlanCard color scheme
-    val backgroundColor = if (isSelected) {
-        Color(0xFFE8E8E8) // Light grey for selected (same as subscription)
-    } else {
-        Color(0xFF2A2A2A) // Darker grey for unselected (slightly different from subscription's 0xFF1F1F1F)
-    }
-    
-    val borderColor = if (isSelected) {
-        Color(0xFFD1D1D1) // Grey border for selected
-    } else {
-        Color.White.copy(alpha = 1.0f) // White border for unselected
-    }
-    
-    val textColor = if (isSelected) Color.Black else Color.White
-    val secondaryTextColor = if (isSelected) Color(0xFF6B7280) else Color(0xFF9CA3AF)
-
-    Box(
-        modifier = modifier
-    ) {
-        // Card content - matches subscription card structure
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onClick)
-                .background(
-                    color = backgroundColor,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .border(
-                    width = 1.dp,
-                    color = borderColor,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .padding(horizontal = 12.dp, vertical = 16.dp)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                // Credits number (large and bold, like subscription card)
-                Text(
-                    text = "${product.credits}",
-                    style = MaterialTheme.typography.displaySmall,
-                    fontWeight = FontWeight.Bold,
-                    color = textColor,
-                    fontSize = 32.sp,
-                    lineHeight = 40.sp
-                )
-                
-                // "Credits" text
-                Text(
-                    text = "Credits",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = textColor,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 14.sp
-                )
-                
-                // Price
-                Text(
-                    text = product.price,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = secondaryTextColor,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 14.sp
-                )
-                
-                // Per-credit cost (unique to top-up cards - helps users compare value)
-                val perCredit = product.price.replace("$", "").toDoubleOrNull()?.div(product.credits)
-                if (perCredit != null) {
-                    Text(
-                        text = "$${String.format("%.3f", perCredit)}/credit",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = secondaryTextColor.copy(alpha = 0.8f),
-                        fontSize = 11.sp
-                    )
-                }
-            }
-        }
-        
-        // Badge positioned ABOVE card (like subscription's "Popular" badge)
-        if (product.isBestValue || product.isPopular) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .offset(y = (-14).dp) // Position above card
-            ) {
-                Box(
-                    modifier = Modifier
-                        .background(
-                            color = if (product.isBestValue) Color(0xFFF59E0B) else Color(0xFF10B981),
-                            shape = RoundedCornerShape(50.dp) // Pill shape
-                        )
-                        .padding(horizontal = 12.dp, vertical = 4.dp)
-                ) {
-                    Text(
-                        text = if (product.isBestValue) "Best Value" else "Popular",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        fontSize = 11.sp
                     )
                 }
             }

@@ -389,6 +389,14 @@ class LandingPageViewModel(
                 price = "$69.99",
                 isPopular = false,
                 isBestValue = true
+            ),
+            OneTimeProduct(
+                productId = "credits_1000",
+                name = "1000 Credits",
+                credits = 1000,
+                price = "$129.99",
+                isPopular = false,
+                isBestValue = false
             )
         )
         _uiState.value = _uiState.value.copy(oneTimeProducts = products)

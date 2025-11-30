@@ -331,7 +331,7 @@ class FirebaseLandingPageRepository(
             val isPopular = planMap["isPopular"] as? Boolean ?: false
             val productId = planMap["productId"] as? String ?: return@mapNotNull null
             val period = planMap["period"] as? String ?: "Weekly"
-            SubscriptionPlan(credits, price, isPopular, productId, period)
+            SubscriptionPlan(credits, price, isPopular, false,productId, period)
         }
         
         // Parse testimonials (optional)
@@ -358,9 +358,9 @@ class FirebaseLandingPageRepository(
                 LandingPageFeature("Premium Prompt Assistance", "Expert help crafting high-performing prompts.", "quote")
             ),
             subscriptionPlans = listOf(
-                SubscriptionPlan(60, "$9.99", false, "weekly_60_credits", "Weekly"),
-                SubscriptionPlan(100, "$14.99", true, "weekly_100_credits", "Weekly"),
-                SubscriptionPlan(150, "$19.99", false, "weekly_150_credits", "Weekly")
+                SubscriptionPlan(60, "$9.99", false, false,"weekly_60_credits", "Weekly"),
+                SubscriptionPlan(100, "$14.99", true, false,"weekly_100_credits", "Weekly"),
+                SubscriptionPlan(150, "$19.99", false, false,"weekly_150_credits", "Weekly")
             ),
             testimonials = emptyList()
         )

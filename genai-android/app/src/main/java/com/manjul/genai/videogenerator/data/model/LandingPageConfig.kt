@@ -20,6 +20,7 @@ data class SubscriptionPlan(
     val credits: Int,
     val price: String,
     val isPopular: Boolean = false,
+    val isBestValue: Boolean = false,
     val productId: String, // Google Play product ID
     val period: String = "Weekly" // Subscription period
 )

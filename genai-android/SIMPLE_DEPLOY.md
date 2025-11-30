@@ -78,3 +78,4 @@ No GitHub, no complex setup, no CI/CD - just simple static file hosting!
 
 
 
+
