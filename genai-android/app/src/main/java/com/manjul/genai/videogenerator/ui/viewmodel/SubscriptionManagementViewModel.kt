@@ -1,6 +1,9 @@
 package com.manjul.genai.videogenerator.ui.viewmodel
 
 import android.app.Application
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -15,46 +18,37 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
-data class SubscriptionInfo(
-    val productId: String = "",
-    val productName: String = "",
-    val creditsPerWeek: Int = 0,
-    val status: String = "",
-    val startDate: String = "",
-    val nextRenewalDate: String = "",
-    val isActive: Boolean = false
-)
-
-data class SubscriptionManagementUiState(
-    val isLoading: Boolean = true,
-    val hasActiveSubscription: Boolean = false,
-    val subscriptionInfo: SubscriptionInfo? = null,
-    val purchaseHistory: List<PurchaseHistoryItem> = emptyList(),
-    val error: String? = null
-)
-
+/**
+ * ViewModel for Subscription Management Screen
+ * Handles:
+ * - Active subscription status
+ * - Purchase history (subscriptions + one-time purchases)
+ * - Deep links to Google Play subscription management
+ */
 class SubscriptionManagementViewModel(
     private val application: Application
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(SubscriptionManagementUiState())
-    val uiState: StateFlow<SubscriptionManagementUiState> = _uiState.asStateFlow()
-    
+
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val firestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
-    
+
+    private val _uiState = MutableStateFlow(SubscriptionManagementUiState())
+    val uiState: StateFlow<SubscriptionManagementUiState> = _uiState.asStateFlow()
+
     init {
-        loadSubscriptionData()
+        loadSubscriptionStatus()
         loadPurchaseHistory()
     }
-    
+
     /**
-     * Load active subscription information from Firestore
+     * Load active subscription status from Firestore
      */
-    private fun loadSubscriptionData() {
+    private fun loadSubscriptionStatus() {
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+
             try {
                 val userId = auth.currentUser?.uid
                 if (userId == null) {
@@ -64,7 +58,7 @@ class SubscriptionManagementViewModel(
                     )
                     return@launch
                 }
-                
+
                 // Query active subscriptions
                 val subscriptionsSnapshot = firestore
                     .collection("users")
@@ -73,50 +67,33 @@ class SubscriptionManagementViewModel(
                     .whereEqualTo("status", "active")
                     .get()
                     .await()
-                
+
                 if (subscriptionsSnapshot.isEmpty) {
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         hasActiveSubscription = false,
-                        subscriptionInfo = null
+                        activeSubscription = null
                     )
                     return@launch
                 }
-                
+
                 // Get the first active subscription
-                val subDoc = subscriptionsSnapshot.documents.firstOrNull()
-                if (subDoc != null) {
-                    val productId = subDoc.getString("productId") ?: ""
-                    val creditsPerRenewal = subDoc.getLong("creditsPerRenewal")?.toInt() ?: 0
-                    val status = subDoc.getString("status") ?: ""
-                    val createdAt = subDoc.getTimestamp("createdAt")
-                    val nextRenewalDate = subDoc.getTimestamp("nextRenewalDate")
-                    
-                    val productName = when {
-                        productId.contains("60") -> "60 Credits Weekly"
-                        productId.contains("100") -> "100 Credits Weekly"
-                        productId.contains("150") -> "150 Credits Weekly"
-                        else -> "Weekly Subscription"
-                    }
-                    
-                    val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-                    val startDateStr = createdAt?.toDate()?.let { dateFormat.format(it) } ?: "N/A"
-                    val nextRenewalStr = nextRenewalDate?.toDate()?.let { dateFormat.format(it) } ?: "N/A"
-                    
-                    val subscriptionInfo = SubscriptionInfo(
-                        productId = productId,
-                        productName = productName,
-                        creditsPerWeek = creditsPerRenewal,
-                        status = status,
-                        startDate = startDateStr,
-                        nextRenewalDate = nextRenewalStr,
-                        isActive = status == "active"
-                    )
-                    
+                val subscriptionDoc = subscriptionsSnapshot.documents.firstOrNull()
+                if (subscriptionDoc != null) {
+                    val productId = subscriptionDoc.getString("productId") ?: ""
+                    val creditsPerRenewal = subscriptionDoc.getLong("creditsPerRenewal")?.toInt() ?: 0
+                    val nextRenewalDate = subscriptionDoc.getTimestamp("nextRenewalDate")
+                    val createdAt = subscriptionDoc.getTimestamp("createdAt")
+
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         hasActiveSubscription = true,
-                        subscriptionInfo = subscriptionInfo
+                        activeSubscription = ActiveSubscriptionInfo(
+                            productId = productId,
+                            creditsPerWeek = creditsPerRenewal,
+                            startDate = createdAt?.toDate(),
+                            nextRenewalDate = nextRenewalDate?.toDate()
+                        )
                     )
                 } else {
                     _uiState.value = _uiState.value.copy(
@@ -125,17 +102,18 @@ class SubscriptionManagementViewModel(
                     )
                 }
             } catch (e: Exception) {
-                android.util.Log.e("SubscriptionManagementVM", "Error loading subscription data", e)
+                android.util.Log.e("SubscriptionMgmtVM", "Error loading subscription status", e)
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    error = "Failed to load subscription data: ${e.message}"
+                    error = "Failed to load subscription status: ${e.message}"
                 )
             }
         }
     }
-    
+
     /**
      * Load purchase history from Firestore
+     * Includes both subscription and one-time purchases
      */
     private fun loadPurchaseHistory() {
         viewModelScope.launch {
@@ -144,105 +122,168 @@ class SubscriptionManagementViewModel(
                 if (userId == null) {
                     return@launch
                 }
-                
-                // Query purchases ordered by purchase time
+
+                // Query all purchases, sorted by date (newest first)
                 val purchasesSnapshot = firestore
                     .collection("users")
                     .document(userId)
                     .collection("purchases")
-                    .orderBy("purchaseTime", Query.Direction.DESCENDING)
+                    .orderBy("createdAt", Query.Direction.DESCENDING)
                     .limit(50) // Limit to last 50 purchases
                     .get()
                     .await()
-                
-                val purchases = purchasesSnapshot.documents.mapNotNull { doc ->
+
+                val purchaseHistory = purchasesSnapshot.documents.mapNotNull { doc ->
                     try {
+                        val purchaseToken = doc.id
                         val productId = doc.getString("productId") ?: return@mapNotNull null
-                        val type = doc.getString("type") ?: "one_time"
+                        val typeString = doc.getString("type") ?: "one_time"
+                        val type = if (typeString == "subscription") PurchaseType.SUBSCRIPTION else PurchaseType.ONE_TIME
                         val credits = doc.getLong("credits")?.toInt() ?: 0
                         val priceMicros = doc.getLong("priceMicros") ?: 0L
                         val currency = doc.getString("currency") ?: "USD"
-                        val purchaseTime = doc.getTimestamp("purchaseTime")
-                        
-                        val productName = if (type == "subscription") {
-                            when {
-                                productId.contains("60") -> "60 Credits Weekly"
-                                productId.contains("100") -> "100 Credits Weekly"
-                                productId.contains("150") -> "150 Credits Weekly"
-                                else -> "Weekly Subscription"
-                            }
-                        } else {
-                            "$credits Credits Top-Up"
-                        }
-                        
+                        val date = doc.getTimestamp("createdAt")?.toDate()?.time ?: 0L
+
+                        // Format price from micros (divide by 1,000,000)
                         val price = if (priceMicros > 0) {
                             val priceValue = priceMicros / 1_000_000.0
-                            "$currency ${String.format("%.2f", priceValue)}"
+                            "$${String.format("%.2f", priceValue)}"
                         } else {
-                            "N/A"
+                            "$0.00"
                         }
-                        
+
+                        // Create product name
+                        val productName = when {
+                            type == PurchaseType.SUBSCRIPTION -> "$credits Credits Weekly"
+                            type == PurchaseType.ONE_TIME -> "$credits Credits Top-Up"
+                            else -> "$credits Credits"
+                        }
+
                         PurchaseHistoryItem(
-                            purchaseToken = doc.id,
+                            purchaseToken = purchaseToken,
                             productId = productId,
-                            type = if (type == "subscription") PurchaseType.SUBSCRIPTION else PurchaseType.ONE_TIME,
+                            type = type,
                             credits = credits,
                             price = price,
                             currency = currency,
-                            date = purchaseTime?.toDate()?.time ?: 0L,
+                            date = date,
                             productName = productName
                         )
                     } catch (e: Exception) {
-                        android.util.Log.e("SubscriptionManagementVM", "Error parsing purchase", e)
+                        android.util.Log.e("SubscriptionMgmtVM", "Error parsing purchase: ${doc.id}", e)
                         null
                     }
                 }
-                
+
                 _uiState.value = _uiState.value.copy(
-                    purchaseHistory = purchases
+                    purchaseHistory = purchaseHistory,
+                    isLoadingHistory = false
                 )
             } catch (e: Exception) {
-                android.util.Log.e("SubscriptionManagementVM", "Error loading purchase history", e)
+                android.util.Log.e("SubscriptionMgmtVM", "Error loading purchase history", e)
                 _uiState.value = _uiState.value.copy(
+                    isLoadingHistory = false,
                     error = "Failed to load purchase history: ${e.message}"
                 )
             }
         }
     }
-    
+
     /**
-     * Get deep link to Google Play subscriptions page
+     * Generate deep link to Google Play subscription management
+     * Format: https://play.google.com/store/account/subscriptions?sku={productId}&package={packageName}
      */
-    fun getPlayStoreSubscriptionLink(productId: String): String {
+    fun getSubscriptionManagementUrl(): String {
         val packageName = application.packageName
+        val productId = _uiState.value.activeSubscription?.productId ?: ""
         return "https://play.google.com/store/account/subscriptions?sku=$productId&package=$packageName"
     }
-    
+
     /**
-     * Format date from timestamp
+     * Open subscription management in Google Play
      */
-    fun formatDate(timestamp: Long): String {
-        val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-        return dateFormat.format(Date(timestamp))
+    fun openSubscriptionManagement(context: Context) {
+        try {
+            val url = getSubscriptionManagementUrl()
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            android.util.Log.e("SubscriptionMgmtVM", "Error opening subscription management", e)
+            _uiState.value = _uiState.value.copy(
+                error = "Failed to open subscription management"
+            )
+        }
     }
-    
+
     /**
-     * Format date and time from timestamp
+     * Format date for display
+     */
+    fun formatDate(date: Date?): String {
+        if (date == null) return "Unknown"
+        val formatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+        return formatter.format(date)
+    }
+
+    /**
+     * Format date and time for display
      */
     fun formatDateTime(timestamp: Long): String {
-        val dateFormat = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
-        return dateFormat.format(Date(timestamp))
+        if (timestamp == 0L) return "Unknown"
+        val date = Date(timestamp)
+        val formatter = SimpleDateFormat("MMM dd, yyyy 'at' hh:mm a", Locale.getDefault())
+        return formatter.format(date)
     }
-    
-    companion object {
-        fun Factory(application: Application): ViewModelProvider.Factory {
-            return object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SubscriptionManagementViewModel(application) as T
-                }
-            }
-        }
+
+    /**
+     * Refresh all data
+     */
+    fun refresh() {
+        loadSubscriptionStatus()
+        loadPurchaseHistory()
+    }
+
+    /**
+     * Clear error message
+     */
+    fun clearError() {
+        _uiState.value = _uiState.value.copy(error = null)
     }
 }
 
+/**
+ * UI State for Subscription Management Screen
+ */
+data class SubscriptionManagementUiState(
+    val isLoading: Boolean = true,
+    val isLoadingHistory: Boolean = true,
+    val hasActiveSubscription: Boolean = false,
+    val activeSubscription: ActiveSubscriptionInfo? = null,
+    val purchaseHistory: List<PurchaseHistoryItem> = emptyList(),
+    val error: String? = null
+)
+
+/**
+ * Active subscription information
+ */
+data class ActiveSubscriptionInfo(
+    val productId: String,
+    val creditsPerWeek: Int,
+    val startDate: Date?,
+    val nextRenewalDate: Date?
+)
+
+/**
+ * Factory for creating SubscriptionManagementViewModel
+ */
+class SubscriptionManagementViewModelFactory(
+    private val application: Application
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(SubscriptionManagementViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return SubscriptionManagementViewModel(application) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}

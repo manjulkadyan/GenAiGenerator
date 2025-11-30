@@ -95,7 +95,8 @@ fun ProfileScreen(
     creditsViewModel: CreditsViewModel = viewModel(factory = CreditsViewModel.Factory),
     historyViewModel: HistoryViewModel = viewModel(factory = HistoryViewModel.Factory),
     onBuyCreditsClick: () -> Unit = {},
-    onVideosClick: () -> Unit = {}
+    onVideosClick: () -> Unit = {},
+    onSubscriptionManagementClick: () -> Unit = {}
 ) {
     val credits by creditsViewModel.state.collectAsState()
     val jobs by historyViewModel.jobs.collectAsState()
@@ -248,7 +249,8 @@ fun ProfileScreen(
         isAnonymous = isAnonymous,
         onGoogleSignIn = {
             // This will be handled by the launcher in ProfileScreenContent
-        }
+        },
+        onSubscriptionManagementClick = onSubscriptionManagementClick
     )
 }
 
@@ -450,7 +452,8 @@ private fun ProfileScreenPreview() {
             onBuyCreditsClick = {},
             onVideosClick = {},
             isAnonymous = true,
-            onGoogleSignIn = {}
+            onGoogleSignIn = {},
+            onSubscriptionManagementClick = {}
         )
     }
 }
@@ -468,7 +471,8 @@ private fun ProfileScreenContent(
     onVideosClick: () -> Unit = {},
     onLogout: () -> Unit = {},
     isAnonymous: Boolean = false,
-    onGoogleSignIn: () -> Unit = {}
+    onGoogleSignIn: () -> Unit = {},
+    onSubscriptionManagementClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -875,12 +879,20 @@ private fun ProfileScreenContent(
                 description = "Common actions and shortcuts",
                 required = false
             ) {
-                ActionCard(
-                    icon = Icons.Default.CreditCard,
-                    title = "Buy Credits",
-                    onClick = onBuyCreditsClick,
-                    iconBackgroundColor = AppColors.PrimaryPurple.copy(alpha = 0.1f)
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    ActionCard(
+                        icon = Icons.Default.CreditCard,
+                        title = "Buy Credits",
+                        onClick = onBuyCreditsClick,
+                        iconBackgroundColor = AppColors.PrimaryPurple.copy(alpha = 0.1f)
+                    )
+                    ActionCard(
+                        icon = Icons.Default.WorkspacePremium,
+                        title = "Subscription & Credits",
+                        onClick = onSubscriptionManagementClick,
+                        iconBackgroundColor = AppColors.PrimaryPurple.copy(alpha = 0.15f)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))

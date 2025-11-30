@@ -104,6 +104,7 @@ fun GenAiRoot() {
     var resultJobId by rememberSaveable { mutableStateOf<String?>(null) }
     var pendingJobId by rememberSaveable { mutableStateOf<String?>(null) }
     var showBuyCreditsScreen by rememberSaveable { mutableStateOf(false) }
+    var showSubscriptionManagementScreen by rememberSaveable { mutableStateOf(false) }
     var showInsufficientCreditsDialog by rememberSaveable { mutableStateOf(false) }
     var requiredCredits by rememberSaveable { mutableStateOf(0) }
     val destinations = remember { listOf(AppDestination.Generate, AppDestination.Models, AppDestination.History, AppDestination.Profile) }
@@ -341,6 +342,9 @@ fun GenAiRoot() {
                         },
                         onVideosClick = {
                             currentRoute = AppDestination.History
+                        },
+                        onSubscriptionManagementClick = {
+                            showSubscriptionManagementScreen = true
                         }
                     )
                 }
@@ -364,6 +368,21 @@ fun GenAiRoot() {
                     },
                     showInsufficientCreditsDialog = showInsufficientCreditsDialog,
                     requiredCredits = requiredCredits
+                )
+            }
+            
+            // SubscriptionManagementScreen as overlay
+            if (showSubscriptionManagementScreen) {
+                SubscriptionManagementScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    onBackClick = {
+                        showSubscriptionManagementScreen = false
+                    },
+                    onBuyCreditsClick = {
+                        // Close subscription management and open buy credits
+                        showSubscriptionManagementScreen = false
+                        showBuyCreditsScreen = true
+                    }
                 )
             }
         }
