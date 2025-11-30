@@ -12,6 +12,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.Source
 import com.google.firebase.functions.FirebaseFunctions
 import android.content.Context
+import android.util.Log
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -28,6 +29,7 @@ import com.manjul.genai.videogenerator.data.model.SchemaParameter
 import com.manjul.genai.videogenerator.data.model.LandingPageConfig
 import com.manjul.genai.videogenerator.data.model.LandingPageFeature
 import com.manjul.genai.videogenerator.data.model.SubscriptionPlan
+import com.manjul.genai.videogenerator.data.model.OneTimeProductConfig
 import com.manjul.genai.videogenerator.data.model.Testimonial
 import com.manjul.genai.videogenerator.data.model.UserCredits
 import com.manjul.genai.videogenerator.data.model.VideoJob
@@ -265,7 +267,7 @@ class FirebaseLandingPageRepository(
     private val firestore: FirebaseFirestore
 ) : LandingPageRepository {
     override fun observeConfig(): Flow<LandingPageConfig> = callbackFlow {
-        android.util.Log.d("LandingPageRepository", "Setting up Firestore listener for app/landingPage")
+        Log.d("LandingPageRepository", "Setting up Firestore listener for app/landingPage")
         val registration = firestore.collection("app")
             .document("landingPage")
             .addSnapshotListener { snapshot, error ->
@@ -280,10 +282,10 @@ class FirebaseLandingPageRepository(
                 }
                 
                 if (snapshot != null && snapshot.exists()) {
-                    android.util.Log.d("LandingPageRepository", "Snapshot received and exists")
+                    Log.d("LandingPageRepository", "Snapshot received and exists")
                     val config = snapshot.toLandingPageConfig()
-                    android.util.Log.d("LandingPageRepository", "Config parsed. backgroundVideoUrl: ${config.backgroundVideoUrl}")
-                    android.util.Log.d("LandingPageRepository", "Features count: ${config.features.size}, Plans count: ${config.subscriptionPlans.size}")
+                    Log.d("LandingPageRepository", "Config parsed. backgroundVideoUrl: ${config.backgroundVideoUrl}")
+                    Log.d("LandingPageRepository", "Features count: ${config.features.size}, Plans count: ${config.subscriptionPlans.size}")
                 trySend(config)
                 } else {
                     android.util.Log.w("LandingPageRepository", "Snapshot is null or doesn't exist, using default config")
@@ -329,9 +331,21 @@ class FirebaseLandingPageRepository(
             val credits = (planMap["credits"] as? Number)?.toInt() ?: return@mapNotNull null
             val price = planMap["price"] as? String ?: return@mapNotNull null
             val isPopular = planMap["isPopular"] as? Boolean ?: false
+            val isBestValue = planMap["isBestValue"] as? Boolean ?: false
             val productId = planMap["productId"] as? String ?: return@mapNotNull null
             val period = planMap["period"] as? String ?: "Weekly"
-            SubscriptionPlan(credits, price, isPopular, false,productId, period)
+            SubscriptionPlan(credits, price, isPopular, isBestValue, productId, period)
+        }
+        
+        // Parse one-time products
+        val oneTimeProductsList = get("oneTimeProducts") as? List<Map<String, Any>> ?: emptyList()
+        val oneTimeProducts = oneTimeProductsList.mapNotNull { productMap ->
+            val credits = (productMap["credits"] as? Number)?.toInt() ?: return@mapNotNull null
+            val price = productMap["price"] as? String ?: return@mapNotNull null
+            val isPopular = productMap["isPopular"] as? Boolean ?: false
+            val isBestValue = productMap["isBestValue"] as? Boolean ?: false
+            val productId = productMap["productId"] as? String ?: return@mapNotNull null
+            OneTimeProductConfig(credits, price, isPopular, isBestValue, productId)
         }
         
         // Parse testimonials (optional)
@@ -343,7 +357,7 @@ class FirebaseLandingPageRepository(
             Testimonial(username, rating, text)
         }
         
-        return LandingPageConfig(backgroundVideoUrl, features, plans, testimonials)
+        return LandingPageConfig(backgroundVideoUrl, features, plans, oneTimeProducts, testimonials)
     }
     
     private fun getDefaultConfig(): LandingPageConfig {
@@ -361,6 +375,13 @@ class FirebaseLandingPageRepository(
                 SubscriptionPlan(60, "$9.99", false, false,"weekly_60_credits", "Weekly"),
                 SubscriptionPlan(100, "$14.99", true, false,"weekly_100_credits", "Weekly"),
                 SubscriptionPlan(150, "$19.99", false, false,"weekly_150_credits", "Weekly")
+            ),
+            oneTimeProducts = listOf(
+                OneTimeProductConfig(100, "$9.99", false, false, "credits_100"),
+                OneTimeProductConfig(200, "$17.99", false, true, "credits_200"),
+                OneTimeProductConfig(300, "$24.99", false, false, "credits_300"),
+                OneTimeProductConfig(500, "$39.99", true, false, "credits_500"),
+                OneTimeProductConfig(1000, "$69.99", false, false, "credits_1000")
             ),
             testimonials = emptyList()
         )
