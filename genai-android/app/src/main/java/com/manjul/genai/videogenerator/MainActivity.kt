@@ -13,6 +13,7 @@ import com.manjul.genai.videogenerator.ui.components.AuthGate
 import com.manjul.genai.videogenerator.ui.screens.GenAiRoot
 import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
 import com.manjul.genai.videogenerator.data.repository.BillingRepository
+import com.manjul.genai.videogenerator.data.onboarding.OnboardingManager
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -24,6 +25,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        
+        // Initialize onboarding manager
+        OnboardingManager.initialize(applicationContext)
+        
         // Initialize billing connection once
         lifecycleScope.launch {
             billingRepository.initialize().collect { /* no-op */ }
