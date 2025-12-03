@@ -59,8 +59,8 @@ class FirebaseOnboardingRepository(
                     features = emptyList()
                 ), OnboardingPageConfig(
                     id = "models",
-                    title = "Upgrade to Premium, Get More Possibilities",
-                    subtitle = "Enjoy more storage, advanced styles, faster processing, and priority support to enhance your video creation experience.",
+                    title = "Choose from Multiple AI Models",
+                    subtitle = "Access powerful AI models like Veo 3, Sora 2, Kling and 19 more. Each model brings unique capabilities to bring your vision to life.",
                     imageUrl = "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/images%2Fonboarding%2FModels.png?alt=media",
                     videoUrl = null,
                     order = 2,
