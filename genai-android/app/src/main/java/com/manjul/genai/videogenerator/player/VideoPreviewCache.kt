@@ -26,9 +26,9 @@ object VideoPreviewCache {
                 // filesDir persists even when cache is cleared (only cleared on app uninstall)
                 // This is better for video caching that should persist across app launches
                 val cacheDir = File(appContext.filesDir, "video_cache")
-                Log.d("VideoPreviewCache", "Cache directory: ${cacheDir.absolutePath}")
-                Log.d("VideoPreviewCache", "Cache directory exists: ${cacheDir.exists()}")
-                Log.d("VideoPreviewCache", "Using filesDir (more persistent than cacheDir)")
+                //Log.d("VideoPreviewCache", "Cache directory: ${cacheDir.absolutePath}")
+                //Log.d("VideoPreviewCache", "Cache directory exists: ${cacheDir.exists()}")
+                //Log.d("VideoPreviewCache", "Using filesDir (more persistent than cacheDir)")
                 
                 SimpleCache(
                     cacheDir,

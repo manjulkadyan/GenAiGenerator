@@ -8,6 +8,7 @@ import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.ConsumeParams
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesUpdatedListener
@@ -500,14 +501,14 @@ class BillingRepository(private val context: Context) {
      * ⚠️ CRITICAL: Only acknowledge purchases in PURCHASED state, not PENDING.
      * The three-day acknowledgement window begins only when purchase transitions from PENDING to PURCHASED.
      * 
-     * ⚠️ NOTE: For ONE-TIME purchases (INAPP), we DON'T acknowledge here.
-     * The backend (Cloud Function) handles acknowledgment AFTER verification and credit addition.
-     * This prevents duplicate acknowledgments and ensures entitlement is granted before acknowledging.
+     * ⚠️ NOTE: For ONE-TIME purchases (INAPP), we CONSUME them (not acknowledge).
+     * The backend (Cloud Function) handles consumption AFTER verification and credit addition.
+     * Consumption allows the user to purchase the same product again.
      */
     private fun handlePurchase(purchase: Purchase) {
         // ⚠️ CRITICAL: Only process PURCHASED purchases, not PENDING
         if (purchase.purchaseState != Purchase.PurchaseState.PURCHASED) {
-            android.util.Log.w("BillingRepository", "Purchase is in ${purchase.purchaseState} state, not PURCHASED. Skipping acknowledgment.")
+            android.util.Log.w("BillingRepository", "Purchase is in ${purchase.purchaseState} state, not PURCHASED. Skipping processing.")
             return
         }
         
@@ -516,8 +517,10 @@ class BillingRepository(private val context: Context) {
         val isOneTimePurchase = productId.startsWith("credits_")
         
         if (isOneTimePurchase) {
-            Log.d("BillingRepository", "One-time purchase detected: $productId. Backend will handle acknowledgment.")
-            return // Backend Cloud Function will acknowledge after verification
+            Log.d("BillingRepository", "One-time purchase detected: $productId. Backend will handle consumption.")
+            // Backend Cloud Function will consume after verification and credit grant
+            // Consuming (not acknowledging) allows user to purchase the same product again
+            return
         }
         
         // For subscriptions, acknowledge locally
@@ -546,6 +549,44 @@ class BillingRepository(private val context: Context) {
             }
         } else {
             Log.d("BillingRepository", "Subscription already acknowledged: ${purchase.products.firstOrNull()}")
+        }
+    }
+    
+    /**
+     * Consume a one-time purchase.
+     * This allows the user to purchase the same INAPP product again.
+     * Should only be called by the backend after credits are granted.
+     */
+    suspend fun consumePurchase(purchaseToken: String): Result<String> {
+        return suspendCancellableCoroutine { continuation ->
+            val billingClient = billingClient
+            if (billingClient == null) {
+                continuation.resume(Result.failure(IllegalStateException("Billing client not initialized")))
+                return@suspendCancellableCoroutine
+            }
+            
+            val consumeParams = ConsumeParams.newBuilder()
+                .setPurchaseToken(purchaseToken)
+                .build()
+            
+            billingClient.consumeAsync(consumeParams) { billingResult, outToken ->
+                when (billingResult.responseCode) {
+                    BillingClient.BillingResponseCode.OK -> {
+                        Log.d("BillingRepository", "✅ Purchase consumed successfully: $outToken")
+                        continuation.resume(Result.success(outToken))
+                    }
+                    BillingClient.BillingResponseCode.ITEM_NOT_OWNED -> {
+                        Log.w("BillingRepository", "⚠️ Consume failed: Item not owned (already consumed?)")
+                        continuation.resume(Result.success(outToken)) // Already consumed, treat as success
+                    }
+                    else -> {
+                        Log.e("BillingRepository", "❌ Failed to consume purchase: ${billingResult.debugMessage} (code: ${billingResult.responseCode})")
+                        continuation.resume(Result.failure(
+                            Exception("Failed to consume purchase: ${billingResult.debugMessage}")
+                        ))
+                    }
+                }
+            }
         }
     }
     
