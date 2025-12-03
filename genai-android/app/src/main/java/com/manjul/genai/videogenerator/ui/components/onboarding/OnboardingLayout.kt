@@ -76,12 +76,12 @@ fun OnboardingLayout(
             ) {
 
                 Box(
-                    modifier = Modifier.weight(1f).padding(20.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(20.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    IPhoneMockup {
-                        mockupContent()
-                    }
+                    mockupContent()
                 }
             }
         }

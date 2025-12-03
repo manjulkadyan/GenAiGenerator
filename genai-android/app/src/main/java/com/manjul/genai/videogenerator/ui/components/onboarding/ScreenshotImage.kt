@@ -1,5 +1,6 @@
 package com.manjul.genai.videogenerator.ui.components.onboarding
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,6 +46,7 @@ fun ScreenshotImage(
     fallbackContent: @Composable () -> Unit = { ScreenshotPlaceholder(contentDescription) }
 ) {
     if (!imageUrl.isNullOrEmpty()) {
+        Log.d("ScreenshotImage", "Loading: $imageUrl")
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(imageUrl)
@@ -66,9 +68,16 @@ fun ScreenshotImage(
                     )
                 }
             },
-            error = { fallbackContent() }
+            error = { 
+                Log.e("ScreenshotImage", "Failed: $imageUrl")
+                fallbackContent() 
+            },
+            onSuccess = {
+                Log.d("ScreenshotImage", "Success: $imageUrl")
+            }
         )
     } else {
+        Log.d("ScreenshotImage", "Empty URL, showing fallback")
         fallbackContent()
     }
 }
@@ -167,7 +176,7 @@ private fun ScreenshotPlaceholderPreview() {
 @Composable
 private fun ScreenshotImageNullPreview() {
     ScreenshotImage(
-        imageUrl = null,
+        imageUrl = "null",
         contentDescription = "Premium Features"
     )
 }
