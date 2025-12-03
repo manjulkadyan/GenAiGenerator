@@ -55,6 +55,7 @@ fun AppTextField(
     placeholder: String = "",
     label: String? = null,
     maxLines: Int = 1,
+    minLines: Int = 1,
     isError: Boolean = false,
     errorMessage: String? = null,
     enabled: Boolean = true
@@ -105,6 +106,7 @@ fun AppTextField(
             color = AppColors.TextPrimary
         ),
         shape = RoundedCornerShape(TextFieldConstants.CORNER_RADIUS.dp),
+        minLines = minLines,
         maxLines = maxLines
     )
 }
