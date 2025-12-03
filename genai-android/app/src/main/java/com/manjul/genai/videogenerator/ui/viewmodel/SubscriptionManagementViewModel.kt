@@ -43,8 +43,34 @@ class SubscriptionManagementViewModel(
 
     init {
         Log.d("SubscriptionMgmtVM", "Initializing - will query Google Play Billing")
-        loadSubscriptionStatusFromGooglePlay()
-        loadPurchaseHistory()
+        
+        // Initialize billing repository first, then load data
+        viewModelScope.launch {
+            try {
+                Log.d("SubscriptionMgmtVM", "Initializing BillingRepository...")
+                
+                // Wait for billing to be ready
+                billingRepository.initialize().collect { billingResult ->
+                    if (billingResult.responseCode == com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
+                        Log.d("SubscriptionMgmtVM", "✅ Billing initialized successfully, loading subscription status")
+                        loadSubscriptionStatusFromGooglePlay()
+                        loadPurchaseHistory()
+                    } else {
+                        Log.e("SubscriptionMgmtVM", "❌ Billing initialization failed: ${billingResult.debugMessage}")
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            error = "Failed to initialize billing: ${billingResult.debugMessage}"
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("SubscriptionMgmtVM", "Error initializing billing", e)
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    error = "Failed to initialize billing: ${e.message}"
+                )
+            }
+        }
     }
 
     /**

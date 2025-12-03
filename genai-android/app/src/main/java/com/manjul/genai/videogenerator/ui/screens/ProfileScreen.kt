@@ -904,14 +904,14 @@ private fun ProfileScreenContent(
                 required = false
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    // Dark Mode - Always ON (display only)
+                    /*// Dark Mode - Always ON (display only)
                     ActionCard(
                         icon = Icons.Default.DarkMode,
                         title = "Dark Mode",
                         onClick = { },
                         iconBackgroundColor = AppColors.SurfaceElevated.copy(alpha = 0.5f),
                         badge = "Always On"
-                    )
+                    )*/
 
                     // Notifications - Opens app settings
                     ActionCard(

@@ -1,5 +1,6 @@
 package com.manjul.genai.videogenerator.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -135,6 +136,7 @@ fun SubscriptionManagementScreen(
                 if (uiState.isLoading) {
                     LoadingSubscriptionCard()
                 } else if (uiState.hasActiveSubscription && uiState.activeSubscription != null) {
+                    Log.d("Manjul", "SubscriptionManagementScreen() called with: uiState.activeSubscription = ${uiState.activeSubscription}")
                     ActiveSubscriptionCard(
                         subscription = uiState.activeSubscription!!,
                         onManageClick = { viewModel.openSubscriptionManagement(context) },
@@ -330,9 +332,9 @@ private fun NoSubscriptionCard(onViewPlansClick: () -> Unit) {
             )
 
             Text(
-                text = "Subscribe to get weekly credits automatically delivered to your account.",
+                text = "Subscribe to get weekly credits automatically delivered to your account at lower credit rates.",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color(0xFF9CA3AF),
+                color = Color.White,
                 textAlign = TextAlign.Center
             )
 
