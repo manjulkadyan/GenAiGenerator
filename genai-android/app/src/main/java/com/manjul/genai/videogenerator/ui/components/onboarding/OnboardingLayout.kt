@@ -43,8 +43,6 @@ import androidx.compose.ui.unit.sp
 fun OnboardingLayout(
     currentPage: Int,
     totalPages: Int = 3,
-    showLogo: Boolean = false,
-    logo: @Composable () -> Unit = {},
     mockupContent: @Composable () -> Unit,
     title: String,
     description: String,
@@ -76,26 +74,15 @@ fun OnboardingLayout(
                     .padding(horizontal = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Status bar spacing
-                Spacer(modifier = Modifier.height(60.dp))
 
-                // Optional logo (first screen only)
-                if (showLogo) {
-                    logo()
-                    Spacer(modifier = Modifier.height(24.dp))
-                }
-
-                // iPhone Mockup - Centered in top section
                 Box(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).padding(20.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     IPhoneMockup {
                         mockupContent()
                     }
                 }
-
-                Spacer(modifier = Modifier.height(32.dp))
             }
         }
 
@@ -164,8 +151,6 @@ private fun OnboardingLayoutPage1Preview() {
         OnboardingLayout(
             currentPage = 0,
             totalPages = 3,
-            showLogo = true,
-            logo = { AppLogo() },
             mockupContent = {
                 ScreenshotPlaceholder(title = "Premium Features")
             },
@@ -191,7 +176,6 @@ private fun OnboardingLayoutPage2Preview() {
         OnboardingLayout(
             currentPage = 1,
             totalPages = 3,
-            showLogo = false,
             mockupContent = {
                 ScreenshotPlaceholder(title = "Create Videos")
             },
@@ -217,7 +201,6 @@ private fun OnboardingLayoutPage3Preview() {
         OnboardingLayout(
             currentPage = 2,
             totalPages = 3,
-            showLogo = false,
             mockupContent = {
                 ScreenshotPlaceholder(title = "Video Library")
             },
@@ -242,7 +225,6 @@ private fun OnboardingLayoutAllStatesCompactPreview() {
         OnboardingLayout(
             currentPage = 1,
             totalPages = 3,
-            showLogo = false,
             mockupContent = {
                 ScreenshotPlaceholder(title = "Screenshot Here")
             },
