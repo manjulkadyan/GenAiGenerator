@@ -96,29 +96,38 @@ fun OnboardingScreen(
     }
 
     // Render screen with pure fade animation and swipe gesture detection
+    var dragOffset by remember { mutableStateOf(0f) }
+    
     AnimatedContent(
         targetState = currentPage,
         transitionSpec = {
+            // Start fade in immediately while old screen is fading out
             fadeIn(
-                animationSpec = tween(durationMillis = 500)
+                animationSpec = tween(durationMillis = 400)
             ) togetherWith fadeOut(
-                animationSpec = tween(durationMillis = 500)
+                animationSpec = tween(durationMillis = 600)
             )
         },
         modifier = Modifier
             .fillMaxSize()
-            .pointerInput(Unit) {
+            .background(Color.Transparent) // Prevent black background
+            .pointerInput(currentPage) {
                 // Detect horizontal swipe gestures
                 detectHorizontalDragGestures(
-                    onDragEnd = {},
-                    onHorizontalDrag = { _, dragAmount ->
-                        // Swipe left (negative) = next page
-                        // Swipe right (positive) = previous page
-                        if (dragAmount < -50 && currentPage < 2) {
-                            currentPage++
-                        } else if (dragAmount > 50 && currentPage > 0) {
-                            currentPage--
+                    onDragStart = {
+                        dragOffset = 0f
+                    },
+                    onDragEnd = {
+                        // Only trigger page change when drag ends
+                        when {
+                            dragOffset < -100 && currentPage < 2 -> currentPage++ // Swipe left -> next
+                            dragOffset > 100 && currentPage > 0 -> currentPage--  // Swipe right -> previous
                         }
+                        dragOffset = 0f
+                    },
+                    onHorizontalDrag = { _, dragAmount ->
+                        // Accumulate drag offset
+                        dragOffset += dragAmount
                     }
                 )
             },
