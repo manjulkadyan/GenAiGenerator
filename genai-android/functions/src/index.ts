@@ -1510,22 +1510,23 @@ export const handleOneTimePurchase = onCall<{
       };
     }
 
-    // Acknowledge purchase with Google Play BEFORE adding credits (to prevent duplicates)
-    if (playPurchase.acknowledgementState !== 1) {
+    // Consume purchase with Google Play BEFORE adding credits (to prevent duplicates)
+    // ⚠️ CRITICAL: One-time purchases must be CONSUMED (not acknowledged) to allow repurchasing
+    if (playPurchase.consumptionState !== 1) {
       try {
         const publisher = getAndroidPublisher();
-        await publisher.purchases.products.acknowledge({
+        await publisher.purchases.products.consume({
           packageName: playPackageName,
           productId: productId,
           token: purchaseToken,
         });
-        console.log(`✅ Acknowledged purchase ${purchaseToken} with Google Play`);
+        console.log(`✅ Consumed purchase ${purchaseToken} with Google Play (allows repurchase)`);
       } catch (error: any) {
-        console.error("❌ Failed to acknowledge purchase with Google Play:", error?.message);
-        throw new Error(`Failed to acknowledge purchase: ${error?.message}`);
+        console.error("❌ Failed to consume purchase with Google Play:", error?.message);
+        throw new Error(`Failed to consume purchase: ${error?.message}`);
       }
     } else {
-      console.log("Purchase already acknowledged by Google Play");
+      console.log("Purchase already consumed by Google Play");
     }
 
     // Store purchase in history
@@ -1547,7 +1548,7 @@ export const handleOneTimePurchase = onCall<{
       priceMicros,
       currency,
       purchaseTime: now,
-      acknowledged: true, // Always true at this point
+      consumed: true, // Consumed (not acknowledged) for one-time purchases
       orderId: playPurchase.orderId || "",
       createdAt: now,
       updatedAt: now,
