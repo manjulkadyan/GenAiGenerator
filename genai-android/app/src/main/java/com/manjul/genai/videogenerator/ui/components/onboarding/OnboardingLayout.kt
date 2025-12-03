@@ -58,7 +58,7 @@ fun OnboardingLayout(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.55f) // Takes ~55% of screen
+                .weight(0.6f) // Takes ~55% of screen
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
@@ -101,8 +101,8 @@ fun OnboardingLayout(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.5f) // Takes ~45% of screen
-                .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+                .weight(0.5f) // Takes ~5% of screen
+                .clip(WavyTopShape()) // Custom wavy shape for curved top edge
                 .background(Color.White)
         ) {
             Column(

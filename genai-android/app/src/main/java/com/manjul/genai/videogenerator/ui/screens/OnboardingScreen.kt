@@ -137,7 +137,7 @@ fun OnboardingScreen(
                     totalPages = 3,
                     onNext = if (page == 2) handleGetStarted else handleNext,
                     onSkip = handleSkip
-                )
+            )
             }
         }
     }

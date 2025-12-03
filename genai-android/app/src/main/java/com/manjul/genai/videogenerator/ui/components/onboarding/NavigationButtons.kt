@@ -64,22 +64,22 @@ fun NavigationButtons(
         } else {
             // Other screens: Skip (light) + Continue (purple)
             if (onSkip != null) {
-                Box(
-                    modifier = Modifier
+                    Box(
+                        modifier = Modifier
                         .weight(1f)
-                        .height(56.dp)
+                            .height(56.dp)
                         .clip(RoundedCornerShape(28.dp))
                         .background(Color(0xFFF3F4F6)) // Light gray
-                        .clickable(onClick = onSkip),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Skip",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.SemiBold,
+                            .clickable(onClick = onSkip),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Skip",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF6B7280), // Medium gray
-                        fontSize = 17.sp
-                    )
+                            fontSize = 17.sp
+                        )
                 }
             }
 
@@ -94,7 +94,7 @@ fun NavigationButtons(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Continue",
+                    text = "Continue",
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.White,
