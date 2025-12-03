@@ -1,0 +1,258 @@
+package com.manjul.genai.videogenerator.ui.components.onboarding
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+/**
+ * Base layout for all onboarding screens
+ * NEW LAYOUT STRUCTURE (matching Imagify design):
+ *
+ * ┌─────────────────────────┐
+ * │  Purple Gradient Top    │
+ * │  [Optional Logo]        │
+ * │  [iPhone Mockup]        │
+ * ├─────────────────────────┤
+ * │  White Bottom Section   │
+ * │  [Title]                │
+ * │  [Description]          │
+ * │  [Page Indicators]      │
+ * │  [Skip + Continue]      │
+ * └─────────────────────────┘
+ */
+@Composable
+fun OnboardingLayout(
+    currentPage: Int,
+    totalPages: Int = 3,
+    showLogo: Boolean = false,
+    logo: @Composable () -> Unit = {},
+    mockupContent: @Composable () -> Unit,
+    title: String,
+    description: String,
+    buttons: @Composable () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // TOP SECTION: Purple gradient with iPhone mockup
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.55f) // Takes ~55% of screen
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFF7C3AED), // Purple 600
+                            Color(0xFF6D28D9)  // Purple 700
+                        )
+                    )
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Status bar spacing
+                Spacer(modifier = Modifier.height(60.dp))
+
+                // Optional logo (first screen only)
+                if (showLogo) {
+                    logo()
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+
+                // iPhone Mockup - Centered in top section
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    IPhoneMockup {
+                        mockupContent()
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.5f) // Takes ~45% of screen
+                .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+                .background(Color.White)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp)
+                    .padding(top = 40.dp, bottom = 32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Title - Bold, dark text
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1F2937), // Dark gray
+                    textAlign = TextAlign.Center,
+                    fontSize = 28.sp,
+                    lineHeight = 34.sp
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Description - Gray text
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color(0xFF6B7280), // Medium gray
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    lineHeight = 24.sp,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                // Page indicators
+                PageIndicators(
+                    currentPage = currentPage,
+                    totalPages = totalPages
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Navigation buttons
+                buttons()
+            }
+        }
+    }
+}
+
+/**
+ * Preview: First page with logo and Skip/Continue buttons
+ */
+@Preview(name = "Page 1 - With Logo", showSystemUi = true)
+@Composable
+private fun OnboardingLayoutPage1Preview() {
+    MaterialTheme {
+        OnboardingLayout(
+            currentPage = 0,
+            totalPages = 3,
+            showLogo = true,
+            logo = { AppLogo() },
+            mockupContent = {
+                ScreenshotPlaceholder(title = "Premium Features")
+            },
+            title = "Upgrade to Premium, Get More Possibilities",
+            description = "Enjoy more storage, advanced styles, faster processing, and priority support to enhance your video creation experience.",
+            buttons = {
+                NavigationButtons(
+                    onNext = {},
+                    onSkip = {}
+                )
+            }
+        )
+    }
+}
+
+/**
+ * Preview: Middle page without logo, with Skip/Continue buttons
+ */
+@Preview(name = "Page 2 - Middle Page", showSystemUi = true)
+@Composable
+private fun OnboardingLayoutPage2Preview() {
+    MaterialTheme {
+        OnboardingLayout(
+            currentPage = 1,
+            totalPages = 3,
+            showLogo = false,
+            mockupContent = {
+                ScreenshotPlaceholder(title = "Create Videos")
+            },
+            title = "Imagine Anything. Create Everything!",
+            description = "Welcome to Gen AI Video, the app that turns your imagination into stunning videos. Simply enter your text and let our AI do the magic.",
+            buttons = {
+                NavigationButtons(
+                    onNext = {},
+                    onSkip = {}
+                )
+            }
+        )
+    }
+}
+
+/**
+ * Preview: Last page with Continue button only
+ */
+@Preview(name = "Page 3 - Last Page", showSystemUi = true)
+@Composable
+private fun OnboardingLayoutPage3Preview() {
+    MaterialTheme {
+        OnboardingLayout(
+            currentPage = 2,
+            totalPages = 3,
+            showLogo = false,
+            mockupContent = {
+                ScreenshotPlaceholder(title = "Video Library")
+            },
+            title = "Manage and Organize Your Creations!",
+            description = "Easily access and manage all your Gen AI videos in one place. Edit, delete, or share your masterpieces with ease.",
+            buttons = {
+                NavigationButtons(
+                    onGetStarted = {}
+                )
+            }
+        )
+    }
+}
+
+/**
+ * Preview: Compare all page states side by side
+ */
+@Preview(name = "All Pages States", showBackground = true, widthDp = 400, heightDp = 800)
+@Composable
+private fun OnboardingLayoutAllStatesCompactPreview() {
+    MaterialTheme {
+        OnboardingLayout(
+            currentPage = 1,
+            totalPages = 3,
+            showLogo = false,
+            mockupContent = {
+                ScreenshotPlaceholder(title = "Screenshot Here")
+            },
+            title = "Main Title Goes Here",
+            description = "This is where the description text appears. It provides context about the feature being showcased.",
+            buttons = {
+                NavigationButtons(
+                    onNext = {},
+                    onSkip = {}
+                )
+            }
+        )
+    }
+}

@@ -53,19 +53,19 @@ sealed class AppDestination(
         val Saver: Saver<AppDestination, String> = Saver(
             save = { destination ->
                 when (destination) {
-                    is AppDestination.Models -> "Models"
-                    is AppDestination.Generate -> "Generate"
-                    is AppDestination.History -> "History"
-                    is AppDestination.Profile -> "Profile"
+                    is Models -> "Models"
+                    is Generate -> "Generate"
+                    is History -> "History"
+                    is Profile -> "Profile"
                 }
             },
             restore = { value ->
                 when (value) {
-                    "Models" -> AppDestination.Models
-                    "Generate" -> AppDestination.Generate
-                    "History" -> AppDestination.History
-                    "Profile" -> AppDestination.Profile
-                    else -> AppDestination.Models // Default fallback
+                    "Models" -> Models
+                    "Generate" -> Generate
+                    "History" -> History
+                    "Profile" -> Profile
+                    else -> Models // Default fallback
                 }
             }
         )
