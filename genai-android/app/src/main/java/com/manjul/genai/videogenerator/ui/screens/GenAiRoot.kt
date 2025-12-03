@@ -35,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.manjul.genai.videogenerator.R
 import com.manjul.genai.videogenerator.data.model.VideoJobStatus
+import com.manjul.genai.videogenerator.data.onboarding.OnboardingManager
 import com.manjul.genai.videogenerator.ui.viewmodel.HistoryViewModel
 import com.manjul.genai.videogenerator.ui.viewmodel.VideoGenerateViewModel
 import kotlinx.coroutines.launch
@@ -74,6 +75,42 @@ sealed class AppDestination(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun GenAiRoot() {
+    val context = LocalContext.current
+    val activity = (context as? androidx.activity.ComponentActivity)
+    
+    // App flow states: Splash -> Onboarding (if first time) -> Main App
+    var showSplash by rememberSaveable { mutableStateOf(true) }
+    var showOnboarding by rememberSaveable { 
+        mutableStateOf(false) // Will be set after splash based on OnboardingManager
+    }
+    
+    when {
+        showSplash -> {
+            SplashScreen(
+                onTimeout = {
+                    showSplash = false
+                    // Check if user has completed onboarding
+                    showOnboarding = !OnboardingManager.hasCompletedOnboarding()
+                }
+            )
+        }
+        showOnboarding -> {
+            OnboardingScreen(
+                onComplete = {
+                    OnboardingManager.setOnboardingCompleted()
+                    showOnboarding = false
+                }
+            )
+        }
+        else -> {
+            MainAppContent()
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+private fun MainAppContent() {
     val context = LocalContext.current
     val activity = (context as? androidx.activity.ComponentActivity)
     
