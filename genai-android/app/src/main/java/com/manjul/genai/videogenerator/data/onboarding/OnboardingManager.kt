@@ -31,7 +31,7 @@ object OnboardingManager {
      * Mark onboarding as completed.
      */
     fun setOnboardingCompleted() {
-        prefs?.edit()?.putBoolean(KEY_ONBOARDING_COMPLETED, false)?.apply()
+        prefs?.edit()?.putBoolean(KEY_ONBOARDING_COMPLETED, true)?.apply()
     }
     
     /**
