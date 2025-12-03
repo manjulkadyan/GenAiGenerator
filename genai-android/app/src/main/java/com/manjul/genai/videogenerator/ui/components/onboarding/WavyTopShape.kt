@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.LayoutDirection
 
 /**
  * Custom shape for the white card with downward curve at top
- * Creates a smooth dip/curve downward like in the Imagify design
+ * Curves DOWNWARD to nestle with purple section's downward curve
  */
 class WavyTopShape : Shape {
     override fun createOutline(
@@ -21,14 +21,14 @@ class WavyTopShape : Shape {
             // Start from top-left corner
             moveTo(0f, 0f)
             
-            // Create downward curve at top (dips down in the middle)
+            // Create DOWNWARD curve at top (bulges DOWN in middle)
             cubicTo(
                 x1 = size.width * 0.25f,    // First control point X
-                y1 = size.height * 0.1f,   // First control point Y (dips DOWN)
+                y1 = size.height * 0.1f,    // Control point Y (bulges DOWN)
                 x2 = size.width * 0.75f,    // Second control point X
-                y2 = size.height * 0.1f,   // Second control point Y (dips DOWN)
+                y2 = size.height * 0.1f,    // Control point Y (bulges DOWN)
                 x3 = size.width,             // End point X (right side)
-                y3 = 0f                      // End point Y (back to top)
+                y3 = 0f                      // End point Y (top-right corner)
             )
             
             // Right edge going down
