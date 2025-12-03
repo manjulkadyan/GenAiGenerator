@@ -41,32 +41,40 @@ class FirebaseOnboardingRepository(
         return OnboardingConfig(
             pages = listOf(
                 OnboardingPageConfig(
-                    id = "premium",
-                    title = "Upgrade to Premium, Get More Possibilities",
-                    subtitle = "Enjoy more storage, advanced styles, faster processing, and priority support to enhance your video creation experience.",
-                    imageUrl = "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/onboarding%2Fpremium.jpg?alt=media",
-                    videoUrl = null,
-                    order = 0,
-                    features = emptyList()
-                ),
-                OnboardingPageConfig(
                     id = "create",
                     title = "Imagine Anything. Create Everything!",
                     subtitle = "Welcome to Gen AI Video, the app that turns your imagination into stunning videos. Simply enter your text and let our AI do the magic.",
-                    imageUrl = "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/onboarding%2Fcreate.jpg?alt=media",
+                    imageUrl = "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/images%2Fonboarding%2FStart.png?alt=media",
                     videoUrl = null,
-                    order = 1,
+                    order = 0,
                     features = emptyList()
                 ),
                 OnboardingPageConfig(
                     id = "library",
                     title = "Manage and Organize Your Creations!",
                     subtitle = "Easily access and manage all your Gen AI videos in one place. Edit, delete, or share your masterpieces with ease.",
-                    imageUrl = "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/onboarding%2Flibrary.jpg?alt=media",
+                    imageUrl = "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/images%2Fonboarding%2FHistory.png?alt=media",
+                    videoUrl = null,
+                    order = 1,
+                    features = emptyList()
+                ),
+                OnboardingPageConfig(
+                    id = "premium",
+                    title = "Upgrade to Premium, Get More Possibilities",
+                    subtitle = "Enjoy more storage, advanced styles, faster processing, and priority support to enhance your video creation experience.",
+                    imageUrl = "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/onboarding%2Fpremium.jpg?alt=media",
+                    videoUrl = null,
+                    order = 3,
+                    features = emptyList()
+                ),OnboardingPageConfig(
+                    id = "models",
+                    title = "Upgrade to Premium, Get More Possibilities",
+                    subtitle = "Enjoy more storage, advanced styles, faster processing, and priority support to enhance your video creation experience.",
+                    imageUrl = "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/images%2Fonboarding%2FModels.png?alt=media",
                     videoUrl = null,
                     order = 2,
                     features = emptyList()
-                )
+                ),
             ),
             showAppLogo = false,
             appLogoUrl = null
