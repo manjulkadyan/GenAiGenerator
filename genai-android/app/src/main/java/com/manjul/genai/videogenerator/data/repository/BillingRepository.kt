@@ -92,14 +92,30 @@ class BillingRepository(private val context: Context) {
                         result.onSuccess { existingPurchases ->
                             Log.d("BillingRepository", "Found ${existingPurchases.size} existing purchases")
                             if (existingPurchases.isNotEmpty()) {
-                                // Process the first unacknowledged purchase or the most recent one
-                                val purchaseToProcess = existingPurchases.firstOrNull { !it.isAcknowledged }
-                                    ?: existingPurchases.firstOrNull()
+                                // Process ALL unconsumed one-time purchases (they need to be consumed)
+                                val unconsumedOneTimePurchases = existingPurchases.filter { purchase ->
+                                    purchase.products.any { it.startsWith("credits_") } &&
+                                    purchase.purchaseState == Purchase.PurchaseState.PURCHASED
+                                }
                                 
-                                purchaseToProcess?.let { purchase ->
-                                    Log.d("BillingRepository", "Re-processing existing purchase: ${purchase.products.firstOrNull()}")
-                                    handlePurchase(purchase)
-                                    _purchaseUpdates.tryEmit(PurchaseUpdateEvent.AlreadyOwned(purchase))
+                                if (unconsumedOneTimePurchases.isNotEmpty()) {
+                                    Log.d("BillingRepository", "Found ${unconsumedOneTimePurchases.size} unconsumed one-time purchases to process")
+                                    unconsumedOneTimePurchases.forEach { purchase ->
+                                        Log.d("BillingRepository", "Re-processing unconsumed one-time purchase: ${purchase.products.firstOrNull()}")
+                                        // Don't call handlePurchase (it skips one-time), just emit the event
+                                        _purchaseUpdates.tryEmit(PurchaseUpdateEvent.AlreadyOwned(purchase))
+                                    }
+                                } else {
+                                    // Process subscription if no one-time purchases found
+                                    val subscriptionPurchase = existingPurchases.firstOrNull { 
+                                        it.products.any { productId -> productId.startsWith("weekly_") }
+                                    }
+                                    
+                                    subscriptionPurchase?.let { purchase ->
+                                        Log.d("BillingRepository", "Re-processing existing subscription: ${purchase.products.firstOrNull()}")
+                                        handlePurchase(purchase)
+                                        _purchaseUpdates.tryEmit(PurchaseUpdateEvent.AlreadyOwned(purchase))
+                                    }
                                 }
                             } else {
                                 android.util.Log.w("BillingRepository", "No existing purchases found despite ITEM_ALREADY_OWNED error")
