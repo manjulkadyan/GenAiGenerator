@@ -54,11 +54,12 @@ fun OnboardingLayout(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // TOP SECTION: Purple gradient with iPhone mockup
+        // TOP SECTION: Purple gradient with iPhone mockup and curved bottom
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.6f) // Takes ~55% of screen
+                .clip(WavyBottomShape()) // Custom wavy bottom edge
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
