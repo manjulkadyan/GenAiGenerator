@@ -45,11 +45,11 @@ fun OnboardingScreen(
     var isLoading by remember { mutableStateOf(true) }
     var currentPage by remember { mutableIntStateOf(0) }
     
-    // Load onboarding config from Firebase (use first 3 pages)
+    // Load onboarding config from Firebase
     LaunchedEffect(Unit) {
         val result = repository.getOnboardingConfig()
         result.getOrNull()?.let { config ->
-            onboardingPages = config.pages.take(3) // Only use first 3 screens
+            onboardingPages = config.pages
         }
         isLoading = false
     }
@@ -80,7 +80,7 @@ fun OnboardingScreen(
 
     // Handlers
     val handleNext: () -> Unit = {
-        if (currentPage < 2) {
+        if (currentPage < onboardingPages.size -1) {
             currentPage++
         }
     }
@@ -142,10 +142,10 @@ fun OnboardingScreen(
                 title = pageConfig.title,
                 description = pageConfig.subtitle,
                 isFirstPage = page == 0,
-                isLastPage = page == 2,
+                isLastPage = page == onboardingPages.size,
                 currentPage = page,
-                totalPages = 3,
-                onNext = if (page == 2) handleGetStarted else handleNext,
+                totalPages = onboardingPages.size,
+                onNext = if (page == (onboardingPages.size -1) ) handleGetStarted else handleNext,
                 onSkip = handleSkip
             )
         }

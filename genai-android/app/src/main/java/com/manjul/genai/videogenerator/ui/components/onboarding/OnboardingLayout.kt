@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun OnboardingLayout(
     currentPage: Int,
-    totalPages: Int = 3,
+    totalPages: Int,
     mockupContent: @Composable () -> Unit,
     title: String,
     description: String,
@@ -158,80 +158,6 @@ private fun OnboardingLayoutPage1Preview() {
             },
             title = "Upgrade to Premium, Get More Possibilities",
             description = "Enjoy more storage, advanced styles, faster processing, and priority support to enhance your video creation experience.",
-            buttons = {
-                NavigationButtons(
-                    onNext = {},
-                    onSkip = {}
-                )
-            }
-        )
-    }
-}
-
-/**
- * Preview: Middle page without logo, with Skip/Continue buttons
- */
-@Preview(name = "Page 2 - Middle Page", showSystemUi = true)
-@Composable
-private fun OnboardingLayoutPage2Preview() {
-    MaterialTheme {
-        OnboardingLayout(
-            currentPage = 1,
-            totalPages = 3,
-            mockupContent = {
-                ScreenshotPlaceholder(title = "Create Videos")
-            },
-            title = "Imagine Anything. Create Everything!",
-            description = "Welcome to Gen AI Video, the app that turns your imagination into stunning videos. Simply enter your text and let our AI do the magic.",
-            buttons = {
-                NavigationButtons(
-                    onNext = {},
-                    onSkip = {}
-                )
-            }
-        )
-    }
-}
-
-/**
- * Preview: Last page with Continue button only
- */
-@Preview(name = "Page 3 - Last Page", showSystemUi = true)
-@Composable
-private fun OnboardingLayoutPage3Preview() {
-    MaterialTheme {
-        OnboardingLayout(
-            currentPage = 2,
-            totalPages = 3,
-            mockupContent = {
-                ScreenshotPlaceholder(title = "Video Library")
-            },
-            title = "Manage and Organize Your Creations!",
-            description = "Easily access and manage all your Gen AI videos in one place. Edit, delete, or share your masterpieces with ease.",
-            buttons = {
-                NavigationButtons(
-                    onGetStarted = {}
-                )
-            }
-        )
-    }
-}
-
-/**
- * Preview: Compare all page states side by side
- */
-@Preview(name = "All Pages States", showBackground = true, widthDp = 400, heightDp = 800)
-@Composable
-private fun OnboardingLayoutAllStatesCompactPreview() {
-    MaterialTheme {
-        OnboardingLayout(
-            currentPage = 1,
-            totalPages = 3,
-            mockupContent = {
-                ScreenshotPlaceholder(title = "Screenshot Here")
-            },
-            title = "Main Title Goes Here",
-            description = "This is where the description text appears. It provides context about the feature being showcased.",
             buttons = {
                 NavigationButtons(
                     onNext = {},

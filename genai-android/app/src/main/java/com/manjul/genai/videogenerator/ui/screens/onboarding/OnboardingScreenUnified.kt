@@ -31,7 +31,7 @@ fun OnboardingPageScreen(
     isFirstPage: Boolean = false,
     isLastPage: Boolean = false,
     currentPage: Int,
-    totalPages: Int = 3,
+    totalPages: Int,
     onNext: () -> Unit,
     onSkip: () -> Unit
 ) {
@@ -70,7 +70,8 @@ private fun OnboardingPage1Preview() {
         isLastPage = false,
         currentPage = 0,
         onNext = {},
-        onSkip = {}
+        onSkip = {},
+        totalPages = 1
     )
 }
 
@@ -85,7 +86,8 @@ private fun OnboardingPage2Preview() {
         isLastPage = false,
         currentPage = 1,
         onNext = {},
-        onSkip = {}
+        onSkip = {},
+        totalPages = 1
     )
 }
 
@@ -100,7 +102,8 @@ private fun OnboardingPage3Preview() {
         isLastPage = true,
         currentPage = 2,
         onNext = {},
-        onSkip = {}
+        onSkip = {},
+        totalPages = 1
     )
 }
 
