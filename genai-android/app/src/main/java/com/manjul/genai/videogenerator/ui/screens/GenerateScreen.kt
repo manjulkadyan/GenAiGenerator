@@ -431,8 +431,9 @@ private fun GenerateScreenContent(
                         AppTextField(
                             value = state.prompt,
                             onValueChange = onPromptChanged,
-                            placeholder = "\uD83D\uDC46 Tap here to type your prompt \\nEg: A medium shot, historical adventure setting: Warm lamplight illuminates a cartographer in a clustered study, poring over an ancient, sprawling map spread across a large table. Cartographer: \"According to this old sea chart,the lost island isn't myth!, We must prepare an exp..........",
-                            maxLines = 5
+                            placeholder = "\uD83D\uDC46 Tap here to type your prompt \nEg: A medium shot, historical adventure setting: Warm lamplight illuminates a cartographer in a clustered study, poring over an ancient, sprawling map spread across a large table. Cartographer: \"According to this old sea chart,the lost island isn't myth!, We must prepare an exp..........",
+                            maxLines = 5,
+                            minLines = 5
                         )
                     }
 
