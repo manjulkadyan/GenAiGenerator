@@ -120,7 +120,7 @@ fun OnboardingScreen(
                     onDragEnd = {
                         // Only trigger page change when drag ends
                         when {
-                            dragOffset < -100 && currentPage < 2 -> currentPage++ // Swipe left -> next
+                            dragOffset < -100 && currentPage < onboardingPages.size -1 -> currentPage++ // Swipe left -> next
                             dragOffset > 100 && currentPage > 0 -> currentPage--  // Swipe right -> previous
                         }
                         dragOffset = 0f
