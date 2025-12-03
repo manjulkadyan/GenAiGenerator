@@ -145,10 +145,9 @@ fun GenerateScreen(
         AnalyticsManager.trackScreenView("Generate")
     }
 
-    BackHandler(enabled = true) {
-        if (state.selectedModel != null) {
-            onBackToModels()
-        }
+    BackHandler(enabled = false) {
+        // Disable back handler - let system handle back button to exit app
+        // This ensures pressing back minimizes the app instead of navigating to ModelsScreen
     }
 
     LaunchedEffect(preselectedModelId, state.models) {
