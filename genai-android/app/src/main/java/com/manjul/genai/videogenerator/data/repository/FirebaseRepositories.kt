@@ -16,6 +16,7 @@ import android.util.Log
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.manjul.genai.videogenerator.BuildConfig
 import com.manjul.genai.videogenerator.data.repository.datasource.FirebaseModelDataSource
 import com.manjul.genai.videogenerator.data.repository.datasource.RoomModelDataSource
 import com.manjul.genai.videogenerator.data.repository.ModelRepository
@@ -249,9 +250,14 @@ class FirebaseVideoGenerateRepository(
         return runCatching {
             // Call Firebase Function - it will create the job document
             // TODO: Switch to "testCallReplicateVeoAPIV2/callReplicateVeoAPIV2" for testing (see TESTING_CREDITS.md)
+            val funcName = if(BuildConfig.DEBUG) {
+                "testCallReplicateVeoAPIV2"
+            } else {
+                "callReplicateVeoAPIV2"
+            }
             // IMPORTANT: Function name must match exactly (case-sensitive)
             val callableResult = functions
-                .getHttpsCallable("testCallReplicateVeoAPIV2") // Fixed: lowercase 'c' to match deployed function
+                .getHttpsCallable(funcName) // Fixed: lowercase 'c' to match deployed function
                 .call(data)
                 .await()
             
