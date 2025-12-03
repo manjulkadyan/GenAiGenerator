@@ -78,10 +78,13 @@ fun GenAiRoot() {
     val context = LocalContext.current
     val activity = (context as? androidx.activity.ComponentActivity)
     
-    // App flow states: Splash -> Onboarding (if first time) -> Main App
+    // App flow states: Splash -> Onboarding (if first time) -> BuyCredits -> Main App
     var showSplash by rememberSaveable { mutableStateOf(true) }
     var showOnboarding by rememberSaveable { 
         mutableStateOf(false) // Will be set after splash based on OnboardingManager
+    }
+    var showInitialBuyCredits by rememberSaveable {
+        mutableStateOf(false) // Will be set after onboarding completes
     }
     
     when {
@@ -99,7 +102,25 @@ fun GenAiRoot() {
                 onComplete = {
                     OnboardingManager.setOnboardingCompleted()
                     showOnboarding = false
+                    // Show BuyCreditsScreen after onboarding
+                    showInitialBuyCredits = true
                 }
+            )
+        }
+        showInitialBuyCredits -> {
+            // Show BuyCreditsScreen right after onboarding
+            BuyCreditsScreen(
+                modifier = Modifier.fillMaxSize(),
+                onBackClick = { 
+                    // When user closes BuyCredits, go to main app
+                    showInitialBuyCredits = false
+                },
+                onPurchaseSuccess = {
+                    // After successful purchase, go to main app (GenerateScreen)
+                    showInitialBuyCredits = false
+                },
+                showInsufficientCreditsDialog = false,
+                requiredCredits = 0
             )
         }
         else -> {
