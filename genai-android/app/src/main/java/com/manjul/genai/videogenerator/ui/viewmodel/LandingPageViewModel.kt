@@ -60,6 +60,7 @@ class LandingPageViewModel(
         loadConfig()
         initializeBilling()
         observePurchaseUpdates()
+        consumePendingOneTimePurchases() // Consume any old unconsumed one-time purchases
     }
     
     private fun loadConfig() {
@@ -209,6 +210,44 @@ class LandingPageViewModel(
     }
     
     /**
+     * Consume any pending one-time purchases that weren't consumed yet.
+     * This handles old purchases from before the consumption fix was deployed.
+     */
+    private fun consumePendingOneTimePurchases() {
+        viewModelScope.launch {
+            try {
+                Log.d("LandingPageViewModel", "🔍 Checking for unconsumed one-time purchases...")
+                
+                // Query all purchases
+                val result = billingRepository.queryPurchases()
+                result.onSuccess { purchases ->
+                    val oneTimePurchases = purchases.filter { purchase ->
+                        purchase.products.any { it.startsWith("credits_") } &&
+                        purchase.purchaseState == com.android.billingclient.api.Purchase.PurchaseState.PURCHASED
+                    }
+                    
+                    if (oneTimePurchases.isNotEmpty()) {
+                        Log.d("LandingPageViewModel", "⚠️ Found ${oneTimePurchases.size} unconsumed one-time purchases")
+                        
+                        // Process each one
+                        oneTimePurchases.forEach { purchase ->
+                            val productId = purchase.products.firstOrNull() ?: ""
+                            Log.d("LandingPageViewModel", "Processing unconsumed purchase: $productId")
+                            processOneTimePurchase(purchase)
+                        }
+                    } else {
+                        Log.d("LandingPageViewModel", "✅ No unconsumed one-time purchases found")
+                    }
+                }.onFailure { error ->
+                    Log.e("LandingPageViewModel", "Failed to query purchases for consumption check", error)
+                }
+            } catch (e: Exception) {
+                Log.e("LandingPageViewModel", "Error consuming pending one-time purchases", e)
+            }
+        }
+    }
+    
+    /**
      * Observe purchase updates from BillingRepository
      */
     private fun observePurchaseUpdates() {
@@ -248,16 +287,37 @@ class LandingPageViewModel(
                 )
                     }
                     is PurchaseUpdateEvent.AlreadyOwned -> {
-                        Log.d("LandingPageViewModel", "ℹ️ Subscription already owned - syncing: ${event.purchase.products.firstOrNull()}")
-                        // Process existing subscription on the server to sync
-                        viewModelScope.launch {
-                            processSubscriptionPurchase(event.purchase)
+                        val productId = event.purchase.products.firstOrNull() ?: ""
+                        val isOneTimePurchase = productId.startsWith("credits_")
+                        
+                        if (isOneTimePurchase) {
+                            Log.d("LandingPageViewModel", "ℹ️ One-time purchase already owned (unconsumed): $productId")
+                            Log.d("LandingPageViewModel", "This means the purchase wasn't consumed yet. Processing it now...")
+                            
+                            // Process the one-time purchase (backend will consume it)
+                            viewModelScope.launch {
+                                processOneTimePurchase(event.purchase)
+                            }
+                            
+                            _uiState.value = _uiState.value.copy(
+                                isPurchaseInProgress = false,
+                                purchaseMessage = "Processing your previous purchase...",
+                                error = null
+                            )
+                        } else {
+                            Log.d("LandingPageViewModel", "ℹ️ Subscription already owned - syncing: $productId")
+                            
+                            // Process existing subscription on the server to sync
+                            viewModelScope.launch {
+                                processSubscriptionPurchase(event.purchase)
+                            }
+                            
+                            _uiState.value = _uiState.value.copy(
+                                isPurchaseInProgress = false,
+                                purchaseMessage = "Your subscription is already active! Syncing...",
+                                error = null
+                            )
                         }
-                        _uiState.value = _uiState.value.copy(
-                            isPurchaseInProgress = false,
-                            purchaseMessage = "Your subscription is already active! Syncing...",
-                            error = null
-                        )
                     }
                     is PurchaseUpdateEvent.Error -> {
                         android.util.Log.e("LandingPageViewModel", "❌ Purchase ERROR: code=${event.billingResult.responseCode}, message=${event.billingResult.debugMessage}")
