@@ -6,8 +6,18 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,6 +33,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -801,6 +812,138 @@ private fun GradientGenerateButton(
 }
 
 @Composable
+private fun AnimatedCreditBadge(
+    creditsCount: Int,
+    onClick: () -> Unit
+) {
+    // Track previous credits for change detection
+    var previousCredits by remember { mutableStateOf(creditsCount) }
+    var creditChange by remember { mutableStateOf<Int?>(null) }
+    
+    // Animated counter that smoothly counts from old value to new value
+    val animatedCredits by animateIntAsState(
+        targetValue = creditsCount,
+        animationSpec = tween(
+            durationMillis = when {
+                kotlin.math.abs(creditsCount - previousCredits) > 100 -> 1500 // Larger changes take longer
+                kotlin.math.abs(creditsCount - previousCredits) > 50 -> 1000
+                else -> 800
+            },
+            easing = LinearEasing
+        ),
+        label = "creditCount"
+    )
+    
+    // Detect credit change and show floating indicator
+    LaunchedEffect(creditsCount) {
+        if (creditsCount != previousCredits) {
+            creditChange = creditsCount - previousCredits
+            previousCredits = creditsCount
+            
+            // Clear change indicator after animation
+            delay(2500)
+            creditChange = null
+        }
+    }
+    
+    // Scale animation when credits change
+    val scale by animateFloatAsState(
+        targetValue = if (creditChange != null) 1.15f else 1f,
+        animationSpec = spring(
+            dampingRatio = 0.5f,
+            stiffness = 300f
+        ),
+        label = "creditScale"
+    )
+    
+    Box(
+        modifier = Modifier.scale(scale)
+    ) {
+        Surface(
+            modifier = Modifier.clickable(onClick = onClick),
+            shape = RoundedCornerShape(12.dp),
+            color = if (creditChange != null && creditChange!! > 0) {
+                // Green tint for credit increase
+                Color(0xFF4CAF50).copy(alpha = 0.2f)
+            } else if (creditChange != null && creditChange!! < 0) {
+                // Red tint for credit decrease
+                Color(0xFFFF5252).copy(alpha = 0.2f)
+            } else {
+                MaterialTheme.colorScheme.surface.copy(alpha = 0.3f)
+            },
+            tonalElevation = 2.dp,
+            border = BorderStroke(
+                width = 1.dp,
+                color = if (creditChange != null && creditChange!! > 0) {
+                    Color(0xFF4CAF50).copy(alpha = 0.6f)
+                } else if (creditChange != null && creditChange!! < 0) {
+                    Color(0xFFFF5252).copy(alpha = 0.6f)
+                } else {
+                    AppColors.TextSecondary.copy(alpha = 0.3f)
+                }
+            )
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = "Credits",
+                    tint = Color(0xFFFFD700), // Yellow star color
+                    modifier = Modifier.size(18.dp)
+                )
+                
+                // Counting animation - shows intermediate values
+                Text(
+                    text = animatedCredits.toString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = AppColors.TextPrimary
+                )
+            }
+        }
+        
+        // Floating change indicator (+X or -X)
+        creditChange?.let { change ->
+            AnimatedVisibility(
+                visible = true,
+                enter = slideInVertically(
+                    initialOffsetY = { 0 },
+                    animationSpec = tween(300)
+                ) + fadeIn(),
+                exit = slideOutVertically(
+                    targetOffsetY = { -it * 2 },
+                    animationSpec = tween(1500, delayMillis = 500)
+                ) + fadeOut(animationSpec = tween(1000, delayMillis = 1000)),
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = 8.dp, y = (-8).dp)
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = if (change > 0) {
+                        Color(0xFF4CAF50)
+                    } else {
+                        Color(0xFFFF5252)
+                    },
+                    tonalElevation = 4.dp
+                ) {
+                    Text(
+                        text = if (change > 0) "+$change" else "$change",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun GenerateHeader(
     creditsCount: Int,
     onSettingsClick: () -> Unit = {},
@@ -828,36 +971,11 @@ private fun GenerateHeader(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Star badge with credits count
-            Surface(
-                modifier = Modifier.clickable(onClick = onCreditsClick),
-                shape = RoundedCornerShape(12.dp),
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
-                tonalElevation = 2.dp,
-                border = BorderStroke(
-                    width = 1.dp,
-                    color = AppColors.TextSecondary.copy(alpha = 0.3f)
-                )
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = "Credits",
-                        tint = Color(0xFFFFD700), // Yellow star color
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Text(
-                        text = creditsCount.toString(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = AppColors.TextPrimary
-                    )
-                }
-            }
+            // Animated credit counter badge
+            AnimatedCreditBadge(
+                creditsCount = creditsCount,
+                onClick = onCreditsClick
+            )
             // Settings icon
             IconButton(
                 onClick = onSettingsClick,
