@@ -57,16 +57,7 @@ class FirebaseOnboardingRepository(
                     videoUrl = null,
                     order = 1,
                     features = emptyList()
-                ),
-                OnboardingPageConfig(
-                    id = "premium",
-                    title = "Upgrade to Premium, Get More Possibilities",
-                    subtitle = "Enjoy more storage, advanced styles, faster processing, and priority support to enhance your video creation experience.",
-                    imageUrl = "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/onboarding%2Fpremium.jpg?alt=media",
-                    videoUrl = null,
-                    order = 3,
-                    features = emptyList()
-                ),OnboardingPageConfig(
+                ), OnboardingPageConfig(
                     id = "models",
                     title = "Upgrade to Premium, Get More Possibilities",
                     subtitle = "Enjoy more storage, advanced styles, faster processing, and priority support to enhance your video creation experience.",
@@ -75,6 +66,15 @@ class FirebaseOnboardingRepository(
                     order = 2,
                     features = emptyList()
                 ),
+//                OnboardingPageConfig(
+//                    id = "premium",
+//                    title = "Upgrade to Premium, Get More Possibilities",
+//                    subtitle = "Enjoy more storage, advanced styles, faster processing, and priority support to enhance your video creation experience.",
+//                    imageUrl = "https://firebasestorage.googleapis.com/v0/b/genaivideogenerator.firebasestorage.app/o/onboarding%2Fpremium.jpg?alt=media",
+//                    videoUrl = null,
+//                    order = 3,
+//                    features = emptyList()
+//                )
             ),
             showAppLogo = false,
             appLogoUrl = null
