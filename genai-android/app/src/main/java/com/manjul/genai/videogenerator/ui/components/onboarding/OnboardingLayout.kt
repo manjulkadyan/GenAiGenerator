@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -48,16 +49,15 @@ fun OnboardingLayout(
     description: String,
     buttons: @Composable () -> Unit
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
-        // TOP SECTION: Purple gradient with iPhone mockup and curved bottom
+        // TOP SECTION: Purple gradient with iPhone mockup (60% height, straight bottom)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.6f) // Takes ~55% of screen
-                .clip(WavyBottomShape()) // Custom wavy bottom edge
+                .fillMaxHeight(0.7f) // Takes exactly 60% from top
+                .align(Alignment.TopStart)
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
@@ -86,10 +86,12 @@ fun OnboardingLayout(
             }
         }
 
+        // BOTTOM SECTION: White card (50% height, starts at 50%, overlaps purple by 10%)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.5f) // Takes ~5% of screen
+                .fillMaxHeight(0.45f) // Takes exactly 50% from bottom
+                .align(Alignment.BottomStart)
                 .clip(WavyTopShape()) // Custom wavy shape for curved top edge
                 .background(Color.White)
         ) {

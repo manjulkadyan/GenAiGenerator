@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.LayoutDirection
 
 /**
  * Custom shape for the purple gradient section with downward curve at bottom
- * Matches the WavyTopShape to create seamless transition
+ * Creates same downward bulge as white section's top
  */
 class WavyBottomShape : Shape {
     override fun createOutline(
@@ -21,23 +21,26 @@ class WavyBottomShape : Shape {
             // Start from top-left corner
             moveTo(0f, 0f)
             
-            // Top edge
+            // Top edge (straight)
             lineTo(size.width, 0f)
             
-            // Right edge going down
+            // Right edge going down to bottom
             lineTo(size.width, size.height)
             
-            // Create downward curve at bottom (dips down in the middle)
+            // Create DOWNWARD curve at bottom (bulges down in middle)
             cubicTo(
                 x1 = size.width * 0.75f,    // First control point X (coming from right)
-                y1 = size.height + (size.height * 0.1f),  // Control point Y (extends DOWN)
+                y1 = size.height * 1.1f,    // Control point Y (bulges DOWN 10%)
                 x2 = size.width * 0.25f,    // Second control point X
-                y2 = size.height + (size.height * 0.1f),  // Control point Y (extends DOWN)
+                y2 = size.height * 1.1f,    // Control point Y (bulges DOWN 10%)
                 x3 = 0f,                     // End point X (left side)
-                y3 = size.height             // End point Y (back to bottom)
+                y3 = size.height             // End point Y (back to bottom-left)
             )
             
-            // Close path back to start
+            // Left edge back to top
+            lineTo(0f, 0f)
+            
+            // Close path
             close()
         }
         return Outline.Generic(path)

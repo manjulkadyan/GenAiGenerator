@@ -38,10 +38,6 @@ fun OnboardingPageScreen(
     OnboardingLayout(
         currentPage = currentPage,
         totalPages = totalPages,
-        showLogo = isFirstPage, // Only show logo on first page
-        logo = {
-            AppLogo()
-        },
         mockupContent = {
             ScreenshotImage(
                 imageUrl = imageUrl,
