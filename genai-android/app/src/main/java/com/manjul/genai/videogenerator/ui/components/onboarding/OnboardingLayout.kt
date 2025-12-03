@@ -110,7 +110,7 @@ fun OnboardingLayout(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 24.dp)
-                    .padding(top = 40.dp, bottom = 32.dp),
+                    .padding(top = 80.dp, bottom = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Title - Bold, dark text
