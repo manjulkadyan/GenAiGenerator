@@ -78,25 +78,15 @@ fun GenAiRoot() {
     val context = LocalContext.current
     val activity = (context as? androidx.activity.ComponentActivity)
     
-    // App flow states: Splash -> Onboarding (if first time) -> BuyCredits -> Main App
-    var showSplash by rememberSaveable { mutableStateOf(true) }
+    // App flow states: Onboarding (if first time) -> BuyCredits -> Main App
     var showOnboarding by rememberSaveable { 
-        mutableStateOf(false) // Will be set after splash based on OnboardingManager
+        mutableStateOf(!OnboardingManager.hasCompletedOnboarding()) // Check immediately on first composition
     }
     var showInitialBuyCredits by rememberSaveable {
         mutableStateOf(false) // Will be set after onboarding completes
     }
     
     when {
-        showSplash -> {
-            SplashScreen(
-                onTimeout = {
-                    showSplash = false
-                    // Check if user has completed onboarding
-                    showOnboarding = !OnboardingManager.hasCompletedOnboarding()
-                }
-            )
-        }
         showOnboarding -> {
             OnboardingScreen(
                 onComplete = {

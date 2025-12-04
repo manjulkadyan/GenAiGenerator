@@ -118,18 +118,16 @@ fun SplashScreen(
                 // Logo/App icon - Using app name with gradient instead of icon
                 Surface(
                     modifier = Modifier
-                        .size(120.dp)
+                        .size(192.dp)
                         .scale(scale.value)
                         .alpha(alpha.value),
                     shape = CircleShape,
                     color = Color(0xFF5B4FFF)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            imageVector = Icons.Default.Star,
+                        Image(
+                            painter = painterResource(R.drawable.ic_launcher),
                             contentDescription = "App Logo",
-                            tint = Color.White,
-                            modifier = Modifier.size(60.dp)
                         )
                     }
                 }
