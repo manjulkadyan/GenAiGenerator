@@ -77,8 +77,7 @@ fun OnboardingLayout(
 
                 Box(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(20.dp),
+                        .weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
                     mockupContent()
