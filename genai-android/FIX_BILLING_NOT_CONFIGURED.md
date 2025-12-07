@@ -239,3 +239,5 @@ adb logcat | grep -E "BillingRepository|LandingPageViewModel|BuyCreditsScreen"
 
 
 
+
+
