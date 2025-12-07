@@ -370,6 +370,26 @@ object AnalyticsManager {
         }
     }
 
+    /**
+     * Track in-app review shown event.
+     * @param appOpenCount Number of times app has been opened
+     */
+    fun trackInAppReviewShown(appOpenCount: Int) {
+        analytics?.logEvent("in_app_review_shown") {
+            param("app_open_count", appOpenCount.toLong())
+        }
+    }
+
+    /**
+     * Track in-app review failed event.
+     * @param errorMessage Error message
+     */
+    fun trackInAppReviewFailed(errorMessage: String) {
+        analytics?.logEvent("in_app_review_failed") {
+            param("error_message", errorMessage)
+        }
+    }
+
     // ==================== User Properties ====================
 
     /**

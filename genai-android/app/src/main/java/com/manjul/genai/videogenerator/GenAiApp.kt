@@ -26,7 +26,7 @@ class GenAiApp : Application() {
         FirebaseApp.initializeApp(this)
 
         // StrictMode for debug builds to surface performance and resource issues early
-        if (BuildConfig.STRICT_MODE_ENABLED) {
+        /*if (BuildConfig.STRICT_MODE_ENABLED || false) {
             StrictMode.setThreadPolicy(
                 StrictMode.ThreadPolicy.Builder()
                     .detectAll()
@@ -39,7 +39,7 @@ class GenAiApp : Application() {
                     .penaltyLog()
                     .build()
             )
-        }
+        }*/
 
         // Initialize Firebase Analytics
         FirebaseAnalytics.getInstance(this)
