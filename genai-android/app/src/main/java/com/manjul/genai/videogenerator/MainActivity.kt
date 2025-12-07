@@ -14,6 +14,7 @@ import com.manjul.genai.videogenerator.ui.screens.GenAiRoot
 import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
 import com.manjul.genai.videogenerator.data.repository.BillingRepository
 import com.manjul.genai.videogenerator.data.onboarding.OnboardingManager
+import com.manjul.genai.videogenerator.utils.InAppReviewManager
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -28,6 +29,9 @@ class MainActivity : ComponentActivity() {
         
         // Initialize onboarding manager
         OnboardingManager.initialize(applicationContext)
+        
+        // Increment app open count for in-app review tracking
+        InAppReviewManager.incrementAppOpenCount(applicationContext)
         
         // Initialize billing connection once
         lifecycleScope.launch {

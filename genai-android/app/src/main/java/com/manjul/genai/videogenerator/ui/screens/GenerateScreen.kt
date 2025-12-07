@@ -2,6 +2,7 @@ package com.manjul.genai.videogenerator.ui.screens
 
 import android.net.Uri
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -67,6 +68,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -93,6 +95,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -122,7 +125,9 @@ import com.manjul.genai.videogenerator.ui.viewmodel.CreditsViewModel
 import com.manjul.genai.videogenerator.ui.viewmodel.GenerateScreenState
 import com.manjul.genai.videogenerator.ui.viewmodel.VideoGenerateViewModel
 import com.manjul.genai.videogenerator.utils.AnalyticsManager
+import com.manjul.genai.videogenerator.utils.InAppReviewManager
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun GenerateScreen(
@@ -139,6 +144,7 @@ fun GenerateScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val creditsState by creditsViewModel.state.collectAsState()
+    val context = LocalContext.current
 
     // Track screen view
     LaunchedEffect(Unit) {
@@ -173,6 +179,33 @@ fun GenerateScreen(
     var showAdvanced by rememberSaveable { mutableStateOf(true) }
     var showPricingDialog by rememberSaveable { mutableStateOf(false) }
     var isSubmitting by remember { mutableStateOf(false) }
+    var showRatingRequestDialog by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    
+    // Debug: Log whenever showRatingRequestDialog changes
+    LaunchedEffect(showRatingRequestDialog) {
+        Log.d("GenerateScreen", "📊 showRatingRequestDialog changed to: $showRatingRequestDialog")
+    }
+    
+    // Show rating request dialog when screen is loaded and all data is ready
+    LaunchedEffect(state.isLoading, state.models) {
+        Log.d("GenerateScreen", "🔍 LaunchedEffect triggered - isLoading: ${state.isLoading}, models count: ${state.models.size}")
+        // Wait for models to load
+        if (!state.isLoading && state.models.isNotEmpty()) {
+            // Add a small delay to ensure UI is fully rendered
+            delay(200)
+            
+            Log.d("GenerateScreen", "⏱️ Delay completed, checking if should show review...")
+            // Check if we should show review
+            if (InAppReviewManager.shouldShowReview(context)) {
+                // Show custom dialog first
+                Log.d("GenerateScreen", "🎯 Setting showRatingRequestDialog = true")
+                showRatingRequestDialog = true
+            } else {
+                Log.d("GenerateScreen", "❌ Should not show review (criteria not met)")
+            }
+        }
+    }
 
     // Handle mode change and model compatibility
     val onModeSelected: (GenerationMode) -> Unit = { newMode ->
@@ -308,6 +341,48 @@ fun GenerateScreen(
         PricingDialog(
             models = state.models,
             onDismiss = { showPricingDialog = false }
+        )
+    }
+    
+    // Show rating request dialog
+    if (showRatingRequestDialog) {
+        Log.d("GenerateScreen", "🎨 Showing custom rating request dialog")
+        RatingRequestDialog(
+            onRateNow = {
+                Log.d("GenerateScreen", "⭐ User clicked Rate Now")
+                showRatingRequestDialog = false
+                // Get the activity and request review
+                val activity = context as? ComponentActivity
+                activity?.let {
+                    coroutineScope.launch {
+                        try {
+                            Log.d("GenerateScreen", "🚀 Launching Google Play review")
+                            val success = InAppReviewManager.requestReview(it)
+                            if (success) {
+                                // Mark as shown ONLY after successful review request
+                                InAppReviewManager.markReviewAsShown(context)
+                                Log.d("GenerateScreen", "✅ Review completed and marked as shown")
+                            } else {
+                                Log.d("GenerateScreen", "⚠️ Review request failed, will try again later")
+                            }
+                        } catch (e: Exception) {
+                            Log.e("GenerateScreen", "❌ Failed to request in-app review", e)
+                        }
+                    }
+                }
+            },
+            onMaybeLater = {
+                Log.d("GenerateScreen", "⏭️ User clicked Maybe Later - postponing to next 4 opens")
+                showRatingRequestDialog = false
+                // Postpone review by 4 more opens (e.g., if currently 2, will show at 6)
+                InAppReviewManager.postponeReview(context)
+            },
+            onDismiss = {
+                Log.d("GenerateScreen", "❌ User dismissed dialog - postponing to next 4 opens")
+                showRatingRequestDialog = false
+                // Postpone review by 4 more opens if dismissed
+                InAppReviewManager.postponeReview(context)
+            }
         )
     }
 }
@@ -2181,6 +2256,170 @@ private fun ContentGuidelinesCard() {
                         color = AppColors.TextSecondary,
                         modifier = Modifier.weight(1f)
                     )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun RatingRequestDialog(
+    onRateNow: () -> Unit,
+    onMaybeLater: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true
+        )
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(32.dp),
+            color = AppColors.BackgroundDarkGray,
+            tonalElevation = 8.dp,
+            border = BorderStroke(
+                width = 1.dp,
+                color = AppColors.PrimaryPurple.copy(alpha = 0.3f)
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                // Star icon with animated gradient background
+                Box(
+                    modifier = Modifier.size(80.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    // Gradient circle background
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        shape = CircleShape,
+                        color = Color.Transparent
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.radialGradient(
+                                        colors = listOf(
+                                            AppColors.PrimaryPurple.copy(alpha = 0.3f),
+                                            Color.Transparent
+                                        )
+                                    )
+                                )
+                        )
+                    }
+                    
+                    // Star icon
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = null,
+                        tint = Color(0xFFFFD700), // Gold color
+                        modifier = Modifier.size(48.dp)
+                    )
+                }
+                
+                // Title
+                Text(
+                    text = "Enjoying the App?",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = AppColors.TextPrimary,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+                
+                // Description
+                Text(
+                    text = "We'd love to hear from you! Your feedback helps us improve and create better AI videos.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = AppColors.TextSecondary,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    lineHeight = 22.sp
+                )
+                
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                // Buttons
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    // Rate Now Button - Gradient
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .clickable(onClick = onRateNow),
+                        shape = RoundedCornerShape(28.dp),
+                        color = Color.Transparent,
+                        tonalElevation = 4.dp
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.horizontalGradient(
+                                        colors = listOf(
+                                            AppColors.PrimaryPurple,
+                                            Color(0xFFFF6B35) // Orange
+                                        )
+                                    )
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 24.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Star,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp),
+                                    tint = Color.White
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "Rate Now",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+                            }
+                        }
+                    }
+                    
+                    // Maybe Later Button - Subtle
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .clickable(onClick = onMaybeLater),
+                        shape = RoundedCornerShape(28.dp),
+                        color = AppColors.CardBackground,
+                        tonalElevation = 2.dp,
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = AppColors.TextSecondary.copy(alpha = 0.3f)
+                        )
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Maybe Later",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = AppColors.TextSecondary
+                            )
+                        }
+                    }
                 }
             }
         }

@@ -124,6 +124,9 @@ dependencies {
     
     // Google Play Billing - Updated to 8.0.0+ (required by Aug 31, 2025)
     implementation("com.android.billingclient:billing-ktx:8.0.0")
+    
+    // Google Play In-App Review
+    implementation("com.google.android.play:review-ktx:2.0.1")
     implementation("androidx.media3:media3-exoplayer:1.3.1")
     implementation("androidx.media3:media3-ui:1.3.1")
     implementation("androidx.media3:media3-datasource:1.3.1") // Includes CacheDataSource
