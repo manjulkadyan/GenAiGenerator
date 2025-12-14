@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.width
@@ -75,11 +76,13 @@ import com.manjul.genai.videogenerator.ui.components.getFeatureIcon
 import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
 import com.manjul.genai.videogenerator.ui.designsystem.components.dialogs.AppDialog
+import com.manjul.genai.videogenerator.ui.viewmodel.CreditsViewModel
 import com.manjul.genai.videogenerator.ui.viewmodel.LandingPageViewModel
 import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import com.manjul.genai.videogenerator.data.model.PurchaseType
 import com.manjul.genai.videogenerator.data.model.OneTimeProduct
 import com.manjul.genai.videogenerator.data.model.SubscriptionPlan
+import androidx.compose.material3.CircularProgressIndicator
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -89,6 +92,7 @@ fun BuyCreditsScreen(
     onPurchaseSuccess: () -> Unit = {}, // Callback when purchase is successful
     showInsufficientCreditsDialog: Boolean = false, // Show dialog when coming from insufficient credits
     requiredCredits: Int = 0, // Credits needed for the generation
+    initialPurchaseType: PurchaseType = PurchaseType.SUBSCRIPTION, // Initial tab to show
     viewModel: LandingPageViewModel = viewModel(
         factory = LandingPageViewModel.Factory(LocalContext.current.applicationContext as android.app.Application)
     )
@@ -100,9 +104,18 @@ fun BuyCreditsScreen(
     // Video takes 50% of screen, leaving room for bottom sheet
     val videoHeightDp = (screenHeightDp * 0.45f).toInt() // 50% of screen for video
     
+    // Credits ViewModel for tracking credit updates after purchase
+    val creditsViewModel: CreditsViewModel = viewModel(factory = CreditsViewModel.Factory)
+    val creditsState by creditsViewModel.state.collectAsState()
+    
     // Snackbar for showing purchase messages
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    
+    // Credit verification state
+    var isVerifyingCredits by remember { mutableStateOf(false) }
+    var previousCredits by remember { mutableStateOf(-1) }
+    var creditsAdded by remember { mutableStateOf(0) }
     
     // Track screen view
     LaunchedEffect(Unit) {
@@ -110,6 +123,10 @@ fun BuyCreditsScreen(
         AnalyticsManager.trackCreditsViewed()
         Log.d("BuyCreditsScreen", "=== Screen Initialized ===")
         Log.d("BuyCreditsScreen", "Screen height: ${screenHeightDp}dp, Video height: ${videoHeightDp}dp")
+        
+        // Set initial purchase type based on navigation source
+        viewModel.selectPurchaseType(initialPurchaseType)
+        Log.d("BuyCreditsScreen", "Initial purchase type set to: $initialPurchaseType")
     }
     
     // Log complete state summary when key values change
@@ -189,6 +206,9 @@ fun BuyCreditsScreen(
     // Track if we should show success dialog
     var showSuccessDialog by remember { mutableStateOf(false) }
     
+    // Track if we should show verification dialog
+    var showVerificationDialog by remember { mutableStateOf(false) }
+    
     // Track insufficient credits dialog
     var showInsufficientDialog by remember { mutableStateOf(showInsufficientCreditsDialog) }
     
@@ -198,14 +218,42 @@ fun BuyCreditsScreen(
             Log.d("BuyCreditsScreen", "Purchase message received: $message")
             // Check if it's a success message
             if (message.contains("successfully", ignoreCase = true)) {
-                // Show success dialog instead of snackbar
-                showSuccessDialog = true
+                // Start credit verification process
+                Log.d("BuyCreditsScreen", "Starting credit verification, current credits: ${creditsState.credits}")
+                previousCredits = creditsState.credits
+                isVerifyingCredits = true
+                showVerificationDialog = true
             } else {
                 // Show snackbar for other messages
                 scope.launch {
                     snackbarHostState.showSnackbar(message)
                     viewModel.clearPurchaseMessage()
                 }
+            }
+        }
+    }
+    
+    // Wait for credits to update after purchase
+    LaunchedEffect(creditsState.credits, isVerifyingCredits) {
+        if (isVerifyingCredits && previousCredits >= 0 && creditsState.credits > previousCredits) {
+            // Credits have been updated!
+            creditsAdded = creditsState.credits - previousCredits
+            Log.d("BuyCreditsScreen", "Credits updated! Previous: $previousCredits, New: ${creditsState.credits}, Added: $creditsAdded")
+            isVerifyingCredits = false
+            showVerificationDialog = false
+            showSuccessDialog = true
+        }
+    }
+    
+    // Timeout for verification (10 seconds max)
+    LaunchedEffect(isVerifyingCredits) {
+        if (isVerifyingCredits) {
+            kotlinx.coroutines.delay(10000) // 10 second timeout
+            if (isVerifyingCredits) {
+                Log.d("BuyCreditsScreen", "Credit verification timeout, showing success anyway")
+                isVerifyingCredits = false
+                showVerificationDialog = false
+                showSuccessDialog = true
             }
         }
     }
@@ -353,6 +401,7 @@ fun BuyCreditsScreen(
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .background(Color(0xFF1F1F1F))
+                    .windowInsetsPadding(WindowInsets.navigationBars) // Handle 3-button navigation
                     .padding(horizontal = 24.dp, vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
@@ -710,6 +759,37 @@ fun BuyCreditsScreen(
             }
         }
         
+        // Verification dialog while waiting for credits to update
+        if (showVerificationDialog) {
+            AppDialog(
+                onDismissRequest = { /* Don't dismiss while verifying */ },
+                title = "Verifying Purchase"
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Loading spinner
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(48.dp),
+                        color = AppColors.PrimaryPurple,
+                        strokeWidth = 4.dp
+                    )
+                    
+                    Text(
+                        text = "Verifying your purchase and adding credits to your account...",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = AppColors.TextSecondary,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                }
+            }
+        }
+        
         // Success dialog for successful purchases
         if (showSuccessDialog) {
             AppDialog(
@@ -746,12 +826,41 @@ fun BuyCreditsScreen(
                         )
                     }
                     
-                    Text(
-                        text = "Your subscription has been activated successfully. You can now start generating amazing AI videos!",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = AppColors.TextSecondary,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = if (creditsAdded > 0) {
+                                "+$creditsAdded credits added!"
+                            } else {
+                                "Credits added to your account!"
+                            },
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF10B981),
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                        
+                        Text(
+                            text = "Your new balance: ${creditsState.credits} credits",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Medium,
+                            color = AppColors.TextPrimary,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
+                        Text(
+                            text = "You can now start generating amazing AI videos!",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = AppColors.TextSecondary,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                    }
                     
                     AppPrimaryButton(
                         text = "Start Creating",

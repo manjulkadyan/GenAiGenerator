@@ -36,6 +36,7 @@ import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Article
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Feedback
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
@@ -96,7 +97,8 @@ fun ProfileScreen(
     historyViewModel: HistoryViewModel = viewModel(factory = HistoryViewModel.Factory),
     onBuyCreditsClick: () -> Unit = {},
     onVideosClick: () -> Unit = {},
-    onSubscriptionManagementClick: () -> Unit = {}
+    onSubscriptionManagementClick: () -> Unit = {},
+    onFeedbackClick: () -> Unit = {}
 ) {
     val credits by creditsViewModel.state.collectAsState()
     val jobs by historyViewModel.jobs.collectAsState()
@@ -250,7 +252,8 @@ fun ProfileScreen(
         onGoogleSignIn = {
             // This will be handled by the launcher in ProfileScreenContent
         },
-        onSubscriptionManagementClick = onSubscriptionManagementClick
+        onSubscriptionManagementClick = onSubscriptionManagementClick,
+        onFeedbackClick = onFeedbackClick
     )
 }
 
@@ -453,7 +456,8 @@ private fun ProfileScreenPreview() {
             onVideosClick = {},
             isAnonymous = true,
             onGoogleSignIn = {},
-            onSubscriptionManagementClick = {}
+            onSubscriptionManagementClick = {},
+            onFeedbackClick = {}
         )
     }
 }
@@ -472,7 +476,8 @@ private fun ProfileScreenContent(
     onLogout: () -> Unit = {},
     isAnonymous: Boolean = false,
     onGoogleSignIn: () -> Unit = {},
-    onSubscriptionManagementClick: () -> Unit = {}
+    onSubscriptionManagementClick: () -> Unit = {},
+    onFeedbackClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -924,6 +929,14 @@ private fun ProfileScreenContent(
                             context.startActivity(intent)
                         },
                         iconBackgroundColor = AppColors.SurfaceElevated.copy(alpha = 0.5f)
+                    )
+                    
+                    // Send Feedback
+                    ActionCard(
+                        icon = Icons.Default.Feedback,
+                        title = "Send Feedback",
+                        onClick = onFeedbackClick,
+                        iconBackgroundColor = AppColors.PrimaryPurple.copy(alpha = 0.1f)
                     )
 
                     // Privacy Policy

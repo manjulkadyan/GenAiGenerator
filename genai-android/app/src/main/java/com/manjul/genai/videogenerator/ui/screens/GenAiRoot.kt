@@ -110,7 +110,8 @@ fun GenAiRoot() {
                     showInitialBuyCredits = false
                 },
                 showInsufficientCreditsDialog = false,
-                requiredCredits = 0
+                requiredCredits = 0,
+                initialPurchaseType = com.manjul.genai.videogenerator.data.model.PurchaseType.SUBSCRIPTION
             )
         }
         else -> {
@@ -153,8 +154,10 @@ private fun MainAppContent() {
     var pendingJobId by rememberSaveable { mutableStateOf<String?>(null) }
     var showBuyCreditsScreen by rememberSaveable { mutableStateOf(false) }
     var showSubscriptionManagementScreen by rememberSaveable { mutableStateOf(false) }
+    var showFeedbackScreen by rememberSaveable { mutableStateOf(false) }
     var showInsufficientCreditsDialog by rememberSaveable { mutableStateOf(false) }
     var requiredCredits by rememberSaveable { mutableStateOf(0) }
+    var buyCreditsInitialType by rememberSaveable { mutableStateOf(com.manjul.genai.videogenerator.data.model.PurchaseType.SUBSCRIPTION) }
     val destinations = remember { listOf(AppDestination.Generate, AppDestination.Models, AppDestination.History, AppDestination.Profile) }
     
     // Watch for job completion when generating
@@ -286,8 +289,8 @@ private fun MainAppContent() {
     
     Scaffold(
         bottomBar = {
-            // Hide bottom navigation bar when BuyCreditsScreen or SubscriptionManagementScreen is shown (full screen)
-            if (!showBuyCreditsScreen && !showSubscriptionManagementScreen) {
+            // Hide bottom navigation bar when BuyCreditsScreen, SubscriptionManagementScreen, or FeedbackScreen is shown (full screen)
+            if (!showBuyCreditsScreen && !showSubscriptionManagementScreen && !showFeedbackScreen) {
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.BottomCenter
@@ -357,12 +360,14 @@ private fun MainAppContent() {
                                 // Show BuyCreditsScreen overlay (no dialog, just show plans)
                                 showInsufficientCreditsDialog = false
                                 requiredCredits = 0
+                                buyCreditsInitialType = com.manjul.genai.videogenerator.data.model.PurchaseType.SUBSCRIPTION
                                 showBuyCreditsScreen = true
                             },
                             onBuyCreditsClick = { credits ->
                                 // Show BuyCreditsScreen overlay with insufficient credits dialog
                                 showInsufficientCreditsDialog = true
                                 requiredCredits = credits
+                                buyCreditsInitialType = com.manjul.genai.videogenerator.data.model.PurchaseType.SUBSCRIPTION
                                 showBuyCreditsScreen = true
                             }
                         )
@@ -386,6 +391,7 @@ private fun MainAppContent() {
                         onBuyCreditsClick = { 
                             showInsufficientCreditsDialog = false
                             requiredCredits = 0
+                            buyCreditsInitialType = com.manjul.genai.videogenerator.data.model.PurchaseType.ONE_TIME
                             showBuyCreditsScreen = true 
                         },
                         onVideosClick = {
@@ -393,6 +399,9 @@ private fun MainAppContent() {
                         },
                         onSubscriptionManagementClick = {
                             showSubscriptionManagementScreen = true
+                        },
+                        onFeedbackClick = {
+                            showFeedbackScreen = true
                         }
                     )
                 }
@@ -415,7 +424,8 @@ private fun MainAppContent() {
                         currentRoute = AppDestination.Generate
                     },
                     showInsufficientCreditsDialog = showInsufficientCreditsDialog,
-                    requiredCredits = requiredCredits
+                    requiredCredits = requiredCredits,
+                    initialPurchaseType = buyCreditsInitialType
                 )
             }
             
@@ -429,7 +439,18 @@ private fun MainAppContent() {
                     onBuyCreditsClick = {
                         // Close subscription management and open buy credits
                         showSubscriptionManagementScreen = false
+                        buyCreditsInitialType = com.manjul.genai.videogenerator.data.model.PurchaseType.SUBSCRIPTION
                         showBuyCreditsScreen = true
+                    }
+                )
+            }
+            
+            // FeedbackScreen as overlay
+            if (showFeedbackScreen) {
+                FeedbackScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    onBackClick = {
+                        showFeedbackScreen = false
                     }
                 )
             }
