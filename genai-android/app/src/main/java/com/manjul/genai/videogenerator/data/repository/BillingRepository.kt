@@ -194,11 +194,12 @@ class BillingRepository(private val context: Context) {
                 // Try to reconnect after a short delay
                 // Note: enableAutoServiceReconnection() should handle this automatically,
                 // but we'll also try manually as a fallback
+                val self = this // Capture the listener reference (this refers to the listener object)
                 CoroutineScope(Dispatchers.IO).launch {
                     kotlinx.coroutines.delay(2000) // Wait 2 seconds before reconnecting
                     if (billingClient != null && !billingClient!!.isReady) {
                         Log.d("BillingRepository", "Reconnecting billing client...")
-                        billingClient?.startConnection(this@listener)
+                        billingClient?.startConnection(self)
                     }
                 }
             }
