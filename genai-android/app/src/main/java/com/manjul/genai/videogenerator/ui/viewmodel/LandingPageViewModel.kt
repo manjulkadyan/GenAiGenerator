@@ -109,23 +109,55 @@ class LandingPageViewModel(
     private fun initializeBilling() {
         viewModelScope.launch {
             Log.d("LandingPageViewModel", "Starting billing initialization...")
-            billingRepository.initialize().collect { billingResult ->
-                Log.d("LandingPageViewModel", "Billing initialization result: code=${billingResult.responseCode}, message=${billingResult.debugMessage}")
-                if (billingResult.responseCode == com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
-                    Log.d("LandingPageViewModel", "Billing initialized successfully - loading product details")
-                    _uiState.value = _uiState.value.copy(billingInitialized = true)
-                    // Load product details after billing is initialized and ready
-                    val currentConfig = _uiState.value.config
-                    if (currentConfig.subscriptionPlans.isNotEmpty()) {
-                        Log.d("LandingPageViewModel", "Loading product details for ${currentConfig.subscriptionPlans.size} plans")
-                        loadProductDetails(currentConfig.subscriptionPlans.map { it.productId })
+            var hasSucceeded = false
+            
+            try {
+                // Keep collecting from the flow - it will emit on every connection/reconnection
+                billingRepository.initialize().collect { billingResult ->
+                    Log.d("LandingPageViewModel", "Billing initialization result: code=${billingResult.responseCode}, message=${billingResult.debugMessage}")
+                    if (billingResult.responseCode == com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
+                        val isFirstSuccess = !hasSucceeded
+                        if (isFirstSuccess) {
+                            // First successful connection
+                            Log.d("LandingPageViewModel", "Billing initialized successfully - loading product details")
+                            hasSucceeded = true
+                        } else {
+                            // Reconnection after disconnection
+                            Log.d("LandingPageViewModel", "Billing reconnected successfully")
+                        }
+                        
+                        _uiState.value = _uiState.value.copy(billingInitialized = true, error = null)
+                        
+                        // Load product details after billing is initialized and ready (only on first success)
+                        if (isFirstSuccess || _uiState.value.productDetails.isEmpty()) {
+                            val currentConfig = _uiState.value.config
+                            if (currentConfig.subscriptionPlans.isNotEmpty()) {
+                                Log.d("LandingPageViewModel", "Loading product details for ${currentConfig.subscriptionPlans.size} plans")
+                                loadProductDetails(currentConfig.subscriptionPlans.map { it.productId })
+                            } else {
+                                android.util.Log.w("LandingPageViewModel", "No subscription plans in config to load")
+                            }
+                        }
                     } else {
-                        android.util.Log.w("LandingPageViewModel", "No subscription plans in config to load")
+                        android.util.Log.e("LandingPageViewModel", "Billing initialization failed: ${billingResult.debugMessage} (code: ${billingResult.responseCode})")
+                        
+                        // Only show error if we haven't succeeded before (to avoid overwriting success state)
+                        if (!hasSucceeded) {
+                            _uiState.value = _uiState.value.copy(
+                                error = "Billing initialization failed: ${billingResult.debugMessage}",
+                                billingInitialized = false
+                            )
+                        } else {
+                            // Reconnection failed, but keep the initialized state
+                            android.util.Log.w("LandingPageViewModel", "Billing reconnection failed, but keeping initialized state")
+                        }
                     }
-                } else {
-                    android.util.Log.e("LandingPageViewModel", "Billing initialization failed: ${billingResult.debugMessage} (code: ${billingResult.responseCode})")
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("LandingPageViewModel", "Exception during billing initialization", e)
+                if (!hasSucceeded) {
                     _uiState.value = _uiState.value.copy(
-                        error = "Billing initialization failed: ${billingResult.debugMessage}",
+                        error = "Billing initialization error: ${e.message}",
                         billingInitialized = false
                     )
                 }
@@ -493,6 +525,14 @@ class LandingPageViewModel(
     fun selectOneTimeProduct(product: OneTimeProduct) {
         _uiState.value = _uiState.value.copy(selectedOneTimeProduct = product)
         Log.d("LandingPageViewModel", "One-time product selected: ${product.productId}")
+    }
+    
+    /**
+     * Check if billing is available/ready
+     * This provides a dynamic check instead of just relying on the initialization flag
+     */
+    fun isBillingReady(): Boolean {
+        return uiState.value.billingInitialized || billingRepository.isBillingAvailable()
     }
     
     /**

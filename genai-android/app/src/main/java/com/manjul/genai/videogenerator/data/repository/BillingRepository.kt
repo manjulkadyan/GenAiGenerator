@@ -141,6 +141,7 @@ class BillingRepository(private val context: Context) {
     
     /**
      * Initialize the billing client.
+     * This flow emits whenever billing setup finishes (including reconnections).
      */
     fun initialize(): Flow<BillingResult> = callbackFlow {
         // For Billing Library 8.0.0+, enablePendingPurchases() requires PendingPurchasesParams
@@ -158,7 +159,7 @@ class BillingRepository(private val context: Context) {
             // If compilation fails, remove this line - auto-reconnection is handled manually
             .build()
         
-        billingClient?.startConnection(object : BillingClientStateListener {
+        val listener = object : BillingClientStateListener {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 Log.d("BillingRepository", "Billing setup finished: code=${billingResult.responseCode}, message=${billingResult.debugMessage}")
                 trySend(billingResult)
@@ -189,14 +190,26 @@ class BillingRepository(private val context: Context) {
             }
             
             override fun onBillingServiceDisconnected() {
-                android.util.Log.w("BillingRepository", "Billing service disconnected - connection lost")
-                // Try to restart the connection on the next request
-                // The billing client will need to be reinitialized
+                android.util.Log.w("BillingRepository", "Billing service disconnected - attempting to reconnect...")
+                // Try to reconnect after a short delay
+                // Note: enableAutoServiceReconnection() should handle this automatically,
+                // but we'll also try manually as a fallback
+                CoroutineScope(Dispatchers.IO).launch {
+                    kotlinx.coroutines.delay(2000) // Wait 2 seconds before reconnecting
+                    if (billingClient != null && !billingClient!!.isReady) {
+                        Log.d("BillingRepository", "Reconnecting billing client...")
+                        billingClient?.startConnection(this@listener)
+                    }
+                }
             }
-        })
+        }
+        
+        billingClient?.startConnection(listener)
         
         awaitClose {
-            billingClient?.endConnection()
+            Log.d("BillingRepository", "Billing initialization flow closed")
+            // Don't end connection here - keep it alive for the app lifecycle
+            // billingClient?.endConnection()
         }
     }
     
