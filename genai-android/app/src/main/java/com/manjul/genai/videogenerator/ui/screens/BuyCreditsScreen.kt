@@ -572,10 +572,26 @@ fun BuyCreditsScreen(
                 }
                 
                 // Continue button - sticky at bottom
+                // Check billing status dynamically instead of just relying on the flag
+                // This handles cases where billing might be ready but flag wasn't updated
+                val billingReady = viewModel.isBillingReady()
+                
                 val canPurchase = if (uiState.selectedPurchaseType == PurchaseType.SUBSCRIPTION) {
-                    !uiState.isPurchaseInProgress && uiState.selectedPlan != null && uiState.billingInitialized
+                    !uiState.isPurchaseInProgress && uiState.selectedPlan != null && billingReady
                 } else {
-                    !uiState.isPurchaseInProgress && uiState.selectedOneTimeProduct != null && uiState.billingInitialized
+                    !uiState.isPurchaseInProgress && uiState.selectedOneTimeProduct != null && billingReady
+                }
+                
+                // Log button state for debugging
+                LaunchedEffect(canPurchase, uiState.selectedPlan?.productId, uiState.selectedOneTimeProduct?.productId, billingReady, uiState.billingInitialized) {
+                    Log.d("BuyCreditsScreen", "=== Continue Button State ===")
+                    Log.d("BuyCreditsScreen", "Can purchase: $canPurchase")
+                    Log.d("BuyCreditsScreen", "Purchase in progress: ${uiState.isPurchaseInProgress}")
+                    Log.d("BuyCreditsScreen", "Selected plan: ${uiState.selectedPlan?.productId ?: "none"}")
+                    Log.d("BuyCreditsScreen", "Selected one-time product: ${uiState.selectedOneTimeProduct?.productId ?: "none"}")
+                    Log.d("BuyCreditsScreen", "Billing ready: $billingReady")
+                    Log.d("BuyCreditsScreen", "Billing initialized flag: ${uiState.billingInitialized}")
+                    Log.d("BuyCreditsScreen", "Purchase type: ${uiState.selectedPurchaseType}")
                 }
                 
                 Box(
