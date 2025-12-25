@@ -116,7 +116,7 @@ fun OnboardingLayout(
                     lineHeight = 34.sp
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 // Description - Gray text
                 Text(
@@ -125,11 +125,10 @@ fun OnboardingLayout(
                     color = Color(0xFF6B7280), // Medium gray
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
-                    lineHeight = 24.sp,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
 
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 // Page indicators
                 PageIndicators(
@@ -137,7 +136,7 @@ fun OnboardingLayout(
                     totalPages = totalPages
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 // Navigation buttons
                 buttons()
