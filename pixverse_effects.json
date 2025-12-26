@@ -1,0 +1,73 @@
+[
+  {
+    "id": "earth-zoom",
+    "name": "Earth Zoom",
+    "prompt": "earth zoom out",
+    "credits": 40,
+    "aspectRatio": "1:1",
+    "previewUrl": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_earthzoom_250716.gif",
+    "endpoint": "pixverse",
+    "identifier": "Earth Zoom"
+  },
+  {
+    "id": "muscle",
+    "name": "Muscle Surge",
+    "prompt": "muscle surge",
+    "credits": 30,
+    "aspectRatio": "1:1",
+    "previewUrl": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_muscle_0610.gif",
+    "endpoint": "pixverse",
+    "identifier": "Muscle Surge"
+  },
+  {
+    "id": "360-rotate-microwave",
+    "name": "Rotate 360",
+    "prompt": "rotate 360",
+    "credits": 40,
+    "aspectRatio": "1:1",
+    "previewUrl": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_360_250227.gif",
+    "endpoint": "pixverse",
+    "identifier": "Microwave"
+  },
+  {
+    "id": "Bikini",
+    "name": "Bikini Up",
+    "prompt": "put on bikini",
+    "credits": 40,
+    "aspectRatio": "1:1",
+    "previewUrl": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_bikini_250218.gif",
+    "endpoint": "pixverse",
+    "identifier": "Bikini Up"
+  },
+  {
+    "id": "mermaid",
+    "name": "Fin-tastic Mermaid",
+    "prompt": "Mermaid me",
+    "credits": 40,
+    "aspectRatio": "1:1",
+    "previewUrl": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_mermaid_250528.gif",
+    "endpoint": "pixverse",
+    "identifier": "Fin-tastic Mermaid"
+  },
+  {
+    "id": "metal",
+    "name": "Liquid Metal",
+    "prompt": "",
+    "credits": 40,
+    "aspectRatio": "1:1",
+    "previewUrl": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_metal_250606.gif",
+    "endpoint": "pixverse",
+    "identifier": "Liquid Metal"
+  },
+  {
+    "id": "wings-angle",
+    "name": "Angel Wings",
+    "prompt": "put on angle wings",
+    "credits": 40,
+    "aspectRatio": "1:1",
+    "previewUrl": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_anglewings_250208.gif",
+    "endpoint": "pixverse",
+    "identifier": "Holy Wings"
+  }
+]
+
