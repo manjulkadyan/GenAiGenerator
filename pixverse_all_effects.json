@@ -1,0 +1,1897 @@
+[
+  {
+    "template_id": 315446315336768,
+    "display_name": "Kiss Kiss",
+    "workflow_tag": "kiss_241202",
+    "display_prompt": "One click to send your kiss",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_kisskiss_0610.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_kisskiss_0610.mp4",
+    "example_text": "Upload a two-person photo",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 346384996936128,
+    "display_name": "Old Photo Revival",
+    "workflow_tag": "hellooldphoto_250630",
+    "display_prompt": "Breathe life into old photos\u2014time travel through their eyes.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_old_250630.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_old_250630.mov",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 308621408717184,
+    "display_name": "Muscle Surge",
+    "workflow_tag": "muscle_241128",
+    "display_prompt": "Show off your strong muscles and have everyone hooked.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_muscle_0610.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_muscle_0610.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 375297572099008,
+    "display_name": "Christmas Night",
+    "workflow_tag": "meta_nanopro_it2v_v5_251204",
+    "display_prompt": "The lights come on, and you become the star of Christmas.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_christmassparkleentrance_251210.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_christmassparkleentrance_251210.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "new"
+  },
+  {
+    "template_id": 375277260704704,
+    "display_name": "Xmas Front Page Karma",
+    "workflow_tag": "meta_nanopro_transition_v5_251204",
+    "display_prompt": "Break the front page and detonate the Xmas headline!",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fapp_xmasnews_251210.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fapp_xmasnews_251210.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "new"
+  },
+  {
+    "template_id": 340712049100608,
+    "display_name": "Hug Together",
+    "workflow_tag": "interact_hug_250529",
+    "display_prompt": "Merge photos, share love.",
+    "effect_type": "2",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2F340712049100608_251107.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2F340712049100608_251107.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 327828816843648,
+    "display_name": "Subject 3 Fever",
+    "workflow_tag": "subject3_250317",
+    "display_prompt": "Subject 3 dance takes the world by storm!",
+    "effect_type": "1",
+    "duration": 8,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fapp_subject3_251109.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fapp_subject3_251109.mp4",
+    "example_text": "Select a full body photo",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 349232644550272,
+    "display_name": "My Girlfriendssss",
+    "workflow_tag": "yourgirls_250716",
+    "display_prompt": "They\u2019re here for me, and I\u2019m here for them.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_yourgirls_250716.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_yourgirls_250716.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 349232463042176,
+    "display_name": "My Boyfriendsssss",
+    "workflow_tag": "yourboys_250716",
+    "display_prompt": "Too hot to handle. Too close to say no.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_yourboys_250716.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_yourboys_250716.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 359166562889024,
+    "display_name": "Kiss Me to Heaven",
+    "workflow_tag": "wetkiss_250910",
+    "display_prompt": "Kissing non-stop, feeling the endless desire ",
+    "effect_type": "1",
+    "duration": 8,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_wetkiss_250910.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_wetkiss_250910.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 362704938833536,
+    "display_name": "Ghostface Terror",
+    "workflow_tag": "scream_250930",
+    "display_prompt": "Scream, right now!",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_scream_250930.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_scream_250930.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 303624424723200,
+    "display_name": "Hug Your Love",
+    "workflow_tag": "hug_love_241030",
+    "display_prompt": "Hug each other\t",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_hugyourlove2_250512.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_hugyourlove2_250512.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 350827863568000,
+    "display_name": "I Believe I Can Fly",
+    "workflow_tag": "fly_250725",
+    "display_prompt": "Fly beyond the clouds, to a world of dreams.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Ffly_250917_2.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Ffly_250917_2.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 352802159378368,
+    "display_name": "Mwah Mwah",
+    "workflow_tag": "kiss_2_250805",
+    "display_prompt": "A soft kiss strong enough to shatter",
+    "effect_type": "2",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_kiss2_250805.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_kiss2_250805.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 340952173729600,
+    "display_name": "Change My Outfit",
+    "workflow_tag": "outfitchange_250324",
+    "display_prompt": "Different style matches different mood",
+    "effect_type": "2",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_changemyoutfit_250604.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_changemyoutfit__250604.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 374871723655616,
+    "display_name": "Grinch's Xmas Hijack",
+    "workflow_tag": "meta_nanopro_transition_v5_251204",
+    "display_prompt": "Forget Santa. Grinch drops in with champagne to your ultimate luxury party.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fapp_grinch_251208.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fapp_grinch_251208.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "new"
+  },
+  {
+    "template_id": 338445884778240,
+    "display_name": "Creepy Devil Smile",
+    "workflow_tag": "creepy_smile_250516",
+    "display_prompt": "Not a smile. A warning.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_creepy_250516.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_creepy_250516.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 335104003407232,
+    "display_name": "Grow Up",
+    "workflow_tag": "growup_250427",
+    "display_prompt": "Start time travel with one click",
+    "effect_type": "2",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb-335104003407232-251107.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb-335104003407232-251107.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 352981446212096,
+    "display_name": "Birthday Surprise",
+    "workflow_tag": "birthday_250806",
+    "display_prompt": "Surprise! Your birthday just got extra special",
+    "effect_type": "1",
+    "duration": 4,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_birthday_250806.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_birthday_250806.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 338083197718400,
+    "display_name": "Punch Face",
+    "workflow_tag": "punchface_250514",
+    "display_prompt": "One punch and you're a meme now",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_punch_250515.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_punch_250515.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 340541567573824,
+    "display_name": "Fin-tastic Mermaid",
+    "workflow_tag": "mermaid_250528",
+    "display_prompt": "Dive in! Get your fins now",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_mermaid_250528.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_mermaid_250528.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 342847495240768,
+    "display_name": "Who\u2019s Arrested?",
+    "workflow_tag": "arrest_250610",
+    "display_prompt": "When the AI cop shows up, someone\u2019s in trouble!",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_arrest_250610.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_arrest_250610.mov",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 343410955453504,
+    "display_name": "Dad vs. Me",
+    "workflow_tag": "fight_250106",
+    "display_prompt": "Time for a father-son face-off...",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_fightingfather_0613.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_fightingfather_0613.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 349110259052160,
+    "display_name": "Earth Zoom Challenge",
+    "workflow_tag": "earthzoom_250715",
+    "display_prompt": "From space to you \u2014 the world is watching",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_earthzoom_250716.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_earthzoom_250716.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 333178074897472,
+    "display_name": "Jiggle Jiggle",
+    "workflow_tag": "jiggle_250416",
+    "display_prompt": "Twist your waist, clap your hands, turn around and follow the beat.",
+    "effect_type": "1",
+    "duration": 8,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_jiggle_250422.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_jiggle_250422.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 353279785150016,
+    "display_name": "Officer Crush",
+    "workflow_tag": "myofficer_250808",
+    "display_prompt": "Come closer, Officer. I\u2019m almost yours.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_officer_250808.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_officer_250808.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 313649491716544,
+    "display_name": "The Tiger's Touch",
+    "workflow_tag": "tigerhug_250127",
+    "display_prompt": "A giant tiger appears and snuggles up with you.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_tigerhug_250127.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_tigerhug_250127.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 337792714792704,
+    "display_name": "PUBG Winner Hit",
+    "workflow_tag": "winnerdance_250512",
+    "display_prompt": "Victory secured, now hit the dance floor!",
+    "effect_type": "1",
+    "duration": 8,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_winnerdance_250513.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_winnerdance_250513.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 351899261628032,
+    "display_name": "Drunk Pole Dance",
+    "workflow_tag": "poledance_250731",
+    "display_prompt": "Spinning nonstop, crazy moves, I dare to do it, do you dare to watch?",
+    "effect_type": "1",
+    "duration": 4,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_poledance_250731.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_poledance_250731.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 347130807494528,
+    "display_name": "Ride My Porsche",
+    "workflow_tag": "car_250704",
+    "display_prompt": "Get in the car, millionaire!",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_car_250706.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_car_250706.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 362350589198976,
+    "display_name": "Dragon Evoker",
+    "workflow_tag": "dragon_250928",
+    "display_prompt": "What's your dragon attribute? Find out now. ",
+    "effect_type": "1",
+    "duration": 8,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_dragon_250928.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_dragon_250928.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 353326100438592,
+    "display_name": "Middle Finger Up",
+    "workflow_tag": "finger_250808",
+    "display_prompt": "Show me your friendly",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_finger_250808.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_finger_250808.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 302325299711040,
+    "display_name": "Leggy Run",
+    "workflow_tag": "leggy_run_241028",
+    "display_prompt": "The [OBJECT] grows legs and runs away",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_leggyrun.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_leggyrun.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 334053280928832,
+    "display_name": "Vroom Vroom Step",
+    "workflow_tag": "dance_pet_250421",
+    "display_prompt": "Vroom goes the beat, step hits the street",
+    "effect_type": "1",
+    "duration": 8,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_dance_250316.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_dance_250316.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 313555098280384,
+    "display_name": "Bikini Up!",
+    "workflow_tag": "bikini_250217",
+    "display_prompt": "Catch the wave, rock that bikini vibe!",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_bikini_250218.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_bikini_250218.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 347847915659136,
+    "display_name": "Private Airplane",
+    "workflow_tag": "jet_250708",
+    "display_prompt": "Luxury takes off. First class only.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_jet_250708.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_jet_250708.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 324641581197696,
+    "display_name": "Let's YMCA!",
+    "workflow_tag": "babydance_250227",
+    "display_prompt": "Everyone, join the Disco Party Jam!",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_ymca_250423.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_ymca_250423.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 342538347747072,
+    "display_name": "Somber Embrace",
+    "workflow_tag": "blackwings_250608",
+    "display_prompt": "Ebony wings unfold, a fallen angel's ascent",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_blackwings_0609.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_blackwings_0609.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 310371322329472,
+    "display_name": "Sheep Curls",
+    "workflow_tag": "sheep_241208",
+    "display_prompt": "Change hairstyle for a better mood",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_curlyhair.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_curlyhair.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 344080941597120,
+    "display_name": "Dust Me Away",
+    "workflow_tag": "part_250617",
+    "display_prompt": "Catch me fading like a deleted file.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_part_250618.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_part_250618.mov",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 303788802773760,
+    "display_name": "Evil Trigger",
+    "workflow_tag": "wicked_paintings_241028",
+    "display_prompt": "Grab the gun, pull the trigger, and let it rip!",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_fire_250328.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_fire_250328.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 342535507046144,
+    "display_name": "Sharking Summer",
+    "workflow_tag": "shark_250608",
+    "display_prompt": "Pet the danger. Taste the thrill.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_skark_250608.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_skark_250608.mov",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 351907687030400,
+    "display_name": "Hi-Five Emoji Twin",
+    "workflow_tag": "uandemoji_250731",
+    "display_prompt": "We look alike because it\u2019s mine",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb-emoji-251107.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb-emoji-251107.mp4",
+    "example_text": "Please upload a single-person front-facing photo",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 329607251526400,
+    "display_name": "Huge Cutie",
+    "workflow_tag": "hugecutie_250327",
+    "display_prompt": "Transform into an urban giant!",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_hugecutie_250327.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_hugecutie_250327.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 354371350649280,
+    "display_name": "Ninja Shadow Clone",
+    "workflow_tag": "clone_250814",
+    "display_prompt": "Clone yourself, conquer the world",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_clone_250814.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_clone_250814.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 302325299721280,
+    "display_name": "Alive Art",
+    "workflow_tag": "alive_art_241028",
+    "display_prompt": "Make everything alive",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_aliveart.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_aliveart.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 341983360051008,
+    "display_name": "Fairy Wings",
+    "workflow_tag": "sprite_250605",
+    "display_prompt": "Summon your ethereal wings and reveal your inner magic.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_sprite_250605.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_sprite_250605.mov",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 337052664588608,
+    "display_name": "Cry Me a River",
+    "workflow_tag": "tears_250508",
+    "display_prompt": "Let it out, let it out. Tears like a waterfall.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_tears_250508.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_tears_250508.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 351913231468160,
+    "display_name": "Emoji Check!",
+    "workflow_tag": "phoneemoji_250731",
+    "display_prompt": "Stop playing with your phone, you\u2019ve turned into an emoji",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_phoneemoji_250731.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_phoneemoji_250731.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 350496364287680,
+    "display_name": "Muscle Max: Bodybuilder Champion",
+    "workflow_tag": "muscleplus_250723",
+    "display_prompt": "Ready to be the king of the gym?",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_muscleplus_250723.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_muscleplus_250723.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 322852853601344,
+    "display_name": "Vogue Walk",
+    "workflow_tag": "runwaywalk_250217",
+    "display_prompt": "Walk like a supermodel and shine brighter than ever",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_model_250312.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_model_250312.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 325501134629952,
+    "display_name": "Polar Bear Shock",
+    "workflow_tag": "polarbear_250304",
+    "display_prompt": "A polar bear suddenly jumps out and hugs you",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_polarbear_250304.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_polarbear_250304.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 308552687706496,
+    "display_name": "Long Hair Magic",
+    "workflow_tag": "hair_magic_241128",
+    "display_prompt": "Grow lots of hair. Never be bald.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_hairgrowth_0114.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_hairgrowth.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 340894729537344,
+    "display_name": "Rainbow Moment",
+    "workflow_tag": "rainbow_250530",
+    "display_prompt": "Add rainbow to your world \u2014pride shines all year",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_rainbow_250603.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_rainbow_250603.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 338611800368896,
+    "display_name": "Just a Friend?",
+    "workflow_tag": "growup_250427",
+    "display_prompt": "One click from Chill to Slay",
+    "effect_type": "2",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb-justafriend-251109.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb-justafriend-251109.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 335610959448832,
+    "display_name": "Werewolf Rage",
+    "workflow_tag": "wereworf_250430",
+    "display_prompt": "The full moon rises, your fangs come out.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_werewolf_250430.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_werewolf_250430.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 339848996187712,
+    "display_name": "Eye Zoom Challenge",
+    "workflow_tag": "eyezoomin_250524",
+    "display_prompt": "Zoom into your pupil \u2014 and the whole world falls with you",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_eye_250524.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_eye_250524.mp4",
+    "example_text": "Select a selfie ",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 334005897813056,
+    "display_name": "Transition",
+    "workflow_tag": "transition_250421",
+    "display_prompt": "You can become anyone you want",
+    "effect_type": "2",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_transition_250422.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_transition_250422.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 359850491398912,
+    "display_name": "Muscle Pro: Born to Built",
+    "workflow_tag": "muscle_250914",
+    "display_prompt": "Your body, born powerful.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_muscle_250914.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_muscle_250914.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 326607027713088,
+    "display_name": "Fire Roar",
+    "workflow_tag": "firespitter_250310",
+    "display_prompt": "Unleash your inner flame",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_fire_250312.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_fire_250312.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 356317200152960,
+    "display_name": "Skull Multiverse ",
+    "workflow_tag": "skull_250825",
+    "display_prompt": "Which skull is your true face?",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_skull_250825.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_skull_250825.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 302325299651648,
+    "display_name": "Zombie Mode",
+    "workflow_tag": "zombie_mode_241028",
+    "display_prompt": "The [SUBJECT] suddenly transforms into a zombie.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_zombiemode.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_zombiemode.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 339133943656192,
+    "display_name": "BOOM DROP",
+    "workflow_tag": "explode_250520",
+    "display_prompt": "A real man never looks back at the explosion behind him",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_explode_250520.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_explode_250520.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 348369452948224,
+    "display_name": "Welcome to My House",
+    "workflow_tag": "house_250711",
+    "display_prompt": "A sip of red, and the rich life appears.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_house_250711.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_house_250711.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 343058274917440,
+    "display_name": "Gabu Dance",
+    "workflow_tag": "gabudance_250609",
+    "display_prompt": "Eu Sento Gabu! Everywhere you walk is Runway",
+    "effect_type": "1",
+    "duration": 12,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_gabudance_0625.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_gabudance_0625.mp4",
+    "example_text": "Select a full - body photo of a single person ",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 340383170699072,
+    "display_name": "Thunder God",
+    "workflow_tag": "thundergod_250527",
+    "display_prompt": "Lightning in your eyes. Thunder in your stare.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_thunder_250527.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_thunder_250527.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 315447659476032,
+    "display_name": "Kungfu Club",
+    "workflow_tag": "fight_250106",
+    "display_prompt": "Let the battle begin",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_fight_250114.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_fight_250114.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 372272620777642,
+    "display_name": "Santa",
+    "workflow_tag": "",
+    "display_prompt": "Transform yourself into Santa Claus.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fsanta.gif",
+    "preview_video": "https://media.pixverse.ai/studio%2Fvideo%2F1a79c32f-b492-46f8-9a91-37dee4b48007.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": ""
+  },
+  {
+    "template_id": 351687353790080,
+    "display_name": "Ruin Your Vow",
+    "workflow_tag": "bride_250730",
+    "display_prompt": "Not your happy ending. Just mine.",
+    "effect_type": "1",
+    "duration": 7,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_bride_250801.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_bride_250801.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 345014411085376,
+    "display_name": "Winged Wardrobe",
+    "workflow_tag": "outfitchange_250324",
+    "display_prompt": "Wear ethereal wings and dazzle like a supermodel",
+    "effect_type": "2",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_winged_0623.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_winged_0623.mp4",
+    "example_text": "Full-body photos will yield better results",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 359328847686976,
+    "display_name": "Figurine Me Up!",
+    "workflow_tag": "3dtoy_3_250911",
+    "display_prompt": "Turn into your own figurine, hold it in your hand and admire!",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fapp_3dtoy_250911.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fapp_3dtoy_250911.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 339398587639552,
+    "display_name": "Trippy Lilies",
+    "workflow_tag": "lilies_250522",
+    "display_prompt": "Dreams bloom in silence \u2014 beauty with a twist",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_lilies_250522.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_lilies_250522.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 336856634055424,
+    "display_name": "Balloon Belly",
+    "workflow_tag": "belly_250507",
+    "display_prompt": "One puff and\u2014boom! You\u2019re the cutest balloon in town.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_belly_250508.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_belly_250508.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 343058758753344,
+    "display_name": "Shake It to the Max",
+    "workflow_tag": "shakeittomax_250609",
+    "display_prompt": "Go on bend your knees, baby, shake it to the max",
+    "effect_type": "1",
+    "duration": 12,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_shakeitmax_250626.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_shakeitmax_250626.mov",
+    "example_text": "Select a full - body photo of a single person ",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 341651541059392,
+    "display_name": "Fish Dreamcore",
+    "workflow_tag": "fish_250603",
+    "display_prompt": "Dive deep in a dream, surrounded by fish, where visions flood.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_fish_250603.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_fish_250603.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 332074055488256,
+    "display_name": "Mega Dive",
+    "workflow_tag": "diving_250410",
+    "display_prompt": "Jump into summer, cool off in the water!",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_diving_250410.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_diving_250410.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 372276089942356,
+    "display_name": "Krampus",
+    "workflow_tag": "",
+    "display_prompt": "Transform yourself into the Krampus.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/studio%2Fimg%2F251df69f-ff53-4f62-b768-04ffa74e0d8a.gif",
+    "preview_video": "https://media.pixverse.ai/studio%2Fvideo%2F55df01a9-a10c-4edc-afdc-9dfc49e2b531.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": ""
+  },
+  {
+    "template_id": 339673485621824,
+    "display_name": "Baby Shroom",
+    "workflow_tag": "babybite_250523",
+    "display_prompt": "One bite of the shroom \u2014 boom, baby you again!",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_babybite_250526.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_babybite_250526.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 357905373827456,
+    "display_name": "Lionfish Venomous",
+    "workflow_tag": "lionfish_250903",
+    "display_prompt": "lionfish_250903",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_lionfish_250903.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_lionfish_250903.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 366950737546048,
+    "display_name": "Dreamliked Cloud ",
+    "workflow_tag": "cloudad_251015",
+    "display_prompt": "Place your product on a dreamlike cloud\uff01",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2F%E4%BA%91%E6%9C%B5%E5%B9%BF%E5%91%8A.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2F%E4%BA%91%E6%9C%B5%E5%B9%BF%E5%91%8A.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 366945220815680,
+    "display_name": "Baby Wave",
+    "workflow_tag": "babywave_251024",
+    "display_prompt": "What a happy big family!",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_babywave_251024.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_babywave1_251024.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 302325299692608,
+    "display_name": "Squish It",
+    "workflow_tag": "squish_it_241028",
+    "display_prompt": "A pair of hands appears and squishes the [OBJECT] as if it's slime",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_squishit.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_squishit.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 360586769510976,
+    "display_name": "My Destiny Tarot Card",
+    "workflow_tag": "tarot_250918",
+    "display_prompt": "Glimpse into the soul, unlock your destiny's code.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb-tarot-251107.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb-tarot-251107.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 337036093477184,
+    "display_name": "The Cube Reborn",
+    "workflow_tag": "minecraft_250508",
+    "display_prompt": "Break the dimension. Be the cube hero you were meant to be",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fapp_pixel.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fapp_pixel.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 350827688007296,
+    "display_name": "Beam Me Up",
+    "workflow_tag": "bluelight_250725",
+    "display_prompt": "Ready to energize, Scotty!",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_blue_250725.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_blue_250725.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 367400055937163,
+    "display_name": "Become the Reaper!",
+    "workflow_tag": "",
+    "display_prompt": "Embrace your dark side.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/studio%2Fimg%2Fb3b8a9ae-eb6e-4903-8dd7-c0bd311803e0.gif",
+    "preview_video": "https://media.pixverse.ai/studio%2Fvideo%2F9da2b769-933a-494b-ace5-354c0e6c3706.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 327829606196096,
+    "display_name": "Money Tornado",
+    "workflow_tag": "money360_250317",
+    "display_prompt": "Money rains down, enjoy the wealth storm! ",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_money360_250326.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_money360_250326.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 369205027418304,
+    "display_name": "The Nasty Step",
+    "workflow_tag": "shenzailun_251102",
+    "display_prompt": "Your body, your rules. Be the nastiest main character tonight.",
+    "effect_type": "1",
+    "duration": 13,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fshenzailun_251116.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fshenzailun_251116.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "new"
+  },
+  {
+    "template_id": 342874383633472,
+    "display_name": "Baby Arrived",
+    "workflow_tag": "getbaby_250610",
+    "display_prompt": "Mummy and daddy, I\u2019m here!",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_getbaby_250611.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_getbaby_250611.mov",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 350321367924416,
+    "display_name": "Alien Kidnap",
+    "workflow_tag": "alien_250722",
+    "display_prompt": "Take me to your planet\u2026 or wherever you want.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_alien_251110.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_alien_251110.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 313358700761536,
+    "display_name": "Anything, Robot",
+    "workflow_tag": "robot_250207",
+    "display_prompt": "Transform into a robot",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_robot_250207.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_robot_250207.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 354340119359936,
+    "display_name": "Buddha\u2019s Blessing",
+    "workflow_tag": "buddha_250814",
+    "display_prompt": "Feel the power, embrace the peace.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_buddha_250814.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_buddha_250814.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 330448062595520,
+    "display_name": "Paw Princess",
+    "workflow_tag": "dresspet_250331",
+    "display_prompt": "Dress up your pet like a royal princess",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_dresspet_250401.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_dresspet_250401.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 343058574996544,
+    "display_name": "Li Xi Cheng Merch",
+    "workflow_tag": "lixichengdance_250609",
+    "display_prompt": "Once upon a time, a legend was born",
+    "effect_type": "1",
+    "duration": 13,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_lixicheng_250626.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_lixicheng_250626.mov",
+    "example_text": "Select a full - body photo of a single person ",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 349454446560896,
+    "display_name": "My Chanel",
+    "workflow_tag": "outfitchange_250324",
+    "display_prompt": "Fashion fades, only style remains the same",
+    "effect_type": "2",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_chanel_0717.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_chanel_0717.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 316826014376384,
+    "display_name": "Warmth of Jesus",
+    "workflow_tag": "jesus_250109",
+    "display_prompt": "Find peace in Jesus' arms.",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_jesus_250116.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_jesus_250116.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 354568167143040,
+    "display_name": "Kitten Hide and Seek",
+    "workflow_tag": "cat_250815",
+    "display_prompt": "Cats love their hideaways, let\u2019s go find them!",
+    "effect_type": "1",
+    "duration": 5,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_250815_2.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_250815_2.mp4",
+    "example_text": "Upload a close-up photo of an object",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 359516293494080,
+    "display_name": "Vampire Royalty",
+    "workflow_tag": "vampire_250912",
+    "display_prompt": "Lift the eternal veil, reveal your crimson elegance.",
+    "effect_type": "1",
+    "duration": 6,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_vampire_250911.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_vampire_250911.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": "default"
+  },
+  {
+    "template_id": 372923368360950,
+    "display_name": "Arctic Animals",
+    "workflow_tag": "",
+    "display_prompt": "Let arctic animals surround you.",
+    "effect_type": "1",
+    "duration": 8,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p",
+      "1080p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/studio%2Fimg%2Fd61f3904-d1a9-4ff8-b125-4b3e8a08d413.gif",
+    "preview_video": "https://media.pixverse.ai/studio%2Fvideo%2F3a9fac45-e3c9-4a22-bc27-0bad681d51b7.mp4",
+    "example_text": "",
+    "template_type": 1,
+    "marker": ""
+  },
+  {
+    "template_id": 343058324329536,
+    "display_name": "Hands Up! Hands Up! ",
+    "workflow_tag": "handsupdance_250609",
+    "display_prompt": "Raise your hands, stamp your feet, and detonate summer together ",
+    "effect_type": "1",
+    "duration": 14,
+    "qualities": [
+      "360p",
+      "540p",
+      "720p"
+    ],
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_handsup_250626.gif",
+    "preview_video": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_handsup_250626.mov",
+    "example_text": "Select a full - body photo of a single person ",
+    "template_type": 1,
+    "marker": "default"
+  }
+]

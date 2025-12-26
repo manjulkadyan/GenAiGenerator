@@ -1,0 +1,902 @@
+[
+  {
+    "name": "Kiss Kiss",
+    "workflow_tag": "kiss_241202",
+    "template_id": 315446315336768,
+    "duration": 5,
+    "prompt": "One click to send your kiss",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_kisskiss_0610.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Old Photo Revival",
+    "workflow_tag": "hellooldphoto_250630",
+    "template_id": 346384996936128,
+    "duration": 5,
+    "prompt": "Breathe life into old photos\u2014time travel through their eyes.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_old_250630.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Muscle Surge",
+    "workflow_tag": "muscle_241128",
+    "template_id": 308621408717184,
+    "duration": 5,
+    "prompt": "Show off your strong muscles and have everyone hooked.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_muscle_0610.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Christmas Night",
+    "workflow_tag": "meta_nanopro_it2v_v5_251204",
+    "template_id": 375297572099008,
+    "duration": 5,
+    "prompt": "The lights come on, and you become the star of Christmas.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_christmassparkleentrance_251210.gif",
+    "marker": "new"
+  },
+  {
+    "name": "Xmas Front Page Karma",
+    "workflow_tag": "meta_nanopro_transition_v5_251204",
+    "template_id": 375277260704704,
+    "duration": 5,
+    "prompt": "Break the front page and detonate the Xmas headline!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fapp_xmasnews_251210.gif",
+    "marker": "new"
+  },
+  {
+    "name": "Hug Together",
+    "workflow_tag": "interact_hug_250529",
+    "template_id": 340712049100608,
+    "duration": 5,
+    "prompt": "Merge photos, share love.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2F340712049100608_251107.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Subject 3 Fever",
+    "workflow_tag": "subject3_250317",
+    "template_id": 327828816843648,
+    "duration": 8,
+    "prompt": "Subject 3 dance takes the world by storm!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fapp_subject3_251109.gif",
+    "marker": "default"
+  },
+  {
+    "name": "My Girlfriendssss",
+    "workflow_tag": "yourgirls_250716",
+    "template_id": 349232644550272,
+    "duration": 5,
+    "prompt": "They\u2019re here for me, and I\u2019m here for them.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_yourgirls_250716.gif",
+    "marker": "default"
+  },
+  {
+    "name": "My Boyfriendsssss",
+    "workflow_tag": "yourboys_250716",
+    "template_id": 349232463042176,
+    "duration": 5,
+    "prompt": "Too hot to handle. Too close to say no.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_yourboys_250716.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Kiss Me to Heaven",
+    "workflow_tag": "wetkiss_250910",
+    "template_id": 359166562889024,
+    "duration": 8,
+    "prompt": "Kissing non-stop, feeling the endless desire ",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_wetkiss_250910.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Ghostface Terror",
+    "workflow_tag": "scream_250930",
+    "template_id": 362704938833536,
+    "duration": 5,
+    "prompt": "Scream, right now!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_scream_250930.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Hug Your Love",
+    "workflow_tag": "hug_love_241030",
+    "template_id": 303624424723200,
+    "duration": 5,
+    "prompt": "Hug each other\t",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_hugyourlove2_250512.gif",
+    "marker": "default"
+  },
+  {
+    "name": "I Believe I Can Fly",
+    "workflow_tag": "fly_250725",
+    "template_id": 350827863568000,
+    "duration": 5,
+    "prompt": "Fly beyond the clouds, to a world of dreams.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Ffly_250917_2.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Mwah Mwah",
+    "workflow_tag": "kiss_2_250805",
+    "template_id": 352802159378368,
+    "duration": 5,
+    "prompt": "A soft kiss strong enough to shatter",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_kiss2_250805.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Change My Outfit",
+    "workflow_tag": "outfitchange_250324",
+    "template_id": 340952173729600,
+    "duration": 5,
+    "prompt": "Different style matches different mood",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_changemyoutfit_250604.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Grinch's Xmas Hijack",
+    "workflow_tag": "meta_nanopro_transition_v5_251204",
+    "template_id": 374871723655616,
+    "duration": 5,
+    "prompt": "Forget Santa. Grinch drops in with champagne to your ultimat...",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fapp_grinch_251208.gif",
+    "marker": "new"
+  },
+  {
+    "name": "Creepy Devil Smile",
+    "workflow_tag": "creepy_smile_250516",
+    "template_id": 338445884778240,
+    "duration": 5,
+    "prompt": "Not a smile. A warning.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_creepy_250516.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Grow Up",
+    "workflow_tag": "growup_250427",
+    "template_id": 335104003407232,
+    "duration": 5,
+    "prompt": "Start time travel with one click",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb-335104003407232-251107.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Birthday Surprise",
+    "workflow_tag": "birthday_250806",
+    "template_id": 352981446212096,
+    "duration": 4,
+    "prompt": "Surprise! Your birthday just got extra special",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_birthday_250806.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Punch Face",
+    "workflow_tag": "punchface_250514",
+    "template_id": 338083197718400,
+    "duration": 5,
+    "prompt": "One punch and you're a meme now",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_punch_250515.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Fin-tastic Mermaid",
+    "workflow_tag": "mermaid_250528",
+    "template_id": 340541567573824,
+    "duration": 5,
+    "prompt": "Dive in! Get your fins now",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_mermaid_250528.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Who\u2019s Arrested?",
+    "workflow_tag": "arrest_250610",
+    "template_id": 342847495240768,
+    "duration": 5,
+    "prompt": "When the AI cop shows up, someone\u2019s in trouble!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_arrest_250610.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Dad vs. Me",
+    "workflow_tag": "fight_250106",
+    "template_id": 343410955453504,
+    "duration": 5,
+    "prompt": "Time for a father-son face-off...",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_fightingfather_0613.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Earth Zoom Challenge",
+    "workflow_tag": "earthzoom_250715",
+    "template_id": 349110259052160,
+    "duration": 5,
+    "prompt": "From space to you \u2014 the world is watching",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_earthzoom_250716.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Jiggle Jiggle",
+    "workflow_tag": "jiggle_250416",
+    "template_id": 333178074897472,
+    "duration": 8,
+    "prompt": "Twist your waist, clap your hands, turn around and follow th...",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_jiggle_250422.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Officer Crush",
+    "workflow_tag": "myofficer_250808",
+    "template_id": 353279785150016,
+    "duration": 5,
+    "prompt": "Come closer, Officer. I\u2019m almost yours.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_officer_250808.gif",
+    "marker": "default"
+  },
+  {
+    "name": "The Tiger's Touch",
+    "workflow_tag": "tigerhug_250127",
+    "template_id": 313649491716544,
+    "duration": 5,
+    "prompt": "A giant tiger appears and snuggles up with you.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_tigerhug_250127.gif",
+    "marker": "default"
+  },
+  {
+    "name": "PUBG Winner Hit",
+    "workflow_tag": "winnerdance_250512",
+    "template_id": 337792714792704,
+    "duration": 8,
+    "prompt": "Victory secured, now hit the dance floor!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_winnerdance_250513.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Drunk Pole Dance",
+    "workflow_tag": "poledance_250731",
+    "template_id": 351899261628032,
+    "duration": 4,
+    "prompt": "Spinning nonstop, crazy moves, I dare to do it, do you dare ...",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_poledance_250731.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Ride My Porsche",
+    "workflow_tag": "car_250704",
+    "template_id": 347130807494528,
+    "duration": 5,
+    "prompt": "Get in the car, millionaire!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_car_250706.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Dragon Evoker",
+    "workflow_tag": "dragon_250928",
+    "template_id": 362350589198976,
+    "duration": 8,
+    "prompt": "What's your dragon attribute? Find out now. ",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_dragon_250928.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Middle Finger Up",
+    "workflow_tag": "finger_250808",
+    "template_id": 353326100438592,
+    "duration": 5,
+    "prompt": "Show me your friendly",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_finger_250808.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Leggy Run",
+    "workflow_tag": "leggy_run_241028",
+    "template_id": 302325299711040,
+    "duration": 5,
+    "prompt": "The [OBJECT] grows legs and runs away",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_leggyrun.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Vroom Vroom Step",
+    "workflow_tag": "dance_pet_250421",
+    "template_id": 334053280928832,
+    "duration": 8,
+    "prompt": "Vroom goes the beat, step hits the street",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_dance_250316.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Bikini Up!",
+    "workflow_tag": "bikini_250217",
+    "template_id": 313555098280384,
+    "duration": 5,
+    "prompt": "Catch the wave, rock that bikini vibe!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_bikini_250218.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Private Airplane",
+    "workflow_tag": "jet_250708",
+    "template_id": 347847915659136,
+    "duration": 5,
+    "prompt": "Luxury takes off. First class only.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_jet_250708.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Let's YMCA!",
+    "workflow_tag": "babydance_250227",
+    "template_id": 324641581197696,
+    "duration": 5,
+    "prompt": "Everyone, join the Disco Party Jam!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_ymca_250423.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Somber Embrace",
+    "workflow_tag": "blackwings_250608",
+    "template_id": 342538347747072,
+    "duration": 5,
+    "prompt": "Ebony wings unfold, a fallen angel's ascent",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_blackwings_0609.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Sheep Curls",
+    "workflow_tag": "sheep_241208",
+    "template_id": 310371322329472,
+    "duration": 5,
+    "prompt": "Change hairstyle for a better mood",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_curlyhair.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Dust Me Away",
+    "workflow_tag": "part_250617",
+    "template_id": 344080941597120,
+    "duration": 5,
+    "prompt": "Catch me fading like a deleted file.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_part_250618.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Evil Trigger",
+    "workflow_tag": "wicked_paintings_241028",
+    "template_id": 303788802773760,
+    "duration": 5,
+    "prompt": "Grab the gun, pull the trigger, and let it rip!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_fire_250328.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Sharking Summer",
+    "workflow_tag": "shark_250608",
+    "template_id": 342535507046144,
+    "duration": 5,
+    "prompt": "Pet the danger. Taste the thrill.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_skark_250608.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Hi-Five Emoji Twin",
+    "workflow_tag": "uandemoji_250731",
+    "template_id": 351907687030400,
+    "duration": 5,
+    "prompt": "We look alike because it\u2019s mine",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb-emoji-251107.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Huge Cutie",
+    "workflow_tag": "hugecutie_250327",
+    "template_id": 329607251526400,
+    "duration": 5,
+    "prompt": "Transform into an urban giant!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_hugecutie_250327.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Ninja Shadow Clone",
+    "workflow_tag": "clone_250814",
+    "template_id": 354371350649280,
+    "duration": 5,
+    "prompt": "Clone yourself, conquer the world",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_clone_250814.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Alive Art",
+    "workflow_tag": "alive_art_241028",
+    "template_id": 302325299721280,
+    "duration": 5,
+    "prompt": "Make everything alive",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_aliveart.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Fairy Wings",
+    "workflow_tag": "sprite_250605",
+    "template_id": 341983360051008,
+    "duration": 5,
+    "prompt": "Summon your ethereal wings and reveal your inner magic.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_sprite_250605.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Cry Me a River",
+    "workflow_tag": "tears_250508",
+    "template_id": 337052664588608,
+    "duration": 5,
+    "prompt": "Let it out, let it out. Tears like a waterfall.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_tears_250508.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Emoji Check!",
+    "workflow_tag": "phoneemoji_250731",
+    "template_id": 351913231468160,
+    "duration": 5,
+    "prompt": "Stop playing with your phone, you\u2019ve turned into an emoji",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_phoneemoji_250731.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Muscle Max: Bodybuilder Champion",
+    "workflow_tag": "muscleplus_250723",
+    "template_id": 350496364287680,
+    "duration": 5,
+    "prompt": "Ready to be the king of the gym?",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_muscleplus_250723.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Vogue Walk",
+    "workflow_tag": "runwaywalk_250217",
+    "template_id": 322852853601344,
+    "duration": 5,
+    "prompt": "Walk like a supermodel and shine brighter than ever",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_model_250312.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Polar Bear Shock",
+    "workflow_tag": "polarbear_250304",
+    "template_id": 325501134629952,
+    "duration": 5,
+    "prompt": "A polar bear suddenly jumps out and hugs you",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_polarbear_250304.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Long Hair Magic",
+    "workflow_tag": "hair_magic_241128",
+    "template_id": 308552687706496,
+    "duration": 5,
+    "prompt": "Grow lots of hair. Never be bald.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_hairgrowth_0114.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Rainbow Moment",
+    "workflow_tag": "rainbow_250530",
+    "template_id": 340894729537344,
+    "duration": 5,
+    "prompt": "Add rainbow to your world \u2014pride shines all year",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_rainbow_250603.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Just a Friend?",
+    "workflow_tag": "growup_250427",
+    "template_id": 338611800368896,
+    "duration": 5,
+    "prompt": "One click from Chill to Slay",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb-justafriend-251109.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Werewolf Rage",
+    "workflow_tag": "wereworf_250430",
+    "template_id": 335610959448832,
+    "duration": 5,
+    "prompt": "The full moon rises, your fangs come out.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_werewolf_250430.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Eye Zoom Challenge",
+    "workflow_tag": "eyezoomin_250524",
+    "template_id": 339848996187712,
+    "duration": 5,
+    "prompt": "Zoom into your pupil \u2014 and the whole world falls with you",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_eye_250524.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Transition",
+    "workflow_tag": "transition_250421",
+    "template_id": 334005897813056,
+    "duration": 5,
+    "prompt": "You can become anyone you want",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_transition_250422.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Muscle Pro: Born to Built",
+    "workflow_tag": "muscle_250914",
+    "template_id": 359850491398912,
+    "duration": 5,
+    "prompt": "Your body, born powerful.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_muscle_250914.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Fire Roar",
+    "workflow_tag": "firespitter_250310",
+    "template_id": 326607027713088,
+    "duration": 5,
+    "prompt": "Unleash your inner flame",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_fire_250312.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Skull Multiverse ",
+    "workflow_tag": "skull_250825",
+    "template_id": 356317200152960,
+    "duration": 5,
+    "prompt": "Which skull is your true face?",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_skull_250825.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Zombie Mode",
+    "workflow_tag": "zombie_mode_241028",
+    "template_id": 302325299651648,
+    "duration": 5,
+    "prompt": "The [SUBJECT] suddenly transforms into a zombie.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_zombiemode.gif",
+    "marker": "default"
+  },
+  {
+    "name": "BOOM DROP",
+    "workflow_tag": "explode_250520",
+    "template_id": 339133943656192,
+    "duration": 5,
+    "prompt": "A real man never looks back at the explosion behind him",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_explode_250520.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Welcome to My House",
+    "workflow_tag": "house_250711",
+    "template_id": 348369452948224,
+    "duration": 5,
+    "prompt": "A sip of red, and the rich life appears.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_house_250711.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Gabu Dance",
+    "workflow_tag": "gabudance_250609",
+    "template_id": 343058274917440,
+    "duration": 12,
+    "prompt": "Eu Sento Gabu! Everywhere you walk is Runway",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_gabudance_0625.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Thunder God",
+    "workflow_tag": "thundergod_250527",
+    "template_id": 340383170699072,
+    "duration": 5,
+    "prompt": "Lightning in your eyes. Thunder in your stare.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_thunder_250527.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Kungfu Club",
+    "workflow_tag": "fight_250106",
+    "template_id": 315447659476032,
+    "duration": 5,
+    "prompt": "Let the battle begin",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_fight_250114.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Santa",
+    "workflow_tag": "",
+    "template_id": 372272620777642,
+    "duration": 5,
+    "prompt": "Transform yourself into Santa Claus.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fsanta.gif",
+    "marker": ""
+  },
+  {
+    "name": "Ruin Your Vow",
+    "workflow_tag": "bride_250730",
+    "template_id": 351687353790080,
+    "duration": 7,
+    "prompt": "Not your happy ending. Just mine.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_bride_250801.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Winged Wardrobe",
+    "workflow_tag": "outfitchange_250324",
+    "template_id": 345014411085376,
+    "duration": 5,
+    "prompt": "Wear ethereal wings and dazzle like a supermodel",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_winged_0623.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Figurine Me Up!",
+    "workflow_tag": "3dtoy_3_250911",
+    "template_id": 359328847686976,
+    "duration": 5,
+    "prompt": "Turn into your own figurine, hold it in your hand and admire...",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fapp_3dtoy_250911.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Trippy Lilies",
+    "workflow_tag": "lilies_250522",
+    "template_id": 339398587639552,
+    "duration": 5,
+    "prompt": "Dreams bloom in silence \u2014 beauty with a twist",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_lilies_250522.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Balloon Belly",
+    "workflow_tag": "belly_250507",
+    "template_id": 336856634055424,
+    "duration": 5,
+    "prompt": "One puff and\u2014boom! You\u2019re the cutest balloon in town.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_belly_250508.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Shake It to the Max",
+    "workflow_tag": "shakeittomax_250609",
+    "template_id": 343058758753344,
+    "duration": 12,
+    "prompt": "Go on bend your knees, baby, shake it to the max",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_shakeitmax_250626.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Fish Dreamcore",
+    "workflow_tag": "fish_250603",
+    "template_id": 341651541059392,
+    "duration": 5,
+    "prompt": "Dive deep in a dream, surrounded by fish, where visions floo...",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_fish_250603.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Mega Dive",
+    "workflow_tag": "diving_250410",
+    "template_id": 332074055488256,
+    "duration": 5,
+    "prompt": "Jump into summer, cool off in the water!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_diving_250410.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Krampus",
+    "workflow_tag": "",
+    "template_id": 372276089942356,
+    "duration": 5,
+    "prompt": "Transform yourself into the Krampus.",
+    "preview_gif": "https://media.pixverse.ai/studio%2Fimg%2F251df69f-ff53-4f62-b768-04ffa74e0d8a.gif",
+    "marker": ""
+  },
+  {
+    "name": "Baby Shroom",
+    "workflow_tag": "babybite_250523",
+    "template_id": 339673485621824,
+    "duration": 5,
+    "prompt": "One bite of the shroom \u2014 boom, baby you again!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_babybite_250526.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Lionfish Venomous",
+    "workflow_tag": "lionfish_250903",
+    "template_id": 357905373827456,
+    "duration": 5,
+    "prompt": "lionfish_250903",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_lionfish_250903.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Dreamliked Cloud ",
+    "workflow_tag": "cloudad_251015",
+    "template_id": 366950737546048,
+    "duration": 5,
+    "prompt": "Place your product on a dreamlike cloud\uff01",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2F%E4%BA%91%E6%9C%B5%E5%B9%BF%E5%91%8A.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Baby Wave",
+    "workflow_tag": "babywave_251024",
+    "template_id": 366945220815680,
+    "duration": 5,
+    "prompt": "What a happy big family!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_babywave_251024.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Squish It",
+    "workflow_tag": "squish_it_241028",
+    "template_id": 302325299692608,
+    "duration": 5,
+    "prompt": "A pair of hands appears and squishes the [OBJECT] as if it's...",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_squishit.gif",
+    "marker": "default"
+  },
+  {
+    "name": "My Destiny Tarot Card",
+    "workflow_tag": "tarot_250918",
+    "template_id": 360586769510976,
+    "duration": 5,
+    "prompt": "Glimpse into the soul, unlock your destiny's code.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb-tarot-251107.gif",
+    "marker": "default"
+  },
+  {
+    "name": "The Cube Reborn",
+    "workflow_tag": "minecraft_250508",
+    "template_id": 337036093477184,
+    "duration": 5,
+    "prompt": "Break the dimension. Be the cube hero you were meant to be",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fapp_pixel.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Beam Me Up",
+    "workflow_tag": "bluelight_250725",
+    "template_id": 350827688007296,
+    "duration": 5,
+    "prompt": "Ready to energize, Scotty!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_blue_250725.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Become the Reaper!",
+    "workflow_tag": "",
+    "template_id": 367400055937163,
+    "duration": 5,
+    "prompt": "Embrace your dark side.",
+    "preview_gif": "https://media.pixverse.ai/studio%2Fimg%2Fb3b8a9ae-eb6e-4903-8dd7-c0bd311803e0.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Money Tornado",
+    "workflow_tag": "money360_250317",
+    "template_id": 327829606196096,
+    "duration": 5,
+    "prompt": "Money rains down, enjoy the wealth storm! ",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_money360_250326.gif",
+    "marker": "default"
+  },
+  {
+    "name": "The Nasty Step",
+    "workflow_tag": "shenzailun_251102",
+    "template_id": 369205027418304,
+    "duration": 13,
+    "prompt": "Your body, your rules. Be the nastiest main character tonigh...",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fshenzailun_251116.gif",
+    "marker": "new"
+  },
+  {
+    "name": "Baby Arrived",
+    "workflow_tag": "getbaby_250610",
+    "template_id": 342874383633472,
+    "duration": 5,
+    "prompt": "Mummy and daddy, I\u2019m here!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_getbaby_250611.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Alien Kidnap",
+    "workflow_tag": "alien_250722",
+    "template_id": 350321367924416,
+    "duration": 5,
+    "prompt": "Take me to your planet\u2026 or wherever you want.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_alien_251110.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Anything, Robot",
+    "workflow_tag": "robot_250207",
+    "template_id": 313358700761536,
+    "duration": 5,
+    "prompt": "Transform into a robot",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_robot_250207.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Buddha\u2019s Blessing",
+    "workflow_tag": "buddha_250814",
+    "template_id": 354340119359936,
+    "duration": 5,
+    "prompt": "Feel the power, embrace the peace.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_buddha_250814.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Paw Princess",
+    "workflow_tag": "dresspet_250331",
+    "template_id": 330448062595520,
+    "duration": 5,
+    "prompt": "Dress up your pet like a royal princess",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_dresspet_250401.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Li Xi Cheng Merch",
+    "workflow_tag": "lixichengdance_250609",
+    "template_id": 343058574996544,
+    "duration": 13,
+    "prompt": "Once upon a time, a legend was born",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_lixicheng_250626.gif",
+    "marker": "default"
+  },
+  {
+    "name": "My Chanel",
+    "workflow_tag": "outfitchange_250324",
+    "template_id": 349454446560896,
+    "duration": 5,
+    "prompt": "Fashion fades, only style remains the same",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_chanel_0717.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Warmth of Jesus",
+    "workflow_tag": "jesus_250109",
+    "template_id": 316826014376384,
+    "duration": 5,
+    "prompt": "Find peace in Jesus' arms.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_jesus_250116.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Kitten Hide and Seek",
+    "workflow_tag": "cat_250815",
+    "template_id": 354568167143040,
+    "duration": 5,
+    "prompt": "Cats love their hideaways, let\u2019s go find them!",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_250815_2.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Vampire Royalty",
+    "workflow_tag": "vampire_250912",
+    "template_id": 359516293494080,
+    "duration": 6,
+    "prompt": "Lift the eternal veil, reveal your crimson elegance.",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_vampire_250911.gif",
+    "marker": "default"
+  },
+  {
+    "name": "Arctic Animals",
+    "workflow_tag": "",
+    "template_id": 372923368360950,
+    "duration": 8,
+    "prompt": "Let arctic animals surround you.",
+    "preview_gif": "https://media.pixverse.ai/studio%2Fimg%2Fd61f3904-d1a9-4ff8-b125-4b3e8a08d413.gif",
+    "marker": ""
+  },
+  {
+    "name": "Hands Up! Hands Up! ",
+    "workflow_tag": "handsupdance_250609",
+    "template_id": 343058324329536,
+    "duration": 14,
+    "prompt": "Raise your hands, stamp your feet, and detonate summer toget...",
+    "preview_gif": "https://media.pixverse.ai/asset%2Ftemplate%2Fweb_handsup_250626.gif",
+    "marker": "default"
+  }
+]

@@ -102,7 +102,7 @@ fun OnboardingLayout(
                     .fillMaxSize()
                     .windowInsetsPadding(WindowInsets.navigationBars) // Handle 3-button navigation
                     .padding(horizontal = 24.dp)
-                    .padding(top = 80.dp, bottom = 16.dp),
+                    .padding(top = 80.dp, bottom = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Title - Bold, dark text
@@ -128,15 +128,17 @@ fun OnboardingLayout(
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
 
-                // Spacer to push buttons to bottom
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(4.dp))
+
+                // Page indicators
                 PageIndicators(
                     currentPage = currentPage,
                     totalPages = totalPages
                 )
-                Spacer(modifier = Modifier.height(12.dp))
 
-                // Navigation buttons - always at bottom
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Navigation buttons
                 buttons()
             }
         }
