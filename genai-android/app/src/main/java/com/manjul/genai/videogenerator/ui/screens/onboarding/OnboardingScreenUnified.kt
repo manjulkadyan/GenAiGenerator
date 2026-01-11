@@ -96,8 +96,8 @@ private fun OnboardingPage2Preview() {
 private fun OnboardingPage3Preview() {
     OnboardingPageScreen(
         imageUrl = null,
-        title = "Manage Your Creations!",
-        description = "Organize and share your masterpieces",
+        title = "Imagine Anything. Create Everything!",
+        description = "Welcome to Gen AI VIdeo, The app that turns your imagination into stunning videos. Simply enter your text and let our AI do the magic.",
         isFirstPage = false,
         isLastPage = true,
         currentPage = 2,
