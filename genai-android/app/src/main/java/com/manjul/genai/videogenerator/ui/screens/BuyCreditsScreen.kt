@@ -209,9 +209,7 @@ fun BuyCreditsScreen(
     // Track if we should show verification dialog
     var showVerificationDialog by remember { mutableStateOf(false) }
     
-    // Track insufficient credits dialog
-    var showInsufficientDialog by remember { mutableStateOf(showInsufficientCreditsDialog) }
-    
+
     // Show purchase success/error messages
     LaunchedEffect(uiState.purchaseMessage) {
         uiState.purchaseMessage?.let { message ->
@@ -722,57 +720,6 @@ fun BuyCreditsScreen(
                 containerColor = Color(0xFF1F1F1F),
                 contentColor = Color.White
             )
-        }
-        
-        // Insufficient credits dialog - shown when user tries to generate without enough credits
-        if (showInsufficientDialog) {
-            AppDialog(
-                onDismissRequest = { showInsufficientDialog = false },
-                title = "Insufficient Credits"
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // Warning icon
-                    Box(
-                        modifier = Modifier
-                            .size(64.dp)
-                            .background(
-                                color = Color(0xFFF59E0B).copy(alpha = 0.2f),
-                                shape = CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = "Credits",
-                            tint = Color(0xFFF59E0B),
-                            modifier = Modifier.size(40.dp)
-                        )
-                    }
-                    
-                    Text(
-                        text = if (requiredCredits > 0) {
-                            "You need $requiredCredits credits to generate this video. Please purchase a plan or top-up your credit below to continue."
-                        } else {
-                            "You don't have enough credits to generate this video. Please purchase a plan or top-up your credit below to continue."
-                        },
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = AppColors.TextSecondary,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    
-                    AppPrimaryButton(
-                        text = "View Plans",
-                        onClick = { showInsufficientDialog = false },
-                        fullWidth = true
-                    )
-                }
-            }
         }
         
         // Verification dialog while waiting for credits to update

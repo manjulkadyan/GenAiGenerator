@@ -110,6 +110,7 @@ import com.manjul.genai.videogenerator.ui.components.VideoThumbnail
 import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 import com.manjul.genai.videogenerator.ui.designsystem.components.badges.InfoChip
 import com.manjul.genai.videogenerator.ui.designsystem.components.badges.StatusBadge
+import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
 import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppSecondaryButton
 import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppTextButton
 import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
@@ -180,6 +181,8 @@ fun GenerateScreen(
     var showPricingDialog by rememberSaveable { mutableStateOf(false) }
     var isSubmitting by remember { mutableStateOf(false) }
     var showRatingRequestDialog by remember { mutableStateOf(false) }
+    var showInsufficientCreditsDialog by remember { mutableStateOf(false) }
+    var insufficientCreditsRequired by remember { mutableStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
     
     // Debug: Log whenever showRatingRequestDialog changes
@@ -282,8 +285,9 @@ fun GenerateScreen(
                             // Check if user has enough credits
                             val estimatedCost = state.estimatedCost
                             if (creditsState.credits < estimatedCost) {
-                                // Navigate to BuyCreditsScreen if insufficient credits
-                                onBuyCreditsClick(estimatedCost)
+                                // Show insufficient credits dialog first on GenerateScreen
+                                insufficientCreditsRequired = estimatedCost
+                                showInsufficientCreditsDialog = true
                             } else {
                                 isSubmitting = true
                                 viewModel.dismissMessage()
@@ -328,11 +332,12 @@ fun GenerateScreen(
                 }
             }
         } else {
-            // For credit errors, dismiss the message and navigate to BuyCreditsScreen
+            // For credit errors, dismiss the message and show insufficient credits dialog
             LaunchedEffect(errorMessage) {
                 viewModel.dismissMessage()
                 // Try to extract the required credits from error message, default to estimated cost
-                onBuyCreditsClick(state.estimatedCost)
+                insufficientCreditsRequired = state.estimatedCost
+                showInsufficientCreditsDialog = true
             }
         }
     }
@@ -384,6 +389,61 @@ fun GenerateScreen(
                 InAppReviewManager.postponeReview(context)
             }
         )
+    }
+    
+    // Insufficient credits dialog - shown when user tries to generate without enough credits
+    if (showInsufficientCreditsDialog) {
+        AppDialog(
+            onDismissRequest = { showInsufficientCreditsDialog = false },
+            title = "Insufficient Credits"
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Warning icon
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .background(
+                            color = Color(0xFFF59E0B).copy(alpha = 0.2f),
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = "Credits",
+                        tint = Color(0xFFF59E0B),
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
+                
+                Text(
+                    text = if (insufficientCreditsRequired > 0) {
+                        "You need $insufficientCreditsRequired credits to generate this video. Please purchase a plan or top-up your credit below to continue."
+                    } else {
+                        "You don't have enough credits to generate this video. Please purchase a plan or top-up your credit below to continue."
+                    },
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = AppColors.TextSecondary,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                
+                AppPrimaryButton(
+                    text = "View Plans",
+                    onClick = { 
+                        showInsufficientCreditsDialog = false
+                        // Navigate to BuyCreditsScreen
+                        onBuyCreditsClick(insufficientCreditsRequired)
+                    },
+                    fullWidth = true
+                )
+            }
+        }
     }
 }
 

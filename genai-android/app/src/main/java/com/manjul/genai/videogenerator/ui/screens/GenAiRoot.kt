@@ -364,8 +364,8 @@ private fun MainAppContent() {
                                 showBuyCreditsScreen = true
                             },
                             onBuyCreditsClick = { credits ->
-                                // Show BuyCreditsScreen overlay with insufficient credits dialog
-                                showInsufficientCreditsDialog = true
+                                // Show BuyCreditsScreen overlay (dialog already shown on GenerateScreen)
+                                showInsufficientCreditsDialog = false
                                 requiredCredits = credits
                                 buyCreditsInitialType = com.manjul.genai.videogenerator.data.model.PurchaseType.SUBSCRIPTION
                                 showBuyCreditsScreen = true

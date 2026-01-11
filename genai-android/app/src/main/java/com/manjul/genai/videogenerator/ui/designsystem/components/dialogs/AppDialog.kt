@@ -154,41 +154,52 @@ fun AppDialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
-        Surface(
-            modifier = modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(DialogConstants.STANDARD_DIALOG_CORNER_RADIUS.dp),
-            color = AppColors.CardBackground,
-            tonalElevation = DialogConstants.ELEVATION.dp,
-            border = BorderStroke(
-                DialogConstants.BORDER_WIDTH.dp,
-                AppColors.CardBorder.copy(alpha = DialogConstants.BORDER_ALPHA)
-            )
-        ) {
-            Column(
-                modifier = Modifier.padding(DialogConstants.PADDING.dp)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = DialogConstants.SCRIMMER_ALPHA))
+                .padding(
+                    horizontal = DialogConstants.HORIZONTAL_PADDING.dp,
+                    vertical = DialogConstants.VERTICAL_PADDING.dp
+                ),
+            contentAlignment = Alignment.Center
+        ){
+            Surface(
+                modifier = modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(DialogConstants.STANDARD_DIALOG_CORNER_RADIUS.dp),
+                color = AppColors.CardBackground,
+                tonalElevation = DialogConstants.ELEVATION.dp,
+                border = BorderStroke(
+                    DialogConstants.BORDER_WIDTH.dp,
+                    AppColors.CardBorder.copy(alpha = DialogConstants.BORDER_ALPHA)
+                )
             ) {
-                title?.let {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        Text(
-                            text = it,
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = AppColors.TextPrimary
-                        )
-                        IconButton(onClick = onDismissRequest) {
-                            Icon(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = "Close",
-                                tint = AppColors.TextSecondary
+                Column(
+                    modifier = Modifier.padding(DialogConstants.PADDING.dp)
+                ) {
+                    title?.let {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Top
+                        ) {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = AppColors.TextPrimary
                             )
+                            IconButton(onClick = onDismissRequest) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "Close",
+                                    tint = AppColors.TextSecondary
+                                )
+                            }
                         }
                     }
+                    content()
                 }
-                content()
             }
         }
     }
