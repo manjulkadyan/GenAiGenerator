@@ -40,6 +40,61 @@ object AuthManager {
     fun isAnonymousUser(): Boolean {
         return auth.currentUser?.isAnonymous == true
     }
+    
+    /**
+     * Sign in with email and password
+     */
+    suspend fun signInWithEmail(email: String, password: String): Result<FirebaseUser> {
+        return runCatching {
+            val result = auth.signInWithEmailAndPassword(email, password).await()
+            result.user?.also { user ->
+                Log.d(TAG, "Email sign-in success: ${user.uid}")
+                
+                // Grant test credits if this is a test account
+                if (TestAccountManager.isTestEmail(email)) {
+                    Log.d(TAG, "Test account detected, granting test credits")
+                    TestAccountManager.grantTestCreditsIfNeeded(user.uid, email)
+                }
+                
+                AnalyticsManager.trackSignInEmail()
+                AnalyticsManager.setUserId(user.uid)
+                AnalyticsManager.setIsAnonymous(false)
+            } ?: error("User is null after sign-in")
+        }.onFailure { error ->
+            Log.e(TAG, "Email sign-in failed", error)
+            AnalyticsManager.trackSignInFailed("email", null, error.message)
+            AnalyticsManager.recordException(error)
+        }
+    }
+    
+    /**
+     * Create account with email and password
+     */
+    suspend fun createAccountWithEmail(email: String, password: String): Result<FirebaseUser> {
+        return runCatching {
+            val result = auth.createUserWithEmailAndPassword(email, password).await()
+            result.user?.also { user ->
+                Log.d(TAG, "Email account created: ${user.uid}")
+                
+                // Update user info in Firestore
+                updateUserInfoOnLink(user.uid, "", email)
+                
+                // Grant test credits if this is a test account
+                if (TestAccountManager.isTestEmail(email)) {
+                    Log.d(TAG, "Test account detected, granting test credits")
+                    TestAccountManager.grantTestCreditsIfNeeded(user.uid, email)
+                }
+                
+                AnalyticsManager.trackSignUpEmail()
+                AnalyticsManager.setUserId(user.uid)
+                AnalyticsManager.setIsAnonymous(false)
+            } ?: error("User is null after account creation")
+        }.onFailure { error ->
+            Log.e(TAG, "Email account creation failed", error)
+            AnalyticsManager.trackSignInFailed("email_signup", null, error.message)
+            AnalyticsManager.recordException(error)
+        }
+    }
 
     /**
      * Link anonymous account with Google account using idToken
@@ -95,6 +150,13 @@ object AuthManager {
                 
                 Log.d(TAG, "Linked user info: name=$finalDisplayName, email=$finalEmail")
                 updateUserInfoOnLink(user.uid, finalDisplayName, finalEmail)
+                
+                // Grant test credits if this is a test account (for Google Play reviewers)
+                if (TestAccountManager.isTestEmail(finalEmail)) {
+                    Log.d(TAG, "Test account detected on link, granting test credits")
+                    TestAccountManager.grantTestCreditsIfNeeded(user.uid, finalEmail)
+                }
+                
                 AnalyticsManager.trackLinkAccount("google")
                 AnalyticsManager.setUserId(user.uid)
                 AnalyticsManager.setIsAnonymous(false)
@@ -158,6 +220,12 @@ object AuthManager {
                 }
                 
                 Log.d(TAG, "Google user info: name=$finalDisplayName, email=$finalEmail")
+                
+                // Grant test credits if this is a test account (for Google Play reviewers)
+                if (TestAccountManager.isTestEmail(finalEmail)) {
+                    Log.d(TAG, "Test account detected on merge, granting test credits")
+                    TestAccountManager.grantTestCreditsIfNeeded(googleUser.uid, finalEmail)
+                }
                 
                 // Merge anonymous user's data into Google account
                 if (anonymousData.credits > 0 || anonymousData.jobs.isNotEmpty()) {
@@ -256,6 +324,13 @@ object AuthManager {
             }
             
             Log.d(TAG, "Google sign-in complete: name=$finalDisplayName, email=$finalEmail")
+            
+            // Grant test credits if this is a test account (for Google Play reviewers)
+            if (TestAccountManager.isTestEmail(finalEmail)) {
+                Log.d(TAG, "Test account detected, granting test credits")
+                TestAccountManager.grantTestCreditsIfNeeded(user.uid, finalEmail)
+            }
+            
             AnalyticsManager.trackSignInGoogle()
             AnalyticsManager.setUserId(user.uid)
             AnalyticsManager.setIsAnonymous(false)

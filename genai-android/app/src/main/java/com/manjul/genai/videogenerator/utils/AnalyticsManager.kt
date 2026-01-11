@@ -54,6 +54,24 @@ object AnalyticsManager {
             param("method", "google")
         }
     }
+    
+    /**
+     * Track email sign-in event.
+     */
+    fun trackSignInEmail() {
+        analytics?.logEvent("sign_in_email") {
+            param("method", "email")
+        }
+    }
+    
+    /**
+     * Track email sign-up event.
+     */
+    fun trackSignUpEmail() {
+        analytics?.logEvent("sign_up_email") {
+            param("method", "email")
+        }
+    }
 
     /**
      * Track account linking event.

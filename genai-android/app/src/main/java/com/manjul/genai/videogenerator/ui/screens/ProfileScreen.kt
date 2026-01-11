@@ -7,8 +7,6 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -51,7 +49,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,9 +62,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.manjul.genai.videogenerator.data.auth.AuthManager
@@ -85,10 +79,10 @@ import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
 import com.manjul.genai.videogenerator.ui.designsystem.components.dialogs.AppDialog
 import com.manjul.genai.videogenerator.ui.designsystem.components.sections.SectionCard
 import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
+import androidx.compose.material.icons.filled.Login
 import com.manjul.genai.videogenerator.ui.viewmodel.CreditsViewModel
 import com.manjul.genai.videogenerator.ui.viewmodel.HistoryViewModel
 import com.manjul.genai.videogenerator.utils.AnalyticsManager
-import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
@@ -98,7 +92,8 @@ fun ProfileScreen(
     onBuyCreditsClick: () -> Unit = {},
     onVideosClick: () -> Unit = {},
     onSubscriptionManagementClick: () -> Unit = {},
-    onFeedbackClick: () -> Unit = {}
+    onFeedbackClick: () -> Unit = {},
+    onLoginClick: () -> Unit = {}
 ) {
     val credits by creditsViewModel.state.collectAsState()
     val jobs by historyViewModel.jobs.collectAsState()
@@ -249,9 +244,7 @@ fun ProfileScreen(
             FirebaseAuth.getInstance().signOut()
         },
         isAnonymous = isAnonymous,
-        onGoogleSignIn = {
-            // This will be handled by the launcher in ProfileScreenContent
-        },
+        onLoginClick = onLoginClick,
         onSubscriptionManagementClick = onSubscriptionManagementClick,
         onFeedbackClick = onFeedbackClick
     )
@@ -455,7 +448,7 @@ private fun ProfileScreenPreview() {
             onBuyCreditsClick = {},
             onVideosClick = {},
             isAnonymous = true,
-            onGoogleSignIn = {},
+            onLoginClick = {},
             onSubscriptionManagementClick = {},
             onFeedbackClick = {}
         )
@@ -475,127 +468,12 @@ private fun ProfileScreenContent(
     onVideosClick: () -> Unit = {},
     onLogout: () -> Unit = {},
     isAnonymous: Boolean = false,
-    onGoogleSignIn: () -> Unit = {},
+    onLoginClick: () -> Unit = {},
     onSubscriptionManagementClick: () -> Unit = {},
     onFeedbackClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     var showLogoutDialog by remember { mutableStateOf(false) }
-    var isSigningIn by remember { mutableStateOf(false) }
-    var signInError by remember { mutableStateOf<String?>(null) }
-
-    // Google Sign-In launcher
-    val googleSignInLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        scope.launch {
-            try {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-                val account = task.getResult(ApiException::class.java)
-                account?.idToken?.let { idToken ->
-                    isSigningIn = true
-                    signInError = null
-                    
-                    // Get name and email from GoogleSignIn account (available immediately)
-                    val googleAccountName = account.displayName ?: ""
-                    val googleAccountEmail = account.email ?: ""
-                    Log.d("ProfileScreen", "Google account info: name=$googleAccountName, email=$googleAccountEmail")
-
-                    val authResult = if (isAnonymous) {
-                        // Link anonymous account with Google
-                        AuthManager.linkWithGoogle(idToken, googleAccountName, googleAccountEmail)
-                    } else {
-                        // Sign in with Google
-                        AuthManager.signInWithGoogle(idToken, googleAccountName, googleAccountEmail)
-                    }
-
-                    authResult.fold(
-                        onSuccess = { user ->
-                            isSigningIn = false
-                            signInError = null
-                            // Success - user is now signed in with Google
-                            Log.d("ProfileScreen", "Google sign-in/linking successful: ${user.uid}")
-                            
-                            // Firestore listener will automatically update name/email when it's saved
-                            // The listener is already active and will pick up changes immediately
-                        },
-                        onFailure = { error ->
-                            isSigningIn = false
-                            android.util.Log.e("ProfileScreen", "Google sign-in/linking failed", error)
-                            
-                            val errorMessage = when {
-                                error.message?.contains("already-in-use", ignoreCase = true) == true ||
-                                error.message?.contains("credential-already-in-use", ignoreCase = true) == true ->
-                                    "This Google account is already linked to another account. Signing in with your existing account..."
-
-                                error.message?.contains("credential") == true ->
-                                    "Account linking failed. Please try again."
-
-                                error.message?.contains("network") == true ->
-                                    "Network error. Please check your connection."
-
-                                error.message?.contains("invalid-credential", ignoreCase = true) == true ->
-                                    "Invalid credentials. Please try again."
-
-                                error.message?.contains("not anonymous", ignoreCase = true) == true ->
-                                    "You are already signed in. Please sign out first."
-
-                                else ->
-                                    error.message ?: "Sign in failed. Please try again."
-                            }
-                            signInError = errorMessage
-                        }
-                    )
-                } ?: run {
-                    isSigningIn = false
-                    signInError = "Failed to get Google account"
-                }
-            } catch (e: ApiException) {
-                isSigningIn = false
-                val errorMessage = when (e.statusCode) {
-                    10 -> {
-                        // DEVELOPER_ERROR - SHA-1 not configured or wrong client ID
-                        "Configuration error. Please ensure SHA-1 fingerprint is added in Firebase Console."
-                    }
-
-                    12500 -> "Sign-in was cancelled"
-                    7 -> "Network error. Please check your connection."
-                    8 -> "Internal error. Please try again."
-                    else -> "Google sign-in failed (Error ${e.statusCode}): ${e.message ?: "Unknown error"}"
-                }
-                signInError = errorMessage
-            } catch (e: Exception) {
-                isSigningIn = false
-                signInError = "Unexpected error: ${e.message ?: "Please try again"}"
-            }
-        }
-    }
-
-    // Function to start Google Sign-In
-    val startGoogleSignIn: () -> Unit = {
-        try {
-            // Get web client ID from Firebase Console
-            // IMPORTANT: You need to:
-            // 1. Enable Google Sign-In in Firebase Console → Authentication → Sign-in method
-            // 2. Get the Web client ID from Firebase Console → Project Settings → General → Your apps
-            // 3. Add SHA-1 fingerprint in Firebase Console → Project Settings → Your apps
-            //    Get SHA-1: keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
-            val webClientId =
-                "407437371864-9dkicne9lg7l8l816jbut5dup9qs7sus.apps.googleusercontent.com"
-
-            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(webClientId)
-                .requestEmail()
-                .build()
-
-            val googleSignInClient = GoogleSignIn.getClient(context, gso)
-            val signInIntent = googleSignInClient.signInIntent
-            googleSignInLauncher.launch(signInIntent)
-        } catch (e: Exception) {
-            signInError = "Failed to start Google Sign-In: ${e.message}"
-        }
-    }
 
     Column(
         modifier = modifier
@@ -840,40 +718,19 @@ private fun ProfileScreenContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Google Sign-In Section (only show if anonymous)
+            // Sign-In Section (only show if anonymous)
             if (isAnonymous) {
-                AppCard(modifier = Modifier.fillMaxWidth(), padding = PaddingValues(0.dp)) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Text(
-                            text = "Sign in with Google",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = AppColors.TextPrimary
-                        )
-                        Text(
-                            text = "Link your account to save your progress and access your videos across devices",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = AppColors.TextSecondary
-                        )
-                        signInError?.let { error ->
-                            Text(
-                                text = error,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = AppColors.StatusError
-                            )
-                        }
-                        AppPrimaryButton(
-                            text = if (isSigningIn) "Signing in..." else "Sign in with Google",
-                            onClick = startGoogleSignIn,
-                            enabled = !isSigningIn,
-                            isLoading = isSigningIn
-                        )
-                    }
+                SectionCard(
+                    title = "Account",
+                    description = "Sign in to save your progress",
+                    required = false
+                ) {
+                    ActionCard(
+                        icon = Icons.Default.Login,
+                        title = "Sign In / Sign Up",
+                        onClick = onLoginClick,
+                        iconBackgroundColor = AppColors.PrimaryPurple.copy(alpha = 0.1f)
+                    )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
             }

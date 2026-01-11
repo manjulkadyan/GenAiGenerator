@@ -25,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.setValue
@@ -36,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.manjul.genai.videogenerator.R
 import com.manjul.genai.videogenerator.data.model.VideoJobStatus
 import com.manjul.genai.videogenerator.data.onboarding.OnboardingManager
+import com.manjul.genai.videogenerator.data.auth.TestAccountManager
 import com.manjul.genai.videogenerator.ui.viewmodel.HistoryViewModel
 import com.manjul.genai.videogenerator.ui.viewmodel.VideoGenerateViewModel
 import kotlinx.coroutines.launch
@@ -155,6 +157,7 @@ private fun MainAppContent() {
     var showBuyCreditsScreen by rememberSaveable { mutableStateOf(false) }
     var showSubscriptionManagementScreen by rememberSaveable { mutableStateOf(false) }
     var showFeedbackScreen by rememberSaveable { mutableStateOf(false) }
+    var showLoginSignupScreen by rememberSaveable { mutableStateOf(false) }
     var showInsufficientCreditsDialog by rememberSaveable { mutableStateOf(false) }
     var requiredCredits by rememberSaveable { mutableStateOf(0) }
     var buyCreditsInitialType by rememberSaveable { mutableStateOf(com.manjul.genai.videogenerator.data.model.PurchaseType.SUBSCRIPTION) }
@@ -289,8 +292,8 @@ private fun MainAppContent() {
     
     Scaffold(
         bottomBar = {
-            // Hide bottom navigation bar when BuyCreditsScreen, SubscriptionManagementScreen, or FeedbackScreen is shown (full screen)
-            if (!showBuyCreditsScreen && !showSubscriptionManagementScreen && !showFeedbackScreen) {
+            // Hide bottom navigation bar when overlay screens are shown (full screen)
+            if (!showBuyCreditsScreen && !showSubscriptionManagementScreen && !showFeedbackScreen && !showLoginSignupScreen) {
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.BottomCenter
@@ -402,6 +405,9 @@ private fun MainAppContent() {
                         },
                         onFeedbackClick = {
                             showFeedbackScreen = true
+                        },
+                        onLoginClick = {
+                            showLoginSignupScreen = true
                         }
                     )
                 }
@@ -451,6 +457,19 @@ private fun MainAppContent() {
                     modifier = Modifier.fillMaxSize(),
                     onBackClick = {
                         showFeedbackScreen = false
+                    }
+                )
+            }
+            
+            // LoginSignupScreen as overlay
+            if (showLoginSignupScreen) {
+                LoginSignupScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    onBackClick = {
+                        showLoginSignupScreen = false
+                    },
+                    onLoginSuccess = {
+                        showLoginSignupScreen = false
                     }
                 )
             }

@@ -707,7 +707,7 @@ fun BuyCreditsScreen(
                 }
             }
         }
-        
+
         // Snackbar host for showing purchase messages
         SnackbarHost(
             hostState = snackbarHostState,
