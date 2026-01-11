@@ -1,6 +1,7 @@
 package com.manjul.genai.videogenerator.ui.screens
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -85,6 +86,12 @@ fun SubscriptionManagementScreen(
         )
     )
     val uiState by viewModel.uiState.collectAsState()
+
+    // Handle system back button - navigate back instead of closing app
+    BackHandler(enabled = true) {
+        Log.d("SubscriptionManagementScreen", "Back button pressed - navigating back")
+        onBackClick()
+    }
 
     // Show error snackbar if any
     val snackbarHostState = remember { SnackbarHostState() }

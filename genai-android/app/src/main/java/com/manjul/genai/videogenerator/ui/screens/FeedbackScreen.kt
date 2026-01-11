@@ -3,27 +3,30 @@ package com.manjul.genai.videogenerator.ui.screens
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.manjul.genai.videogenerator.ui.components.AppToolbar
 import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
 import com.manjul.genai.videogenerator.ui.designsystem.components.inputs.AppTextField
@@ -51,6 +53,7 @@ import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeedbackScreen(
     modifier: Modifier = Modifier,
@@ -63,6 +66,12 @@ fun FeedbackScreen(
     var feedbackText by remember { mutableStateOf("") }
     var isSubmitting by remember { mutableStateOf(false) }
     var isSubmitted by remember { mutableStateOf(false) }
+    
+    // Handle system back button - navigate back instead of closing app
+    BackHandler(enabled = true) {
+        Log.d("FeedbackScreen", "Back button pressed - navigating back")
+        onBackClick()
+    }
     
     // Track screen view
     LaunchedEffect(Unit) {
@@ -127,26 +136,38 @@ fun FeedbackScreen(
         }
     }
     
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .windowInsetsPadding(WindowInsets.navigationBars) // Handle 3-button navigation
-    ) {
-        // Header with back button
-        AppToolbar(
-            title = "Send Feedback",
-            subtitle = "Help us improve",
-            showBorder = true,
-            showBackButton = true,
-            onBackClick = onBackClick
-        )
-        
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Send Feedback",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.White
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = AppColors.PrimaryPurple
+                )
+            )
+        },
+        containerColor = Color(0xFF0F0720)
+    ) { paddingValues ->
         if (isSubmitted) {
             // Success state
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(paddingValues)
                     .padding(32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -198,6 +219,7 @@ fun FeedbackScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
