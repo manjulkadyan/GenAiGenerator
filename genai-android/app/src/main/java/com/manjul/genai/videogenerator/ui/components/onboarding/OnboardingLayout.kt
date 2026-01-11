@@ -62,21 +62,24 @@ fun OnboardingLayout(
     // For smaller screens (< 700dp), adjust proportions to give more space to content
     val isVerySmallScreen = screenHeightDp < 650  // 640dp and below
     val isSmallScreen = screenHeightDp < 700
-    val isMediumScreen = screenHeightDp in 700..800
+    val isExactly700 = screenHeightDp in 700..720  // Specifically handle 700dp
+    val isMediumScreen = screenHeightDp in 720..800
     val isLargeScreen = screenHeightDp > 800
     
     // Dynamic top section height: smaller screens need less top, more bottom
     val topSectionHeight = when {
-        isVerySmallScreen -> 0.50f  // 50% for very small screens (640dp)
-        isSmallScreen -> 0.55f      // 55% for small screens
+        isVerySmallScreen -> 0.5f  // 45% for very small screens (640dp) - give more to bottom
+        isSmallScreen -> 0.50f      // 50% for small screens
+        isExactly700 -> 0.55f       // 55% for 700dp screens
         isMediumScreen -> 0.62f     // 62% for medium screens
         else -> 0.7f                // 70% for large screens/tablets
     }
     
-    // Dynamic bottom section height: smaller screens need more space for content
+    // Dynamic bottom section height: smaller screens need more space for content and text
     val bottomSectionHeight = when {
-        isVerySmallScreen -> 0.55f  // 55% for very small screens - more space for buttons
-        isSmallScreen -> 0.52f      // 52% for small screens
+        isVerySmallScreen -> 0.70f  // 60% for very small screens (640dp) - more space for text
+        isSmallScreen -> 0.6f      // 58% for small screens - more space for text
+        isExactly700 -> 0.60f       // 50% for 700dp screens - balanced
         isMediumScreen -> 0.45f     // 45% for medium screens
         else -> 0.45f               // 45% for large screens
     }
@@ -85,6 +88,7 @@ fun OnboardingLayout(
     val titleFontSize = when {
         isVerySmallScreen -> 20.sp
         isSmallScreen -> 22.sp
+        isExactly700 -> 23.sp       // Slightly larger for 700dp
         isMediumScreen -> 24.sp
         else -> 28.sp
     }
@@ -92,6 +96,7 @@ fun OnboardingLayout(
     val titleLineHeight = when {
         isVerySmallScreen -> 26.sp
         isSmallScreen -> 28.sp
+        isExactly700 -> 29.sp       // Slightly larger for 700dp
         isMediumScreen -> 30.sp
         else -> 34.sp
     }
@@ -99,6 +104,7 @@ fun OnboardingLayout(
     val descriptionFontSize = when {
         isVerySmallScreen -> 13.sp
         isSmallScreen -> 14.sp
+        isExactly700 -> 14.sp       // Same as small for 700dp
         isMediumScreen -> 15.sp
         else -> 16.sp
     }
@@ -112,15 +118,17 @@ fun OnboardingLayout(
     }
     
     val topPadding = when {
-        isVerySmallScreen -> 32.dp  // Much less top padding for very small screens
-        isSmallScreen -> 40.dp      // Reduced for small screens
+        isVerySmallScreen -> 26.dp  // Even less top padding for very small screens (640dp)
+        isSmallScreen -> 32.dp      // Reduced for small screens
+        isExactly700 -> 40.dp       // Moderate padding for 700dp
         isMediumScreen -> 55.dp
         else -> 80.dp
     }
     
     val bottomPadding = when {
-        isVerySmallScreen -> 16.dp  // Less bottom padding to save space
-        isSmallScreen -> 20.dp
+        isVerySmallScreen -> 10.dp  // Less bottom padding to save space
+        isSmallScreen -> 18.dp      // Slightly less for small screens
+        isExactly700 -> 16.dp       // Moderate for 700dp
         isMediumScreen -> 24.dp
         else -> 32.dp
     }
@@ -128,6 +136,7 @@ fun OnboardingLayout(
     val titleSpacing = when {
         isVerySmallScreen -> 1.dp
         isSmallScreen -> 2.dp
+        isExactly700 -> 2.dp        // Same as small for 700dp
         isMediumScreen -> 3.dp
         else -> 4.dp
     }
@@ -135,6 +144,7 @@ fun OnboardingLayout(
     val descriptionSpacing = when {
         isVerySmallScreen -> 1.dp
         isSmallScreen -> 2.dp
+        isExactly700 -> 2.dp        // Same as small for 700dp
         isMediumScreen -> 3.dp
         else -> 4.dp
     }
@@ -142,6 +152,7 @@ fun OnboardingLayout(
     val indicatorsSpacing = when {
         isVerySmallScreen -> 4.dp
         isSmallScreen -> 6.dp
+        isExactly700 -> 6.dp        // Same as small for 700dp
         isMediumScreen -> 7.dp
         else -> 8.dp
     }
@@ -227,6 +238,7 @@ fun OnboardingLayout(
                         modifier = Modifier.padding(horizontal = when {
                             isVerySmallScreen -> 2.dp
                             isSmallScreen -> 4.dp
+                            isExactly700 -> 4.dp
                             isMediumScreen -> 6.dp
                             else -> 8.dp
                         })
@@ -253,7 +265,7 @@ fun OnboardingLayout(
 /**
  * Preview: First page with logo and Skip/Continue buttons
  */
-@Preview(name = "Page 1 - With Logo", showSystemUi = true)
+@Preview(name = "Height 700dp", heightDp = 699, showSystemUi = true)
 @Composable
 private fun OnboardingLayoutPage1Preview() {
     MaterialTheme {
@@ -263,8 +275,8 @@ private fun OnboardingLayoutPage1Preview() {
             mockupContent = {
                 ScreenshotPlaceholder(title = "Premium Features")
             },
-            title = "Upgrade to Premium, Get More Possibilities",
-            description = "Enjoy more storage, advanced styles, faster processing, and priority support to enhance your video creation experience.",
+            title = "Imagine Anything. Create Everything!",
+            description = "Welcome to Gen AI VIdeo, The app that turns your imagination into stunning videos. Simply enter your text and let our AI do the magic.",
             buttons = {
                 NavigationButtons(
                     onNext = {},
