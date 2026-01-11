@@ -1,6 +1,8 @@
 package com.manjul.genai.videogenerator.ui.screens.onboarding
 
+import android.util.DisplayMetrics
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.manjul.genai.videogenerator.ui.components.onboarding.*
 
@@ -91,19 +93,25 @@ private fun OnboardingPage2Preview() {
     )
 }
 
-@Preview(name = "Page 3 - Last Page", showSystemUi = true)
+@Preview(name = "Width 320dp", widthDp = 320)
+@Preview(name = "Width 360dp", widthDp = 360)
+@Preview(name = "Width 411dp", widthDp = 411)
+@Preview(name = "Height 640dp", heightDp = 640)
+@Preview(name = "Height 800dp", heightDp = 800)
+@Preview(name = "Height 700dp", heightDp = 700)
 @Composable
+
 private fun OnboardingPage3Preview() {
     OnboardingPageScreen(
         imageUrl = null,
         title = "Imagine Anything. Create Everything!",
         description = "Welcome to Gen AI VIdeo, The app that turns your imagination into stunning videos. Simply enter your text and let our AI do the magic.",
         isFirstPage = false,
-        isLastPage = true,
-        currentPage = 2,
+        isLastPage = false,
+        currentPage = 1,
         onNext = {},
         onSkip = {},
-        totalPages = 1
+        totalPages = 2
     )
 }
 

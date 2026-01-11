@@ -18,13 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
 
 /**
  * Navigation buttons for onboarding screens
@@ -37,9 +36,19 @@ fun NavigationButtons(
     onGetStarted: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
+    val configuration = LocalConfiguration.current
+    val screenHeightDp = configuration.screenHeightDp
+    
+    // Only adjust for very small screens to prevent squeezing
+    val isVerySmallScreen = screenHeightDp < 700
+    val buttonHeight = if (isVerySmallScreen) 52.dp else 56.dp
+    val buttonFontSize = if (isVerySmallScreen) 16.sp else 17.sp
+    val buttonSpacing = if (isVerySmallScreen) 12.dp else 16.dp
+    val cornerRadius = buttonHeight / 2
+    
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(buttonSpacing),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (onGetStarted != null) {
@@ -47,8 +56,8 @@ fun NavigationButtons(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
-                    .clip(RoundedCornerShape(28.dp))
+                    .height(buttonHeight)
+                    .clip(RoundedCornerShape(cornerRadius))
                     .background(Color(0xFF7C3AED))
                     .clickable(onClick = onGetStarted),
                 contentAlignment = Alignment.Center
@@ -58,7 +67,7 @@ fun NavigationButtons(
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White,
-                    fontSize = 17.sp
+                    fontSize = buttonFontSize
                 )
             }
         } else {
@@ -67,8 +76,8 @@ fun NavigationButtons(
                     Box(
                         modifier = Modifier
                         .weight(1f)
-                            .height(56.dp)
-                        .clip(RoundedCornerShape(28.dp))
+                            .height(buttonHeight)
+                        .clip(RoundedCornerShape(cornerRadius))
                         .background(Color(0xFFF3F4F6)) // Light gray
                             .clickable(onClick = onSkip),
                         contentAlignment = Alignment.Center
@@ -78,7 +87,7 @@ fun NavigationButtons(
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF6B7280), // Medium gray
-                            fontSize = 17.sp
+                            fontSize = buttonFontSize
                         )
                 }
             }
@@ -87,8 +96,8 @@ fun NavigationButtons(
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .height(56.dp)
-                        .clip(RoundedCornerShape(28.dp))
+                        .height(buttonHeight)
+                        .clip(RoundedCornerShape(cornerRadius))
                         .background(Color(0xFF7C3AED)) // Purple
                         .clickable(onClick = onNext),
                     contentAlignment = Alignment.Center
@@ -98,7 +107,7 @@ fun NavigationButtons(
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.White,
-                        fontSize = 17.sp
+                        fontSize = buttonFontSize
                     )
                 }
             }

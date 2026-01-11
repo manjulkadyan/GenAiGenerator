@@ -21,9 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -52,14 +55,105 @@ fun OnboardingLayout(
     description: String,
     buttons: @Composable () -> Unit
 ) {
+    val configuration = LocalConfiguration.current
+    val screenHeightDp = configuration.screenHeightDp
+    
+    // Calculate responsive sizes based on screen height
+    // For smaller screens (< 700dp), adjust proportions to give more space to content
+    val isVerySmallScreen = screenHeightDp < 650  // 640dp and below
+    val isSmallScreen = screenHeightDp < 700
+    val isMediumScreen = screenHeightDp in 700..800
+    val isLargeScreen = screenHeightDp > 800
+    
+    // Dynamic top section height: smaller screens need less top, more bottom
+    val topSectionHeight = when {
+        isVerySmallScreen -> 0.50f  // 50% for very small screens (640dp)
+        isSmallScreen -> 0.55f      // 55% for small screens
+        isMediumScreen -> 0.62f     // 62% for medium screens
+        else -> 0.7f                // 70% for large screens/tablets
+    }
+    
+    // Dynamic bottom section height: smaller screens need more space for content
+    val bottomSectionHeight = when {
+        isVerySmallScreen -> 0.55f  // 55% for very small screens - more space for buttons
+        isSmallScreen -> 0.52f      // 52% for small screens
+        isMediumScreen -> 0.45f     // 45% for medium screens
+        else -> 0.45f               // 45% for large screens
+    }
+    
+    // Responsive font sizes based on screen height
+    val titleFontSize = when {
+        isVerySmallScreen -> 20.sp
+        isSmallScreen -> 22.sp
+        isMediumScreen -> 24.sp
+        else -> 28.sp
+    }
+    
+    val titleLineHeight = when {
+        isVerySmallScreen -> 26.sp
+        isSmallScreen -> 28.sp
+        isMediumScreen -> 30.sp
+        else -> 34.sp
+    }
+    
+    val descriptionFontSize = when {
+        isVerySmallScreen -> 13.sp
+        isSmallScreen -> 14.sp
+        isMediumScreen -> 15.sp
+        else -> 16.sp
+    }
+    
+    // Responsive padding and spacing - much more compact for small screens
+    val horizontalPadding = when {
+        isVerySmallScreen -> 16.dp
+        isSmallScreen -> 20.dp
+        isMediumScreen -> 22.dp
+        else -> 24.dp
+    }
+    
+    val topPadding = when {
+        isVerySmallScreen -> 32.dp  // Much less top padding for very small screens
+        isSmallScreen -> 40.dp      // Reduced for small screens
+        isMediumScreen -> 55.dp
+        else -> 80.dp
+    }
+    
+    val bottomPadding = when {
+        isVerySmallScreen -> 16.dp  // Less bottom padding to save space
+        isSmallScreen -> 20.dp
+        isMediumScreen -> 24.dp
+        else -> 32.dp
+    }
+    
+    val titleSpacing = when {
+        isVerySmallScreen -> 1.dp
+        isSmallScreen -> 2.dp
+        isMediumScreen -> 3.dp
+        else -> 4.dp
+    }
+    
+    val descriptionSpacing = when {
+        isVerySmallScreen -> 1.dp
+        isSmallScreen -> 2.dp
+        isMediumScreen -> 3.dp
+        else -> 4.dp
+    }
+    
+    val indicatorsSpacing = when {
+        isVerySmallScreen -> 4.dp
+        isSmallScreen -> 6.dp
+        isMediumScreen -> 7.dp
+        else -> 8.dp
+    }
+    
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        // TOP SECTION: Purple gradient with iPhone mockup (60% height, straight bottom)
+        // TOP SECTION: Purple gradient with iPhone mockup (dynamic height)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.7f) // Takes exactly 60% from top
+                .fillMaxHeight(topSectionHeight)
                 .align(Alignment.TopStart)
                 .background(
                     Brush.verticalGradient(
@@ -74,7 +168,7 @@ fun OnboardingLayout(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 24.dp),
+                    .padding(horizontal = horizontalPadding),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -88,11 +182,11 @@ fun OnboardingLayout(
             }
         }
 
-        // BOTTOM SECTION: White card (50% height, starts at 50%, overlaps purple by 10%)
+        // BOTTOM SECTION: White card (dynamic height)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.45f) // Takes exactly 50% from bottom
+                .fillMaxHeight(bottomSectionHeight)
                 .align(Alignment.BottomStart)
                 .clip(WavyTopShape()) // Custom wavy shape for curved top edge
                 .background(Color.White)
@@ -101,44 +195,55 @@ fun OnboardingLayout(
                 modifier = Modifier
                     .fillMaxSize()
                     .windowInsetsPadding(WindowInsets.navigationBars) // Handle 3-button navigation
-                    .padding(horizontal = 24.dp)
-                    .padding(top = 80.dp, bottom = 32.dp),
+                    .padding(horizontal = horizontalPadding)
+                    .padding(top = topPadding, bottom = bottomPadding),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Title - Bold, dark text
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1F2937), // Dark gray
-                    textAlign = TextAlign.Center,
-                    fontSize = 28.sp,
-                    lineHeight = 34.sp
-                )
+                // Content area with weight to push buttons down
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Title - Bold, dark text (responsive size)
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF1F2937), // Dark gray
+                        textAlign = TextAlign.Center,
+                        fontSize = titleFontSize,
+                        lineHeight = titleLineHeight
+                    )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(titleSpacing))
 
-                // Description - Gray text
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color(0xFF6B7280), // Medium gray
-                    textAlign = TextAlign.Center,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
+                    // Description - Gray text (responsive size)
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodyLarge.copy(lineHeight = TextUnit(1.1f, TextUnitType.Em)),
+                        color = Color(0xFF6B7280), // Medium gray
+                        textAlign = TextAlign.Center,
+                        fontSize = descriptionFontSize,
+                        modifier = Modifier.padding(horizontal = when {
+                            isVerySmallScreen -> 2.dp
+                            isSmallScreen -> 4.dp
+                            isMediumScreen -> 6.dp
+                            else -> 8.dp
+                        })
+                    )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(descriptionSpacing))
 
-                // Page indicators
-                PageIndicators(
-                    currentPage = currentPage,
-                    totalPages = totalPages
-                )
+                    // Page indicators
+                    PageIndicators(
+                        currentPage = currentPage,
+                        totalPages = totalPages
+                    )
+                }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(indicatorsSpacing))
 
-                // Navigation buttons
+                // Navigation buttons - always at bottom
                 buttons()
             }
         }
