@@ -83,6 +83,8 @@ import androidx.compose.material.icons.filled.Login
 import com.manjul.genai.videogenerator.ui.viewmodel.CreditsViewModel
 import com.manjul.genai.videogenerator.ui.viewmodel.HistoryViewModel
 import com.manjul.genai.videogenerator.utils.AnalyticsManager
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
 
 @Composable
 fun ProfileScreen(
@@ -97,6 +99,7 @@ fun ProfileScreen(
 ) {
     val credits by creditsViewModel.state.collectAsState()
     val jobs by historyViewModel.jobs.collectAsState()
+    val scope = rememberCoroutineScope()
 
     // Track screen view
     LaunchedEffect(Unit) {
@@ -241,7 +244,18 @@ fun ProfileScreen(
         onBuyCreditsClick = onBuyCreditsClick,
         onVideosClick = onVideosClick,
         onLogout = {
-            FirebaseAuth.getInstance().signOut()
+            scope.launch {
+                // Sign out from Firebase
+                FirebaseAuth.getInstance().signOut()
+                Log.d("ProfileScreen", "User signed out")
+                
+                // Sign in anonymously again so the app continues to work
+                AuthManager.ensureAnonymousUser()
+                Log.d("ProfileScreen", "Signed in anonymously after logout")
+                
+                // Refresh credits for the new anonymous user
+                //creditsViewModel.refreshCredits()
+            }
         },
         isAnonymous = isAnonymous,
         onLoginClick = onLoginClick,

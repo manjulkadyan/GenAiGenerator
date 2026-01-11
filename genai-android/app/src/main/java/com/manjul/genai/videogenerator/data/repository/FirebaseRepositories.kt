@@ -49,35 +49,67 @@ class FirebaseCreditsRepository(
     private val firestore: FirebaseFirestore
 ) : CreditsRepository {
     override fun observeCredits(): Flow<UserCredits> = callbackFlow {
-        val uid = auth.currentUser?.uid
-        if (uid == null) {
-            trySend(UserCredits(0))
-            close(IllegalStateException("User not authenticated"))
-            return@callbackFlow
-        }
+        var currentRegistration: com.google.firebase.firestore.ListenerRegistration? = null
+        var currentUid: String? = null
         
-        // Initialize user document if it doesn't exist
-        val userRef = firestore.collection("users").document(uid)
-        userRef.get().addOnSuccessListener { snapshot ->
-            if (!snapshot.exists()) {
-                // Create user document with 0 credits
-                userRef.set(mapOf("credits" to 0))
-                    .addOnFailureListener { e ->
-                        android.util.Log.e("CreditsRepo", "Failed to initialize user", e)
-                    }
+        // Function to start listening to a user's credits
+        fun startListeningToUser(uid: String?) {
+            // Remove previous listener if exists
+            currentRegistration?.remove()
+            currentRegistration = null
+            
+            if (uid == null) {
+                trySend(UserCredits(0))
+                return
             }
-        }
-        
-        val registration = userRef
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    trySend(UserCredits(credits = 0))
-                    return@addSnapshotListener
+            
+            // Only restart if user actually changed
+            if (uid == currentUid && currentRegistration != null) return
+            currentUid = uid
+            
+            android.util.Log.d("CreditsRepo", "Starting to listen to credits for user: $uid")
+            
+            // Initialize user document if it doesn't exist
+            val userRef = firestore.collection("users").document(uid)
+            userRef.get().addOnSuccessListener { snapshot ->
+                if (!snapshot.exists()) {
+                    userRef.set(mapOf("credits" to 0))
+                        .addOnFailureListener { e ->
+                            android.util.Log.e("CreditsRepo", "Failed to initialize user", e)
+                        }
                 }
-                val credits = snapshot?.getLong("credits")?.toInt() ?: 0
-                trySend(UserCredits(max(0, credits)))
             }
-        awaitClose { registration.remove() }
+            
+            currentRegistration = userRef
+                .addSnapshotListener { snapshot, error ->
+                    if (error != null) {
+                        android.util.Log.e("CreditsRepo", "Error listening to credits", error)
+                        trySend(UserCredits(credits = 0))
+                        return@addSnapshotListener
+                    }
+                    val credits = snapshot?.getLong("credits")?.toInt() ?: 0
+                    android.util.Log.d("CreditsRepo", "Credits updated for $uid: $credits")
+                    trySend(UserCredits(max(0, credits)))
+                }
+        }
+        
+        // Listen for auth state changes
+        val authListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            val newUid = firebaseAuth.currentUser?.uid
+            android.util.Log.d("CreditsRepo", "Auth state changed, new uid: $newUid")
+            startListeningToUser(newUid)
+        }
+        
+        auth.addAuthStateListener(authListener)
+        
+        // Start initial observation
+        startListeningToUser(auth.currentUser?.uid)
+        
+        awaitClose {
+            android.util.Log.d("CreditsRepo", "Closing credits observer")
+            currentRegistration?.remove()
+            auth.removeAuthStateListener(authListener)
+        }
     }
 }
 
@@ -87,25 +119,59 @@ class FirebaseVideoHistoryRepository(
 ) : VideoHistoryRepository {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun observeJobs(): Flow<List<VideoJob>> = callbackFlow {
-        val uid = auth.currentUser?.uid
-        if (uid == null) {
-            trySend(emptyList())
-            close(IllegalStateException("User not authenticated"))
-            return@callbackFlow
-        }
-        val registration = firestore.collection("users")
-            .document(uid)
-            .collection("jobs")
-            .orderBy("created_at", Query.Direction.DESCENDING)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    trySend(emptyList())
-                    return@addSnapshotListener
-                }
-                val jobs = snapshot?.documents.orEmpty().mapNotNull { it.toVideoJob() }
-                trySend(jobs)
+        var currentRegistration: com.google.firebase.firestore.ListenerRegistration? = null
+        var currentUid: String? = null
+        
+        // Function to start listening to a user's jobs
+        fun startListeningToUser(uid: String?) {
+            // Remove previous listener if exists
+            currentRegistration?.remove()
+            currentRegistration = null
+            
+            if (uid == null) {
+                trySend(emptyList())
+                return
             }
-        awaitClose { registration.remove() }
+            
+            // Only restart if user actually changed
+            if (uid == currentUid && currentRegistration != null) return
+            currentUid = uid
+            
+            android.util.Log.d("HistoryRepo", "Starting to listen to jobs for user: $uid")
+            
+            currentRegistration = firestore.collection("users")
+                .document(uid)
+                .collection("jobs")
+                .orderBy("created_at", Query.Direction.DESCENDING)
+                .addSnapshotListener { snapshot, error ->
+                    if (error != null) {
+                        android.util.Log.e("HistoryRepo", "Error listening to jobs", error)
+                        trySend(emptyList())
+                        return@addSnapshotListener
+                    }
+                    val jobs = snapshot?.documents.orEmpty().mapNotNull { it.toVideoJob() }
+                    android.util.Log.d("HistoryRepo", "Jobs updated for $uid: ${jobs.size} jobs")
+                    trySend(jobs)
+                }
+        }
+        
+        // Listen for auth state changes
+        val authListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            val newUid = firebaseAuth.currentUser?.uid
+            android.util.Log.d("HistoryRepo", "Auth state changed, new uid: $newUid")
+            startListeningToUser(newUid)
+        }
+        
+        auth.addAuthStateListener(authListener)
+        
+        // Start initial observation
+        startListeningToUser(auth.currentUser?.uid)
+        
+        awaitClose {
+            android.util.Log.d("HistoryRepo", "Closing jobs observer")
+            currentRegistration?.remove()
+            auth.removeAuthStateListener(authListener)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
