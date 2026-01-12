@@ -18,6 +18,12 @@ service cloud.firestore {
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
       
+      // Jobs subcollection - user can read their own video generation jobs
+      match /jobs/{jobId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow write: if false; // Only backend (Cloud Functions) can write jobs
+      }
+      
       // Subscriptions subcollection - user can read their own subscriptions
       match /subscriptions/{subscriptionId} {
         allow read: if request.auth != null && request.auth.uid == userId;
@@ -31,17 +37,10 @@ service cloud.firestore {
       }
     }
     
-    match /{document=**} {
-      // This rule allows anyone with your database reference to view, edit,
-      // and delete all data in your database. It is useful for getting
-      // started, but it is configured to expire after 30 days because it
-      // leaves your app open to attackers. At that time, all client
-      // requests to your database will be denied.
-      //
-      // Make sure to write security rules for your app before that time, or
-      // else all client requests to your database will be denied until you
-      // update your rules.
-      allow read, write: if request.time < timestamp.date(2025, 12, 16);
+    // Models collection - public read access for available AI models
+    match /models/{modelId} {
+      allow read: if true;
+      allow write: if false; // Only admins can modify models
     }
   }
 }

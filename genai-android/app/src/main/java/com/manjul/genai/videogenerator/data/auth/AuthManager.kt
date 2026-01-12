@@ -5,6 +5,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.messaging.FirebaseMessaging
 import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import kotlinx.coroutines.tasks.await
 
@@ -12,17 +14,83 @@ object AuthManager {
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val firestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
     private const val TAG = "AuthManager"
+    
+    /**
+     * Save FCM token to Firestore for the given user
+     * This doesn't require notification permission - only showing notifications does
+     */
+    private suspend fun saveFCMToken(userId: String) {
+        try {
+            val token = FirebaseMessaging.getInstance().token.await()
+            val userRef = firestore.collection("users").document(userId)
+            userRef.set(mapOf("fcm_token" to token), SetOptions.merge()).await()
+            Log.d(TAG, "FCM token saved for user $userId")
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to save FCM token (non-critical)", e)
+            // Don't throw - FCM token save is best effort
+        }
+    }
+    
+    /**
+     * Initialize or update user document with basic fields
+     * Called on every login to ensure document exists and is up-to-date
+     */
+    private suspend fun initializeUserDocument(
+        userId: String,
+        name: String = "",
+        email: String = "",
+        isAnonymous: Boolean = false
+    ) {
+        try {
+            val userRef = firestore.collection("users").document(userId)
+            val userDoc = userRef.get().await()
+            
+            val updateData = mutableMapOf<String, Any>(
+                "updated_at" to com.google.firebase.firestore.FieldValue.serverTimestamp(),
+                "is_anonymous" to isAnonymous
+            )
+            
+            // Only update name/email if provided (don't overwrite with empty values)
+            if (name.isNotEmpty()) {
+                updateData["name"] = name
+            }
+            if (email.isNotEmpty()) {
+                updateData["email"] = email
+            }
+            
+            if (userDoc.exists()) {
+                userRef.update(updateData).await()
+                Log.d(TAG, "Updated user document: $userId")
+            } else {
+                // New user - initialize with credits = 0
+                userRef.set(
+                    mapOf("credits" to 0, "created_at" to com.google.firebase.firestore.FieldValue.serverTimestamp()) + updateData
+                ).await()
+                Log.d(TAG, "Created user document: $userId")
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to initialize user document (non-critical)", e)
+            // Don't throw - initialization is best effort
+        }
+    }
 
     suspend fun ensureAnonymousUser(): Result<FirebaseUser> {
-        auth.currentUser?.let {
-            Log.d(TAG, "Using existing anonymous user: ${it.uid}")
-            return Result.success(it)
+        auth.currentUser?.let { existingUser ->
+            Log.d(TAG, "Using existing user: ${existingUser.uid}, isAnonymous=${existingUser.isAnonymous}")
+            // Still save FCM token for existing user (token may have changed)
+            saveFCMToken(existingUser.uid)
+            return Result.success(existingUser)
         }
         Log.d(TAG, "No cached user, signing in anonymously")
         return runCatching {
             val result = auth.signInAnonymously().await()
             result.user?.also { user ->
                 Log.d(TAG, "Anonymous sign-in success: ${user.uid}")
+                
+                // Initialize user document and save FCM token
+                initializeUserDocument(user.uid, isAnonymous = true)
+                saveFCMToken(user.uid)
+                
                 AnalyticsManager.trackSignInAnonymous()
                 AnalyticsManager.setUserId(user.uid)
                 AnalyticsManager.setIsAnonymous(true)
@@ -50,6 +118,11 @@ object AuthManager {
             result.user?.also { user ->
                 Log.d(TAG, "Email sign-in success: ${user.uid}")
                 
+                // Update user info and save FCM token
+                val displayName = user.displayName ?: ""
+                initializeUserDocument(user.uid, displayName, email, isAnonymous = false)
+                saveFCMToken(user.uid)
+                
                 // Grant test credits if this is a test account
                 if (TestAccountManager.isTestEmail(email)) {
                     Log.d(TAG, "Test account detected, granting test credits")
@@ -76,8 +149,9 @@ object AuthManager {
             result.user?.also { user ->
                 Log.d(TAG, "Email account created: ${user.uid}")
                 
-                // Update user info in Firestore
+                // Update user info in Firestore and save FCM token
                 updateUserInfoOnLink(user.uid, "", email)
+                saveFCMToken(user.uid)
                 
                 // Grant test credits if this is a test account
                 if (TestAccountManager.isTestEmail(email)) {
@@ -151,6 +225,7 @@ object AuthManager {
                 
                 Log.d(TAG, "Linked user info: name=$finalDisplayName, email=$finalEmail")
                 updateUserInfoOnLink(user.uid, finalDisplayName, finalEmail)
+                saveFCMToken(user.uid)
                 
                 // Grant test credits if this is a test account (for Google Play reviewers)
                 if (TestAccountManager.isTestEmail(finalEmail)) {
@@ -248,6 +323,9 @@ object AuthManager {
                 // Mark anonymous user as merged (preserve data for reference)
                 markAnonymousUserAsMerged(anonymousUid, googleUser.uid)
                 
+                // Save FCM token for the Google account
+                saveFCMToken(googleUser.uid)
+                
                 // Track account merge
                 AnalyticsManager.trackAccountMerge(anonymousUid, googleUser.uid)
                 AnalyticsManager.setUserId(googleUser.uid)
@@ -282,7 +360,8 @@ object AuthManager {
             
             if (hasGoogleProvider) {
                 Log.d(TAG, "User already signed in with Google account: ${currentUser.uid}")
-                // User is already signed in with Google - return success
+                // User is already signed in with Google - still save FCM token and return success
+                saveFCMToken(currentUser.uid)
                 return Result.success(currentUser)
             }
         }
@@ -319,10 +398,11 @@ object AuthManager {
                 }
             }
             
-            // Update user info in Firestore
+            // Update user info in Firestore and save FCM token
             if (finalDisplayName.isNotEmpty() || finalEmail.isNotEmpty()) {
                 updateUserInfoOnLink(user.uid, finalDisplayName, finalEmail)
             }
+            saveFCMToken(user.uid)
             
             Log.d(TAG, "Google sign-in complete: name=$finalDisplayName, email=$finalEmail")
             
