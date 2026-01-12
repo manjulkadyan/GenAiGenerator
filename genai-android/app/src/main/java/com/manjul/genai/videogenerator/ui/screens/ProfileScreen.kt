@@ -97,6 +97,7 @@ fun ProfileScreen(
     onFeedbackClick: () -> Unit = {},
     onLoginClick: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     val credits by creditsViewModel.state.collectAsState()
     val jobs by historyViewModel.jobs.collectAsState()
     val scope = rememberCoroutineScope()
@@ -107,10 +108,29 @@ fun ProfileScreen(
         AnalyticsManager.trackProfileViewed()
     }
 
-    // Get user info from Firebase Auth (fallback)
+    // Observe auth state changes - this ensures UI updates when user logs out/in
     val auth = FirebaseAuth.getInstance()
-    val currentUser = auth.currentUser
-    val userId = currentUser?.uid ?: ""
+    var currentUser by remember { mutableStateOf(auth.currentUser) }
+    var userId by remember { mutableStateOf(auth.currentUser?.uid ?: "") }
+    
+    // Listen for auth state changes
+    LaunchedEffect(Unit) {
+        val authListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            val newUser = firebaseAuth.currentUser
+            Log.d("ProfileScreen", "Auth state changed: uid=${newUser?.uid}, isAnonymous=${newUser?.isAnonymous}")
+            currentUser = newUser
+            userId = newUser?.uid ?: ""
+        }
+        auth.addAuthStateListener(authListener)
+        
+        // Cleanup when composable leaves composition
+        try {
+            kotlinx.coroutines.awaitCancellation()
+        } finally {
+            auth.removeAuthStateListener(authListener)
+            Log.d("ProfileScreen", "Removed auth state listener")
+        }
+    }
     
     // Observe user profile from Firestore (real-time, no delay)
     var userName by remember { mutableStateOf(currentUser?.displayName ?: "User") }
@@ -159,7 +179,7 @@ fun ProfileScreen(
                     Log.d("ProfileScreen", "User name updated from Firestore: $firestoreName")
                 }
                 currentUser?.displayName != null -> {
-                    userName = currentUser.displayName ?: "User"
+                    userName = currentUser?.displayName ?: "User"
                 }
             }
             
@@ -170,7 +190,7 @@ fun ProfileScreen(
                     Log.d("ProfileScreen", "User email updated from Firestore: $firestoreEmail")
                 }
                 currentUser?.email != null -> {
-                    userEmail = currentUser.email?: "user@example.com"
+                    userEmail = currentUser?.email?: "user@example.com"
                 }
             }
         }
@@ -187,20 +207,20 @@ fun ProfileScreen(
     // Also update from Auth when user changes (immediate fallback)
     LaunchedEffect(currentUser) {
         if (currentUser != null) {
-            Log.d("ProfileScreen", "Current user changed: uid=${currentUser.uid}, displayName=${currentUser.displayName}, email=${currentUser.email}")
+            Log.d("ProfileScreen", "Current user changed: uid=${currentUser?.uid}, displayName=${currentUser?.displayName}, email=${currentUser?.email}")
             
             // Try to reload user profile to get fresh data
             try {
-                currentUser.reload().await()
+                currentUser?.reload()?.await()
                 val reloadedUser = auth.currentUser
                 Log.d("ProfileScreen", "After reload: displayName=${reloadedUser?.displayName}, email=${reloadedUser?.email}")
                 
                 // Use Auth data as fallback if Firestore doesn't have it yet
-                val authDisplayName = reloadedUser?.displayName ?: currentUser.displayName
-                val authEmail = reloadedUser?.email ?: currentUser.email
+                val authDisplayName = reloadedUser?.displayName ?: currentUser?.displayName
+                val authEmail = reloadedUser?.email ?: currentUser?.email
                 
                 // Try provider data if displayName is still null
-                val providerDisplayName = currentUser.providerData.firstOrNull { 
+                val providerDisplayName = currentUser?.providerData?.firstOrNull {
                     it.providerId == "google.com" 
                 }?.displayName
                 
@@ -217,11 +237,11 @@ fun ProfileScreen(
             } catch (e: Exception) {
                 android.util.Log.w("ProfileScreen", "Failed to reload user profile", e)
                 // Fallback to current user data without reload
-                if (userName == "User" && !currentUser.displayName.isNullOrEmpty()) {
-                    userName = currentUser.displayName?: ""
+                if (userName == "User" && !currentUser?.displayName.isNullOrEmpty()) {
+                    userName = currentUser?.displayName?: ""
                 }
-                if (userEmail == "user@example.com" && !currentUser.email.isNullOrEmpty()) {
-                    userEmail = currentUser.email?: ""
+                if (userEmail == "user@example.com" && !currentUser?.email.isNullOrEmpty()) {
+                    userEmail = currentUser?.email?: ""
                 }
             }
         }
@@ -230,8 +250,20 @@ fun ProfileScreen(
     // Calculate video count
     val videoCount = jobs.size
 
-    // Check if user is anonymous
-    val isAnonymous = AuthManager.isAnonymousUser()
+    // Check if user is anonymous - use reactive currentUser state
+    val isAnonymous = currentUser?.isAnonymous == true
+    
+    // Reset user info when user changes (e.g., after logout)
+    LaunchedEffect(userId) {
+        if (userId.isEmpty() || currentUser?.isAnonymous == true) {
+            userName = "User"
+            userEmail = "user@example.com"
+        } else {
+            // Try to get from auth first
+            userName = currentUser?.displayName ?: "User"
+            userEmail = currentUser?.email ?: "user@example.com"
+        }
+    }
 
     // Use the extracted content composable
     ProfileScreenContent(
@@ -247,7 +279,19 @@ fun ProfileScreen(
             scope.launch {
                 // Sign out from Firebase
                 FirebaseAuth.getInstance().signOut()
-                Log.d("ProfileScreen", "User signed out")
+                Log.d("ProfileScreen", "User signed out from Firebase")
+                
+                // Also sign out from Google Sign-In client to clear cached credentials
+                try {
+                    val gso = com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(
+                        com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN
+                    ).build()
+                    val googleSignInClient = com.google.android.gms.auth.api.signin.GoogleSignIn.getClient(context, gso)
+                    googleSignInClient.signOut()
+                    Log.d("ProfileScreen", "User signed out from Google Sign-In client")
+                } catch (e: Exception) {
+                    Log.w("ProfileScreen", "Failed to sign out from Google Sign-In client", e)
+                }
                 
                 // Sign in anonymously again so the app continues to work
                 AuthManager.ensureAnonymousUser()

@@ -59,6 +59,7 @@ import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppTex
 import com.manjul.genai.videogenerator.ui.designsystem.components.inputs.AppTextField
 import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -132,16 +133,28 @@ fun LoginSignupScreen(
     
     // Start Google Sign-In
     val startGoogleSignIn: () -> Unit = {
-        try {
-            val webClientId = "407437371864-9dkicne9lg7l8l816jbut5dup9qs7sus.apps.googleusercontent.com"
-            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(webClientId)
-                .requestEmail()
-                .build()
-            val googleSignInClient = GoogleSignIn.getClient(context, gso)
-            googleSignInLauncher.launch(googleSignInClient.signInIntent)
-        } catch (e: Exception) {
-            errorMessage = "Failed to start Google Sign-In"
+        scope.launch {
+            try {
+                val webClientId = "407437371864-9dkicne9lg7l8l816jbut5dup9qs7sus.apps.googleusercontent.com"
+                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(webClientId)
+                    .requestEmail()
+                    .build()
+                val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                
+                // Sign out from Google Sign-In client first to ensure fresh account picker
+                // This prevents the "already signed in" issue when user previously signed in with Google
+                try {
+                    googleSignInClient.signOut().await()
+                    Log.d("LoginSignupScreen", "Signed out from Google Sign-In client before new sign-in")
+                } catch (e: Exception) {
+                    Log.w("LoginSignupScreen", "Failed to sign out from Google Sign-In client", e)
+                }
+                
+                googleSignInLauncher.launch(googleSignInClient.signInIntent)
+            } catch (e: Exception) {
+                errorMessage = "Failed to start Google Sign-In"
+            }
         }
     }
     

@@ -112,8 +112,9 @@ object AuthManager {
             ?: return Result.failure(IllegalStateException("No user signed in"))
 
         if (!currentUser.isAnonymous) {
-            Log.w(TAG, "Current user is not anonymous, cannot link")
-            return Result.failure(IllegalStateException("Current user is not anonymous"))
+            // User is not anonymous - fall back to regular Google sign-in instead of failing
+            Log.d(TAG, "Current user is not anonymous, falling back to signInWithGoogle")
+            return signInWithGoogle(idToken, displayName, email)
         }
 
         val credential = GoogleAuthProvider.getCredential(idToken, null)
