@@ -48,5 +48,11 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false; // Only admins can modify models
     }
+    
+    // Video features collection - public read access for available AI models
+    match /video_features/{modelId} {
+      allow read: if true;
+      allow write: if false; // Only admins can modify models
+    }
   }
 }
