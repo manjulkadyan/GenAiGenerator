@@ -3,8 +3,6 @@ package com.manjul.genai.videogenerator.data.subscription
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
-import com.google.firebase.functions.ktx.functions
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -22,7 +20,7 @@ import kotlinx.coroutines.tasks.await
  */
 object SubscriptionRenewalManager {
     private const val TAG = "SubscriptionRenewal"
-    private val functions: FirebaseFunctions by lazy { Firebase.functions }
+    private val functions: FirebaseFunctions by lazy { FirebaseFunctions.getInstance() }
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     // Coroutine scope for background operations
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())

@@ -50,6 +50,9 @@ class GenAiApp : Application() {
         // Initialize AnalyticsManager
         AnalyticsManager.initialize(this)
         
+        // Track app launch
+        AnalyticsManager.trackAppLaunch()
+        
         // Set app version for Crashlytics
         try {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)

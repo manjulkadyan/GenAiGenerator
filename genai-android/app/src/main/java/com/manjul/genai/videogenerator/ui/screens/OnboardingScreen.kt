@@ -52,6 +52,9 @@ fun OnboardingScreen(
             onboardingPages = config.pages
         }
         isLoading = false
+        // Track onboarding screen view
+        AnalyticsManager.trackScreenView("Onboarding")
+        AnalyticsManager.trackOnboardingViewed()
     }
     
     if (isLoading || onboardingPages.isEmpty()) {
@@ -73,9 +76,14 @@ fun OnboardingScreen(
         return
     }
 
-    // Track onboarding views
+    // Track onboarding page views
     LaunchedEffect(currentPage) {
-        AnalyticsManager.log("Onboarding page viewed: ${currentPage + 1}")
+        if (onboardingPages.isNotEmpty()) {
+            AnalyticsManager.trackOnboardingPageViewed(
+                pageNumber = currentPage + 1,
+                totalPages = onboardingPages.size
+            )
+        }
     }
 
     // Handlers
@@ -86,12 +94,18 @@ fun OnboardingScreen(
     }
 
     val handleSkip: () -> Unit = {
-        AnalyticsManager.log("Onboarding skipped at page ${currentPage + 1}")
+        AnalyticsManager.trackOnboardingSkipped(
+            skippedAtPage = currentPage + 1,
+            totalPages = onboardingPages.size
+        )
         onComplete()
     }
 
     val handleGetStarted: () -> Unit = {
-        AnalyticsManager.log("Onboarding completed")
+        AnalyticsManager.trackOnboardingCompleted(
+            totalPages = onboardingPages.size,
+            completedPageNumber = currentPage + 1
+        )
         onComplete()
     }
 

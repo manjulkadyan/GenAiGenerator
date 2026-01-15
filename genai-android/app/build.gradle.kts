@@ -94,7 +94,7 @@ android {
 }
 
 dependencies {
-    implementation(platform("androidx.compose:compose-bom:2024.06.00"))
+    implementation(platform("androidx.compose:compose-bom:2025.12.00"))
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.ui:ui")
@@ -102,42 +102,42 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    implementation("androidx.activity:activity-compose:1.9.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.activity:activity-compose:1.9.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
+    implementation("androidx.navigation:navigation-compose:2.8.4")
     implementation("com.google.android.material:material:1.12.0")
 
-    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.firebase:firebase-storage-ktx")
-    implementation("com.google.firebase:firebase-functions-ktx")
-    implementation("com.google.firebase:firebase-messaging-ktx")
+    implementation(platform("com.google.firebase:firebase-bom:34.7.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-functions")
+    implementation("com.google.firebase:firebase-messaging")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
     
     // Google Sign-In
     implementation("com.google.android.gms:play-services-auth:21.2.0")
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.code.gson:gson:2.11.0")
     
     // Google Play Billing - Updated to 8.0.0+ (required by Aug 31, 2025)
-    implementation("com.android.billingclient:billing-ktx:8.0.0")
+    implementation("com.android.billingclient:billing-ktx:8.1.0")
     
     // Google Play In-App Review
-    implementation("com.google.android.play:review-ktx:2.0.1")
-    implementation("androidx.media3:media3-exoplayer:1.3.1")
-    implementation("androidx.media3:media3-ui:1.3.1")
-    implementation("androidx.media3:media3-datasource:1.3.1") // Includes CacheDataSource
-    implementation("androidx.media3:media3-exoplayer-hls:1.3.1")
-    implementation("androidx.media3:media3-database:1.3.1") // For cache database (SimpleCache)
+    implementation("com.google.android.play:review-ktx:2.0.2")
+    implementation("androidx.media3:media3-exoplayer:1.4.1")
+    implementation("androidx.media3:media3-ui:1.4.1")
+    implementation("androidx.media3:media3-datasource:1.4.1") // Includes CacheDataSource
+    implementation("androidx.media3:media3-exoplayer-hls:1.4.1")
+    implementation("androidx.media3:media3-database:1.4.1") // For cache database (SimpleCache)
     
     // Coil for image loading
-    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation("io.coil-kt:coil-compose:2.7.0")
     
     // Permissions
-    implementation("com.google.accompanist:accompanist-permissions:0.34.0")
+    implementation("com.google.accompanist:accompanist-permissions:0.36.0")
     
     // Room Database for caching
     val roomVersion = "2.6.1"

@@ -6,8 +6,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ProductDetails
 import com.manjul.genai.videogenerator.data.model.LandingPageConfig
@@ -21,8 +19,6 @@ import com.manjul.genai.videogenerator.data.repository.RepositoryProvider
 import com.manjul.genai.videogenerator.utils.AnalyticsManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
-import com.google.firebase.functions.ktx.functions
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -53,7 +49,7 @@ class LandingPageViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LandingPageUiState())
     val uiState: StateFlow<LandingPageUiState> = _uiState.asStateFlow()
-    private val functions: FirebaseFunctions by lazy { Firebase.functions }
+    private val functions: FirebaseFunctions by lazy { FirebaseFunctions.getInstance() }
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     
     init {
@@ -497,6 +493,11 @@ class LandingPageViewModel(
         _uiState.value = _uiState.value.copy(selectedPurchaseType = type)
         Log.d("LandingPageViewModel", "Purchase type selected: $type")
         
+        // Track analytics
+        if (type == PurchaseType.ONE_TIME) {
+            AnalyticsManager.trackOneTimePurchaseViewed()
+        }
+        
         // Load one-time product details when switching to one-time type
         if (type == PurchaseType.ONE_TIME) {
             if (_uiState.value.oneTimeProductDetails.isEmpty()) {
@@ -514,6 +515,14 @@ class LandingPageViewModel(
                 if (secondToLast != null) {
                     Log.d("LandingPageViewModel", "Auto-selecting second-to-last product: ${secondToLast.productId} (${secondToLast.credits} credits)")
                     _uiState.value = _uiState.value.copy(selectedOneTimeProduct = secondToLast)
+                    // Track auto-selection
+                    val productDetails = _uiState.value.oneTimeProductDetails[secondToLast.productId]
+                    AnalyticsManager.trackOneTimePurchasePlanSelected(
+                        productId = secondToLast.productId,
+                        credits = secondToLast.credits.toDouble(),
+                        price = productDetails?.oneTimePurchaseOfferDetails?.priceAmountMicros,
+                        currency = productDetails?.oneTimePurchaseOfferDetails?.priceCurrencyCode
+                    )
                 }
             }
         }
@@ -525,6 +534,15 @@ class LandingPageViewModel(
     fun selectOneTimeProduct(product: OneTimeProduct) {
         _uiState.value = _uiState.value.copy(selectedOneTimeProduct = product)
         Log.d("LandingPageViewModel", "One-time product selected: ${product.productId}")
+        
+        // Track analytics
+        val productDetails = _uiState.value.oneTimeProductDetails[product.productId]
+        AnalyticsManager.trackOneTimePurchasePlanSelected(
+            productId = product.productId,
+            credits = product.credits.toDouble(),
+            price = productDetails?.oneTimePurchaseOfferDetails?.priceAmountMicros,
+            currency = productDetails?.oneTimePurchaseOfferDetails?.priceCurrencyCode
+        )
     }
     
     /**
@@ -610,6 +628,16 @@ class LandingPageViewModel(
                 .call(data)
                 .await()
             Log.d("LandingPageViewModel", "✅ One-time purchase sent to backend for processing")
+            
+            // Track purchase completion
+            val productDetails = _uiState.value.oneTimeProductDetails[productId]
+            AnalyticsManager.trackPurchaseCompleted(
+                productId = productId,
+                purchaseToken = purchase.purchaseToken,
+                price = productDetails?.oneTimePurchaseOfferDetails?.priceAmountMicros,
+                currency = productDetails?.oneTimePurchaseOfferDetails?.priceCurrencyCode
+            )
+            
             _uiState.value = _uiState.value.copy(
                 purchaseMessage = "Purchase successful! ${product.credits} credits added to your account."
             )

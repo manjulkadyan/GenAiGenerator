@@ -1,11 +1,9 @@
 package com.manjul.genai.videogenerator.utils
 
 import android.content.Context
+import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.google.firebase.ktx.Firebase
 
 /**
  * Centralized utility class for Firebase Analytics and Crashlytics.
@@ -20,7 +18,7 @@ object AnalyticsManager {
      * Should be called in Application.onCreate()
      */
     fun initialize(context: Context) {
-        analytics = Firebase.analytics
+        analytics = FirebaseAnalytics.getInstance(context)
     }
 
     // ==================== Screen View Tracking ====================
@@ -30,9 +28,10 @@ object AnalyticsManager {
      * @param screenName Name of the screen being viewed
      */
     fun trackScreenView(screenName: String) {
-        analytics?.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
-            param(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
+        val bundle = Bundle().apply {
+            putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
         }
+        analytics?.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
     }
 
     // ==================== Authentication Events ====================
@@ -41,36 +40,40 @@ object AnalyticsManager {
      * Track anonymous sign-in event.
      */
     fun trackSignInAnonymous() {
-        analytics?.logEvent("sign_in_anonymous") {
-            param("method", "anonymous")
+        val bundle = Bundle().apply {
+            putString("method", "anonymous")
         }
+        analytics?.logEvent("sign_in_anonymous", bundle)
     }
 
     /**
      * Track Google sign-in event.
      */
     fun trackSignInGoogle() {
-        analytics?.logEvent("sign_in_google") {
-            param("method", "google")
+        val bundle = Bundle().apply {
+            putString("method", "google")
         }
+        analytics?.logEvent("sign_in_google", bundle)
     }
     
     /**
      * Track email sign-in event.
      */
     fun trackSignInEmail() {
-        analytics?.logEvent("sign_in_email") {
-            param("method", "email")
+        val bundle = Bundle().apply {
+            putString("method", "email")
         }
+        analytics?.logEvent("sign_in_email", bundle)
     }
     
     /**
      * Track email sign-up event.
      */
     fun trackSignUpEmail() {
-        analytics?.logEvent("sign_up_email") {
-            param("method", "email")
+        val bundle = Bundle().apply {
+            putString("method", "email")
         }
+        analytics?.logEvent("sign_up_email", bundle)
     }
 
     /**
@@ -78,9 +81,10 @@ object AnalyticsManager {
      * @param method The linking method (e.g., "google")
      */
     fun trackLinkAccount(method: String) {
-        analytics?.logEvent("link_account_google") {
-            param("method", method)
+        val bundle = Bundle().apply {
+            putString("method", method)
         }
+        analytics?.logEvent("link_account_google", bundle)
     }
 
     /**
@@ -89,10 +93,11 @@ object AnalyticsManager {
      * @param toUserId The user ID being merged to
      */
     fun trackAccountMerge(fromUserId: String, toUserId: String) {
-        analytics?.logEvent("account_merge") {
-            param("from_user_id", fromUserId)
-            param("to_user_id", toUserId)
+        val bundle = Bundle().apply {
+            putString("from_user_id", fromUserId)
+            putString("to_user_id", toUserId)
         }
+        analytics?.logEvent("account_merge", bundle)
     }
 
     /**
@@ -102,11 +107,12 @@ object AnalyticsManager {
      * @param errorMessage Error message
      */
     fun trackSignInFailed(method: String, errorCode: String? = null, errorMessage: String? = null) {
-        analytics?.logEvent("sign_in_failed") {
-            param("method", method)
-            errorCode?.let { param("error_code", it) }
-            errorMessage?.let { param("error_message", it) }
+        val bundle = Bundle().apply {
+            putString("method", method)
+            errorCode?.let { putString("error_code", it) }
+            errorMessage?.let { putString("error_message", it) }
         }
+        analytics?.logEvent("sign_in_failed", bundle)
     }
 
     // ==================== Video Generation Events ====================
@@ -130,15 +136,16 @@ object AnalyticsManager {
         hasAudio: Boolean,
         usePromptOptimizer: Boolean
     ) {
-        analytics?.logEvent("generate_video_started") {
-            param("model_id", modelId)
-            param("model_name", modelName)
-            param("duration_seconds", durationSeconds.toLong())
-            param("aspect_ratio", aspectRatio)
-            param("cost", cost.toLong())
-            param("has_audio", if (hasAudio) 1L else 0L)
-            param("use_prompt_optimizer", if (usePromptOptimizer) 1L else 0L)
+        val bundle = Bundle().apply {
+            putString("model_id", modelId)
+            putString("model_name", modelName)
+            putLong("duration_seconds", durationSeconds.toLong())
+            putString("aspect_ratio", aspectRatio)
+            putLong("cost", cost.toLong())
+            putLong("has_audio", if (hasAudio) 1L else 0L)
+            putLong("use_prompt_optimizer", if (usePromptOptimizer) 1L else 0L)
         }
+        analytics?.logEvent("generate_video_started", bundle)
     }
 
     /**
@@ -148,11 +155,12 @@ object AnalyticsManager {
      * @param cost Credits cost
      */
     fun trackGenerateVideoCompleted(modelId: String, jobId: String, cost: Int) {
-        analytics?.logEvent("generate_video_completed") {
-            param("model_id", modelId)
-            param("job_id", jobId)
-            param("cost", cost.toLong())
+        val bundle = Bundle().apply {
+            putString("model_id", modelId)
+            putString("job_id", jobId)
+            putLong("cost", cost.toLong())
         }
+        analytics?.logEvent("generate_video_completed", bundle)
     }
 
     /**
@@ -162,11 +170,12 @@ object AnalyticsManager {
      * @param errorCode Error code if available
      */
     fun trackGenerateVideoFailed(modelId: String, errorMessage: String, errorCode: String? = null) {
-        analytics?.logEvent("generate_video_failed") {
-            param("model_id", modelId)
-            param("error_message", errorMessage)
-            errorCode?.let { param("error_code", it) }
+        val bundle = Bundle().apply {
+            putString("model_id", modelId)
+            putString("error_message", errorMessage)
+            errorCode?.let { putString("error_code", it) }
         }
+        analytics?.logEvent("generate_video_failed", bundle)
     }
 
     /**
@@ -175,10 +184,11 @@ object AnalyticsManager {
      * @param availableCredits Credits available
      */
     fun trackGenerateVideoInsufficientCredits(requiredCredits: Int, availableCredits: Int) {
-        analytics?.logEvent("generate_video_insufficient_credits") {
-            param("required_credits", requiredCredits.toLong())
-            param("available_credits", availableCredits.toLong())
+        val bundle = Bundle().apply {
+            putLong("required_credits", requiredCredits.toLong())
+            putLong("available_credits", availableCredits.toLong())
         }
+        analytics?.logEvent("generate_video_insufficient_credits", bundle)
     }
 
     /**
@@ -187,10 +197,11 @@ object AnalyticsManager {
      * @param modelName Selected model name
      */
     fun trackModelSelected(modelId: String, modelName: String) {
-        analytics?.logEvent("model_selected") {
-            param("model_id", modelId)
-            param("model_name", modelName)
+        val bundle = Bundle().apply {
+            putString("model_id", modelId)
+            putString("model_name", modelName)
         }
+        analytics?.logEvent("model_selected", bundle)
     }
 
     /**
@@ -198,9 +209,10 @@ object AnalyticsManager {
      * @param aspectRatio Selected aspect ratio
      */
     fun trackAspectRatioSelected(aspectRatio: String) {
-        analytics?.logEvent("aspect_ratio_selected") {
-            param("aspect_ratio", aspectRatio)
+        val bundle = Bundle().apply {
+            putString("aspect_ratio", aspectRatio)
         }
+        analytics?.logEvent("aspect_ratio_selected", bundle)
     }
 
     /**
@@ -208,9 +220,10 @@ object AnalyticsManager {
      * @param durationSeconds Selected duration in seconds
      */
     fun trackDurationSelected(durationSeconds: Int) {
-        analytics?.logEvent("duration_selected") {
-            param("duration_seconds", durationSeconds.toLong())
+        val bundle = Bundle().apply {
+            putLong("duration_seconds", durationSeconds.toLong())
         }
+        analytics?.logEvent("duration_selected", bundle)
     }
 
     /**
@@ -218,9 +231,10 @@ object AnalyticsManager {
      * @param enabled Whether prompt optimizer is enabled
      */
     fun trackPromptOptimizerToggled(enabled: Boolean) {
-        analytics?.logEvent("prompt_optimizer_toggled") {
-            param("enabled", if (enabled) 1L else 0L)
+        val bundle = Bundle().apply {
+            putLong("enabled", if (enabled) 1L else 0L)
         }
+        analytics?.logEvent("prompt_optimizer_toggled", bundle)
     }
 
     /**
@@ -228,9 +242,10 @@ object AnalyticsManager {
      * @param enabled Whether audio is enabled
      */
     fun trackAudioEnabled(enabled: Boolean) {
-        analytics?.logEvent("audio_enabled") {
-            param("enabled", if (enabled) 1L else 0L)
+        val bundle = Bundle().apply {
+            putLong("enabled", if (enabled) 1L else 0L)
         }
+        analytics?.logEvent("audio_enabled", bundle)
     }
 
     /**
@@ -239,10 +254,11 @@ object AnalyticsManager {
      * @param success Whether upload was successful
      */
     fun trackReferenceFrameUploaded(frameType: String, success: Boolean) {
-        analytics?.logEvent("reference_frame_uploaded") {
-            param("frame_type", frameType)
-            param("success", if (success) 1L else 0L)
+        val bundle = Bundle().apply {
+            putString("frame_type", frameType)
+            putLong("success", if (success) 1L else 0L)
         }
+        analytics?.logEvent("reference_frame_uploaded", bundle)
     }
 
     // ==================== Subscription/Billing Events ====================
@@ -253,10 +269,11 @@ object AnalyticsManager {
      * @param productType Product type (subscription, etc.)
      */
     fun trackPurchaseStarted(productId: String, productType: String = "subscription") {
-        analytics?.logEvent("purchase_started") {
-            param("product_id", productId)
-            param("product_type", productType)
+        val bundle = Bundle().apply {
+            putString("product_id", productId)
+            putString("product_type", productType)
         }
+        analytics?.logEvent("purchase_started", bundle)
     }
 
     /**
@@ -272,12 +289,13 @@ object AnalyticsManager {
         price: Long? = null,
         currency: String? = null
     ) {
-        analytics?.logEvent("purchase_completed") {
-            param("product_id", productId)
-            param("purchase_token", purchaseToken)
-            price?.let { param("price", it) }
-            currency?.let { param("currency", it) }
+        val bundle = Bundle().apply {
+            putString("product_id", productId)
+            putString("purchase_token", purchaseToken)
+            price?.let { putLong("price", it) }
+            currency?.let { putString("currency", it) }
         }
+        analytics?.logEvent("purchase_completed", bundle)
     }
 
     /**
@@ -287,11 +305,12 @@ object AnalyticsManager {
      * @param errorMessage Error message
      */
     fun trackPurchaseFailed(productId: String, errorCode: Int, errorMessage: String) {
-        analytics?.logEvent("purchase_failed") {
-            param("product_id", productId)
-            param("error_code", errorCode.toLong())
-            param("error_message", errorMessage)
+        val bundle = Bundle().apply {
+            putString("product_id", productId)
+            putLong("error_code", errorCode.toLong())
+            putString("error_message", errorMessage)
         }
+        analytics?.logEvent("purchase_failed", bundle)
     }
 
     /**
@@ -299,16 +318,17 @@ object AnalyticsManager {
      * @param productId Product ID that was cancelled
      */
     fun trackPurchaseCancelled(productId: String) {
-        analytics?.logEvent("purchase_cancelled") {
-            param("product_id", productId)
+        val bundle = Bundle().apply {
+            putString("product_id", productId)
         }
+        analytics?.logEvent("purchase_cancelled", bundle)
     }
 
     /**
      * Track subscription screen viewed event.
      */
     fun trackSubscriptionViewed() {
-        analytics?.logEvent("subscription_viewed") {}
+        analytics?.logEvent("subscription_viewed", null)
     }
 
     /**
@@ -317,10 +337,11 @@ object AnalyticsManager {
      * @param planName Plan name
      */
     fun trackSubscriptionPlanSelected(planId: String, credit: Double) {
-        analytics?.logEvent("subscription_plan_selected") {
-            param("plan_id", planId)
-            param("plan_credit", credit)
+        val bundle = Bundle().apply {
+            putString("plan_id", planId)
+            putDouble("plan_credit", credit)
         }
+        analytics?.logEvent("subscription_plan_selected", bundle)
     }
 
     // ==================== User Action Events ====================
@@ -331,10 +352,11 @@ object AnalyticsManager {
      * @param modelId Model ID used for generation
      */
     fun trackVideoPlayed(jobId: String, modelId: String? = null) {
-        analytics?.logEvent("video_played") {
-            param("job_id", jobId)
-            modelId?.let { param("model_id", it) }
+        val bundle = Bundle().apply {
+            putString("job_id", jobId)
+            modelId?.let { putString("model_id", it) }
         }
+        analytics?.logEvent("video_played", bundle)
     }
 
     /**
@@ -342,9 +364,10 @@ object AnalyticsManager {
      * @param jobId Video job ID
      */
     fun trackVideoDownloaded(jobId: String) {
-        analytics?.logEvent("video_downloaded") {
-            param("job_id", jobId)
+        val bundle = Bundle().apply {
+            putString("job_id", jobId)
         }
+        analytics?.logEvent("video_downloaded", bundle)
     }
 
     /**
@@ -352,30 +375,31 @@ object AnalyticsManager {
      * @param jobId Video job ID
      */
     fun trackVideoShared(jobId: String) {
-        analytics?.logEvent("video_shared") {
-            param("job_id", jobId)
+        val bundle = Bundle().apply {
+            putString("job_id", jobId)
         }
+        analytics?.logEvent("video_shared", bundle)
     }
 
     /**
      * Track credits viewed event.
      */
     fun trackCreditsViewed() {
-        analytics?.logEvent("credits_viewed") {}
+        analytics?.logEvent("credits_viewed", null)
     }
 
     /**
      * Track history viewed event.
      */
     fun trackHistoryViewed() {
-        analytics?.logEvent("history_viewed") {}
+        analytics?.logEvent("history_viewed", null)
     }
 
     /**
      * Track profile viewed event.
      */
     fun trackProfileViewed() {
-        analytics?.logEvent("profile_viewed") {}
+        analytics?.logEvent("profile_viewed", null)
     }
 
     /**
@@ -383,9 +407,10 @@ object AnalyticsManager {
      * @param modelId Model ID
      */
     fun trackModelPreviewPlayed(modelId: String) {
-        analytics?.logEvent("model_preview_played") {
-            param("model_id", modelId)
+        val bundle = Bundle().apply {
+            putString("model_id", modelId)
         }
+        analytics?.logEvent("model_preview_played", bundle)
     }
 
     /**
@@ -393,9 +418,10 @@ object AnalyticsManager {
      * @param appOpenCount Number of times app has been opened
      */
     fun trackInAppReviewShown(appOpenCount: Int) {
-        analytics?.logEvent("in_app_review_shown") {
-            param("app_open_count", appOpenCount.toLong())
+        val bundle = Bundle().apply {
+            putLong("app_open_count", appOpenCount.toLong())
         }
+        analytics?.logEvent("in_app_review_shown", bundle)
     }
 
     /**
@@ -403,9 +429,110 @@ object AnalyticsManager {
      * @param errorMessage Error message
      */
     fun trackInAppReviewFailed(errorMessage: String) {
-        analytics?.logEvent("in_app_review_failed") {
-            param("error_message", errorMessage)
+        val bundle = Bundle().apply {
+            putString("error_message", errorMessage)
         }
+        analytics?.logEvent("in_app_review_failed", bundle)
+    }
+
+    // ==================== Onboarding Events ====================
+
+    /**
+     * Track onboarding screen viewed event.
+     */
+    fun trackOnboardingViewed() {
+        analytics?.logEvent("onboarding_viewed", null)
+    }
+
+    /**
+     * Track onboarding page viewed event.
+     * @param pageNumber Page number (1-indexed)
+     * @param totalPages Total number of pages
+     */
+    fun trackOnboardingPageViewed(pageNumber: Int, totalPages: Int) {
+        val bundle = Bundle().apply {
+            putLong("page_number", pageNumber.toLong())
+            putLong("total_pages", totalPages.toLong())
+        }
+        analytics?.logEvent("onboarding_page_viewed", bundle)
+    }
+
+    /**
+     * Track onboarding completed event.
+     * @param totalPages Total number of pages
+     * @param completedPageNumber Last page number viewed
+     */
+    fun trackOnboardingCompleted(totalPages: Int, completedPageNumber: Int) {
+        val bundle = Bundle().apply {
+            putLong("total_pages", totalPages.toLong())
+            putLong("completed_page_number", completedPageNumber.toLong())
+        }
+        analytics?.logEvent("onboarding_completed", bundle)
+    }
+
+    /**
+     * Track onboarding skipped event.
+     * @param skippedAtPage Page number where user skipped (1-indexed)
+     * @param totalPages Total number of pages
+     */
+    fun trackOnboardingSkipped(skippedAtPage: Int, totalPages: Int) {
+        val bundle = Bundle().apply {
+            putLong("skipped_at_page", skippedAtPage.toLong())
+            putLong("total_pages", totalPages.toLong())
+        }
+        analytics?.logEvent("onboarding_skipped", bundle)
+    }
+
+    // ==================== App Lifecycle Events ====================
+
+    /**
+     * Track app launch event.
+     * Should be called when app starts.
+     */
+    fun trackAppLaunch() {
+        analytics?.logEvent("app_launch", null)
+    }
+
+    /**
+     * Track app session start event.
+     * @param isFirstLaunch Whether this is the first app launch
+     */
+    /*fun trackSessionStart(isFirstLaunch: Boolean = false) {
+        val bundle = Bundle().apply {
+            putLong("is_first_launch", if (isFirstLaunch) 1L else 0L)
+        }
+        analytics?.logEvent("session_start", bundle)
+    }
+*/
+    // ==================== One-Time Purchase Events ====================
+
+    /**
+     * Track one-time purchase plan selected event.
+     * @param productId Product ID selected
+     * @param credits Credits amount
+     * @param price Price in micros
+     * @param currency Currency code
+     */
+    fun trackOneTimePurchasePlanSelected(
+        productId: String,
+        credits: Double,
+        price: Long? = null,
+        currency: String? = null
+    ) {
+        val bundle = Bundle().apply {
+            putString("product_id", productId)
+            putDouble("credits", credits)
+            price?.let { putLong("price", it) }
+            currency?.let { putString("currency", it) }
+        }
+        analytics?.logEvent("one_time_purchase_plan_selected", bundle)
+    }
+
+    /**
+     * Track one-time purchase viewed event.
+     */
+    fun trackOneTimePurchaseViewed() {
+        analytics?.logEvent("one_time_purchase_viewed", null)
     }
 
     // ==================== User Properties ====================
