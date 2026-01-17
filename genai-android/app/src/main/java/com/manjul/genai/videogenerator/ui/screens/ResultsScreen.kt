@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.aspectRatio
@@ -763,67 +764,74 @@ private fun ContentReportDialog(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .verticalScroll(scrollState)
-                .padding(top = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(top = 16.dp)
         ) {
-            Text(
-                text = "Help us keep our community safe. Please select a reason for reporting this content.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = AppColors.TextSecondary
-            )
-            
-            // Reason selection
+            // Scrollable content area with max height constraint
             Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 400.dp) // Max height to prevent overflow
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                reportReasons.forEach { reason ->
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { selectedReason = reason },
-                        shape = RoundedCornerShape(12.dp),
-                        color = if (selectedReason == reason) {
-                            AppColors.PrimaryPurple.copy(alpha = 0.2f)
-                        } else {
-                            AppColors.CardBackground
-                        },
-                        border = BorderStroke(
-                            1.dp,
-                            if (selectedReason == reason) {
-                                AppColors.PrimaryPurple
-                            } else {
-                                AppColors.CardBorder
-                            }
-                        )
-                    ) {
-                        Text(
-                            text = reason,
-                            modifier = Modifier.padding(16.dp),
-                            style = MaterialTheme.typography.bodyMedium,
+                Text(
+                    text = "Help us keep our community safe. Please select a reason for reporting this content.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = AppColors.TextSecondary
+                )
+                
+                // Reason selection
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    reportReasons.forEach { reason ->
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { selectedReason = reason },
+                            shape = RoundedCornerShape(12.dp),
                             color = if (selectedReason == reason) {
-                                AppColors.PrimaryPurple
+                                AppColors.PrimaryPurple.copy(alpha = 0.2f)
                             } else {
-                                AppColors.TextPrimary
-                            }
-                        )
+                                AppColors.CardBackground
+                            },
+                            border = BorderStroke(
+                                1.dp,
+                                if (selectedReason == reason) {
+                                    AppColors.PrimaryPurple
+                                } else {
+                                    AppColors.CardBorder
+                                }
+                            )
+                        ) {
+                            Text(
+                                text = reason,
+                                modifier = Modifier.padding(16.dp),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = if (selectedReason == reason) {
+                                    AppColors.PrimaryPurple
+                                } else {
+                                    AppColors.TextPrimary
+                                }
+                            )
+                        }
                     }
                 }
+                
+                // Additional details
+                AppTextField(
+                    value = additionalDetails,
+                    onValueChange = { additionalDetails = it },
+                    label = "Additional details (optional)",
+                    placeholder = "Provide any additional information...",
+                    modifier = Modifier.fillMaxWidth(),
+                    maxLines = 4
+                )
             }
             
-            // Additional details
-            AppTextField(
-                value = additionalDetails,
-                onValueChange = { additionalDetails = it },
-                label = "Additional details (optional)",
-                placeholder = "Provide any additional information...",
-                modifier = Modifier.fillMaxWidth(),
-                maxLines = 4
-            )
+            Spacer(modifier = Modifier.height(16.dp))
             
-            Spacer(modifier = Modifier.height(8.dp))
-            
-            // Action buttons
+            // Action buttons - always visible at bottom
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
