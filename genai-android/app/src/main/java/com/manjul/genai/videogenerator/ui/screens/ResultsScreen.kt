@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.annotation.OptIn
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.aspectRatio
@@ -26,12 +28,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Share
@@ -45,6 +50,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -58,6 +64,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
+import com.google.firebase.Timestamp
 import com.manjul.genai.videogenerator.data.local.AppDatabase
 import com.manjul.genai.videogenerator.data.local.toEntity
 import com.manjul.genai.videogenerator.data.model.VideoJob
@@ -69,11 +76,17 @@ import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 import com.manjul.genai.videogenerator.ui.designsystem.components.badges.CustomStatusBadge
 import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
 import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppSecondaryButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppTextButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.inputs.AppTextField
 import com.manjul.genai.videogenerator.ui.designsystem.components.cards.AppCard
 import com.manjul.genai.videogenerator.ui.theme.GenAiVideoTheme
 import com.manjul.genai.videogenerator.utils.VideoDownloader
 import com.manjul.genai.videogenerator.utils.VideoSharer
 import com.manjul.genai.videogenerator.utils.AnalyticsManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.manjul.genai.videogenerator.ui.designsystem.components.dialogs.AppDialog
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -115,6 +128,7 @@ fun ResultsScreen(
     val aspectRatio = parseAspectRatio(job.aspectRatio)
     var isDownloading by rememberSaveable { mutableStateOf(false) }
     var isSharing by rememberSaveable { mutableStateOf(false) }
+    var showReportDialog by rememberSaveable { mutableStateOf(false) }
 
     // Track screen view
     if (!isInPreview) {
@@ -292,10 +306,28 @@ fun ResultsScreen(
                                 }
                             }
                         },
-                        onRegenerate = onRegenerate
+                        onRegenerate = onRegenerate,
+                        onReport = { showReportDialog = true }
                     )
                 }
             }
+        }
+        
+        // Content reporting dialog
+        if (showReportDialog) {
+            ContentReportDialog(
+                jobId = job.id,
+                videoUrl = videoUrl,
+                onDismiss = { showReportDialog = false },
+                onReportSubmitted = {
+                    showReportDialog = false
+                    android.widget.Toast.makeText(
+                        context,
+                        "Thank you for your report. We'll review it shortly.",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
+            )
         }
     }
 }
@@ -624,7 +656,8 @@ private fun ActionButtonsSection(
     isSharing: Boolean = false,
     onDownload: () -> Unit,
     onShare: () -> Unit,
-    onRegenerate: () -> Unit
+    onRegenerate: () -> Unit,
+    onReport: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -664,6 +697,14 @@ private fun ActionButtonsSection(
                 modifier = Modifier.weight(1f)
             )
         }
+        
+        // Report button - smaller, less prominent
+        AppTextButton(
+            text = "Report Content",
+            onClick = onReport,
+            icon = Icons.Default.Flag,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
@@ -684,6 +725,158 @@ private fun ResultsScreenPreview() {
             onClose = {},
             onRegenerate = {}
         )
+    }
+}
+
+@Composable
+private fun ContentReportDialog(
+    jobId: String,
+    videoUrl: String,
+    onDismiss: () -> Unit,
+    onReportSubmitted: () -> Unit
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val auth = FirebaseAuth.getInstance()
+    val firestore = FirebaseFirestore.getInstance()
+    
+    var selectedReason by remember { mutableStateOf<String?>(null) }
+    var additionalDetails by remember { mutableStateOf("") }
+    var isSubmitting by remember { mutableStateOf(false) }
+    
+    val reportReasons = listOf(
+        "Violence or harmful content",
+        "Sexual or explicit content",
+        "Hate speech or discrimination",
+        "Misinformation or false content",
+        "Copyright infringement",
+        "Spam or misleading content",
+        "Other"
+    )
+    
+    AppDialog(
+        onDismissRequest = onDismiss,
+        title = "Report Content"
+    ) {
+        val scrollState = rememberScrollState()
+        
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(scrollState)
+                .padding(top = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(
+                text = "Help us keep our community safe. Please select a reason for reporting this content.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = AppColors.TextSecondary
+            )
+            
+            // Reason selection
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                reportReasons.forEach { reason ->
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { selectedReason = reason },
+                        shape = RoundedCornerShape(12.dp),
+                        color = if (selectedReason == reason) {
+                            AppColors.PrimaryPurple.copy(alpha = 0.2f)
+                        } else {
+                            AppColors.CardBackground
+                        },
+                        border = BorderStroke(
+                            1.dp,
+                            if (selectedReason == reason) {
+                                AppColors.PrimaryPurple
+                            } else {
+                                AppColors.CardBorder
+                            }
+                        )
+                    ) {
+                        Text(
+                            text = reason,
+                            modifier = Modifier.padding(16.dp),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (selectedReason == reason) {
+                                AppColors.PrimaryPurple
+                            } else {
+                                AppColors.TextPrimary
+                            }
+                        )
+                    }
+                }
+            }
+            
+            // Additional details
+            AppTextField(
+                value = additionalDetails,
+                onValueChange = { additionalDetails = it },
+                label = "Additional details (optional)",
+                placeholder = "Provide any additional information...",
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 4
+            )
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            // Action buttons
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                AppSecondaryButton(
+                    text = "Cancel",
+                    onClick = onDismiss,
+                    modifier = Modifier.weight(1f),
+                    fullWidth = false
+                )
+                AppPrimaryButton(
+                    text = if (isSubmitting) "Submitting..." else "Submit Report",
+                    onClick = {
+                        if (selectedReason != null && !isSubmitting) {
+                            isSubmitting = true
+                            scope.launch {
+                                try {
+                                    val userId = auth.currentUser?.uid ?: "anonymous"
+                                    val reportData = hashMapOf(
+                                        "userId" to userId,
+                                        "jobId" to jobId,
+                                        "videoUrl" to videoUrl,
+                                        "reason" to selectedReason,
+                                        "additionalDetails" to additionalDetails,
+                                        "timestamp" to Timestamp.now(),
+                                        "status" to "pending"
+                                    )
+                                    
+                                    firestore.collection("content_reports")
+                                        .add(reportData)
+                                        .await()
+                                    
+                                    AnalyticsManager.log("Content reported: $selectedReason")
+                                    onReportSubmitted()
+                                } catch (e: Exception) {
+                                    android.util.Log.e("ResultsScreen", "Failed to submit report", e)
+                                    android.widget.Toast.makeText(
+                                        context,
+                                        "Failed to submit report. Please try again.",
+                                        android.widget.Toast.LENGTH_SHORT
+                                    ).show()
+                                    isSubmitting = false
+                                }
+                            }
+                        }
+                    },
+                    modifier = Modifier.weight(1f),
+                    fullWidth = false,
+                    enabled = selectedReason != null && !isSubmitting,
+                    isLoading = isSubmitting
+                )
+            }
+        }
     }
 }
 

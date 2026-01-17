@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -241,12 +242,12 @@ class SubscriptionManagementViewModel(
                         val currency = doc.getString("currency") ?: "USD"
                         val date = doc.getTimestamp("createdAt")?.toDate()?.time ?: 0L
 
-                        // Format price from micros (divide by 1,000,000)
+                        // Format price from micros (divide by 1,000,000) with proper currency formatting
                         val price = if (priceMicros > 0) {
                             val priceValue = priceMicros / 1_000_000.0
-                            "$${String.format("%.2f", priceValue)}"
+                            formatPriceWithCurrency(priceValue, currency)
                         } else {
-                            "$0.00"
+                            formatPriceWithCurrency(0.0, currency)
                         }
 
                         // Create product name
@@ -311,6 +312,52 @@ class SubscriptionManagementViewModel(
             _uiState.value = _uiState.value.copy(
                 error = "Failed to open subscription management"
             )
+        }
+    }
+
+    /**
+     * Format price with currency symbol based on currency code
+     */
+    private fun formatPriceWithCurrency(price: Double, currencyCode: String): String {
+        return try {
+            val locale = when (currencyCode.uppercase()) {
+                "USD" -> Locale.US
+                "EUR" -> Locale("en", "EU")
+                "GBP" -> Locale.UK
+                "JPY" -> Locale.JAPAN
+                "CNY" -> Locale.CHINA
+                "INR" -> Locale("en", "IN")
+                "AUD" -> Locale("en", "AU")
+                "CAD" -> Locale.CANADA
+                "BRL" -> Locale("pt", "BR")
+                "MXN" -> Locale("es", "MX")
+                "KRW" -> Locale.KOREA
+                "RUB" -> Locale("ru", "RU")
+                else -> {
+                    // Try to find locale by currency code
+                    Locale.getAvailableLocales().firstOrNull { locale ->
+                        try {
+                            val currency = Currency.getInstance(locale)
+                            currency.currencyCode == currencyCode.uppercase()
+                        } catch (e: Exception) {
+                            false
+                        }
+                    } ?: Locale.getDefault()
+                }
+            }
+            
+            val currency = try {
+                Currency.getInstance(currencyCode.uppercase())
+            } catch (e: Exception) {
+                Currency.getInstance("USD") // Fallback to USD
+            }
+            
+            val formatter = NumberFormat.getCurrencyInstance(locale)
+            formatter.currency = currency
+            formatter.format(price)
+        } catch (e: Exception) {
+            // Fallback to simple format if currency formatting fails
+            "$currencyCode ${String.format(Locale.US, "%.2f", price)}"
         }
     }
 

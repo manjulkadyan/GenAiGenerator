@@ -25,13 +25,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.billingclient.api.ProductDetails
 import com.manjul.genai.videogenerator.data.model.SubscriptionPlan
+import java.text.NumberFormat
+import java.util.Currency
+import java.util.Locale
 
 /**
  * Subscription plan card component for landing page.
  * Matches the exact design: Period/Type -> Large Number -> Credits -> Price -> Per-credit cost
  * All cards have the same height for consistent layout.
  * Can be used for both subscriptions and one-time purchases.
+ * 
+ * @param productDetails Optional ProductDetails from Google Play - if provided, uses formatted price with currency
+ * @param showTrialInfo If true, shows trial/intro pricing information if available
  */
 @Composable
 fun SubscriptionPlanCard(
@@ -40,7 +47,9 @@ fun SubscriptionPlanCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     periodText: String? = null, // Override period text (e.g., "One Time" instead of "Weekly")
-    showPerCreditCost: Boolean = true // Always show per-credit cost by default
+    showPerCreditCost: Boolean = true, // Always show per-credit cost by default
+    productDetails: ProductDetails? = null, // Google Play product details for accurate pricing
+    showTrialInfo: Boolean = false // Show trial/intro pricing information
 ) {
     // All cards have the same styling - only difference is the badge for popular
     val backgroundColor = if (isSelected) {
@@ -113,8 +122,36 @@ fun SubscriptionPlanCard(
             )
             
             // Price - bottom
+            // Use ProductDetails formatted price if available (for currency consistency)
+            val displayPrice = if (productDetails != null) {
+                // Check for one-time purchase first (INAPP products)
+                if (productDetails.oneTimePurchaseOfferDetails != null) {
+                    // For one-time purchases
+                    productDetails.oneTimePurchaseOfferDetails!!.formattedPrice
+                } else {
+                    // For subscriptions, get price from subscription offer details
+                    val subscriptionOfferDetails = productDetails.subscriptionOfferDetails
+                    if (!subscriptionOfferDetails.isNullOrEmpty()) {
+                        val offer = subscriptionOfferDetails.first()
+                        val pricingPhases = offer.pricingPhases.pricingPhaseList
+                        if (pricingPhases.isNotEmpty()) {
+                            // Get the recurring price (after trial/intro if any)
+                            val recurringPhase = pricingPhases.lastOrNull()
+                            recurringPhase?.formattedPrice ?: plan.price
+                        } else {
+                            plan.price
+                        }
+                    } else {
+                        plan.price
+                    }
+                }
+            } else {
+                // Fallback to config price
+                plan.price
+            }
+            
             Text(
-                text = plan.price,
+                text = displayPrice,
                 style = MaterialTheme.typography.bodyMedium,
                 color = secondaryTextColor,
                 fontWeight = FontWeight.Medium,
@@ -122,13 +159,101 @@ fun SubscriptionPlanCard(
             )
             
             // Per-credit cost - always shown for consistent height
-            val priceValue = plan.price.replace("$", "").replace(",", "").toDoubleOrNull()
-            val perCredit = priceValue?.div(plan.credits)
+            // Get currency code and price amount from ProductDetails for accurate calculation
+            val (priceAmountMicros, currencyCode) = if (productDetails != null) {
+                if (productDetails.oneTimePurchaseOfferDetails != null) {
+                    // One-time purchase
+                    val offer = productDetails.oneTimePurchaseOfferDetails!!
+                    Pair(offer.priceAmountMicros, offer.priceCurrencyCode)
+                } else {
+                    // Subscription - get from recurring phase
+                    val subscriptionOfferDetails = productDetails.subscriptionOfferDetails
+                    if (!subscriptionOfferDetails.isNullOrEmpty()) {
+                        val offer = subscriptionOfferDetails.first()
+                        val pricingPhases = offer.pricingPhases.pricingPhaseList
+                        if (pricingPhases.isNotEmpty()) {
+                            val recurringPhase = pricingPhases.lastOrNull()
+                            Pair(
+                                recurringPhase?.priceAmountMicros ?: 0L,
+                                recurringPhase?.priceCurrencyCode ?: "USD"
+                            )
+                        } else {
+                            Pair(0L, "USD")
+                        }
+                    } else {
+                        Pair(0L, "USD")
+                    }
+                }
+            } else {
+                // Fallback: try to parse from displayPrice
+                Pair(0L, "USD")
+            }
+            
+            // Calculate per-credit cost
+            val perCredit = if (priceAmountMicros > 0) {
+                priceAmountMicros / 1_000_000.0 / plan.credits
+            } else {
+                // Fallback: parse from displayPrice string
+                try {
+                    displayPrice.replace(Regex("[^0-9.,]"), "")
+                        .replace(",", "")
+                        .replace(".", "")
+                        .toDoubleOrNull()?.div(100.0)?.div(plan.credits)
+                        ?: displayPrice.replace(Regex("[^0-9.]"), "").toDoubleOrNull()?.div(plan.credits)
+                } catch (e: Exception) {
+                    null
+                }
+            }
+            
+            // Format per-credit cost with proper currency
+            val formattedPerCredit = if (perCredit != null && priceAmountMicros > 0) {
+                formatPerCreditCost(perCredit, currencyCode)
+            } else if (perCredit != null) {
+                // Fallback to USD if we don't have currency info
+                formatPerCreditCost(perCredit, "USD")
+            } else {
+                null
+            }
+            
+            // Show trial/intro pricing info if available and requested
+            if (showTrialInfo && productDetails != null) {
+                val subscriptionOfferDetails = productDetails.subscriptionOfferDetails
+                if (!subscriptionOfferDetails.isNullOrEmpty()) {
+                    val offer = subscriptionOfferDetails.first()
+                    val pricingPhases = offer.pricingPhases.pricingPhaseList
+                    if (pricingPhases.size > 1) {
+                        // Has trial or intro pricing
+                        val trialPhase = pricingPhases.first()
+                        val recurringPhase = pricingPhases.last()
+                        if (trialPhase.priceAmountMicros == 0L) {
+                            // Free trial
+                            Text(
+                                text = "Free trial, then ${recurringPhase.formattedPrice}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color(0xFF10B981),
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 10.sp,
+                                modifier = Modifier.padding(top = 2.dp)
+                            )
+                        } else if (trialPhase.priceAmountMicros < recurringPhase.priceAmountMicros) {
+                            // Intro pricing
+                            Text(
+                                text = "${trialPhase.formattedPrice} intro, then ${recurringPhase.formattedPrice}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color(0xFF10B981),
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 10.sp,
+                                modifier = Modifier.padding(top = 2.dp)
+                            )
+                        }
+                    }
+                }
+            }
             
             // Always render this to maintain consistent card height
             Text(
-                text = if (showPerCreditCost && perCredit != null) {
-                    "$${String.format("%.3f", perCredit)}/credit"
+                text = if (showPerCreditCost && formattedPerCredit != null) {
+                    "$formattedPerCredit/credit"
                 } else {
                     " " // Empty space to maintain height
                 },
@@ -180,6 +305,54 @@ fun SubscriptionPlanCard(
                 }
             }
         }
+    }
+}
+
+/**
+ * Format per-credit cost with proper currency symbol
+ */
+private fun formatPerCreditCost(perCredit: Double, currencyCode: String): String {
+    return try {
+        val locale = when (currencyCode.uppercase()) {
+            "USD" -> Locale.US
+            "EUR" -> Locale("en", "EU")
+            "GBP" -> Locale.UK
+            "JPY" -> Locale.JAPAN
+            "CNY" -> Locale.CHINA
+            "INR" -> Locale("en", "IN")
+            "AUD" -> Locale("en", "AU")
+            "CAD" -> Locale.CANADA
+            "BRL" -> Locale("pt", "BR")
+            "MXN" -> Locale("es", "MX")
+            "KRW" -> Locale.KOREA
+            "RUB" -> Locale("ru", "RU")
+            else -> {
+                // Try to find locale by currency code
+                Locale.getAvailableLocales().firstOrNull { locale ->
+                    try {
+                        val currency = Currency.getInstance(locale)
+                        currency.currencyCode == currencyCode.uppercase()
+                    } catch (e: Exception) {
+                        false
+                    }
+                } ?: Locale.getDefault()
+            }
+        }
+        
+        val currency = try {
+            Currency.getInstance(currencyCode.uppercase())
+        } catch (e: Exception) {
+            Currency.getInstance("USD") // Fallback to USD
+        }
+        
+        val formatter = NumberFormat.getCurrencyInstance(locale)
+        formatter.currency = currency
+        formatter.minimumFractionDigits = 3 // Show 3 decimal places for per-credit cost
+        formatter.maximumFractionDigits = 3
+        formatter.format(perCredit)
+    } catch (e: Exception) {
+        // Fallback to simple format if currency formatting fails
+        "$currencyCode ${String.format(Locale.US, "%.3f", perCredit)}"
     }
 }
 

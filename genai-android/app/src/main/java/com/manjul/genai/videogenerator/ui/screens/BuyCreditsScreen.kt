@@ -75,6 +75,7 @@ import com.manjul.genai.videogenerator.ui.components.SubscriptionPlanCard
 import com.manjul.genai.videogenerator.ui.components.getFeatureIcon
 import com.manjul.genai.videogenerator.ui.designsystem.colors.AppColors
 import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppPrimaryButton
+import com.manjul.genai.videogenerator.ui.designsystem.components.buttons.AppSecondaryButton
 import com.manjul.genai.videogenerator.ui.designsystem.components.dialogs.AppDialog
 import com.manjul.genai.videogenerator.ui.viewmodel.CreditsViewModel
 import com.manjul.genai.videogenerator.ui.viewmodel.LandingPageViewModel
@@ -208,6 +209,9 @@ fun BuyCreditsScreen(
     
     // Track if we should show verification dialog
     var showVerificationDialog by remember { mutableStateOf(false) }
+    
+    // Track if we should show subscription terms dialog
+    var showSubscriptionTermsDialog by remember { mutableStateOf(false) }
     
 
     // Show purchase success/error messages
@@ -494,6 +498,7 @@ fun BuyCreditsScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             uiState.config.subscriptionPlans.forEach { plan ->
+                                val productDetails = uiState.productDetails[plan.productId]
                                 SubscriptionPlanCard(
                                     plan = plan,
                                     isSelected = uiState.selectedPlan?.productId == plan.productId,
@@ -501,7 +506,9 @@ fun BuyCreditsScreen(
                                         Log.d("BuyCreditsScreen", "Plan clicked: ${plan.productId}")
                                         viewModel.selectPlan(plan)
                                     },
-                                    modifier = Modifier.weight(1f)
+                                    modifier = Modifier.weight(1f),
+                                    productDetails = productDetails,
+                                    showTrialInfo = true
                                 )
                             }
                         }
@@ -553,6 +560,7 @@ fun BuyCreditsScreen(
                                     isBestValue = product.isBestValue
                                 )
                                 
+                                val oneTimeProductDetails = uiState.oneTimeProductDetails[product.productId]
                                 SubscriptionPlanCard(
                                     plan = planForDisplay,
                                     isSelected = uiState.selectedOneTimeProduct?.productId == product.productId,
@@ -561,7 +569,8 @@ fun BuyCreditsScreen(
                                         viewModel.selectOneTimeProduct(product)
                                     },
                                     modifier = Modifier.width(120.dp),
-                                    periodText = "One Time"
+                                    periodText = "One Time",
+                                    productDetails = oneTimeProductDetails
                                     // showPerCreditCost defaults to true
                                 )
                             }
@@ -608,11 +617,23 @@ fun BuyCreditsScreen(
                             Log.d("BuyCreditsScreen", "Purchase type: ${uiState.selectedPurchaseType}")
                             
                             if (uiState.selectedPurchaseType == PurchaseType.SUBSCRIPTION) {
-                                uiState.selectedPlan?.let { plan ->
-                                    Log.d("BuyCreditsScreen", "Attempting to purchase plan: ${plan.productId}")
-                                    if (context is Activity && uiState.billingInitialized) {
-                                        val billingResult = viewModel.purchasePlan(context, plan)
-                                        Log.d("BuyCreditsScreen", "Purchase initiated - Response code: ${billingResult.responseCode}")
+                                // Show subscription terms dialog first if there's trial/intro pricing
+                                val selectedPlan = uiState.selectedPlan
+                                val productDetails = selectedPlan?.let { uiState.productDetails[it.productId] }
+                                val hasTrialOrIntro = productDetails?.subscriptionOfferDetails?.firstOrNull()?.let { offer ->
+                                    offer.pricingPhases.pricingPhaseList.size > 1
+                                } ?: false
+                                
+                                if (hasTrialOrIntro) {
+                                    showSubscriptionTermsDialog = true
+                                } else {
+                                    // No trial/intro, proceed directly
+                                    selectedPlan?.let { plan ->
+                                        Log.d("BuyCreditsScreen", "Attempting to purchase plan: ${plan.productId}")
+                                        if (context is Activity && uiState.billingInitialized) {
+                                            val billingResult = viewModel.purchasePlan(context, plan)
+                                            Log.d("BuyCreditsScreen", "Purchase initiated - Response code: ${billingResult.responseCode}")
+                                        }
                                     }
                                 }
                             } else {
@@ -749,6 +770,155 @@ fun BuyCreditsScreen(
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
+                }
+            }
+        }
+        
+        // Subscription terms dialog - shows trial/intro pricing details
+        if (showSubscriptionTermsDialog) {
+            val selectedPlan = uiState.selectedPlan
+            val productDetails = selectedPlan?.let { uiState.productDetails[it.productId] }
+            val offer = productDetails?.subscriptionOfferDetails?.firstOrNull()
+            val pricingPhases = offer?.pricingPhases?.pricingPhaseList ?: emptyList()
+            
+            AppDialog(
+                onDismissRequest = { showSubscriptionTermsDialog = false },
+                title = "Subscription Details"
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    if (pricingPhases.size > 1) {
+                        val trialPhase = pricingPhases.first()
+                        val recurringPhase = pricingPhases.last()
+                        
+                        // Trial or intro pricing info
+                        if (trialPhase.priceAmountMicros == 0L) {
+                            // Free trial
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Text(
+                                    text = "Free Trial Period",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF10B981)
+                                )
+                                Text(
+                                    text = "Start with a free trial. After the trial period, you'll be charged ${recurringPhase.formattedPrice} per ${selectedPlan?.period?.lowercase() ?: "period"}.",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = AppColors.TextPrimary
+                                )
+                            }
+                        } else if (trialPhase.priceAmountMicros < recurringPhase.priceAmountMicros) {
+                            // Intro pricing
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Text(
+                                    text = "Introductory Pricing",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF10B981)
+                                )
+                                Text(
+                                    text = "Start with ${trialPhase.formattedPrice} for the first period. After that, you'll be charged ${recurringPhase.formattedPrice} per ${selectedPlan?.period?.lowercase() ?: "period"}.",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = AppColors.TextPrimary
+                                )
+                            }
+                        }
+                        
+                        // Recurring price
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Text(
+                                text = "Regular Price",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = AppColors.TextPrimary
+                            )
+                            Text(
+                                text = "${recurringPhase.formattedPrice} per ${selectedPlan?.period?.lowercase() ?: "period"}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = AppColors.TextSecondary
+                            )
+                        }
+                    } else {
+                        // No trial/intro, just regular pricing
+                        val regularPhase = pricingPhases.firstOrNull()
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Text(
+                                text = "Price",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = AppColors.TextPrimary
+                            )
+                            Text(
+                                text = "${regularPhase?.formattedPrice ?: selectedPlan?.price ?: ""} per ${selectedPlan?.period?.lowercase() ?: "period"}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = AppColors.TextSecondary
+                            )
+                        }
+                    }
+                    
+                    // Cancellation info
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(
+                            text = "Cancellation",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = AppColors.TextPrimary
+                        )
+                        Text(
+                            text = "You can cancel your subscription at any time from your Google Play account settings. Cancellation takes effect at the end of the current billing period.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = AppColors.TextSecondary
+                        )
+                    }
+                    
+                    // Auto-renewal info
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(
+                            text = "Auto-Renewal",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = AppColors.TextPrimary
+                        )
+                        Text(
+                            text = "Your subscription will automatically renew unless cancelled at least 24 hours before the end of the current period.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = AppColors.TextSecondary
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    // Action buttons
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        AppSecondaryButton(
+                            text = "Cancel",
+                            onClick = { showSubscriptionTermsDialog = false },
+                            modifier = Modifier.weight(1f),
+                            fullWidth = false
+                        )
+                        AppPrimaryButton(
+                            text = "Subscribe",
+                            onClick = {
+                                showSubscriptionTermsDialog = false
+                                selectedPlan?.let { plan ->
+                                    Log.d("BuyCreditsScreen", "Proceeding with purchase after terms: ${plan.productId}")
+                                    if (context is Activity && uiState.billingInitialized) {
+                                        val billingResult = viewModel.purchasePlan(context, plan)
+                                        Log.d("BuyCreditsScreen", "Purchase initiated - Response code: ${billingResult.responseCode}")
+                                    }
+                                }
+                            },
+                            modifier = Modifier.weight(1f),
+                            fullWidth = false
+                        )
+                    }
                 }
             }
         }
