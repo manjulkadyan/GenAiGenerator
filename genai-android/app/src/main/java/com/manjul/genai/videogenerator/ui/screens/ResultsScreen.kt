@@ -698,14 +698,38 @@ private fun ActionButtonsSection(
                 modifier = Modifier.weight(1f)
             )
         }
-        
-        // Report button - smaller, less prominent
-        AppTextButton(
-            text = "Report Content",
-            onClick = onReport,
-            icon = Icons.Default.Flag,
-            modifier = Modifier.fillMaxWidth()
-        )
+
+        // Report button - prominent per Google Play AI-Generated Content policy
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onReport),
+            shape = RoundedCornerShape(12.dp),
+            color = Color(0xFF2A1A1A),
+            border = BorderStroke(1.dp, Color(0xFF8B0000).copy(alpha = 0.5f))
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 14.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Flag,
+                    contentDescription = "Report",
+                    modifier = Modifier.size(18.dp),
+                    tint = Color(0xFFFF6B6B)
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                Text(
+                    text = "Report Inappropriate Content",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFFFF6B6B)
+                )
+            }
+        }
     }
 }
 

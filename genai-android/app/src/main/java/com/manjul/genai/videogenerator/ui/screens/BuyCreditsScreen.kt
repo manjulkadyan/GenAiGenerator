@@ -512,6 +512,12 @@ fun BuyCreditsScreen(
                                 )
                             }
                         }
+
+                        // Subscription terms disclosure - required by Google Play policy
+                        SubscriptionTermsDisclosure(
+                            selectedPlan = uiState.selectedPlan,
+                            productDetails = uiState.selectedPlan?.let { uiState.productDetails[it.productId] }
+                        )
                     }
                 } else {
                     // One-time products section - 5 cards in a horizontal scrollable LazyRow
@@ -794,34 +800,36 @@ fun BuyCreditsScreen(
                     if (pricingPhases.size > 1) {
                         val trialPhase = pricingPhases.first()
                         val recurringPhase = pricingPhases.last()
-                        
+                        val trialDuration = parseSubscriptionPeriod(trialPhase.billingPeriod)
+                        val recurringPeriod = parseSubscriptionPeriodShort(recurringPhase.billingPeriod)
+
                         // Trial or intro pricing info
                         if (trialPhase.priceAmountMicros == 0L) {
-                            // Free trial
+                            // Free trial with explicit duration
                             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                 Text(
-                                    text = "Free Trial Period",
+                                    text = "$trialDuration FREE Trial",
                                     style = MaterialTheme.typography.titleSmall,
                                     fontWeight = FontWeight.Bold,
                                     color = Color(0xFF10B981)
                                 )
                                 Text(
-                                    text = "Start with a free trial. After the trial period, you'll be charged ${recurringPhase.formattedPrice} per ${selectedPlan?.period?.lowercase() ?: "period"}.",
+                                    text = "Enjoy a $trialDuration free trial. After the trial ends, you'll be automatically charged ${recurringPhase.formattedPrice}/$recurringPeriod.",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = AppColors.TextPrimary
                                 )
                             }
                         } else if (trialPhase.priceAmountMicros < recurringPhase.priceAmountMicros) {
-                            // Intro pricing
+                            // Intro pricing with explicit duration
                             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                 Text(
-                                    text = "Introductory Pricing",
+                                    text = "Introductory Pricing - $trialDuration",
                                     style = MaterialTheme.typography.titleSmall,
                                     fontWeight = FontWeight.Bold,
                                     color = Color(0xFF10B981)
                                 )
                                 Text(
-                                    text = "Start with ${trialPhase.formattedPrice} for the first period. After that, you'll be charged ${recurringPhase.formattedPrice} per ${selectedPlan?.period?.lowercase() ?: "period"}.",
+                                    text = "Start with ${trialPhase.formattedPrice} for the first $trialDuration. After that, you'll be automatically charged ${recurringPhase.formattedPrice}/$recurringPeriod.",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = AppColors.TextPrimary
                                 )
@@ -831,13 +839,13 @@ fun BuyCreditsScreen(
                         // Recurring price
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(
-                                text = "Regular Price",
+                                text = "Price After Trial",
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = AppColors.TextPrimary
                             )
                             Text(
-                                text = "${recurringPhase.formattedPrice} per ${selectedPlan?.period?.lowercase() ?: "period"}",
+                                text = "${recurringPhase.formattedPrice}/$recurringPeriod (auto-renews)",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = AppColors.TextSecondary
                             )
@@ -845,6 +853,7 @@ fun BuyCreditsScreen(
                     } else {
                         // No trial/intro, just regular pricing
                         val regularPhase = pricingPhases.firstOrNull()
+                        val regularPeriod = regularPhase?.let { parseSubscriptionPeriodShort(it.billingPeriod) } ?: "period"
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(
                                 text = "Price",
@@ -853,23 +862,23 @@ fun BuyCreditsScreen(
                                 color = AppColors.TextPrimary
                             )
                             Text(
-                                text = "${regularPhase?.formattedPrice ?: selectedPlan?.price ?: ""} per ${selectedPlan?.period?.lowercase() ?: "period"}",
+                                text = "${regularPhase?.formattedPrice ?: selectedPlan?.price ?: ""}/$regularPeriod (auto-renews)",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = AppColors.TextSecondary
                             )
                         }
                     }
                     
-                    // Cancellation info
+                    // Cancellation info - REQUIRED by Google Play policy
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text(
-                            text = "Cancellation",
+                            text = "How to Cancel",
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
                             color = AppColors.TextPrimary
                         )
                         Text(
-                            text = "You can cancel your subscription at any time from your Google Play account settings. Cancellation takes effect at the end of the current billing period.",
+                            text = "To cancel: Open Google Play Store → tap your profile icon → Payments & subscriptions → Subscriptions → select this app → Cancel subscription. Cancellation takes effect at the end of the current billing period.",
                             style = MaterialTheme.typography.bodySmall,
                             color = AppColors.TextSecondary
                         )
@@ -1008,5 +1017,128 @@ fun BuyCreditsScreen(
                 }
             }
         }
+    }
+}
+
+/**
+ * Subscription terms disclosure component - required by Google Play policy
+ * Compact version showing essential terms in a subtle format
+ */
+@Composable
+private fun SubscriptionTermsDisclosure(
+    selectedPlan: SubscriptionPlan?,
+    productDetails: com.android.billingclient.api.ProductDetails?
+) {
+    val context = LocalContext.current
+    val offer = productDetails?.subscriptionOfferDetails?.firstOrNull()
+    val pricingPhases = offer?.pricingPhases?.pricingPhaseList ?: emptyList()
+
+    val hasTrialOrIntro = pricingPhases.size > 1
+    val trialPhase = if (hasTrialOrIntro) pricingPhases.first() else null
+    val recurringPhase = if (hasTrialOrIntro) pricingPhases.last() else pricingPhases.firstOrNull()
+
+    if (selectedPlan != null && recurringPhase != null) {
+        val recurringPeriod = parseSubscriptionPeriodShort(recurringPhase.billingPeriod)
+
+        // Build price text based on trial availability
+        val priceText = if (hasTrialOrIntro && trialPhase != null) {
+            val trialDuration = parseSubscriptionPeriod(trialPhase.billingPeriod)
+            if (trialPhase.priceAmountMicros == 0L) {
+                "★ $trialDuration free trial, then ${recurringPhase.formattedPrice}/$recurringPeriod"
+            } else {
+                "★ ${trialPhase.formattedPrice} for $trialDuration, then ${recurringPhase.formattedPrice}/$recurringPeriod"
+            }
+        } else {
+            "★ ${recurringPhase.formattedPrice}/$recurringPeriod"
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Line 1: Price info
+            Text(
+                text = priceText,
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF9CA3AF),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+            // Line 2: Auto-renewal
+            Text(
+                text = "★ Auto-renews until cancelled",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF9CA3AF)
+            )
+            // Line 3: Cancel anytime
+            Text(
+                text = "★ Cancel anytime in Google Play",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF9CA3AF)
+            )
+            // Line 4: Manage link
+            Text(
+                text = "Manage subscriptions →",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF6366F1),
+                modifier = Modifier.clickable {
+                    try {
+                        val packageName = context.packageName
+                        val url = "https://play.google.com/store/account/subscriptions?package=$packageName"
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        context.startActivity(intent)
+                    } catch (e: Exception) {
+                        Log.e("BuyCreditsScreen", "Failed to open subscription management", e)
+                    }
+                }
+            )
+        }
+    }
+}
+
+/**
+ * Parse ISO 8601 billing period to human-readable format
+ * Examples: P3D -> "3 days", P1W -> "7 days", P7D -> "7 days", P1M -> "1 month"
+ */
+private fun parseSubscriptionPeriod(billingPeriod: String): String {
+    return try {
+        val regex = Regex("P(\\d+)([DWMY])")
+        val match = regex.find(billingPeriod) ?: return "trial period"
+        val (count, unit) = match.destructured
+        val countInt = count.toIntOrNull() ?: 1
+        when (unit) {
+            "D" -> if (countInt == 1) "1 day" else "$countInt days"
+            "W" -> if (countInt == 1) "7 days" else "${countInt * 7} days"
+            "M" -> if (countInt == 1) "1 month" else "$countInt months"
+            "Y" -> if (countInt == 1) "1 year" else "$countInt years"
+            else -> "trial period"
+        }
+    } catch (e: Exception) {
+        "trial period"
+    }
+}
+
+/**
+ * Parse ISO 8601 billing period to short format
+ * Examples: P1W -> "week", P1M -> "month"
+ */
+private fun parseSubscriptionPeriodShort(billingPeriod: String): String {
+    return try {
+        val regex = Regex("P(\\d+)([DWMY])")
+        val match = regex.find(billingPeriod) ?: return "period"
+        val (count, unit) = match.destructured
+        val countInt = count.toIntOrNull() ?: 1
+        when (unit) {
+            "D" -> if (countInt == 1) "day" else "$countInt days"
+            "W" -> if (countInt == 1) "week" else "$countInt weeks"
+            "M" -> if (countInt == 1) "month" else "$countInt months"
+            "Y" -> if (countInt == 1) "year" else "$countInt years"
+            else -> "period"
+        }
+    } catch (e: Exception) {
+        "period"
     }
 }

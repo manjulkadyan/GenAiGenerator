@@ -225,25 +225,43 @@ fun SubscriptionPlanCard(
                         // Has trial or intro pricing
                         val trialPhase = pricingPhases.first()
                         val recurringPhase = pricingPhases.last()
+
+                        // Parse trial duration from billing period (ISO 8601 format: P1W, P3D, P7D, etc.)
+                        val trialDuration = parseTrialDuration(trialPhase.billingPeriod)
+
                         if (trialPhase.priceAmountMicros == 0L) {
-                            // Free trial
+                            // Free trial with duration
                             Text(
-                                text = "Free trial, then ${recurringPhase.formattedPrice}",
+                                text = "$trialDuration free trial",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color(0xFF10B981),
-                                fontWeight = FontWeight.Medium,
+                                fontWeight = FontWeight.Bold,
                                 fontSize = 10.sp,
                                 modifier = Modifier.padding(top = 2.dp)
                             )
-                        } else if (trialPhase.priceAmountMicros < recurringPhase.priceAmountMicros) {
-                            // Intro pricing
                             Text(
-                                text = "${trialPhase.formattedPrice} intro, then ${recurringPhase.formattedPrice}",
+                                text = "then ${recurringPhase.formattedPrice}/${parseRecurringPeriod(recurringPhase.billingPeriod)}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color(0xFF9CA3AF),
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 9.sp
+                            )
+                        } else if (trialPhase.priceAmountMicros < recurringPhase.priceAmountMicros) {
+                            // Intro pricing with duration
+                            Text(
+                                text = "${trialPhase.formattedPrice} for $trialDuration",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color(0xFF10B981),
-                                fontWeight = FontWeight.Medium,
+                                fontWeight = FontWeight.Bold,
                                 fontSize = 10.sp,
                                 modifier = Modifier.padding(top = 2.dp)
+                            )
+                            Text(
+                                text = "then ${recurringPhase.formattedPrice}/${parseRecurringPeriod(recurringPhase.billingPeriod)}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color(0xFF9CA3AF),
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 9.sp
                             )
                         }
                     }
@@ -305,6 +323,132 @@ fun SubscriptionPlanCard(
                 }
             }
         }
+    }
+}
+
+/**
+ * Data class to hold trial/intro pricing information for a subscription
+ */
+data class SubscriptionOfferInfo(
+    val hasFreeTrial: Boolean = false,
+    val hasIntroPricing: Boolean = false,
+    val trialDuration: String? = null,           // e.g., "7-day", "3-day"
+    val trialPrice: String? = null,              // e.g., "$0.99" for intro pricing
+    val recurringPrice: String? = null,          // e.g., "$9.99"
+    val recurringPeriod: String? = null,         // e.g., "week", "month"
+    val billingPeriodIso: String? = null         // e.g., "P1W", "P1M"
+)
+
+/**
+ * Extracts trial/intro pricing information from ProductDetails.
+ * Returns null if no subscription offer details are available.
+ *
+ * How it works:
+ * - Google Play Console lets you configure offers (free trial, intro pricing) per subscription
+ * - When user queries products, Google returns ONLY offers they're eligible for
+ * - If user already used trial, that offer won't be in the list
+ *
+ * @param productDetails The ProductDetails from Google Play Billing
+ * @return SubscriptionOfferInfo with trial details, or null if not a subscription
+ */
+fun getSubscriptionOfferInfo(productDetails: ProductDetails?): SubscriptionOfferInfo? {
+    if (productDetails == null) return null
+
+    val subscriptionOfferDetails = productDetails.subscriptionOfferDetails
+    if (subscriptionOfferDetails.isNullOrEmpty()) return null
+
+    val offer = subscriptionOfferDetails.first()
+    val pricingPhases = offer.pricingPhases.pricingPhaseList
+
+    if (pricingPhases.isEmpty()) return null
+
+    // Single phase = no trial/intro
+    if (pricingPhases.size == 1) {
+        val phase = pricingPhases.first()
+        return SubscriptionOfferInfo(
+            hasFreeTrial = false,
+            hasIntroPricing = false,
+            recurringPrice = phase.formattedPrice,
+            recurringPeriod = parseRecurringPeriod(phase.billingPeriod),
+            billingPeriodIso = phase.billingPeriod
+        )
+    }
+
+    // Multiple phases = has trial or intro pricing
+    val firstPhase = pricingPhases.first()
+    val recurringPhase = pricingPhases.last()
+
+    val isFreeTrial = firstPhase.priceAmountMicros == 0L
+    val isIntroPricing = !isFreeTrial && firstPhase.priceAmountMicros < recurringPhase.priceAmountMicros
+
+    return SubscriptionOfferInfo(
+        hasFreeTrial = isFreeTrial,
+        hasIntroPricing = isIntroPricing,
+        trialDuration = parseTrialDuration(firstPhase.billingPeriod),
+        trialPrice = if (isIntroPricing) firstPhase.formattedPrice else null,
+        recurringPrice = recurringPhase.formattedPrice,
+        recurringPeriod = parseRecurringPeriod(recurringPhase.billingPeriod),
+        billingPeriodIso = recurringPhase.billingPeriod
+    )
+}
+
+/**
+ * Quick check if a product has a free trial offer.
+ * Note: This only returns true if the USER is eligible for the trial.
+ * If they've already used it, Google Play won't return the trial offer.
+ */
+fun hasFreeTrial(productDetails: ProductDetails?): Boolean {
+    return getSubscriptionOfferInfo(productDetails)?.hasFreeTrial == true
+}
+
+/**
+ * Quick check if a product has intro pricing offer.
+ */
+fun hasIntroPricing(productDetails: ProductDetails?): Boolean {
+    return getSubscriptionOfferInfo(productDetails)?.hasIntroPricing == true
+}
+
+/**
+ * Parse ISO 8601 billing period to human-readable trial duration
+ * Examples: P3D -> "3-day", P1W -> "7-day", P7D -> "7-day", P1M -> "1-month"
+ */
+private fun parseTrialDuration(billingPeriod: String): String {
+    return try {
+        val regex = Regex("P(\\d+)([DWMY])")
+        val match = regex.find(billingPeriod) ?: return "Free"
+        val (count, unit) = match.destructured
+        val countInt = count.toIntOrNull() ?: 1
+        when (unit) {
+            "D" -> "$countInt-day"
+            "W" -> "${countInt * 7}-day"
+            "M" -> if (countInt == 1) "1-month" else "$countInt-month"
+            "Y" -> if (countInt == 1) "1-year" else "$countInt-year"
+            else -> "Free"
+        }
+    } catch (e: Exception) {
+        "Free"
+    }
+}
+
+/**
+ * Parse ISO 8601 billing period to short recurring period label
+ * Examples: P1W -> "week", P1M -> "month"
+ */
+private fun parseRecurringPeriod(billingPeriod: String): String {
+    return try {
+        val regex = Regex("P(\\d+)([DWMY])")
+        val match = regex.find(billingPeriod) ?: return "period"
+        val (count, unit) = match.destructured
+        val countInt = count.toIntOrNull() ?: 1
+        when (unit) {
+            "D" -> if (countInt == 1) "day" else "$countInt days"
+            "W" -> if (countInt == 1) "week" else "$countInt weeks"
+            "M" -> if (countInt == 1) "month" else "$countInt months"
+            "Y" -> if (countInt == 1) "year" else "$countInt years"
+            else -> "period"
+        }
+    } catch (e: Exception) {
+        "period"
     }
 }
 
