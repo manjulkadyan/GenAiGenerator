@@ -488,7 +488,7 @@ fun BuyCreditsScreen(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
-                
+
                 // Pricing cards - different based on selected tab
                 if (uiState.selectedPurchaseType == PurchaseType.SUBSCRIPTION) {
                     // Subscription plans section - 3 cards in a row
@@ -513,9 +513,8 @@ fun BuyCreditsScreen(
                             }
                         }
 
-                        // Subscription terms disclosure - required by Google Play policy
-                        SubscriptionTermsDisclosure(
-                            selectedPlan = uiState.selectedPlan,
+                        // Subscription terms card - clickable to show full details
+                        SubscriptionTermsCard(
                             productDetails = uiState.selectedPlan?.let { uiState.productDetails[it.productId] }
                         )
                     }
@@ -1021,13 +1020,94 @@ fun BuyCreditsScreen(
 }
 
 /**
- * Subscription terms disclosure component - required by Google Play policy
- * Compact version showing essential terms in a subtle format
+ * Subscription terms card - clickable card that shows a dialog with full details
+ * Required by Google Play policy to show clear subscription terms
  */
 @Composable
-private fun SubscriptionTermsDisclosure(
-    selectedPlan: SubscriptionPlan?,
+private fun SubscriptionTermsCard(
     productDetails: com.android.billingclient.api.ProductDetails?
+) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    val offer = productDetails?.subscriptionOfferDetails?.firstOrNull()
+    val pricingPhases = offer?.pricingPhases?.pricingPhaseList ?: emptyList()
+
+    val hasTrialOrIntro = pricingPhases.size > 1
+    val trialPhase = if (hasTrialOrIntro) pricingPhases.first() else null
+    val recurringPhase = if (hasTrialOrIntro) pricingPhases.last() else pricingPhases.firstOrNull()
+
+    // Build summary text for the card
+    val summaryText = if (hasTrialOrIntro && trialPhase != null && recurringPhase != null) {
+        val trialDuration = parseSubscriptionPeriod(trialPhase.billingPeriod)
+        if (trialPhase.priceAmountMicros == 0L) {
+            "$trialDuration free trial • Auto-renews • Cancel anytime"
+        } else {
+            "Intro pricing • Auto-renews • Cancel anytime"
+        }
+    } else {
+        "Auto-renews weekly • Cancel anytime"
+    }
+
+    // Clickable card
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = Color(0xFF1A1A1A),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .border(
+                width = 1.dp,
+                color = Color(0xFF333333),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .clickable { showDialog = true }
+            .padding(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Subscription Terms",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White
+                )
+                Text(
+                    text = summaryText,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFF9CA3AF),
+                    fontSize = 11.sp
+                )
+            }
+            Text(
+                text = "View →",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF6366F1),
+                fontWeight = FontWeight.Medium
+            )
+        }
+    }
+
+    // Full details dialog
+    if (showDialog) {
+        SubscriptionTermsDialog(
+            productDetails = productDetails,
+            onDismiss = { showDialog = false }
+        )
+    }
+}
+
+/**
+ * Dialog showing full subscription terms and details
+ */
+@Composable
+private fun SubscriptionTermsDialog(
+    productDetails: com.android.billingclient.api.ProductDetails?,
+    onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
     val offer = productDetails?.subscriptionOfferDetails?.firstOrNull()
@@ -1037,53 +1117,65 @@ private fun SubscriptionTermsDisclosure(
     val trialPhase = if (hasTrialOrIntro) pricingPhases.first() else null
     val recurringPhase = if (hasTrialOrIntro) pricingPhases.last() else pricingPhases.firstOrNull()
 
-    if (selectedPlan != null && recurringPhase != null) {
-        val recurringPeriod = parseSubscriptionPeriodShort(recurringPhase.billingPeriod)
-
-        // Build price text based on trial availability
-        val priceText = if (hasTrialOrIntro && trialPhase != null) {
-            val trialDuration = parseSubscriptionPeriod(trialPhase.billingPeriod)
-            if (trialPhase.priceAmountMicros == 0L) {
-                "★ $trialDuration free trial, then ${recurringPhase.formattedPrice}/$recurringPeriod"
-            } else {
-                "★ ${trialPhase.formattedPrice} for $trialDuration, then ${recurringPhase.formattedPrice}/$recurringPeriod"
-            }
-        } else {
-            "★ ${recurringPhase.formattedPrice}/$recurringPeriod"
-        }
-
+    AppDialog(
+        onDismissRequest = onDismiss,
+        title = "Subscription Terms"
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Line 1: Price info
-            Text(
-                text = priceText,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color(0xFF9CA3AF),
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            // Trial/Intro Section
+            if (hasTrialOrIntro && trialPhase != null && recurringPhase != null) {
+                val trialDuration = parseSubscriptionPeriod(trialPhase.billingPeriod)
+                val recurringPeriod = parseSubscriptionPeriodShort(recurringPhase.billingPeriod)
+
+                TermsSection(
+                    icon = "🎁",
+                    title = if (trialPhase.priceAmountMicros == 0L) "Free Trial" else "Introductory Offer",
+                    description = if (trialPhase.priceAmountMicros == 0L) {
+                        "Enjoy $trialDuration completely free. Your subscription begins after the trial ends."
+                    } else {
+                        "Start with ${trialPhase.formattedPrice} for $trialDuration, then regular pricing applies."
+                    }
+                )
+
+                TermsSection(
+                    icon = "💳",
+                    title = "Price After Trial",
+                    description = "You'll be charged ${recurringPhase.formattedPrice} per $recurringPeriod after your trial ends."
+                )
+            } else if (recurringPhase != null) {
+                val recurringPeriod = parseSubscriptionPeriodShort(recurringPhase.billingPeriod)
+                TermsSection(
+                    icon = "💳",
+                    title = "Subscription Price",
+                    description = "${recurringPhase.formattedPrice} per $recurringPeriod, charged automatically."
+                )
+            }
+
+            // Auto-renewal
+            TermsSection(
+                icon = "🔄",
+                title = "Auto-Renewal",
+                description = "Your subscription renews automatically. We'll email you 24 hours before each renewal."
             )
-            // Line 2: Auto-renewal
-            Text(
-                text = "★ Auto-renews until cancelled",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color(0xFF9CA3AF)
+
+            // Cancellation
+            TermsSection(
+                icon = "✓",
+                title = "Cancel Anytime",
+                description = "Cancel at least 24 hours before renewal. Go to Google Play Store → Profile → Payments & subscriptions → Subscriptions."
             )
-            // Line 3: Cancel anytime
-            Text(
-                text = "★ Cancel anytime in Google Play",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color(0xFF9CA3AF)
-            )
-            // Line 4: Manage link
-            Text(
-                text = "Manage subscriptions →",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color(0xFF6366F1),
-                modifier = Modifier.clickable {
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Manage subscriptions button
+            AppSecondaryButton(
+                text = "Manage in Google Play",
+                onClick = {
                     try {
                         val packageName = context.packageName
                         val url = "https://play.google.com/store/account/subscriptions?package=$packageName"
@@ -1093,7 +1185,51 @@ private fun SubscriptionTermsDisclosure(
                     } catch (e: Exception) {
                         Log.e("BuyCreditsScreen", "Failed to open subscription management", e)
                     }
-                }
+                },
+                fullWidth = true
+            )
+
+            // Close button
+            AppPrimaryButton(
+                text = "Got it",
+                onClick = onDismiss,
+                fullWidth = true
+            )
+        }
+    }
+}
+
+/**
+ * Section item for the terms dialog
+ */
+@Composable
+private fun TermsSection(
+    icon: String,
+    title: String,
+    description: String
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            text = icon,
+            fontSize = 20.sp
+        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF9CA3AF),
+                lineHeight = 18.sp
             )
         }
     }
